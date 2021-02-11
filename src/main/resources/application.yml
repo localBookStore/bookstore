@@ -14,6 +14,9 @@ spring:
         dialect: org.hibernate.dialect.MySQL57Dialect
         format_sql: true
 
+  thymeleaf:
+    cache: false
+
 logging:
   level:
     org:
