@@ -1,9 +1,10 @@
 package com.bookstore.webservice.entity;
 
-import com.bookstore.webservice.entity.item.Item;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -11,23 +12,19 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Cart {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @JoinColumn(name = "category_id")
+    private Category parent;
 
-    private Integer price;
-
-    private Integer quantity;
-
+    @OneToMany(mappedBy = "parent")
+    private List<Category> child = new ArrayList<>();
 
 }

@@ -1,5 +1,6 @@
 package com.bookstore.webservice.entity;
 
+import com.bookstore.webservice.entity.item.Item;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orders_item")
+    @JoinColumn(name = "orders_id")
     private Orders order;
 
     @ManyToOne(fetch = FetchType.LAZY)

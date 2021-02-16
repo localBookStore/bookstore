@@ -1,6 +1,5 @@
 package com.bookstore.webservice.entity;
 
-import com.bookstore.webservice.entity.item.Item;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,23 +10,18 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Cart {
+public class couponCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item item;
-
-    private Integer price;
-
-    private Integer quantity;
-
+    @JoinColumn(name = "Category_id")
+    private Category category;
 
 }

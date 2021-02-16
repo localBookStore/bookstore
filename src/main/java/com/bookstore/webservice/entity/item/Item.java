@@ -1,5 +1,7 @@
-package com.bookstore.webservice.entity;
+package com.bookstore.webservice.entity.item;
 
+import com.bookstore.webservice.entity.ItemCategory;
+import com.bookstore.webservice.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,15 +19,17 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     private String name;
 
-    //private List<ItemCategory> itemCategories;
+    @OneToMany(mappedBy = "item")
+    private List<ItemCategory> itemCategories;
 
-    private String desc;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     private Integer price;
 

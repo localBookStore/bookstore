@@ -4,6 +4,8 @@ import com.bookstore.webservice.entity.item.Item;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -11,23 +13,28 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Cart {
+public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "orders_id")
+    private Orders orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private Integer price;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
+    private Review parent;
 
-    private Integer quantity;
+    @OneToMany(mappedBy = "parent")
+    private List<Review> child = new ArrayList<>();
 
+    private String content;
 
+    private Integer lvl;
 }
