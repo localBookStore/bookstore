@@ -34,7 +34,7 @@
    ```markdown
    # 카카오 오븐사용
    # 각각의 이미지는 prototype-image 폴더에 저장
-   https://ovenapp.io/view/IsuAqqRNVhCdVOBfCScCSPSGLUS1NAlB/3cieS
+   <https://ovenapp.io/view/IsuAqqRNVhCdVOBfCScCSPSGLUS1NAlB/3cieS>
    ```
    
 <br/>   
