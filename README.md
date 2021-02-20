@@ -31,11 +31,9 @@
 ## 5. 프로토타입
 <br/>
 
-   ```markdown
-   # 카카오 오븐사용
-   # 각각의 이미지는 prototype-image 폴더에 저장
-   https://ovenapp.io/view/IsuAqqRNVhCdVOBfCScCSPSGLUS1NAlB/3cieS
-   ```
+> **카카오 오븐 사용 <br/>
+> 각각의 이미지는 prototype-image 폴더에 저장<br/>
+> [프로토타입 페이지](https://ovenapp.io/view/IsuAqqRNVhCdVOBfCScCSPSGLUS1NAlB/3cieS)**
    
 <br/>   
    
