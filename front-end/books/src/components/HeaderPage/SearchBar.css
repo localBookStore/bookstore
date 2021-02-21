@@ -1,6 +1,28 @@
+
+.search-items {
+    position: absolute;
+    left: 350px;
+    top: 140px;
+}
 .search-bar {
     background-color: whitesmoke;
-    margin: 0 auto;
-    width:400px;
-    height:30px;
+    width:800px;
+    height:50px;
+    font-size: 20px;
+    padding-left:8px;
+}
+.search-button {
+    position: absolute;
+    background-color: powderblue;
+    top: 8px;
+    left: 680px;
+    width: 110px;
+    height: 40px;
+    margin: 0 10px;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+}
+.search-button:hover{
+    opacity: 0.8;
 }

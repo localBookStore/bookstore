@@ -1,15 +1,15 @@
 import "./SearchBar.css"
-import {useState} from "react"
+import { useState } from "react"
 
 
 const SearchBar = () => {
   const [inputs, setInputs] = useState(null);
 
   const enterEvent = (event) => {
-    
-    const {value} = event.target
+
+    const { value } = event.target
     setInputs(value)
-    if (event.key === 'Enter'){
+    if (event.key === 'Enter') {
       clickEvent()
     }
   }
@@ -19,12 +19,19 @@ const SearchBar = () => {
   }
 
   return <>
-    <input
-      className="search-bar"
-      placeholder="검색고자하는 책제목을 입력하세요"
-      onKeyDown ={enterEvent}
-    />
-    <button onClick={clickEvent}>검색</button>
+    <div className="search-items">
+      <input
+        className="search-bar"
+        placeholder="Search ..."
+        onKeyDown={enterEvent}
+      />
+      <button
+        className="search-button"
+        onClick={clickEvent}
+        
+        >검색
+        </button>
+    </div>
   </>
 }
 export default SearchBar

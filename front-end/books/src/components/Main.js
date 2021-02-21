@@ -1,6 +1,8 @@
+import "./Main.css"
+
 const Main = () => {
 
-  return <div>
+  return <div className="main">
     hello world
   </div>
 }

@@ -3,9 +3,9 @@ import SearchBar from "./SearchBar"
 import "./Header.css"
 
 const Header = () => {
-  return <>
-    <img src={logo} className="logo" alt="logo" />
-    <SearchBar />
-  </>
+  return <div className="header">
+      <img src={logo} className="logo" alt="logo" />
+      <SearchBar />
+  </div>
 }
 export default Header;
