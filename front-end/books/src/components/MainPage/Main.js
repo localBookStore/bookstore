@@ -1,9 +1,10 @@
 import "./Main.css"
+import SlideItems from "./SlideItems"
 
 const Main = () => {
 
   return <div className="main">
-    hello world
+    <SlideItems />
   </div>
 }
 export default Main
