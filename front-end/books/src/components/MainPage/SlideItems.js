@@ -1,7 +1,7 @@
 import { Carousel } from "react-bootstrap"
 import "./SlideItems.css"
 const SlideItems = () => {
-  const arr = ["animals", "tech", "nature"]
+  const arr = ["tech", "nature", "animals"]
 
   return <Carousel className="carousel">
     {arr.map((value, idx) => {
