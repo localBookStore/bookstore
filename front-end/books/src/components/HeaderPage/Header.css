@@ -1,0 +1,14 @@
+.header{
+    position: relative;
+    width: 100%;
+    height: 210px;
+}
+
+.logo {
+    position: absolute;
+    left:100px;
+    top: 20px;
+    width:150px;
+    height: auto;
+    overflow: hidden;
+}
