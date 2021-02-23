@@ -8,6 +8,6 @@ const NextArrow = (props) => {
   return <button
     className="promotion-next-btn"
     onClick={onClick}
-  ><FontAwesomeIcon icon={faArrowCircleRight} /></button>
+  ><FontAwesomeIcon icon={faArrowCircleRight} style={{color:"rgb(43, 43, 48)"}}/></button>
 }
 export default NextArrow

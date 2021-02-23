@@ -8,6 +8,6 @@ const PrevArrow = (props) => {
   return <button
     className="promotion-prev-btn"
     onClick={onClick}
-  ><FontAwesomeIcon icon={faArrowCircleLeft} /></button>
+  ><FontAwesomeIcon icon={faArrowCircleLeft} style={{color:"rgb(43, 43, 48)"}} /></button>
 }
 export default PrevArrow;

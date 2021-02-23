@@ -5,7 +5,6 @@ import Footer from "./components/FooterPage/Footer"
 // import {Route, Switch, NavLink} from "react-router-dom"
 
 
-
 function App() {
   return <div className="app">
     <Header />

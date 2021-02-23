@@ -1,5 +1,12 @@
-.lines {
-    border: 0;
-    height: 1.8px;
-    background-color: rgba(129, 129, 129, 0.822);
+.main {
+  position: relative;
+  width: 100%;
+}
+
+hr.line {
+  position: relative;
+  margin-top: 40px;
+  border: 0 none;
+  height: 5px;
+  background-color: rgba(0, 0, 0, 0.13);
 }

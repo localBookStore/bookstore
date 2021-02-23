@@ -6,7 +6,7 @@ const Main = () => {
 
   return <div className="main">
     <SlideItems />
-    <hr className="lines" />
+    <hr className="line" />
     <PickItems />
   </div>
 }

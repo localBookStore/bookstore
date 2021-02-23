@@ -6,17 +6,26 @@ import "./SlideItems.css"
 const SlideItems = () => {
   const arr = ["tech", "nature", "animals"]
   const settings = {
+    // className: "center",
+    // centerPadding: "60px",
+    // centerMode: true,
+    fade:true,
+    pauseOnHover: true,
+    dots:true,
     autoplay: true,
     arrows: true,
     infinite: true,
     speed: 1000,
-    autoplaySpeed: 2200,
+    autoplaySpeed: 2500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    swipeToSlide:false,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />
   };
-  return <Slider {...settings} className="slider">
+
+  return <div> 
+  <Slider {...settings} className="slider">
         {arr.map((value, idx) => {
           return <div key={idx}>
           <img
@@ -26,6 +35,6 @@ const SlideItems = () => {
           />
           </div>
         })}
-    </Slider>
+    </Slider></div>
 }
 export default SlideItems;
