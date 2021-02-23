@@ -1,13 +1,19 @@
 .header{
     position: relative;
     width: 100%;
-    height: 210px;
+    height: 300px;
 }
 
-.logo {
+
+.logo-button {
     position: absolute;
     left:100px;
     top: 20px;
+    border: 0 none;
+    background-color: inherit;
+}
+
+.logo {
     width:150px;
     height: auto;
     overflow: hidden;

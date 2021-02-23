@@ -1,10 +1,12 @@
 .search-items {
-    position: absolute;
+    position: relative;
+    width: 0vw;
     top: 110px;
     left: 350px;
 }
 .search-bar {
-    border: 2px solid;
+    position:relative;
+    /* border: 2px solid; */
     background-color: whitesmoke;
     width:800px;
     height:50px;

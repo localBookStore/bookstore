@@ -22,7 +22,7 @@ const SearchBar = () => {
     <div className="search-items">
       <input
         className="search-bar"
-        placeholder="Search ..."
+        placeholder="Search..."
         onKeyDown={enterEvent}
       />
       <button
