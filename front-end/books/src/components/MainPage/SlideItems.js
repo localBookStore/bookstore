@@ -27,13 +27,13 @@ const SlideItems = () => {
   return <div> 
   <Slider {...settings} className="slider">
         {arr.map((value, idx) => {
-          return <div key={idx}>
+          return <button key={idx} className="slider-image">
           <img
             className="w-100"
             src={`https://placeimg.com/720/280/${value}`}
             alt="First slide"
           />
-          </div>
+          </button>
         })}
     </Slider></div>
 }
