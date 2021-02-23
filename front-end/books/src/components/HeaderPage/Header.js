@@ -1,12 +1,14 @@
-import logo from "../../icons/books.jpg"
+import logo from "../../icons/bookshop.svg"
 import SearchBar from "./SearchBar"
 import CategoryBar from "./CategoryBar"
 import "./Header.css"
 
 const Header = () => {
   return <div className="header">
-      <button className="logo-button"><img src={logo} className="logo" alt="logo" /></button>
-      <SearchBar />
+    <button className="logo-button">
+      <img src={logo} className="logo" alt="logo" />
+    </button>
+    <SearchBar />
     <div className="category"><CategoryBar /></div>
   </div>
 }
