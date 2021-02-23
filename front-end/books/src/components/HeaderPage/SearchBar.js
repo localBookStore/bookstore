@@ -28,7 +28,6 @@ const SearchBar = () => {
       <button
         className="search-button"
         onClick={clickEvent}
-        
         >검색
         </button>
     </div>

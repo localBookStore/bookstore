@@ -9,7 +9,7 @@ const Header = () => {
       <img src={logo} className="logo" alt="logo" />
     </button>
     <SearchBar />
-    <div className="category"><CategoryBar /></div>
+    <CategoryBar />
   </div>
 }
 export default Header;
