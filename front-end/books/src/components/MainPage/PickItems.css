@@ -1,0 +1,28 @@
+.pick-items{
+  position: relative;
+  margin: 0 auto;
+  width: 90%;
+}
+
+span.we-pick-title{
+  font-size: 2.5rem;
+  font-weight:900;
+  position:relative;
+  top: -10px;
+  margin-right:20px;
+}
+
+.each-image{
+  position: relative;
+  overflow: hidden;
+  max-height: 400px;
+}
+
+.random-pick-item {
+  border: 0 none;
+  background-color: transparent;
+}
+
+/* .pick-image{
+  width:233px;
+} */

@@ -12,6 +12,12 @@ npm start # react server 실행 (3000 포트)
 'react-router-dom' # Apply Domain Routing
 'axios' # Asynchronous Request
 'react-bootstrap' # Apply Carousel & modal
+'react-slick' # For a apply Multi Carousel (Like Netflix...)
+'slick-carousel' # react-slcik CSS
+'fontawesome 3 Pakage' # for react UI font
+    '@fortawesome/fontawesome-svg-core'
+    '@fortawesome/free-solid-svg-icons'
+    '@fortawesome/react-fontawesome'
 ```
 
 ### File Structure (In Progress...)

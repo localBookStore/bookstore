@@ -1,3 +1,12 @@
 .main {
-    /* position: relative; */
+  position: relative;
+  width: 100%;
+}
+
+hr.line {
+  position: relative;
+  margin-top: 40px;
+  border: 0 none;
+  height: 5px;
+  background-color: rgba(0, 0, 0, 0.13);
 }

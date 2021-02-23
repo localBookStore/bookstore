@@ -1,0 +1,11 @@
+button.promotion-next-btn {
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  right: -70px;
+  font-size: 50px;
+  height:90px;
+  background-color: transparent;
+  border: 0 none;
+}
