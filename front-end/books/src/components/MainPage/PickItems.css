@@ -1,4 +1,25 @@
-.pick-items {
-  /* position: relative; */
-  /* background-color: black; */
+.pick-items{
+  position: relative;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.random-pick-item {
+  position: relative;
+  margin: 0 auto;
+  max-height: 400px;
+  padding: 20px;
+  overflow: hidden;
+  cursor: pointer;
+}
+h2.we-pick-title{
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin:auto;
+}
+
+span.we-pick-title{
+  font-size: 2.5rem;
+  font-weight:900;
+  margin-right:20px;
 }
