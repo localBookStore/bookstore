@@ -1,11 +1,13 @@
 .category-container {
-  position: absolute;
+  position: relative;
   text-align: center;
+  height: 300px;
   padding: 0;
   width: 100%;
-  bottom: 40px;
+  top: 150px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  z-index: 6;
 }
 
 .category-item-button{
