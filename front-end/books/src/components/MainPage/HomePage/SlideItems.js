@@ -9,6 +9,7 @@ const SlideItems = () => {
   const history = useHistory();
 
   const GoItemDetail = (idx) => {
+    history.push('/detail')
   }
 
   const settings = {
