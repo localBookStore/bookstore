@@ -1,11 +1,12 @@
 import "./CategoryHoverDetail.css"
 
-const CategoryHoverDetail = ({page}) => {
-  return <>{page !== undefined ? 
+const CategoryHoverDetail = ({ page }) => {
+  return <>{page === null ?
+    <></> :
     <button className="hover-detail">
-    카테고리바 디테일 페이지
+      카테고리바 디테일 페이지
     {page}
-  </button> : <div>없음</div> 
+    </button>
   }
   </>
 }

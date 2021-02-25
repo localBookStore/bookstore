@@ -37,7 +37,8 @@ const PickItems = () => {
     slidesToShow: 4,
     slidesToScroll: 3,
     nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />
+    prevArrow: <PrevArrow />,
+    swipe:false,
   };
 
   return <div className="pick-items">

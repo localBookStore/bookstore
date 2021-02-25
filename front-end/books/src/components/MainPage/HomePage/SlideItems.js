@@ -1,3 +1,4 @@
+import { useHistory } from "react-router-dom"
 import Slider from "react-slick"
 import PrevArrow from "./CustomArrow/PrevArrow"
 import NextArrow from "./CustomArrow/NextArrow"
@@ -5,6 +6,11 @@ import "./SlideItems.css"
 
 const SlideItems = () => {
   const arr = ["tech", "nature", "animals"]
+  const history = useHistory();
+
+  const GoItemDetail = (idx) => {
+  }
+
   const settings = {
     // className: "center",
     // centerPadding: "60px",
@@ -27,7 +33,11 @@ const SlideItems = () => {
   return <div> 
   <Slider {...settings} className="slider">
         {arr.map((value, idx) => {
-          return <button key={idx} className="slider-image">
+          return <button 
+          key={idx} 
+          className="slider-image" 
+          onClick={() => {GoItemDetail(idx)}}
+          >
           <img
             className="w-100"
             src={`https://placeimg.com/720/280/${value}`}

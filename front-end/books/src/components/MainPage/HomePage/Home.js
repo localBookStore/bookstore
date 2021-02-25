@@ -1,7 +1,7 @@
 import SlideItems from "./SlideItems"
 import PickItems from "./PickItems"
 import MonthBooks from "./MonthBooks"
-import "./Main.css"
+import "./Home.css"
 
 const Main = () => {
 

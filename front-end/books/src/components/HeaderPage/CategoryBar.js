@@ -1,10 +1,12 @@
 import CategoryHoverDetail from "./CategoryHover/CategoryHoverDetail"
 import { useState } from "react"
+import { useHistory } from "react-router-dom"
 import "./CategoryBar.css"
 
 const CategoryBar = () => {
   const [isHover, setIsHover] = useState(false);
   const [HoverIdx, setHoverIdx] = useState(null);
+  const history = useHistory()
 
   const itemNames = ["국내작", "국외작", "베스트", "최신작", "커뮤니티"]
 
@@ -14,11 +16,16 @@ const CategoryBar = () => {
 
   const ShowOffHover = () => {
     setIsHover(false)
+    setHoverIdx(null)
   }
 
   const ShowHoverDetail = (page) => {
     setHoverIdx(page)
   }
+
+  // const GoCategoryDetailPage = (category) => {
+  //   history.push('/detail')
+  // }
 
   return <div
     className="category-container"
@@ -33,6 +40,7 @@ const CategoryBar = () => {
         <button
           className="category-item-button"
           onMouseEnter={() => ShowHoverDetail(idx)}
+          // onClick={() => GoCategoryDetailPage(idx)}
         >
           {itemName}
         </button>
