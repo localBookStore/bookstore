@@ -9,10 +9,12 @@ import { Route, Switch, Link } from "react-router-dom"
 function App() {
   return <div className="app">
     <Header />
+
     <Switch>
       <Route exact path="/" component={Home} />
       <Route path="/detail/" component={ItemDetail} />
     </Switch>
+      
     <Footer />
   </div>
 }
