@@ -14,6 +14,7 @@ import javax.persistence.*;
 @ToString
 @EqualsAndHashCode(of = "id")
 public class OrderItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
