@@ -1,6 +1,6 @@
 package com.webservice.bookstore.domain.entity.item;
 
-import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.domain.entity.category.Category;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"member",})
+@ToString
 @EqualsAndHashCode(of = "id")
 public class Item {
 
@@ -18,13 +18,11 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private String name;
-
-    //private List<ItemCategory> itemCategories;
 
     private String description;
 
