@@ -1,6 +1,7 @@
-package com.webservice.bookstore.domain.entity.order;
+package com.webservice.bookstore.domain.entity.orderItem;
 
 import com.webservice.bookstore.domain.entity.item.Item;
+import com.webservice.bookstore.domain.entity.order.Orders;
 import lombok.*;
 
 import javax.persistence.*;
