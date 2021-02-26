@@ -3,15 +3,16 @@ package com.webservice.bookstore.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"member","item"})
+@ToString
 @EqualsAndHashCode(of = "id")
-public class Cart {
+public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,13 +22,14 @@ public class Cart {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
+    private String name;
+
+    //private List<ItemCategory> itemCategories;
+
+    private String description;
 
     private Integer price;
 
     private Integer quantity;
-
 
 }
