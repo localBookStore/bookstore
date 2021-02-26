@@ -9,7 +9,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = {"member","role"})
 @EqualsAndHashCode(of = "id")
 public class MemberRole {
     @Id

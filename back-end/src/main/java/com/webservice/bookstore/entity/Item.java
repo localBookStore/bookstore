@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = {"member",})
 @EqualsAndHashCode(of = "id")
 public class Item {
 
