@@ -1,13 +1,13 @@
-package com.bookstore.webservice;
+package com.webservice.bookstore;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WebserviceApplication {
+public class BookstoreApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WebserviceApplication.class, args);
+        SpringApplication.run(BookstoreApplication.class, args);
     }
 
 }
