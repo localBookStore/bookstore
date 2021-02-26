@@ -1,4 +1,4 @@
-package com.webservice.bookstore.entity;
+package com.webservice.bookstore.domain.entity.member;
 
 import lombok.*;
 
