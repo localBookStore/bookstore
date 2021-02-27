@@ -34,4 +34,6 @@ public class Item {
 
     private String publisher;
 
+    private String author;
+
 }
