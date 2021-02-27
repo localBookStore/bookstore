@@ -33,5 +33,5 @@ public class Item {
     private String isbn;
 
     private String publisher;
-    
+
 }
