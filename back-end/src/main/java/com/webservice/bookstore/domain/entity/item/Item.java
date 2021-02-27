@@ -30,4 +30,8 @@ public class Item {
 
     private Integer quantity;
 
+    private String isbn;
+
+    private String publisher;
+    
 }
