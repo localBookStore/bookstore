@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.category;
 
+import com.webservice.bookstore.domain.entity.item.Item;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,16 +17,13 @@ import java.util.List;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+    @OneToMany(mappedBy = "category")
+    private List<Item> items = new ArrayList<>();
 
-    @OneToMany(mappedBy = "parent")
-    private List<Category> child = new ArrayList<>();
 
 }
