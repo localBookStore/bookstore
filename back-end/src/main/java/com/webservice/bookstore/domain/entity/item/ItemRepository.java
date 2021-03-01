@@ -1,4 +1,4 @@
-package com.webservice.bookstore.repository;
+package com.webservice.bookstore.domain.entity.item;
 
 import com.webservice.bookstore.domain.entity.item.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
