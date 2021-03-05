@@ -6,25 +6,23 @@ import { useState, useEffect } from "react"
 import axois from "axios"
 import Slider from "react-slick";
 import './PickItems.css'
+import axios from 'axios'
 
 const PickItems = () => {
-  const [images, setImages] = useState(null);
-  const PIXEL_API_KEY = process.env.REACT_APP_PIXEL_API_KEY
-  const URL = "https://api.pexels.com/v1/search"
+  const [images, setImages] = useState(false);
+  // const PIXEL_API_KEY = process.env.REACT_APP_PIXEL_API_KEY
+  // const URL = "https://api.pexels.com/v1/search"
 
   useEffect(() => {
     const getImage = async () => {
-      const { data: { photos } } = await axois.get(URL, {
-        params: {
-          query: "random",
-          per_page: 15,
-          page: 1
-        },
-        headers: {
-          Authorization: PIXEL_API_KEY,
-        }
-      })
-      setImages(photos)
+      await axios.get("http://localhost:8080/api/index/wepickitem/")
+        .then(res => {
+          const { data } = res
+          setImages(data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
     getImage()
   }, [])
@@ -37,7 +35,8 @@ const PickItems = () => {
     slidesToShow: 4,
     slidesToScroll: 3,
     nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />
+    prevArrow: <PrevArrow />,
+    swipe: false,
   };
 
   return <div className="pick-items">
@@ -45,7 +44,7 @@ const PickItems = () => {
     <FontAwesomeIcon icon={faHandPointDown} style={{ fontSize: "60px", color: "#CC87B1" }} />
 
     <Slider {...settings}>
-      {images !== null && images.map((res, idx) => {
+      {images && images.map((res, idx) => {
         const { src: { large } } = res
         return <div key={idx} className="each-image">
           <button className="random-pick-item" onClick={() => console.log(res)}>

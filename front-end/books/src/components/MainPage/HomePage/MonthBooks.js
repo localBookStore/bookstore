@@ -3,28 +3,25 @@ import { faHandPointDown } from '@fortawesome/free-solid-svg-icons'
 import NextArrow from "./CustomArrow/NextArrow"
 import PrevArrow from "./CustomArrow/PrevArrow"
 import { useState, useEffect } from "react"
-import axois from "axios"
+import axios from "axios"
 import Slider from "react-slick";
 import "./MonthBooks.css"
 
 const MonthBooks = () => {
   const [images, setImages] = useState(null);
-  const PIXEL_API_KEY = process.env.REACT_APP_PIXEL_API_KEY
-  const URL = "https://api.pexels.com/v1/search"
+  // const PIXEL_API_KEY = process.env.REACT_APP_PIXEL_API_KEY
+  // const URL = "https://api.pexels.com/v1/search"
 
   useEffect(() => {
     const getImage = async () => {
-      const { data: { photos } } = await axois.get(URL, {
-        params: {
-          query: "random",
-          per_page: 20,
-          page: 4
-        },
-        headers: {
-          Authorization: PIXEL_API_KEY,
-        }
-      })
-      setImages(photos)
+      await axios.get("http://localhost:8080/api/index/thismonth/")
+        .then(res => {
+          const {data} = res
+          setImages(data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
     getImage()
   }, [])
@@ -45,7 +42,7 @@ const MonthBooks = () => {
     <FontAwesomeIcon icon={faHandPointDown} style={{ fontSize: "60px", color: "#74ABE3" }} />
 
     <Slider {...settings}>
-      {images !== null && images.map((res, idx) => {
+      {images && images.map((res, idx) => {
         const { src: { large } } = res
         return <div key={idx} className="each-image">
           <button className="random-pick-item" onClick={() => console.log(res)}>

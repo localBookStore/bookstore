@@ -1,20 +1,23 @@
 .category-container {
-  position: absolute;
+  position: relative;
   text-align: center;
+  height: 200px;
   padding: 0;
   width: 100%;
-  bottom: 40px;
+  top: 150px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  z-index: 1;
 }
 
 .category-item-button{
-  background:#77BBD9;
+  background:#2383D9;
   color:#fff;
   border:0 none;
   position:relative;
-  height:40px;
+  height:50px;
   font-size:1.3em;
+  font-weight: bolder;
   padding:0 2em;
   transition:800ms ease all;
   outline:none;
@@ -23,7 +26,7 @@
 
 .category-item-button:hover {
   background:#fff;
-  color:#77BBD9;
+  color:#2383D9;
 }
 
 .category-item-button:before,
@@ -34,7 +37,7 @@
   right:0;
   height:2px;
   width:0;
-  background: #77BBD9;
+  background: #2383D9;
   transition:400ms ease all;
 }
 
