@@ -38,5 +38,5 @@ public interface ItemService {
         return item;
     }
 
-    List<Item> getRandomList(int cnt);
+    List<ItemDto> getRandomList(int cnt);
 }
