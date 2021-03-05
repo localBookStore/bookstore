@@ -17,3 +17,8 @@ sketch
 
 vscode
 --------------------------------------------------------------------
+.idea/
+.gradle/
+gradle/
+gradlew
+gradlew.bat

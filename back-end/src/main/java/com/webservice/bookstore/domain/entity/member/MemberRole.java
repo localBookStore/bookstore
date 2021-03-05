@@ -1,5 +1,6 @@
-package com.webservice.bookstore.entity;
+package com.webservice.bookstore.domain.entity.member;
 
+import com.webservice.bookstore.domain.entity.role.Role;
 import lombok.*;
 
 import javax.persistence.*;

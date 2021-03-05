@@ -1,4 +1,4 @@
-package com.webservice.bookstore.entity;
+package com.webservice.bookstore.domain.entity.role;
 
 public enum RoleEnum {
     ROLE_USER,

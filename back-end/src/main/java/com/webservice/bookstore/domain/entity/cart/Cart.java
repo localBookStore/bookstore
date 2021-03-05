@@ -1,18 +1,19 @@
-package com.webservice.bookstore.entity;
+package com.webservice.bookstore.domain.entity.cart;
 
+import com.webservice.bookstore.domain.entity.item.Item;
+import com.webservice.bookstore.domain.entity.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"member",})
+@ToString(exclude = {"member","item"})
 @EqualsAndHashCode(of = "id")
-public class Item {
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +23,13 @@ public class Item {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private String name;
-
-    //private List<ItemCategory> itemCategories;
-
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
 
     private Integer price;
 
     private Integer quantity;
+
 
 }
