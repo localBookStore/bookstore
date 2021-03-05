@@ -1,14 +1,12 @@
 package com.webservice.bookstore.web.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Getter
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
+@Data
+@ToString
 public class ItemDto {
 
     private Long id;
