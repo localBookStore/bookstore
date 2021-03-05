@@ -1,6 +1,5 @@
 package com.webservice.bookstore.web.controller;
 
-import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.service.ItemService;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/index")
 @Log4j2
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://locahost:3000"})
+@CrossOrigin(origins = {"http://localhost:3000"})
 public class ItemController{
 
     private final ItemService itemService;
