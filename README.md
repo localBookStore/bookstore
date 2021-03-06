@@ -29,10 +29,8 @@
 
 
 ## 5. API 설계도
-<br/>
-![API_structure](https://user-images.githubusercontent.com/59079426/110195944-7645c980-7e84-11eb-92b8-1f157feb55c6.jpg)
+![API_structure](https://user-images.githubusercontent.com/59079426/110195985-b2792a00-7e84-11eb-8140-3c96399a8fd6.jpg)
 
-<br/>
 
 
 ## 6. 프로토타입
