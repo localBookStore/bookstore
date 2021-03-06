@@ -30,7 +30,8 @@
 
 ## 5. API 설계도
 <br/>
-![API_structure](https://user-images.githubusercontent.com/59079426/110195897-dab45900-7e83-11eb-9989-cdb1e4ecfd9e.jpg)
+![API_structure](https://user-images.githubusercontent.com/59079426/110195944-7645c980-7e84-11eb-92b8-1f157feb55c6.jpg)
+
 <br/>
 
 
