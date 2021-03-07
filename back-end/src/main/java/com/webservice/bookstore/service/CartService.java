@@ -47,9 +47,8 @@ public class CartService {
 
         Item item = itemRepository.getOne(cartDto.getItem_id());
         cartDto.setPrice(item.getPrice());
-        System.out.println("cartDto : " + cartDto);
-        Cart cart = cartDto.toEntity();
 
+        Cart cart = cartDto.toEntity();
         Cart savedCart = cartRepository.save(cart);
 
         return CartDto.of(savedCart);
@@ -65,4 +64,14 @@ public class CartService {
 
         cartEntity.updateQuantity(quantity); // 장바구니 아이템 수량 업데이트 메소드 호출
     }
+
+    /*
+    장바구니 아이템 삭제 서비스 단계
+    select 데이터가 없으면 EmptyResultDataAccessException 예외 발생
+    */
+    @Transactional
+    public void deleteCartItem(Long id) throws EmptyResultDataAccessException {
+        cartRepository.deleteById(id);
+    }
+
 }

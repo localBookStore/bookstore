@@ -57,4 +57,15 @@ public class CartController {
 
         return new ResponseEntity("success", HttpStatus.OK);
     }
+
+    /*
+    장바구니 아이템 삭제 요청 핸들러
+    */
+    @DeleteMapping(value = "/cart/{cart_id}/")
+    public ResponseEntity  deleteCartItem(@PathVariable("cart_id") Long cart_id) {
+
+        cartService.deleteCartItem(cart_id);
+
+        return new ResponseEntity("success", HttpStatus.OK);
+    }
 }
