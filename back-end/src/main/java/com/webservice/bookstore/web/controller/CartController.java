@@ -45,4 +45,16 @@ public class CartController {
 
         return new ResponseEntity(resCartDto, HttpStatus.OK);
     }
+
+    /*
+    장바구니 아이템 수량 업데이트 요청 핸들러
+    */
+    @PatchMapping(value = "/cart/{cart_id}/")
+    public ResponseEntity updateCartItem(@PathVariable("cart_id") Long cart_id,
+                                         @RequestBody CartDto cartDto) {
+
+        cartService.updateQuantity(cart_id, cartDto.getQuantity());
+
+        return new ResponseEntity("success", HttpStatus.OK);
+    }
 }

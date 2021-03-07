@@ -8,6 +8,7 @@ import com.webservice.bookstore.web.dto.CartDto;
 import com.webservice.bookstore.web.dto.ItemDto;
 import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,5 +58,16 @@ public class CartService {
         Cart savedCart = cartRepository.save(cart);
 
         return CartDto.of(savedCart);
+    }
+
+    /*
+    장바구니 아이템 수량 업데이트 서비스 단계
+    */
+    @Transactional
+    public void updateQuantity(Long id, int quantity) {
+
+        Cart cartEntity = cartRepository.getOne(id);
+
+        cartEntity.updateQuantity(quantity); // 장바구니 아이템 수량 업데이트 메소드 호출
     }
 }

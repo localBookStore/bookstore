@@ -31,5 +31,9 @@ public class Cart {
 
     private Integer quantity;
 
+    // 장바구니 아이템 수량 업데이트 메소드 호출
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
 }
