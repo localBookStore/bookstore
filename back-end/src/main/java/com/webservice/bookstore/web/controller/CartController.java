@@ -2,13 +2,13 @@ package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.service.CartService;
 import com.webservice.bookstore.web.dto.CartDto;
+import com.webservice.bookstore.web.dto.ItemDto;
+import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +29,19 @@ public class CartController {
         List<CartDto> cartList = cartService.findByMemberId((long) 1);
 
         return new ResponseEntity<>(cartList, HttpStatus.OK);
+    }
+
+    /*
+    장바구니 아이템 추가 요청 핸들러
+    */
+    @PostMapping(value = "/cart/{item_id}")
+    public ResponseEntity<CartDto> addCartItem(@PathVariable("item_id") Long item_id,
+                                               @RequestBody CartDto cartDto) {
+        cartDto.setMember_id((long) 12);
+        cartDto.setItem_id(item_id);
+
+        CartDto resCartDto = cartService.addCartEntity(cartDto);
+
+        return new ResponseEntity(resCartDto, HttpStatus.OK);
     }
 }

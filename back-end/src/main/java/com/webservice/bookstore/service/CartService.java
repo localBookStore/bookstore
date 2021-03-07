@@ -2,13 +2,18 @@ package com.webservice.bookstore.service;
 
 import com.webservice.bookstore.domain.entity.cart.Cart;
 import com.webservice.bookstore.domain.entity.cart.CartRepository;
+import com.webservice.bookstore.domain.entity.item.Item;
+import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.web.dto.CartDto;
+import com.webservice.bookstore.web.dto.ItemDto;
+import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,6 +21,7 @@ import java.util.List;
 public class CartService {
 
     private final CartRepository cartRepository;
+    private final ItemRepository itemRepository;
 
     /*
     장바구니 목록 조회 서비스 단계
@@ -35,5 +41,21 @@ public class CartService {
             cartDtoList.add(cartDto);
         }
         return cartDtoList;
+    }
+
+    /*
+    장바구니 아이템 추가 요청 핸들러
+    */
+    @Transactional
+    public CartDto addCartEntity(CartDto cartDto) {
+
+        Item item = itemRepository.getOne(cartDto.getItem_id());
+        cartDto.setPrice(item.getPrice());
+        System.out.println("cartDto : " + cartDto);
+        Cart cart = cartDto.toEntity();
+
+        Cart savedCart = cartRepository.save(cart);
+
+        return CartDto.of(savedCart);
     }
 }
