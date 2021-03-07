@@ -28,17 +28,12 @@ public class CartService {
     장바구니 목록 조회 서비스 단계
     */
     public List<CartDto> findByMemberId(Long id) {
+
         List<Cart> cartEntityList = cartRepository.findByMemberId(id);
+
         List<CartDto> cartDtoList = new ArrayList<>();
         for(Cart cartEntity : cartEntityList) {
-            CartDto cartDto = CartDto.builder()
-                    .id(cartEntity.getId())
-                    .member_id(cartEntity.getMember().getId())
-                    .item_id(cartEntity.getItem().getId())
-                    .price(cartEntity.getPrice())
-                    .quantity(cartEntity.getQuantity())
-                    .build();
-
+            CartDto cartDto = CartDto.of(cartEntity);
             cartDtoList.add(cartDto);
         }
         return cartDtoList;

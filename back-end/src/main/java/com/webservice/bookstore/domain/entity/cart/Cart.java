@@ -6,6 +6,11 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/*
+재사용할 여러 엔티티 그룹을 정의
+*/
+@NamedEntityGraph(name = "Cart.member",
+        attributeNodes = @NamedAttributeNode("member"))
 @Entity
 @Builder
 @AllArgsConstructor
