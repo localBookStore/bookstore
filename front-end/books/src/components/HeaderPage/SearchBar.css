@@ -1,7 +1,7 @@
 .search-items {
   position: relative;
   width: 0vw;
-  top: 120px;
+  top: 80px;
   left: 318px;
 }
 .search-bar {
@@ -9,7 +9,7 @@
   border: 1.5px solid;
   background-color: whitesmoke;
   width: 680px;
-  height: 44px;
+  height: 70px;
   padding-left: 20px;
   font-weight: 500;
   border-radius: 5px 5px 5px 5px;
@@ -17,10 +17,10 @@
 .search-button {
   position: absolute;
   background-color: powderblue;
-  top: 4px;
+  top: 10px;
   left: 550px;
   width: 110px;
-  height: 35px;
+  height: 50px;
   margin: 0 10px;
   font-size: 18px;
   font-weight: 700;

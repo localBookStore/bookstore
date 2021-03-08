@@ -18,6 +18,8 @@ npm start # react server 실행 (3000 포트)
     '@fortawesome/fontawesome-svg-core'
     '@fortawesome/free-solid-svg-icons'
     '@fortawesome/react-fontawesome'
+'styled-components' # apply for CSS in js
+'poished' # interactive utill funcion
 ```
 
 ### File Structure (In Progress...)

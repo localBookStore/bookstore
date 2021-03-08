@@ -28,7 +28,12 @@
 <br/><br/>
 
 
-## 5. 프로토타입
+## 5. API 설계도
+![API_structure](https://user-images.githubusercontent.com/59079426/110195985-b2792a00-7e84-11eb-8140-3c96399a8fd6.jpg)
+
+<br/>
+
+## 6. 프로토타입
 <br/>
 
 > **카카오 오븐 사용 <br/>
