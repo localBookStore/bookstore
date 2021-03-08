@@ -9,6 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ItemSearch {
 
-    private String bookName;
+    private String name;
     private String author;
 }

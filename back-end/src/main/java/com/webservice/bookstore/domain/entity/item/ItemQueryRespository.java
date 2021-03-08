@@ -1,7 +1,6 @@
 package com.webservice.bookstore.domain.entity.item;
 
 import com.querydsl.core.QueryResults;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 import static com.webservice.bookstore.domain.entity.item.QItem.item;
 
@@ -25,7 +22,7 @@ public class ItemQueryRespository {
         QueryResults<Item> itemQueryResults = jpaQueryFactory
                 .select(item)
                 .from(item)
-                .where(eqBookName(itemSearch.getBookName()),
+                .where(eqBookName(itemSearch.getName()),
                         eqAuthor(itemSearch.getAuthor()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

@@ -1,0 +1,111 @@
+package com.webservice.bookstore.web.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webservice.bookstore.domain.entity.item.Item;
+import com.webservice.bookstore.domain.entity.item.ItemRepository;
+import com.webservice.bookstore.domain.entity.item.ItemSearch;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@SpringBootTest
+class ItemControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Test
+    @DisplayName("책 검색 테스트")
+    public void searchBooks() throws Exception {
+        //given
+        String bookName = "JPA ORM";
+        String author = "johangjin";
+        ItemSearch itemSearch = new ItemSearch(bookName, author);
+        Item item = Item.builder()
+                .name(bookName)
+                .author(author)
+                .category(null)
+                .price(10000)
+                .description("책")
+                .imageUrl(null)
+                .publisher("hangjin")
+                .isbn("123123")
+                .quantity(3)
+                .build();
+
+        Item item2 = Item.builder()
+                .name("")
+                .author("")
+                .category(null)
+                .price(10000)
+                .description("책")
+                .imageUrl(null)
+                .publisher("hangjin")
+                .isbn("123123")
+                .quantity(3)
+                .build();
+
+        itemRepository.saveAll(Arrays.asList(item, item2));
+
+//        IntStream.range(0,5).forEach(((Long) i -> generateItem((Long) i));
+
+
+        //when
+
+        //then
+        this.mockMvc
+                .perform(get("/api/items/")
+                        .accept(MediaTypes.HAL_JSON_VALUE)
+                        .param("page", "0")
+                        .param("size", "10")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(itemSearch))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("_embedded.itemList[0].name").exists())
+                .andExpect(jsonPath("page").exists())
+                .andExpect(jsonPath("_links.self").exists())
+        ;
+    }
+
+    private void generateItem(Long i) {
+        Item item = Item.builder()
+                .name("JPA BOOK " + i)
+                .description("책")
+                .quantity(3)
+                .price(3)
+                .isbn(null)
+                .imageUrl(null)
+                .category(null)
+                .author("아무개")
+                .build();
+        this.itemRepository.save(item);
+    }
+
+
+}
