@@ -15,6 +15,7 @@ const ItemDetail = () => {
 }
 export default ItemDetail;
 
+
 const DetailComponent = styled.div`
   position: relative;
   height: auto;

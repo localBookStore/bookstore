@@ -6,8 +6,9 @@
   width: 100%;
   top: 150px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   z-index: 1;
+  
 }
 
 .category-item-button{

@@ -8,7 +8,7 @@ const CategoryBar = () => {
   const [HoverIdx, setHoverIdx] = useState(null);
   const history = useHistory()
 
-  const itemNames = ["국내작", "국외작", "베스트", "최신작", "커뮤니티"]
+  const itemNames = ["장르별", "베스트", "최신작", "커뮤니티"]
 
   const ShowOnHover = () => {
     setIsHover(true)
