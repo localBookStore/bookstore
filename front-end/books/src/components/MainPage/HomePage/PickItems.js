@@ -10,8 +10,6 @@ import axios from 'axios'
 
 const PickItems = () => {
   const [images, setImages] = useState(false);
-  // const PIXEL_API_KEY = process.env.REACT_APP_PIXEL_API_KEY
-  // const URL = "https://api.pexels.com/v1/search"
 
   useEffect(() => {
     const getImage = async () => {
