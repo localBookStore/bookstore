@@ -7,7 +7,6 @@ const SearchBar = () => {
   const [tag, setTag] = useState("title");
   const history = useHistory();
 
-
   const enterEvent = (event) => {
     if (event.key === 'Enter') {
       clickEvent();
@@ -15,9 +14,13 @@ const SearchBar = () => {
   }
 
   const clickEvent = () => {
-    console.log(inputs)
+    history.push({
+      pathname:"/booklist",
+      search:`?${tag}=${inputs}`,
+      state:{inputs:inputs}
+    })
   }
-  // console.log(inputs)
+
   return <EntireBar>
     <SelectTag value={tag} onChange={event => setTag(event.target.value)}>
       <option value="title">제목</option>

@@ -1,10 +1,10 @@
-import qs from "qs";
+// import qs from "qs";
 
 const BookList = ({location}) => {
 
-  // console.log(location)
+  console.log(location)
   return <>
-    <div>책 리스트입니다!</div>
+    <div>검색어 : {location.state.inputs}</div>
   </>
 }
 export default BookList;
