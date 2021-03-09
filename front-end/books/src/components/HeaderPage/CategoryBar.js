@@ -1,12 +1,12 @@
 import CategoryHoverDetail from "./CategoryHover/CategoryHoverDetail";
 import { useState } from "react";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 const CategoryBar = () => {
   const [isHover, setIsHover] = useState(false);
   const [HoverIdx, setHoverIdx] = useState(null);
-  // const history = useHistory()
+  const history = useHistory()
 
   const itemNames = ["장르별", "베스트", "최신작"]
 
