@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useHistory, useEffect } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 
 const SearchBar = () => {
@@ -8,21 +8,23 @@ const SearchBar = () => {
   const history = useHistory();
 
   const enterEvent = (event) => {
-    if (event.key === 'Enter' && inputs) {
+    if (event.key === 'Enter') {
       clickEvent();
     }
   }
 
   const clickEvent = () => {
-    history.push({
-      pathname:"/booklist",
-      search:`?${tag}=${inputs}`,
-      state:{
-        inputs:inputs,
-        tag:tag,
-      }
-    })
-    return setInputs("")
+    if (inputs) {
+      history.push({
+        pathname: "/booklist",
+        search: `?${tag}=${inputs}`,
+        state: {
+          inputs: inputs,
+          tag: tag,
+        }
+      })
+      return setInputs("")
+    }
   }
 
   return <EntireBar>
@@ -33,7 +35,7 @@ const SearchBar = () => {
     <SearchInput
       value={inputs}
       placeholder="Search..."
-      onChange={(event) => {setInputs(event.target.value)}}
+      onChange={(event) => { setInputs(event.target.value) }}
       onKeyPress={enterEvent}
     />
     <SearchButton
