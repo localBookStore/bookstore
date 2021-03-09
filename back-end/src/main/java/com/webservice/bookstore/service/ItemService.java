@@ -39,4 +39,6 @@ public interface ItemService {
     }
 
     List<ItemDto> getRandomList(int cnt);
+
+    List<ItemDto> getRandomListByGenre(ItemDto itemDto);
 }

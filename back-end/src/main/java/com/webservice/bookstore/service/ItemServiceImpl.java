@@ -25,4 +25,17 @@ public class ItemServiceImpl implements ItemService{
         }
         return res;
     }
+
+    @Override
+    public List<ItemDto> getRandomListByGenre(ItemDto itemDto) {
+
+        List<Item> itemListByGenre = itemRepository.getRandomListByGenre(itemDto.getCategory_id());
+
+        List<ItemDto> res = new ArrayList<>();
+        for (Item item : itemListByGenre) {
+            res.add(entityToDto(item));
+        }
+
+        return res;
+    }
 }
