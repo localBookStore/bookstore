@@ -1,4 +1,3 @@
-// import "./SearchBar.css"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import styled from "styled-components"
@@ -8,27 +7,17 @@ const SearchBar = () => {
   const [tag, setTag] = useState("title");
   const history = useHistory();
 
-  const goListPage = () => {
-    history.push({
-      pathname: '/booklist',
-      search: `?name=${inputs}`,
-      state: { input: inputs }
-    })
-  }
 
   const enterEvent = (event) => {
-    console.log(event)
     if (event.key === 'Enter') {
-      setInputs(event.target.value)
-
-      goListPage()
+      clickEvent();
     }
   }
 
   const clickEvent = () => {
-    history.push("/booklist")
+    console.log(inputs)
   }
-
+  // console.log(inputs)
   return <EntireBar>
     <SelectTag value={tag} onChange={event => setTag(event.target.value)}>
       <option value="title">제목</option>
@@ -36,6 +25,7 @@ const SearchBar = () => {
     </SelectTag>
     <SearchInput
       placeholder="Search..."
+      onChange={(event) => {setInputs(event.target.value)}}
       onKeyPress={enterEvent}
     />
     <SearchButton
@@ -45,6 +35,7 @@ const SearchBar = () => {
   </EntireBar>
 }
 export default SearchBar
+
 
 const EntireBar = styled.div`
   position: relative;
