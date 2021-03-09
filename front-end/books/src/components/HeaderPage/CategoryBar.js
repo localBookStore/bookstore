@@ -5,10 +5,7 @@ import styled from "styled-components";
 
 const CategoryBar = () => {
   const [isHover, setIsHover] = useState(false);
-  const [HoverIdx, setHoverIdx] = useState(null);
   const history = useHistory()
-
-  const itemNames = ["장르별", "베스트", "최신작"]
 
   const ShowOnHover = () => {
     setIsHover(true)
@@ -16,27 +13,16 @@ const CategoryBar = () => {
 
   const ShowOffHover = () => {
     setIsHover(false)
-    setHoverIdx(null)
-  }
-
-  const ShowHoverDetail = (page) => {
-    setHoverIdx(page)
   }
 
   return <AllContainer
-    onMouseEnter={ShowOnHover}
     onMouseLeave={ShowOffHover}
   >
-    {itemNames.map((itemName, idx) => {
-      return <ItemButton
-        key={idx}
-        onMouseEnter={() => ShowHoverDetail(idx)}
-      >
-        {itemName}
-      </ItemButton>
-    })}
+    <ItemButton onMouseEnter={ShowOnHover}>장르별</ItemButton>
+    <ItemButton>베스트</ItemButton>
+    <ItemButton>최신작</ItemButton>
     <ItemButton>카테고리</ItemButton>
-    {isHover && <CategoryHoverDetail page={HoverIdx} />}
+    {isHover && <CategoryHoverDetail/>}
   </AllContainer>
 }
 export default CategoryBar;
@@ -45,7 +31,7 @@ export default CategoryBar;
 const AllContainer = styled.div`
   position: relative;
   text-align: center;
-  height: 200px;
+  height: 70px;
   padding: 0;
   width: 100%;
   top: 150px;
@@ -69,7 +55,7 @@ const ItemButton = styled.button`
   font-size:1.3em;
   font-weight: bolder;
   
-  transition:600ms ease all;
+  transition: all 600ms;
   
   &:hover {
     background:#AB4386;

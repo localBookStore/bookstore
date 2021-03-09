@@ -11,7 +11,6 @@ const Header = () => {
     history.push('/')
   }
 
-
   return <div className="header">
     <button 
     className="logo-button"

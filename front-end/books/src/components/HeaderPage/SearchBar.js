@@ -1,5 +1,8 @@
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearchPlus } from '@fortawesome/free-solid-svg-icons'
 import styled from "styled-components"
 
 const SearchBar = () => {
@@ -38,9 +41,8 @@ const SearchBar = () => {
       onChange={(event) => { setInputs(event.target.value) }}
       onKeyPress={enterEvent}
     />
-    <SearchButton
-      onClick={clickEvent}
-    >검색
+    <SearchButton onClick={clickEvent}>
+      <FontAwesomeIcon icon={faSearchPlus} style={{ fontSize: "33px", color: "#000" }}/>
     </SearchButton>
   </EntireBar>
 }
@@ -69,7 +71,7 @@ const SearchInput = styled.input`
 `
 const SearchButton = styled.button`
   position: absolute;
-  background-color: powderblue;
+  background-color: #E8D6A5;
   top: 10px;
   left: 680px;
   width: 110px;
@@ -77,7 +79,7 @@ const SearchButton = styled.button`
   margin: 0 10px;
   font-size: 18px;
   font-weight: 700;
-  border-radius: 40px 40px 40px 40px;
+  border-radius: 15px 15px 15px 15px;
 `
 const SelectTag = styled.select`
   position: absolute;

@@ -3,7 +3,6 @@ import { faHandPointDown } from '@fortawesome/free-solid-svg-icons'
 import NextArrow from "./CustomArrow/NextArrow"
 import PrevArrow from "./CustomArrow/PrevArrow"
 import { useState, useEffect } from "react"
-import axois from "axios"
 import Slider from "react-slick";
 import './PickItems.css'
 import axios from 'axios'
