@@ -85,6 +85,7 @@ class ItemControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("_embedded.itemList[0].name").exists())
+                .andExpect(jsonPath("_embedded.itemList[0].id").value(1))
                 .andExpect(jsonPath("page").exists())
                 .andExpect(jsonPath("_links.self").exists())
         ;
@@ -119,6 +120,7 @@ class ItemControllerTest {
         this.mockMvc.perform(get("/api/items/{id}", book.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("DATABASE BOOk"))
+                .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("author").value("아무개"))
                 .andExpect(jsonPath("_links.purchase-item").exists())
         ;
