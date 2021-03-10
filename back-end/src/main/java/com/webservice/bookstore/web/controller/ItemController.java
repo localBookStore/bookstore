@@ -39,6 +39,7 @@ public class ItemController {
 
     @GetMapping("{id}")
     public ResponseEntity getItem(@PathVariable Long id) {
+        this.itemService.improveViewCount(id);
         Item savedItem = itemService.findById(id);
         if(savedItem == null) {
             return ResponseEntity.notFound().build();

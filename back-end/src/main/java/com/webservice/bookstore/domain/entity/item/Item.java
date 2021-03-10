@@ -38,6 +38,6 @@ public class Item {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    private int viewCount;
+    private int viewCount = 0;
 
 }

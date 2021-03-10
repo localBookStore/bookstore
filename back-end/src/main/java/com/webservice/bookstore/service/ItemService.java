@@ -32,7 +32,7 @@ public class ItemService {
     }
 
     @Transactional
-    public void improveViewCount(int id) {
+    public void improveViewCount(Long id) {
         this.itemRepository.improveViewCount(id);
     }
 }
