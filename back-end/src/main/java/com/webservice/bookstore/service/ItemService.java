@@ -30,4 +30,9 @@ public class ItemService {
         Item savedItem = item.orElseGet(null);
         return savedItem;
     }
+
+    @Transactional
+    public void improveViewCount(int id) {
+        this.itemRepository.improveViewCount(id);
+    }
 }
