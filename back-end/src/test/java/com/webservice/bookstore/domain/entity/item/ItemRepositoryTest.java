@@ -7,8 +7,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemRepositoryTest {
 
     @Test
-    public void test() throws Exception {
+    public void 조회수_증가_테스트() throws Exception {
         //given
+
 
         //when
 

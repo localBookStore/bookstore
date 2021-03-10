@@ -147,6 +147,30 @@ class ItemControllerTest {
 
     }
 
+    @Test
+    public void 조회수_증가_테스트() throws Exception {
+        //given
+        Item book = Item.builder()
+                .name("DATABASE BOOk")
+                .author("아무개")
+                .category(null)
+                .imageUrl(null)
+                .isbn("12344")
+                .price(3)
+                .quantity(3)
+                .description("최고의 책")
+                .publisher("한빛미디어")
+                .build();
+
+        //when
+        Item savedItem = this.itemRepository.save(book);
+
+        //then
+        this.mockMvc.perform(get("/api/items/{id}",savedItem.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("viewCount").value(1));
+    }
+
 
 //    private void generateItem(Long i) {
 //        Item item = Item.builder()
