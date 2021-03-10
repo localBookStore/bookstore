@@ -95,6 +95,26 @@ class ItemControllerTest {
        책 검색 조회
     *  Not found Error 테스트 
     */
+    @Test
+    @DisplayName("검색바에서 조회시 없을때 404 응답 받기")
+    public void searchBooks_404() throws Exception {
+        //given
+        ItemSearch itemSearch = ItemSearch.builder()
+                .name("최고의 디비책")
+                .build();
+
+        //when
+
+        //then
+        this.mockMvc.perform(get("/api/items/")
+                .param("page","0")
+                .param("size","10")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(itemSearch))
+        )
+                .andExpect(status().isNotFound());
+    }
+
 
     @Test
     @DisplayName("기존의 책 하나 조회하기")

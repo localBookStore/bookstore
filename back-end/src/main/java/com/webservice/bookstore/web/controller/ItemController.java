@@ -30,7 +30,6 @@ public class ItemController {
     @GetMapping
     public ResponseEntity getSearchItems(@RequestBody ItemSearch itemSearch, Pageable pageable, PagedResourcesAssembler<Item> assembler) {
         Page<Item> items = this.itemService.searchBooks(itemSearch, pageable);
-        System.out.println(items);
         if(items == null || items.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

@@ -1,12 +1,12 @@
 package com.webservice.bookstore.domain.entity.item;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ItemSearch {
 
     private String name;
