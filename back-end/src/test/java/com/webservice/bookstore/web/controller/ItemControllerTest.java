@@ -71,9 +71,6 @@ class ItemControllerTest {
 
         itemRepository.saveAll(Arrays.asList(item, item2));
 
-//        IntStream.range(0,5).forEach(((Long) i -> generateItem((Long) i));
-
-
         //when
 
         //then
@@ -92,20 +89,56 @@ class ItemControllerTest {
                 .andExpect(jsonPath("_links.self").exists())
         ;
     }
+    
+    /*
+       책 검색 조회
+    *  Not found Error 테스트 
+    */
 
-    private void generateItem(Long i) {
-        Item item = Item.builder()
-                .name("JPA BOOK " + i)
-                .description("책")
-                .quantity(3)
-                .price(3)
-                .isbn(null)
-                .imageUrl(null)
-                .category(null)
+    @Test
+    @DisplayName("기존의 책 하나 조회하기")
+    public void getItem() throws Exception {
+        //given
+        Item book = Item.builder()
+                .name("DATABASE BOOk")
                 .author("아무개")
+                .category(null)
+                .imageUrl(null)
+                .isbn("12344")
+                .price(3)
+                .quantity(3)
+                .description("최고의 책")
+                .publisher("한빛미디어")
                 .build();
-        this.itemRepository.save(item);
+
+
+        //when
+        this.itemRepository.save(book);
+
+        //then
+        this.mockMvc.perform(get("/api/items/{id}", book.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value("DATABASE BOOk"))
+                .andExpect(jsonPath("author").value("아무개"))
+                .andExpect(jsonPath("_links.purchase-item").exists())
+        ;
+
     }
+
+
+//    private void generateItem(Long i) {
+//        Item item = Item.builder()
+//                .name("JPA BOOK " + i)
+//                .description("책")
+//                .quantity(3)
+//                .price(3)
+//                .isbn(null)
+//                .imageUrl(null)
+//                .category(null)
+//                .author("아무개")
+//                .build();
+//        this.itemRepository.save(item);
+//    }
 
 
 }
