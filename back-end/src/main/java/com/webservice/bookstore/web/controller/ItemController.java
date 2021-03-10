@@ -16,6 +16,8 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @Log4j2
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"http:localhost:3000"})
@@ -34,5 +36,16 @@ public class ItemController {
         }
         PagedModel<ItemResource> itemResources = assembler.toModel(items, item -> new ItemResource(item));
         return ResponseEntity.ok(itemResources);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity getItem(@PathVariable Long id) {
+        Item savedItem = itemService.findById(id);
+        if(savedItem == null) {
+            return ResponseEntity.notFound().build();
+        }
+        ItemResource itemResource = new ItemResource(savedItem);
+        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
+        return ResponseEntity.ok(itemResource);
     }
 }
