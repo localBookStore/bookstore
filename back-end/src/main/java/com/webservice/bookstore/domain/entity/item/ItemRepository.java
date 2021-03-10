@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item,Long> {
 
@@ -13,5 +14,8 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     @Modifying(clearAutomatically = true)
     @Query("update Item i set i.viewCount = i.viewCount + 1 where i.id = :id")
     int improveViewCount(@Param("id") Long id);
+
+    @Query("select i from Item i order by i.viewCount desc")
+    List<Item> bestItems();
 
 }
