@@ -1,9 +1,11 @@
 package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.domain.entity.item.Item;
+import com.webservice.bookstore.domain.entity.item.ItemLinkResource;
 import com.webservice.bookstore.domain.entity.item.ItemResource;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
 import com.webservice.bookstore.service.ItemService;
+import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -30,17 +33,19 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity getSearchItems(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "author", required = false) String author, Pageable pageable, PagedResourcesAssembler<Item> assembler) {
+    public ResponseEntity getSearchItems(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "author", required = false) String author) {
         ItemSearch itemSearch = ItemSearch.builder()
                 .name(name)
                 .author(author)
                 .build();
-        Page<Item> items = this.itemService.searchBooks(itemSearch, pageable);
+        List<Item> items = this.itemService.searchBooks(itemSearch);
         if(items == null || items.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        PagedModel<ItemResource> itemResources = assembler.toModel(items, item -> new ItemResource(item));
-        return ResponseEntity.ok(itemResources);
+        List<ItemDto> collect = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
+        List<ItemLinkResource> itemLinkResources = collect.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
+        CollectionModel<ItemLinkResource> result = CollectionModel.of(itemLinkResources);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("{id}")

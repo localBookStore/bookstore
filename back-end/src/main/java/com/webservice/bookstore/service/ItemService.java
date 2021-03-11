@@ -22,8 +22,8 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
 
-    public Page<Item> searchBooks(ItemSearch itemSearch, Pageable pageable) {
-        return itemQueryRespository.findDynamicBooks(itemSearch, pageable);
+    public List<Item> searchBooks(ItemSearch itemSearch) {
+        return itemQueryRespository.findDynamicBooks(itemSearch);
     }
 
     public Item findById(Long id) {

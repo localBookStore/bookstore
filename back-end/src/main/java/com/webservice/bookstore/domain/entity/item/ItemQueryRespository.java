@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.webservice.bookstore.domain.entity.item.QItem.item;
 
 @RequiredArgsConstructor
@@ -18,16 +20,14 @@ public class ItemQueryRespository {
     private final JPAQueryFactory jpaQueryFactory;
 
 
-    public Page<Item> findDynamicBooks(ItemSearch itemSearch, Pageable pageable) {
-        QueryResults<Item> itemQueryResults = jpaQueryFactory
+    public List<Item> findDynamicBooks(ItemSearch itemSearch) {
+        List<Item> items = jpaQueryFactory
                 .select(item)
                 .from(item)
                 .where(nameLike(itemSearch.getName()),
                         authorLike(itemSearch.getAuthor()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchResults();
-        return new PageImpl<>(itemQueryResults.getResults(), pageable , itemQueryResults.getTotal());
+                .fetch();
+        return items;
 
     }
 
