@@ -3,6 +3,9 @@ package com.webservice.bookstore.service;
 import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.web.dto.ItemDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
 
 import java.util.List;
 
@@ -39,4 +42,8 @@ public interface ItemService {
     }
 
     List<ItemDto> getRandomList(int cnt);
+
+    List<ItemDto> getRandomListByGenre(ItemDto itemDto);
+
+    List<ItemDto> getListByGenre(Long category_id);
 }
