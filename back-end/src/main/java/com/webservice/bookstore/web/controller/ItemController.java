@@ -1,9 +1,6 @@
 package com.webservice.bookstore.web.controller;
 
-import com.webservice.bookstore.domain.entity.item.Item;
-import com.webservice.bookstore.domain.entity.item.ItemLinkResource;
-import com.webservice.bookstore.domain.entity.item.ItemResource;
-import com.webservice.bookstore.domain.entity.item.ItemSearch;
+import com.webservice.bookstore.domain.entity.item.*;
 import com.webservice.bookstore.service.ItemService;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
