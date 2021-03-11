@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@NamedEntityGraph(name = "Item.category",
+        attributeNodes = @NamedAttributeNode("category"))
 @Entity
 @Builder
 @AllArgsConstructor
