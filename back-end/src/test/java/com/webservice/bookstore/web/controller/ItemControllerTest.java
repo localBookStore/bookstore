@@ -124,10 +124,9 @@ class ItemControllerTest {
 
         //then
         this.mockMvc.perform(get("/api/items/")
-                .param("page","0")
-                .param("size","10")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(itemSearch))
+                .accept(MediaTypes.HAL_JSON_VALUE)
+                .param("tag", "name")
+                .param("input", "ORM")
         )
                 .andExpect(status().isNotFound());
     }
@@ -137,10 +136,16 @@ class ItemControllerTest {
     @DisplayName("기존의 책 하나 조회하기")
     public void getItem() throws Exception {
         //given
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
+
         Item book = Item.builder()
                 .name("DATABASE BOOk")
                 .author("아무개")
-                .category(null)
+                .category(category)
                 .imageUrl(null)
                 .isbn("12344")
                 .price(3)
@@ -155,11 +160,13 @@ class ItemControllerTest {
 
         //then
         this.mockMvc.perform(get("/api/items/{id}", book.getId()))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("DATABASE BOOk"))
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("author").value("아무개"))
-                .andExpect(jsonPath("_links.purchase-item").exists())
+                .andExpect(jsonPath("_links.self").exists())
+//                .andExpect(jsonPath("_links.purchase-item").exists())
         ;
 
     }

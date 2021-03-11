@@ -8,6 +8,7 @@ import com.webservice.bookstore.service.ItemService;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class ItemController {
 
     private final ItemService itemService;
+
+    private final ModelMapper modelMapper;
 
     @GetMapping
     public ResponseEntity getSearchItems(@RequestParam(value = "tag") String tag, @RequestParam(value = "input") String input) {
@@ -55,7 +58,8 @@ public class ItemController {
         if(savedItem == null) {
             return ResponseEntity.notFound().build();
         }
-        ItemDto itemDto = ItemDto.of(savedItem);
+        ItemDto itemDto = modelMapper.map(savedItem, ItemDto.class);
+//        ItemDto itemDto = ItemDto.of(savedItem);
         ItemLinkResource itemResource = new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel());
 //        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
         return ResponseEntity.ok(itemResource);
