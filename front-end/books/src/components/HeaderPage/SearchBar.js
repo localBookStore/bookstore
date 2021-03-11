@@ -1,44 +1,70 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useHistory } from "react-router-dom"
+import axios from "axios"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearchPlus } from '@fortawesome/free-solid-svg-icons'
 import styled from "styled-components"
 
 const SearchBar = () => {
-  const [inputs, setInputs] = useState("");
-  const [tag, setTag] = useState("title");
+  const [input, setInput] = useState("");
+  const [tag, setTag] = useState("name");
+  const [books, setBooks] = useState(null);
+  const [isSearch, setIsSearch] = useState(false);
   const history = useHistory();
+
+  useEffect(() => {
+    const getBooklist = async () => {
+      await axios.get("http://localhost:8080/api/items/", {
+        params: {
+          input,
+          tag,
+        }
+      })
+        .then(res => {
+          console.log(res.data._embedded.itemDtoList)
+          setBooks(res.data._embedded.itemDtoList)
+        })
+        .catch(err => {
+          console.log(err.response)
+          setBooks(null)
+        })
+    }
+    if (isSearch){
+      getBooklist()
+      history.push({
+        pathname:"/booklist",
+        search:`${tag}=${input}`,
+        state:{
+          input,
+          tag,
+          books
+        }
+      })
+    }
+    return setIsSearch(false)
+  }, [isSearch])
 
   const enterEvent = (event) => {
     if (event.key === 'Enter') {
       clickEvent();
     }
   }
-
   const clickEvent = () => {
-    if (inputs) {
-      history.push({
-        pathname: "/booklist",
-        search: `?${tag}=${inputs}`,
-        state: {
-          inputs: inputs,
-          tag: tag,
-        }
-      })
-      return setInputs("")
+    if (input) {
+      setIsSearch(true)
     }
   }
 
   return <EntireBar>
     <SelectTag value={tag} onChange={event => setTag(event.target.value)}>
-      <option value="title">제목</option>
+      <option value="name">제목</option>
       <option value="author">저자</option>
     </SelectTag>
     <SearchInput
-      value={inputs}
+      value={input}
       placeholder="Search..."
-      onChange={(event) => { setInputs(event.target.value) }}
+      onChange={(event) => { setInput(event.target.value) }}
       onKeyPress={enterEvent}
     />
     <SearchButton onClick={clickEvent}>
