@@ -1,18 +1,21 @@
 package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.domain.entity.item.ItemLinkResource;
-import com.webservice.bookstore.service.ItemService;
 import com.webservice.bookstore.service.ItemServices;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -53,14 +56,27 @@ public class IndexController {
     }
 
     /*
-    hover 시 각 장르별 item 정보 3개 랜덤 조회 요청
+    hover 시 각 장르별 item 정보 3개씩 랜덤 조회 요청
     */
     @GetMapping(value = "/genre/")
-    public ResponseEntity<List<ItemDto>> getRandomListByGenre(@RequestBody ItemDto itemDto) {
+    public ResponseEntity getRandomListByGenre() {
 
-        List<ItemDto> itemDtoList = itemService.getRandomListByGenre(itemDto);
+        List<ItemDto> itemDtoList = itemService.getRandomListByGenre();
 
-        return new ResponseEntity<>(itemDtoList, HttpStatus.OK);
+        List<ItemLinkResource> emList = itemDtoList.stream()
+                .map(itemDto -> new ItemLinkResource(itemDto,
+                        linkTo(methodOn(IndexController.class).getListByGenre(itemDto.getId())).withSelfRel()))
+                .collect(Collectors.toList());
+
+        // 카테고리 번호별로 분류한 json 구조로 직렬화(selialize)
+        Map<String, List<ItemLinkResource>> first = new HashMap<>();
+        for(int i = 0; i < itemDtoList.size(); i+=3) {
+            first.put(String.valueOf(i/3), new ArrayList<>(emList.subList(i, Math.min(i+3, emList.size()))));
+        }
+
+        RepresentationModel<?> model = CollectionModel.of(first);
+
+        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     /*
