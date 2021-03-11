@@ -2,6 +2,7 @@ package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.domain.entity.item.ItemLinkResource;
 import com.webservice.bookstore.service.ItemService;
+import com.webservice.bookstore.service.ItemServices;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,7 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @CrossOrigin(origins = {"http://localhost:3000"})
 public class IndexController {
 
-    private final ItemService itemService;
+    private final ItemServices itemService;
 
     @GetMapping("/index/image/")
     public ResponseEntity<List<ItemDto>> getPromotionalImage() {
