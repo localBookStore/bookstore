@@ -49,7 +49,6 @@ public class IndexController {
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
-    @GetMapping("/index/wepickitem/")
     public ResponseEntity<List<ItemDto>> getWePickItem(){
         log.info("우리의 PICK 보내기");
         return new ResponseEntity<>(itemService.getRandomList(12) ,HttpStatus.OK);
@@ -58,19 +57,19 @@ public class IndexController {
     /*
     hover 시 각 장르별 item 정보 3개씩 랜덤 조회 요청
     */
-    @GetMapping(value = "/genre/")
+    @GetMapping(value = "/genre/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
     public ResponseEntity getRandomListByGenre() {
 
         List<ItemDto> itemDtoList = itemService.getRandomListByGenre();
 
         List<ItemLinkResource> emList = itemDtoList.stream()
                 .map(itemDto -> new ItemLinkResource(itemDto,
-                        linkTo(methodOn(IndexController.class).getListByGenre(itemDto.getId())).withSelfRel()))
+                        linkTo(methodOn(ItemController.class).getItem(itemDto.getId())).withSelfRel()))
                 .collect(Collectors.toList());
 
         // 카테고리 번호별로 분류한 json 구조로 직렬화(selialize)
         Map<String, List<ItemLinkResource>> first = new HashMap<>();
-        for(int i = 0; i < itemDtoList.size(); i+=3) {
+        for(int i = 0; i < emList.size(); i+=3) {
             first.put(String.valueOf(i/3), new ArrayList<>(emList.subList(i, Math.min(i+3, emList.size()))));
         }
 
