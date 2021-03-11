@@ -68,8 +68,10 @@ public class ItemController {
     @GetMapping("/bestitems/")
     public ResponseEntity bestItems() {
         List<Item> items = this.itemService.bestItems();
-        List<ItemResource> itemResources = items.stream().map(item -> new ItemResource(item)).collect(Collectors.toList());
-        CollectionModel<ItemResource> collectionModel = CollectionModel.of(itemResources);
+        List<ItemDto> itemDtos = items.stream().map(item -> modelMapper.map(item, ItemDto.class)).collect(Collectors.toList());
+        List<ItemLinkResource> itemLinkResources = itemDtos.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel()))
+                .collect(Collectors.toList());
+        CollectionModel<ItemLinkResource> collectionModel = CollectionModel.of(itemLinkResources);
         return ResponseEntity.ok(collectionModel);
     }
 

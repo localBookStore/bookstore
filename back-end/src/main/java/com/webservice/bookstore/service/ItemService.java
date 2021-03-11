@@ -37,7 +37,6 @@ public class ItemService {
         this.itemRepository.improveViewCount(id);
     }
 
-    @Transactional(readOnly = true)
     public List<Item> bestItems() {
         return this.itemRepository.bestItems();
     }

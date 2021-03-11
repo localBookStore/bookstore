@@ -6,6 +6,7 @@ import com.webservice.bookstore.domain.entity.category.CategoryRepository;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
+import com.webservice.bookstore.service.ItemService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,9 @@ class ItemControllerTest {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    ItemService itemService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -172,6 +176,7 @@ class ItemControllerTest {
     }
 
     @Test
+    @DisplayName("책 상세 페이지 시 조회수 상승 검사")
     public void 조회수_증가_테스트() throws Exception {
         //given
         Item book = Item.builder()
@@ -200,24 +205,36 @@ class ItemControllerTest {
     @DisplayName("best 카테고리 정상적인 조회")
     public void bestItems() throws Exception {
         //given
-        IntStream.rangeClosed(1,10).forEach(this::saveItem);
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
 
         //when
-        List<Item> items = this.itemRepository.bestItems();
+        IntStream.rangeClosed(1,10).forEach(i -> saveItem(i,category));
 
         //then
+        this.mockMvc.perform(get("/api/items/bestitems/"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("_embedded.itemDtoList[0]._links.self").exists())
+                .andExpect(jsonPath("_embedded.itemDtoList[0].quantity").value(10))
+                ;
+
     }
 
-    private void saveItem(int i) {
+    private void saveItem(int i,Category category) {
+
         Item item = Item.builder()
                 .name("DATABASE BOOk")
                 .author("아무개")
-                .category(null)
+                .category(category)
                 .imageUrl(null)
                 .isbn("12344")
                 .price(3)
                 .viewCount(i)
-                .quantity(3)
+                .quantity(i)
                 .description("최고의 책")
                 .publisher("한빛미디어")
                 .build();
