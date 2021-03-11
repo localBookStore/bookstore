@@ -48,11 +48,14 @@ class ItemControllerTest {
     @DisplayName("책 검색 테스트")
     public void searchBooks() throws Exception {
         //given
-        String bookName = "JPA ORM";
-        String author = "johangjin";
-        ItemSearch itemSearch = new ItemSearch(bookName, author);
+        String name = "JPA ORM";
+        String author = "hangjin";
+        ItemSearch itemSearch = ItemSearch.builder()
+                .name("ORM")
+                .build();
+
         Item item = Item.builder()
-                .name(bookName)
+                .name(name)
                 .author(author)
                 .category(null)
                 .price(10000)
@@ -85,6 +88,7 @@ class ItemControllerTest {
                         .accept(MediaTypes.HAL_JSON_VALUE)
                         .param("page", "0")
                         .param("size", "10")
+//                        .param("name", "JPA ORM")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(itemSearch))
                 )
