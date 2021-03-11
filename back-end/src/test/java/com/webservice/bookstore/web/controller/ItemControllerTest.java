@@ -183,13 +183,53 @@ class ItemControllerTest {
     }
 
     @Test
-    @DisplayName("책 상세 페이지 시 조회수 상승 검사")
-    public void 조회수_증가_테스트() throws Exception {
+    @DisplayName("조회한 책이 없을 경우 Not Found 응답")
+    public void getItems_404() throws Exception {
+        //given
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
+
         //given
         Item book = Item.builder()
                 .name("DATABASE BOOk")
                 .author("아무개")
-                .category(null)
+                .category(category)
+                .imageUrl(null)
+                .isbn("12344")
+                .price(3)
+                .quantity(3)
+                .description("최고의 책")
+                .publisher("한빛미디어")
+                .build();
+
+        //when
+        Item savedItem = this.itemRepository.save(book);
+
+        //then
+        this.mockMvc.perform(get("/api/items/{id}", 123))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+        ;
+    }
+
+
+    @Test
+    @DisplayName("책 상세 페이지 시 조회수 상승 검사")
+    public void 조회수_증가_테스트() throws Exception {
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
+
+        //given
+        Item book = Item.builder()
+                .name("DATABASE BOOk")
+                .author("아무개")
+                .category(category)
                 .imageUrl(null)
                 .isbn("12344")
                 .price(3)

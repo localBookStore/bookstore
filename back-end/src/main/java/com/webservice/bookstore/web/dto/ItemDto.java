@@ -33,7 +33,7 @@ public class ItemDto {
 
     private String imageUrl;
 
-    @JsonIgnore
+//    @JsonIgnore
     private int viewCount;
 
     // Entity -> DTO

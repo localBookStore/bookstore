@@ -51,11 +51,11 @@ public class ItemController {
 
     @GetMapping("{id}")
     public ResponseEntity getItem(@PathVariable Long id) {
+        this.itemService.improveViewCount(id);
         Optional<Item> savedItem = itemService.findById(id);
         if(savedItem == null || savedItem.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        this.itemService.improveViewCount(id);
         Item newItem = savedItem.get();
         ItemDto itemDto = modelMapper.map(newItem, ItemDto.class);
         itemDto.setCategory_id(newItem.getCategory().getId());
