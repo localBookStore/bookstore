@@ -40,6 +40,7 @@ public class Item {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Builder.Default
     private int viewCount = 0;
 
 }
