@@ -1,9 +1,29 @@
-import styled, {keyframes} from "styled-components"
+import styled, { keyframes } from "styled-components"
+import { useState, useEffect } from "react"
+import axios from "axios"
+
 
 const CategoryHoverDetail = () => {
+  const [genreData, setGenreData] = useState([])
+
+  useEffect(() => {
+    const getGenreBooks = async () => {
+      await axios.get("http://localhost:8080/api/genre/", {
+        body:{
+        category_id: 2
+      }
+    })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => console.log(err.response))
+    }
+    getGenreBooks()
+  }, [])
+
   return <HoverComponent>
 
-    </HoverComponent>
+  </HoverComponent>
 }
 export default CategoryHoverDetail;
 
@@ -31,3 +51,4 @@ const HoverComponent = styled.div`
   animation-timing-function: ease-out;
   animation-name: ${slideUp};
 `
+

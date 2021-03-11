@@ -21,7 +21,7 @@ const CategoryBar = () => {
     <ItemButton onMouseEnter={ShowOnHover}>장르별</ItemButton>
     <ItemButton>베스트</ItemButton>
     <ItemButton>최신작</ItemButton>
-    <ItemButton>카테고리</ItemButton>
+    <ItemButton>커뮤니티</ItemButton>
     {isHover && <CategoryHoverDetail/>}
   </AllContainer>
 }
