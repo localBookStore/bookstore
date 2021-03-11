@@ -45,6 +45,7 @@ public class InsertItem {
                     .quantity(qunatity.intValue())
                     .imageUrl(imageUrl)
                     .category(newCategory)
+                    .publicationDate(randLocalDate())
                     .build();
             itemRepository.save(item);
 
@@ -64,7 +65,7 @@ public class InsertItem {
 
 
     private LocalDate randLocalDate() {
-        long minDay = LocalDate.of(2020, 1, 1).toEpochDay();
+        long minDay = LocalDate.of(2011, 1, 1).toEpochDay();
         long maxDay = LocalDate.of(2021, 3, 1).toEpochDay();
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
         LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
