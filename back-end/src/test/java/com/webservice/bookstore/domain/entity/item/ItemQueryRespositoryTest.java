@@ -55,17 +55,12 @@ class ItemQueryRespositoryTest {
         itemRepository.saveAll(Arrays.asList(item, item2));
 
         //when
-        PageRequest pageRequest = PageRequest.of(0,5);
-        Page<Item> items =  this.itemQueryRespository.findDynamicBooks(new ItemSearch(bookName, author), pageRequest);
-        List<Item> content = items.getContent();
+        List<Item> items = this.itemQueryRespository.findDynamicBooks(new ItemSearch(bookName, author));
 
         //then
         items.forEach(i -> System.out.println("item: "+ i));
-        assertThat(items.getSize()).isEqualTo(5);
-        assertThat(items.getTotalPages()).isEqualTo(1);
-        assertThat(content.size()).isEqualTo(1);
-        assertThat(content.get(0).getAuthor()).isEqualTo(author);
-        assertThat(content.get(0).getName()).isEqualTo(bookName);
+        assertThat(items.get(0).getAuthor()).isEqualTo(author);
+        assertThat(items.get(0).getName()).isEqualTo(bookName);
     }
 
 
