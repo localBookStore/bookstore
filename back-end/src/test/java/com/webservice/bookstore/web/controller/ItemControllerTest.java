@@ -2,6 +2,7 @@ package com.webservice.bookstore.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webservice.bookstore.domain.entity.category.Category;
+import com.webservice.bookstore.domain.entity.category.CategoryRepository;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
@@ -40,6 +41,9 @@ class ItemControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    CategoryRepository categoryRepository;
+
     @BeforeEach
     void setUp() {
         this.itemRepository.deleteAll();
@@ -50,9 +54,10 @@ class ItemControllerTest {
     public void searchBooks() throws Exception {
         //given
         Category category = Category.builder()
-                .id(1L)
+                .id(10L)
+                .name("총류")
                 .build();
-
+        categoryRepository.save(category);
 
         String name = "JPA ORM";
         String author = "hangjin";
@@ -92,7 +97,8 @@ class ItemControllerTest {
         this.mockMvc
                 .perform(get("/api/items/")
                         .accept(MediaTypes.HAL_JSON_VALUE)
-                        .param("name", "ORM")
+                        .param("tag", "name")
+                        .param("input", "ORM")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

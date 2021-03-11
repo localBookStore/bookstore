@@ -52,6 +52,7 @@ public class ItemController {
         return ResponseEntity.ok(result);
     }
 
+
     @GetMapping("{id}")
     public ResponseEntity getItem(@PathVariable Long id) {
         this.itemService.improveViewCount(id);
@@ -59,8 +60,9 @@ public class ItemController {
         if(savedItem == null) {
             return ResponseEntity.notFound().build();
         }
-        ItemResource itemResource = new ItemResource(savedItem);
-        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
+        ItemDto itemDto = ItemDto.of(savedItem);
+        ItemLinkResource itemResource = new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel());
+//        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
         return ResponseEntity.ok(itemResource);
     }
 
