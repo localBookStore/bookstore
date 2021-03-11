@@ -1,40 +1,94 @@
-import "./SearchBar.css"
 import { useState } from "react"
-import { useHistory, useLocation } from "react-router-dom"
+import { useHistory } from "react-router-dom"
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearchPlus } from '@fortawesome/free-solid-svg-icons'
+import styled from "styled-components"
 
 const SearchBar = () => {
-  const [inputs, setInputs] = useState(null);
+  const [inputs, setInputs] = useState("");
+  const [tag, setTag] = useState("title");
   const history = useHistory();
-  const location = useLocation();
 
   const enterEvent = (event) => {
-    console.log(event)
     if (event.key === 'Enter') {
-      setInputs(event.target.value)
-      console.log(inputs)
-      history.push('/booklist')
+      clickEvent();
     }
   }
 
   const clickEvent = () => {
-    // console.log(inputs)
-    history.push("/booklist")
+    if (inputs) {
+      history.push({
+        pathname: "/booklist",
+        search: `?${tag}=${inputs}`,
+        state: {
+          inputs: inputs,
+          tag: tag,
+        }
+      })
+      return setInputs("")
+    }
   }
 
-  return <>
-    <div className="search-items">
-      <input
-        className="search-bar"
-        placeholder="Search..."
-        onKeyPress={enterEvent}
-      />
-      <button
-        className="search-button"
-        onClick={clickEvent}
-      >검색
-        </button>
-    </div>
-    {/* {console.log(inputs)} */}
-  </>
+  return <EntireBar>
+    <SelectTag value={tag} onChange={event => setTag(event.target.value)}>
+      <option value="title">제목</option>
+      <option value="author">저자</option>
+    </SelectTag>
+    <SearchInput
+      value={inputs}
+      placeholder="Search..."
+      onChange={(event) => { setInputs(event.target.value) }}
+      onKeyPress={enterEvent}
+    />
+    <SearchButton onClick={clickEvent}>
+      <FontAwesomeIcon icon={faSearchPlus} style={{ fontSize: "33px", color: "#000" }}/>
+    </SearchButton>
+  </EntireBar>
 }
 export default SearchBar
+
+
+const EntireBar = styled.div`
+  position: relative;
+  width: 850px;
+  top: 80px;
+  left: 280px;
+`
+const SearchInput = styled.input`
+  position: relative;
+  left: 125px;
+
+  border: 1.5px solid;
+  background-color: whitesmoke;
+  border-radius: 5px 5px 5px 5px;
+  width: 680px;
+  height: 70px;
+  
+  font-weight: 500;
+  
+  padding-left: 20px;
+`
+const SearchButton = styled.button`
+  position: absolute;
+  background-color: #E8D6A5;
+  top: 10px;
+  left: 680px;
+  width: 110px;
+  height: 50px;
+  margin: 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 15px 15px 15px 15px;
+`
+const SelectTag = styled.select`
+  position: absolute;
+  left: 0px;
+  top: 10px;
+  width: 110px;
+  height: 50px;
+  margin: 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+  z-index: 1;
+`
