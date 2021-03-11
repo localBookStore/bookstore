@@ -35,13 +35,13 @@ public class ItemQueryRespository {
         if(author == null) {
             return null;
         }
-        return item.author.like(author);
+        return item.author.contains(author);
     }
 
     private BooleanExpression nameLike(String bookName) {
         if(bookName == null) {
             return null;
         }
-        return item.name.like(bookName);
+        return item.name.contains(bookName);
     }
 }
