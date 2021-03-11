@@ -38,6 +38,11 @@ class ItemControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @BeforeEach
+    void setUp() {
+        this.itemRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("책 검색 테스트")
     public void searchBooks() throws Exception {
