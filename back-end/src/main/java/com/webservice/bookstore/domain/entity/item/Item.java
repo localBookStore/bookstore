@@ -26,6 +26,8 @@ public class Item {
 
     private Integer price;
 
+
+
     private Integer quantity;
 
     private String isbn;

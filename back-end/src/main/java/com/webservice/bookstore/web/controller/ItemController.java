@@ -33,11 +33,15 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity getSearchItems(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "author", required = false) String author) {
+    public ResponseEntity getSearchItems(@RequestParam(value = "tag") String tag, @RequestParam(value = "input") String input) {
         ItemSearch itemSearch = ItemSearch.builder()
-                .name(name)
-                .author(author)
                 .build();
+        if(tag.equals("name")) {
+            itemSearch.setName(input);
+        } else if(tag.equals("author")){
+            itemSearch.setAuthor(input);
+        }
+
         List<Item> items = this.itemService.searchBooks(itemSearch);
         if(items == null || items.isEmpty()) {
             return ResponseEntity.notFound().build();
