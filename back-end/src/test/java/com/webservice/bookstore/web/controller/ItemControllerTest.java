@@ -85,6 +85,7 @@ class ItemControllerTest {
                         .accept(MediaTypes.HAL_JSON_VALUE)
                         .param("page", "0")
                         .param("size", "10")
+//                        .param("name", "JPA ORM")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(itemSearch))
                 )

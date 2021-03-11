@@ -23,17 +23,19 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath email = createString("email");
 
-    public final BooleanPath enabled = createBoolean("enabled");
+    public final StringPath enabled = createString("enabled");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final StringPath memberId = createString("memberId");
 
     public final StringPath name = createString("name");
 
     public final StringPath password = createString("password");
 
     public final StringPath phone = createString("phone");
+
+    public final StringPath role = createString("role");
+
+    public final StringPath userid = createString("userid");
 
     public QMember(String variable) {
         super(Member.class, forVariable(variable));

@@ -22,8 +22,8 @@ public class ItemQueryRespository {
         QueryResults<Item> itemQueryResults = jpaQueryFactory
                 .select(item)
                 .from(item)
-                .where(eqBookName(itemSearch.getName()),
-                        eqAuthor(itemSearch.getAuthor()))
+                .where(nameLike(itemSearch.getName()),
+                        authorLike(itemSearch.getAuthor()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -31,17 +31,17 @@ public class ItemQueryRespository {
 
     }
 
-    private BooleanExpression eqAuthor(String author) {
+    private BooleanExpression authorLike(String author) {
         if(author == null) {
             return null;
         }
-        return item.author.eq(author);
+        return item.author.like(author);
     }
 
-    private BooleanExpression eqBookName(String bookName) {
+    private BooleanExpression nameLike(String bookName) {
         if(bookName == null) {
             return null;
         }
-        return item.name.eq(bookName);
+        return item.name.like(bookName);
     }
 }
