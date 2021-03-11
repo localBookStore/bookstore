@@ -31,6 +31,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    // HATEOAS 추가 : RESTFul API 개발에 편의성 제공하는 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 
 }
 
