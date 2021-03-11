@@ -1,49 +1,45 @@
 package com.webservice.bookstore.service;
 
-import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.domain.entity.item.Item;
-import com.webservice.bookstore.web.dto.ItemDto;
+import com.webservice.bookstore.domain.entity.item.ItemQueryRespository;
+import com.webservice.bookstore.domain.entity.item.ItemRepository;
+import com.webservice.bookstore.domain.entity.item.ItemSearch;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.EntityModel;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface ItemService {
-    default ItemDto entityToDto(Item item){
-        ItemDto dto = ItemDto.builder()
-                .id(item.getId())
-                .category_id(item.getCategory().getId())
-                .description(item.getDescription())
-                .imageUrl(item.getImageUrl())
-                .author(item.getAuthor())
-                .publisher(item.getPublisher())
-                .quantity(item.getQuantity())
-                .price(item.getPrice())
-                .isbn(item.getIsbn())
-                .name(item.getName())
-                .build();
-        return dto;
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class ItemService {
+
+    private final ItemQueryRespository itemQueryRespository;
+
+    private final ItemRepository itemRepository;
+
+    public Page<Item> searchBooks(ItemSearch itemSearch, Pageable pageable) {
+        return itemQueryRespository.findDynamicBooks(itemSearch, pageable);
     }
 
-    default Item dtoToEntity(ItemDto dto){
-        Item item =Item.builder().category(Category.builder().id(dto.getCategory_id()).build())
-                .isbn(dto.getIsbn())
-                .description(dto.getDescription())
-                .author(dto.getAuthor())
-                .publisher(dto.getPublisher())
-                .price(dto.getPrice())
-                .name(dto.getName())
-                .quantity(dto.getQuantity())
-                .id(dto.getId())
-                .imageUrl(dto.getImageUrl())
-                .build();
-        return item;
+    public Item findById(Long id) {
+        Optional<Item> item = this.itemRepository.findById(id);
+        Item savedItem = item.orElseGet(null);
+        return savedItem;
     }
 
-    List<ItemDto> getRandomList(int cnt);
+    @Transactional
+    public void improveViewCount(Long id) {
+        this.itemRepository.improveViewCount(id);
+    }
 
-    List<ItemDto> getRandomListByGenre(ItemDto itemDto);
+    @Transactional(readOnly = true)
+    public List<Item> bestItems() {
+        return this.itemRepository.bestItems();
+    }
 
-    List<ItemDto> getListByGenre(Long category_id);
 }

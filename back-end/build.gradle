@@ -24,9 +24,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
@@ -34,6 +36,25 @@ dependencies {
     // HATEOAS 추가 : RESTFul API 개발에 편의성 제공하는 라이브러리
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 
+    compile("com.querydsl:querydsl-core") // querydsl
+    compile("com.querydsl:querydsl-jpa") // querydsl
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa" // querydsl JPAAnnotationProcessor 사용 지정
+    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+
+}
+
+def generated='src/main/generated'
+sourceSets {
+    main.java.srcDirs += [ generated ]
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(generated)
+}
+
+clean.doLast {
+    file(generated).deleteDir()
 }
 
 test {

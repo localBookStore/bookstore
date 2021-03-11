@@ -15,7 +15,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemServices{
     private final ItemRepository itemRepository;
 
     @Override
