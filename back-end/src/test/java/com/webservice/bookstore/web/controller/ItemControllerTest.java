@@ -7,6 +7,8 @@ import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
 import com.webservice.bookstore.service.ItemService;
+import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,6 +52,11 @@ class ItemControllerTest {
 
     @BeforeEach
     void setUp() {
+        this.itemRepository.deleteAll();
+    }
+
+    @AfterEach
+    void close() {
         this.itemRepository.deleteAll();
     }
 

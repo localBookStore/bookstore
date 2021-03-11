@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -53,12 +54,14 @@ public class ItemController {
 
     @GetMapping("{id}")
     public ResponseEntity getItem(@PathVariable Long id) {
-        this.itemService.improveViewCount(id);
-        Item savedItem = itemService.findById(id);
-        if(savedItem == null) {
+        Optional<Item> savedItem = itemService.findById(id);
+        if(savedItem == null || savedItem.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        ItemDto itemDto = modelMapper.map(savedItem, ItemDto.class);
+        this.itemService.improveViewCount(id);
+        Item newItem = savedItem.get();
+        ItemDto itemDto = modelMapper.map(newItem, ItemDto.class);
+        itemDto.setCategory_id(newItem.getCategory().getId());
 //        ItemDto itemDto = ItemDto.of(savedItem);
         ItemLinkResource itemResource = new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel());
 //        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
@@ -68,7 +71,7 @@ public class ItemController {
     @GetMapping("/bestitems/")
     public ResponseEntity bestItems() {
         List<Item> items = this.itemService.bestItems();
-        List<ItemDto> itemDtos = items.stream().map(item -> modelMapper.map(item, ItemDto.class)).collect(Collectors.toList());
+        List<ItemDto> itemDtos = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
         List<ItemLinkResource> itemLinkResources = itemDtos.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel()))
                 .collect(Collectors.toList());
         CollectionModel<ItemLinkResource> collectionModel = CollectionModel.of(itemLinkResources);
