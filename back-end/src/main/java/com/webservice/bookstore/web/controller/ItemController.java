@@ -16,11 +16,14 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Log4j2
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http:localhost:3000"})
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping(value = "/api/items/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
 public class ItemController {
@@ -47,5 +50,12 @@ public class ItemController {
         ItemResource itemResource = new ItemResource(savedItem);
         itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
         return ResponseEntity.ok(itemResource);
+    }
+
+    @GetMapping("/bestitems/")
+    public ResponseEntity bestItems() {
+        List<Item> items = this.itemService.bestItems();
+        List<ItemResource> itemResources = items.stream().map(item -> new ItemResource(item)).collect(Collectors.toList());
+        return ResponseEntity.ok(itemResources);
     }
 }
