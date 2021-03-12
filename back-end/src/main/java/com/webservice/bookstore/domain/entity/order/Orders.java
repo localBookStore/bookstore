@@ -34,6 +34,8 @@ public class Orders {
 
     //private List<Coupon> coupons;
 
+    private Integer paymentAmount;
+
     private Integer deliveryCharge;
 
     private OrdersEnum status;
