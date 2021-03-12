@@ -17,6 +17,8 @@ public class ItemDto {
 
     private Long category_id;
 
+    private String category_name;
+
     private String name;
 
     private String description;
@@ -52,6 +54,23 @@ public class ItemDto {
                 .build();
     }
 
+    //Category_name 필드 추가
+
+    public static ItemDto toDto(Item item) {
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .price(item.getPrice())
+                .quantity(item.getQuantity())
+                .isbn(item.getIsbn())
+                .publisher(item.getPublisher())
+                .author(item.getAuthor())
+                .imageUrl(item.getImageUrl())
+                .category_id(item.getCategory().getId())
+                .category_name(item.getCategory().getName())
+                .build();
+    }
     // DTO -> Entity
     public Item toEntity() {
 

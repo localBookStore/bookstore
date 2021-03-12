@@ -57,9 +57,9 @@ public class ItemController {
             return ResponseEntity.notFound().build();
         }
         Item newItem = savedItem.get();
-        ItemDto itemDto = modelMapper.map(newItem, ItemDto.class);
-        itemDto.setCategory_id(newItem.getCategory().getId());
-//        ItemDto itemDto = ItemDto.of(savedItem);
+//        ItemDto itemDto = modelMapper.map(newItem, ItemDto.class);
+//        itemDto.setCategory_id(newItem.getCategory().getId());
+        ItemDto itemDto = ItemDto.of(newItem);
         ItemLinkResource itemResource = new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel());
 //        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
         return ResponseEntity.ok(itemResource);
