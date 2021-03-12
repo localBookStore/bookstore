@@ -2,6 +2,7 @@ package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.domain.entity.item.*;
 import com.webservice.bookstore.service.ItemService;
+import com.webservice.bookstore.web.dto.GetItemDto;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -57,10 +58,8 @@ public class ItemController {
             return ResponseEntity.notFound().build();
         }
         Item newItem = savedItem.get();
-//        ItemDto itemDto = modelMapper.map(newItem, ItemDto.class);
-//        itemDto.setCategory_id(newItem.getCategory().getId());
-        ItemDto itemDto = ItemDto.toDto(newItem);
-        ItemLinkResource itemResource = new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel());
+        GetItemDto itemDto = GetItemDto.toDto(newItem);
+        ItemResource itemResource = new ItemResource(itemDto);
 //        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
         return ResponseEntity.ok(itemResource);
     }

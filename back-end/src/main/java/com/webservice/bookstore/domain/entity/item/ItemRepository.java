@@ -27,7 +27,7 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     @Query("update Item i set i.viewCount = i.viewCount + 1 where i.id = :id")
     int improveViewCount(@Param("id") Long id);
 
-    @Query("select i from Item i order by i.viewCount desc")
+    @Query(value = "select * from Item i order by i.view_count desc limit 30", nativeQuery = true)
     List<Item> bestItems();
 
     @Query("select i from Item i join fetch i.category ic")
