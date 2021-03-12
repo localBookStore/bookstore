@@ -147,13 +147,32 @@ class ItemControllerTest {
     @DisplayName("기존의 책 하나 조회하기")
     public void getItem() throws Exception {
         //given
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
+
+        Item books = Item.builder()
+                .name("BOOk")
+                .author("아무개")
+                .category(category)
+                .imageUrl(null)
+                .isbn("12344")
+                .price(3)
+                .quantity(3)
+                .description("최고의 책")
+                .publisher("한빛미디어")
+                .build();
+        this.itemRepository.save(books);
+
         Item book = generateEntity();
 
         this.mockMvc.perform(get("/api/items/{id}", book.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("DATABASE BOOk"))
-                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("id").value(2))
                 .andExpect(jsonPath("category_id").value(10))
                 .andExpect(jsonPath("category_name").value("총류"))
                 .andExpect(jsonPath("author").value("아무개"))
