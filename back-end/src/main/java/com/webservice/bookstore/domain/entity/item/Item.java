@@ -4,6 +4,8 @@ import com.webservice.bookstore.domain.entity.category.Category;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NamedEntityGraph(name = "Item.category",
         attributeNodes = @NamedAttributeNode("category"))
@@ -26,8 +28,6 @@ public class Item {
 
     private Integer price;
 
-
-
     private Integer quantity;
 
     private String isbn;
@@ -44,5 +44,7 @@ public class Item {
 
     @Builder.Default
     private int viewCount = 0;
+
+    private LocalDate publicationDate;
 
 }

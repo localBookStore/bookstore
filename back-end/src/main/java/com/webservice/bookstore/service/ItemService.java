@@ -26,10 +26,9 @@ public class ItemService {
         return itemQueryRespository.findDynamicBooks(itemSearch);
     }
 
-    public Item findById(Long id) {
+    public Optional<Item> findById(Long id) {
         Optional<Item> item = this.itemRepository.findById(id);
-        Item savedItem = item.orElseGet(null);
-        return savedItem;
+        return item;
     }
 
     @Transactional
@@ -37,7 +36,6 @@ public class ItemService {
         this.itemRepository.improveViewCount(id);
     }
 
-    @Transactional(readOnly = true)
     public List<Item> bestItems() {
         return this.itemRepository.bestItems();
     }

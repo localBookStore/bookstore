@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.item;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,11 @@ class ItemRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        this.itemRepository.deleteAll();
+    }
+
+    @AfterEach
+    void close() {
         this.itemRepository.deleteAll();
     }
 

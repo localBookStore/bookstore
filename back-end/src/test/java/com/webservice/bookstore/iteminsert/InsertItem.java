@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
+import java.util.concurrent.ThreadLocalRandom;
+
 @SpringBootTest
 public class InsertItem {
 
@@ -42,9 +45,30 @@ public class InsertItem {
                     .quantity(qunatity.intValue())
                     .imageUrl(imageUrl)
                     .category(newCategory)
+                    .publicationDate(randLocalDate())
                     .build();
             itemRepository.save(item);
 
         }
+    }
+
+    @Test
+    public void 랜덤_날짜() throws Exception {
+        //given
+
+        //when
+
+        //then
+        LocalDate localDate = randLocalDate();
+        System.out.println(localDate);
+    }
+
+
+    private LocalDate randLocalDate() {
+        long minDay = LocalDate.of(2011, 1, 1).toEpochDay();
+        long maxDay = LocalDate.of(2021, 3, 1).toEpochDay();
+        long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+        LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
+        return randomDate;
     }
 }

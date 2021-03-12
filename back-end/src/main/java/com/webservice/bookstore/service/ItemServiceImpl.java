@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
 @Service
 @Log4j2
 @RequiredArgsConstructor
@@ -23,22 +21,22 @@ public class ItemServiceImpl implements ItemServices{
         List<Item> list=itemRepository.getThisMonthbooks(cnt);
         List<ItemDto> res = new ArrayList<>();
         for(int i=0;i<list.size();i++){
-            res.add(entityToDto(list.get(i)));
+            res.add(ItemDto.of(list.get(i)));
         }
         return res;
     }
 
     @Override
-    public List<ItemDto> getRandomListByGenre(ItemDto itemDto) {
+    public List<ItemDto> getRandomListByGenre() {
 
-        List<Item> itemListByGenre = itemRepository.getRandomListByGenre(itemDto.getCategory_id());
+        List<Item> itemList = itemRepository.getRandomListByGenre();
 
-        List<ItemDto> res = new ArrayList<>();
-        for (Item item : itemListByGenre) {
-            res.add(entityToDto(item));
+        List<ItemDto> itemDtoList = new ArrayList<>();
+        for (Item item : itemList) {
+            itemDtoList.add(ItemDto.of(item));
         }
 
-        return res;
+        return itemDtoList;
     }
 
     @Override
@@ -48,7 +46,7 @@ public class ItemServiceImpl implements ItemServices{
 
         List<ItemDto> itemDtoList = new ArrayList<>();
         for(Item item : itemList) {
-            ItemDto dto = entityToDto(item);
+            ItemDto dto = ItemDto.of(item);
             itemDtoList.add(dto);
         }
 
