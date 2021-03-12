@@ -10,8 +10,14 @@ const SlideItems = () => {
   const [promoteImage, setPromoteImage] = useState(false)
   const history = useHistory();
 
-  const GoItemDetail = (idx) => {
-    history.push('/detail')
+  const GoItemDetail = (book) => {
+    history.push({
+      pathname:'/detail',
+      search:`?id=${book.name}`,
+      state:{
+        book
+      }
+    })
   }
 
   useEffect(() => {
@@ -54,7 +60,7 @@ const SlideItems = () => {
         return <button
           key={idx}
           className="slider-image"
-          onClick={() => { GoItemDetail(idx) }}
+          onClick={() => { GoItemDetail(value) }}
         >
           <img
             className="w-100"

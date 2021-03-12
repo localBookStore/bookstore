@@ -1,10 +1,14 @@
 import TopDetail from "./TopDetail";
 import MidDetail from "./MidDetail";
 import BottomDetail from "./BottomDetail";
+import axiois from "axios"
 
 import styled from "styled-components";
 
-const ItemDetail = () => {
+const ItemDetail = ({location}) => {
+  const {state:{book}} = location
+  console.log(book)
+
   return <DetailComponent>
     <TopDetail />
     <Divider />
