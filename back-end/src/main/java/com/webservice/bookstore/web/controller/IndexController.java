@@ -57,9 +57,7 @@ public class IndexController {
     */
     @GetMapping(value = "/genre/")
     public ResponseEntity<List<ItemDto>> getRandomListByGenre(@RequestBody ItemDto itemDto) {
-
         List<ItemDto> itemDtoList = itemService.getRandomListByGenre(itemDto);
-
         return new ResponseEntity<>(itemDtoList, HttpStatus.OK);
     }
 
