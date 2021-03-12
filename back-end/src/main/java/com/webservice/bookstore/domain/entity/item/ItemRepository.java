@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item,Long> {
 
@@ -28,6 +29,9 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
 
     @Query("select i from Item i order by i.viewCount desc")
     List<Item> bestItems();
+
+    @Query("select i from Item i join fetch i.category ic")
+    Optional<Item> findById(Long id);
 
 
 }
