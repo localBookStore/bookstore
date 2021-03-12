@@ -170,7 +170,7 @@ class ItemControllerTest {
         Item savedItem = generateEntity();
 
         //then
-        this.mockMvc.perform(get("/api/items/{id}", 123))
+        this.mockMvc.perform(get("/api/items/{id}", 123123))
                 .andDo(print())
                 .andExpect(status().isNotFound())
         ;

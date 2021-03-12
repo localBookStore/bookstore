@@ -30,8 +30,8 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     @Query(value = "select * from Item i order by i.view_count desc limit 30", nativeQuery = true)
     List<Item> bestItems();
 
-    @Query("select i from Item i join fetch i.category ic")
-    Optional<Item> findById(Long id);
+    @Query("select i from Item i join fetch i.category ic where i.id = :id")
+    Optional<Item> findById(@Param("id") Long id);
 
 
 }
