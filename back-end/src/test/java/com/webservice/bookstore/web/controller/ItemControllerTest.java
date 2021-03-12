@@ -154,6 +154,8 @@ class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("DATABASE BOOk"))
                 .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("category_id").value(10))
+                .andExpect(jsonPath("category_name").value("총류"))
                 .andExpect(jsonPath("author").value("아무개"))
                 .andExpect(jsonPath("_links.self").exists())
 //                .andExpect(jsonPath("_links.purchase-item").exists())
