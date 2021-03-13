@@ -30,4 +30,5 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     List<Item> bestItems();
 
 
+    List<Item> findByIdIn(List<Long> itemIdList);
 }
