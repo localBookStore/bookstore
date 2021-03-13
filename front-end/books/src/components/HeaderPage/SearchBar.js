@@ -10,40 +10,36 @@ const SearchBar = () => {
   const [input, setInput] = useState("");
   const [tag, setTag] = useState("name");
   const [books, setBooks] = useState(null);
-  const [isSearch, setIsSearch] = useState(false);
   const history = useHistory();
 
+  const getBooklist = async () => {
+    await axios.get("http://localhost:8080/api/items/", {
+      params: {
+        input,
+        tag,
+      }
+    })
+      .then(res => {
+        setBooks(res.data._embedded.itemDtoList)
+      })
+      .catch(err => {
+        console.log(err.response)
+        setBooks(null)
+      })
+  }
+
   useEffect(() => {
-    const getBooklist = async () => {
-      await axios.get("http://localhost:8080/api/items/", {
-        params: {
-          input,
-          tag,
-        }
-      })
-        .then(res => {
-          console.log(res.data._embedded.itemDtoList)
-          setBooks(res.data._embedded.itemDtoList)
-        })
-        .catch(err => {
-          console.log(err.response)
-          setBooks(null)
-        })
-    }
-    if (isSearch){
-      getBooklist()
-      history.push({
-        pathname:"/booklist",
-        search:`${tag}=${input}`,
-        state:{
-          input,
-          tag,
-          books
-        }
-      })
-    }
-    return setIsSearch(false)
-  }, [isSearch])
+    history.push({
+      pathname:"/booklist",
+      search:`?${tag}=${input}`,
+      state:{
+        tag,
+        input,
+        books
+      }
+    })
+    return setInput("")
+  }, [books])
 
   const enterEvent = (event) => {
     if (event.key === 'Enter') {
@@ -52,7 +48,7 @@ const SearchBar = () => {
   }
   const clickEvent = () => {
     if (input) {
-      setIsSearch(true)
+      getBooklist()
     }
   }
 
@@ -68,7 +64,7 @@ const SearchBar = () => {
       onKeyPress={enterEvent}
     />
     <SearchButton onClick={clickEvent}>
-      <FontAwesomeIcon icon={faSearchPlus} style={{ fontSize: "33px", color: "#000" }}/>
+      <FontAwesomeIcon icon={faSearchPlus} style={{ fontSize: "33px", color: "#000" }} />
     </SearchButton>
   </EntireBar>
 }

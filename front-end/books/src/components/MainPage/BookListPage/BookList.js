@@ -3,6 +3,7 @@
 const BookList = ({location}) => {
   const {input, tag, books} = location.state
   console.log(location)
+  console.log(books)
   return <>
     <div>태그명 : {tag} </div>
     <div>검색어 : {input}</div>
