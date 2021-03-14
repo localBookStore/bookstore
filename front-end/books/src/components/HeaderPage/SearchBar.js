@@ -23,8 +23,8 @@ const SearchBar = () => {
       .then(res => {
         setBooks(res.data._embedded.itemDtoList)
       })
-      .catch(() => {
-        setBooks(false)
+      .catch(err => {
+        setBooks(null)
       })
   }
 
@@ -42,8 +42,7 @@ const SearchBar = () => {
     }
     return (
       setInput(""),
-      setIsSearch(false),
-      setBooks(null)
+      setIsSearch(false)
     )
   }, [books])
 
