@@ -68,9 +68,9 @@ public class IndexController {
                 .collect(Collectors.toList());
 
         // 카테고리 번호별로 분류한 json 구조로 직렬화(selialize)
-        Map<String, List<ItemLinkResource>> first = new HashMap<>();
+        List<List<ItemLinkResource>> first = new ArrayList<>();
         for(int i = 0; i < emList.size(); i+=3) {
-            first.put(String.valueOf(i/3), new ArrayList<>(emList.subList(i, Math.min(i+3, emList.size()))));
+            first.add(new ArrayList<>(emList.subList(i, Math.min(i+3, emList.size()))));
         }
 
         RepresentationModel<?> model = CollectionModel.of(first);
