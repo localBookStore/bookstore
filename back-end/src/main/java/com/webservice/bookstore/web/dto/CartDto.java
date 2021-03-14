@@ -6,6 +6,7 @@ import com.webservice.bookstore.domain.entity.member.Member;
 import lombok.*;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CartDto {
