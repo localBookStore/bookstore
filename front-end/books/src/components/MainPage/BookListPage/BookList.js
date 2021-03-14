@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom"
 
 const BookList = ({ location }) => {
   const { input, tag, books } = location.state
+  console.log(books)
   const history = useHistory();
 
   const clickEvent = (book) => {
@@ -13,10 +14,9 @@ const BookList = ({ location }) => {
     })
   }
 
-
   return <>
-    <div>태그명 : {tag} </div>
-    <div>검색어 : {input}</div>
+    {/* <div>태그명 : {tag} </div>
+    <div>검색어 : {input}</div> */}
     {books ?
       books.map((book, idx) => {
         return <div key={idx}>

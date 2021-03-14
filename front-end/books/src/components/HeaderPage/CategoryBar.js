@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 const CategoryBar = () => {
   const [isHover, setIsHover] = useState(false);
-  const [books, setBooks] = useState(null);
+  // const [books, setBooks] = useState(null);
   const history = useHistory()
 
   const ShowOnHover = () => {
@@ -20,11 +20,13 @@ const CategoryBar = () => {
   const getBestBooks = async () => {
     await axios.get("http://localhost:8080/api/items/bestitems/")
       .then(res => {
-        console.log(res)
+        const books = res.data._embedded.itemDtoList
+        history.push({
+          pathname:"/booklist",
+          state: { books }
+        })
       })
-      .catch(err => {
-        console.log(err.response)
-      })
+      .catch(err => console.log(err.response))
   }
 
   return <AllContainer

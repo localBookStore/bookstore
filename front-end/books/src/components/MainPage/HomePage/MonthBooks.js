@@ -24,7 +24,7 @@ const MonthBooks = () => {
   const clickEvent = (book) => {
     histroy.push({
       pathname:"/detail",
-      search:`?/id=${book.id}`,
+      search:`?id=${book.id}`,
       state: book
     })
   }

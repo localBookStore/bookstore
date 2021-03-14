@@ -14,35 +14,22 @@ const SearchBar = () => {
   const history = useHistory();
 
   const getBooklist = async () => {
-    await axios.get("http://localhost:8080/api/items/", {
-      params: {
-        input,
-        tag,
-      }
-    })
-      .then(res => {
-        setBooks(res.data._embedded.itemDtoList)
-      })
-      .catch(err => {
-        setBooks(null)
-      })
+    await axios.get("http://localhost:8080/api/items/", { params: { input, tag } })
+      .then(res => setBooks(res.data._embedded.itemDtoList))
+      .catch(err => setBooks(null))
   }
 
   useEffect(() => {
     if (isSearch) {
       history.push({
         pathname:"/booklist",
-        search:`?${tag}=${input}`,
-        state:{
-          tag,
-          input,
-          books
-        }
+        state:{ tag, input, books }
       })
     }
     return (
       setInput(""),
-      setIsSearch(false)
+      setIsSearch(false),
+      setBooks(false)
     )
   }, [books])
 
