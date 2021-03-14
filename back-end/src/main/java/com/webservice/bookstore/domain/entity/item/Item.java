@@ -7,8 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@NamedEntityGraph(name = "Item.category",
-        attributeNodes = @NamedAttributeNode("category"))
 @Entity
 @Builder
 @AllArgsConstructor
