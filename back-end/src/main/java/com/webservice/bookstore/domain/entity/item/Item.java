@@ -4,7 +4,11 @@ import com.webservice.bookstore.domain.entity.category.Category;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@NamedEntityGraph(name = "Item.category",
+        attributeNodes = @NamedAttributeNode("category"))
 @Entity
 @Builder
 @AllArgsConstructor
@@ -37,4 +41,10 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Builder.Default
+    private int viewCount = 0;
+
+    private LocalDate publicationDate;
+
 }

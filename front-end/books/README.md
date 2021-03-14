@@ -1,13 +1,17 @@
 # Front Part - React
 
 ```markdown
-# React app 사용
-npx install create-react-app {app 이름}  # react 앱 생성
-npm start # react server 실행 (3000 포트)
+#### React app 사용 ####
+
+# react 앱 생성 (최초에만)
+npx install create-react-app {app 이름}  
+# react dependency & library 설치
+npm install 
+# react server 실행 (3000 포트)
+npm start 
 ```
 
 ### Library
-
 ```bash
 'react-router-dom' # Apply Domain Routing
 'axios' # Asynchronous Request
@@ -19,7 +23,8 @@ npm start # react server 실행 (3000 포트)
     '@fortawesome/free-solid-svg-icons'
     '@fortawesome/react-fontawesome'
 'styled-components' # apply for CSS in js
-'poished' # interactive utill funcion
+'poished'   # interactive utill funcion
+'qs'    # using query string
 ```
 
 ### File Structure (In Progress...)

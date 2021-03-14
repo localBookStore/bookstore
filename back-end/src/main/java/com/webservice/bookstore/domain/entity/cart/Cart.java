@@ -6,6 +6,11 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/*
+재사용할 여러 엔티티 그룹을 정의
+*/
+@NamedEntityGraph(name = "Cart.member",
+        attributeNodes = @NamedAttributeNode("member"))
 @Entity
 @Builder
 @AllArgsConstructor
@@ -19,11 +24,11 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
@@ -31,5 +36,9 @@ public class Cart {
 
     private Integer quantity;
 
+    // 장바구니 아이템 수량 업데이트 메소드 호출
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
 }

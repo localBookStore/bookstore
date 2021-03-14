@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemServices{
     private final ItemRepository itemRepository;
 
     @Override
@@ -21,8 +21,35 @@ public class ItemServiceImpl implements ItemService{
         List<Item> list=itemRepository.getThisMonthbooks(cnt);
         List<ItemDto> res = new ArrayList<>();
         for(int i=0;i<list.size();i++){
-            res.add(entityToDto(list.get(i)));
+            res.add(ItemDto.of(list.get(i)));
         }
         return res;
+    }
+
+    @Override
+    public List<ItemDto> getRandomListByGenre() {
+
+        List<Item> itemList = itemRepository.getRandomListByGenre();
+
+        List<ItemDto> itemDtoList = new ArrayList<>();
+        for (Item item : itemList) {
+            itemDtoList.add(ItemDto.of(item));
+        }
+
+        return itemDtoList;
+    }
+
+    @Override
+    public List<ItemDto> getListByGenre(Long category_id) {
+
+        List<Item> itemList = itemRepository.findAllByCategoryId(category_id);
+
+        List<ItemDto> itemDtoList = new ArrayList<>();
+        for(Item item : itemList) {
+            ItemDto dto = ItemDto.of(item);
+            itemDtoList.add(dto);
+        }
+
+        return itemDtoList;
     }
 }

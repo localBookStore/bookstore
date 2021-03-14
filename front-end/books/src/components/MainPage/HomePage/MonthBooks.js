@@ -9,14 +9,12 @@ import "./MonthBooks.css"
 
 const MonthBooks = () => {
   const [images, setImages] = useState(null);
-  // const PIXEL_API_KEY = process.env.REACT_APP_PIXEL_API_KEY
-  // const URL = "https://api.pexels.com/v1/search"
 
   useEffect(() => {
     const getImage = async () => {
       await axios.get("http://localhost:8080/api/index/thismonth/")
         .then(res => {
-          const {data} = res
+          const { data } = res
           setImages(data)
         })
         .catch(err => {
@@ -43,10 +41,9 @@ const MonthBooks = () => {
 
     <Slider {...settings}>
       {images && images.map((res, idx) => {
-        const { src: { large } } = res
         return <div key={idx} className="each-image">
           <button className="random-pick-item" onClick={() => console.log(res)}>
-            <img src={large} alt={idx} className="pick-image" />
+            <img src={res.imageUrl} alt={idx} className="pick-image" />
           </button>
         </div>
       })}

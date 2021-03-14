@@ -3,15 +3,12 @@ import { faHandPointDown } from '@fortawesome/free-solid-svg-icons'
 import NextArrow from "./CustomArrow/NextArrow"
 import PrevArrow from "./CustomArrow/PrevArrow"
 import { useState, useEffect } from "react"
-import axois from "axios"
 import Slider from "react-slick";
 import './PickItems.css'
 import axios from 'axios'
 
 const PickItems = () => {
   const [images, setImages] = useState(false);
-  // const PIXEL_API_KEY = process.env.REACT_APP_PIXEL_API_KEY
-  // const URL = "https://api.pexels.com/v1/search"
 
   useEffect(() => {
     const getImage = async () => {
@@ -45,10 +42,10 @@ const PickItems = () => {
 
     <Slider {...settings}>
       {images && images.map((res, idx) => {
-        const { src: { large } } = res
+        
         return <div key={idx} className="each-image">
           <button className="random-pick-item" onClick={() => console.log(res)}>
-            <img src={large} alt={idx} className="pick-image" />
+            <img src={res.imageUrl} alt={idx} className="pick-image" />
           </button>
         </div>
       })}

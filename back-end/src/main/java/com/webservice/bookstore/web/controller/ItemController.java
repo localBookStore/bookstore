@@ -1,39 +1,78 @@
 package com.webservice.bookstore.web.controller;
 
+import com.webservice.bookstore.domain.entity.item.*;
 import com.webservice.bookstore.service.ItemService;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
+import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/api/index")
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @Log4j2
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:3000"})
-public class ItemController{
+@RestController
+@RequestMapping(value = "/api/items/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
+public class ItemController {
 
     private final ItemService itemService;
 
-    @GetMapping("/thismonth")
-    public ResponseEntity<List<ItemDto>> getThisMonthList(){
-        log.info("이달의 도서 보내기");
+    private final ModelMapper modelMapper;
 
-       List<ItemDto> list=itemService.getRandomList(12);
+    @GetMapping
+    public ResponseEntity getSearchItems(@RequestParam(value = "tag") String tag, @RequestParam(value = "input") String input) {
+        ItemSearch itemSearch = ItemSearch.builder()
+                .build();
+        if(tag.equals("name")) {
+            itemSearch.setName(input);
+        } else if(tag.equals("author")){
+            itemSearch.setAuthor(input);
+        }
 
-        return new ResponseEntity<>(list,HttpStatus.OK);
+        List<Item> items = this.itemService.searchBooks(itemSearch);
+        if(items == null || items.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        List<ItemDto> collect = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
+        List<ItemLinkResource> itemLinkResources = collect.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
+        CollectionModel<ItemLinkResource> result = CollectionModel.of(itemLinkResources);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/wepickitem")
-    public ResponseEntity<List<ItemDto>> getWePickItem(){
-        log.info("우리의 PICK 보내기");
-        return new ResponseEntity<>(itemService.getRandomList(12) ,HttpStatus.OK);
+
+    @GetMapping("{id}")
+    public ResponseEntity getItem(@PathVariable Long id) {
+        this.itemService.improveViewCount(id);
+        Optional<Item> savedItem = itemService.findById(id);
+        if(savedItem == null || savedItem.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Item newItem = savedItem.get();
+        ItemDto itemDto = modelMapper.map(newItem, ItemDto.class);
+        itemDto.setCategory_id(newItem.getCategory().getId());
+//        ItemDto itemDto = ItemDto.of(savedItem);
+        ItemLinkResource itemResource = new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel());
+//        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
+        return ResponseEntity.ok(itemResource);
     }
+
+    @GetMapping("/bestitems/")
+    public ResponseEntity bestItems() {
+        List<Item> items = this.itemService.bestItems();
+        List<ItemDto> itemDtos = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
+        List<ItemLinkResource> itemLinkResources = itemDtos.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel()))
+                .collect(Collectors.toList());
+        CollectionModel<ItemLinkResource> collectionModel = CollectionModel.of(itemLinkResources);
+        return ResponseEntity.ok(collectionModel);
+    }
+
 }

@@ -1,14 +1,11 @@
-import CategoryHoverDetail from "./CategoryHover/CategoryHoverDetail"
-import { useState } from "react"
-import { useHistory } from "react-router-dom"
-import "./CategoryBar.css"
+import CategoryHoverDetail from "./CategoryHover/CategoryHoverDetail";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import styled from "styled-components";
 
 const CategoryBar = () => {
   const [isHover, setIsHover] = useState(false);
-  const [HoverIdx, setHoverIdx] = useState(null);
   const history = useHistory()
-
-  const itemNames = ["국내작", "국외작", "베스트", "최신작", "커뮤니티"]
 
   const ShowOnHover = () => {
     setIsHover(true)
@@ -16,37 +13,52 @@ const CategoryBar = () => {
 
   const ShowOffHover = () => {
     setIsHover(false)
-    setHoverIdx(null)
   }
 
-  const ShowHoverDetail = (page) => {
-    setHoverIdx(page)
-  }
-
-  // const GoCategoryDetailPage = (category) => {
-  //   history.push('/detail')
-  // }
-
-  return <div
-    className="category-container"
-    onMouseEnter={ShowOnHover}
+  return <AllContainer
     onMouseLeave={ShowOffHover}
   >
-    {itemNames.map((itemName, idx) => {
-      return <div
-        className="item-box"
-        key={idx}
-      >
-        <button
-          className="category-item-button"
-          onMouseEnter={() => ShowHoverDetail(idx)}
-          // onClick={() => GoCategoryDetailPage(idx)}
-        >
-          {itemName}
-        </button>
-      </div>
-    })}
-    {isHover && <CategoryHoverDetail page={HoverIdx} />}
-  </div>
+    <ItemButton onMouseEnter={ShowOnHover}>장르별</ItemButton>
+    <ItemButton>베스트</ItemButton>
+    <ItemButton>최신작</ItemButton>
+    <ItemButton>커뮤니티</ItemButton>
+    {isHover && <CategoryHoverDetail/>}
+  </AllContainer>
 }
-export default CategoryBar
+export default CategoryBar;
+
+
+const AllContainer = styled.div`
+  position: relative;
+  text-align: center;
+  height: 70px;
+  padding: 0;
+  width: 100%;
+  top: 150px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  z-index: 1;
+`
+const ItemButton = styled.button`
+  position:relative;
+  padding:0 2em;
+
+  background:#50A3C7;
+  border:0 none;
+  border-radius: 5px 5px 5px 5px;
+  outline:none;
+  width:260px;
+  height:50px;
+  margin: 0 auto;
+
+  color:#fff;
+  font-size:1.3em;
+  font-weight: bolder;
+  
+  transition: all 600ms;
+  
+  &:hover {
+    background:#AB4386;
+    color:#fff
+  }
+`
