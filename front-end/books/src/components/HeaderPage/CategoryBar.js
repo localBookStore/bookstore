@@ -1,10 +1,12 @@
 import CategoryHoverDetail from "./CategoryHover/CategoryHoverDetail";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import axios from "axios"
 import styled from "styled-components";
 
 const CategoryBar = () => {
   const [isHover, setIsHover] = useState(false);
+  // const [books, setBooks] = useState(null);
   const history = useHistory()
 
   const ShowOnHover = () => {
@@ -15,11 +17,23 @@ const CategoryBar = () => {
     setIsHover(false)
   }
 
+  const getBestBooks = async () => {
+    await axios.get("http://localhost:8080/api/items/bestitems/")
+      .then(res => {
+        const books = res.data._embedded.itemDtoList
+        history.push({
+          pathname:"/booklist",
+          state: { books }
+        })
+      })
+      .catch(err => console.log(err.response))
+  }
+
   return <AllContainer
     onMouseLeave={ShowOffHover}
   >
     <ItemButton onMouseEnter={ShowOnHover}>장르별</ItemButton>
-    <ItemButton>베스트</ItemButton>
+    <ItemButton onClick={getBestBooks}>베스트</ItemButton>
     <ItemButton>최신작</ItemButton>
     <ItemButton>커뮤니티</ItemButton>
     {isHover && <CategoryHoverDetail/>}

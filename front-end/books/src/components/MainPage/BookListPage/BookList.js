@@ -1,42 +1,47 @@
-// import qs from "qs";
-import {useState, useEffect} from "react"
-import axios from "axios"
+import styled from "styled-components"
+import { useHistory } from "react-router-dom"
 
-const BookList = ({location, match, history}) => {
-  const [books, setBooks] = useState(false);
-  const {inputs, tag} = location.state;
+const BookList = ({ location }) => {
+  const { input, tag, books } = location.state
+  console.log(books)
+  const history = useHistory();
 
-  useEffect(() => {
-    const getBooklist = async () => {
-      await axios.get("http://localhost:8080/api/items/", {
-        params: {
-          name:inputs,
-        }
-      })
-        .then(res => {
-          console.log(res.data._embedded.itemDtoList)
-          setBooks(res.data._embedded.itemDtoList)
-        })
-        .catch(err => {
-          console.log(err.response)
-          setBooks(false)
-        })
-    }
-    getBooklist()
-  }, [inputs])
+  const clickEvent = (book) => {
+    history.push({
+      pathname:"/detail",
+      search:`?id=${book.id}`,
+      state: book
+    })
+  }
 
   return <>
-    <div>태그명 : {tag} </div>
-    <div>검색어 : {inputs}</div>
-    {!books ? 
-    <div>검색 결과가 없습니다.</div> 
-    :
-    books.map((book, idx) => {
-      return <div key={idx}>
-        <h2>{book.name}</h2>
-        <p>{book.description}</p>
-      </div>
-    })}
+    {/* <div>태그명 : {tag} </div>
+    <div>검색어 : {input}</div> */}
+    {books ?
+      books.map((book, idx) => {
+        return <div key={idx}>
+          <ImageButton onClick={() => clickEvent(book)}>
+            <BookPosterImage src={book.imageUrl} alt="idx" />
+          </ImageButton>
+          <h2>{book.name}</h2>
+          <p>{book.description}</p>
+        </div>
+      })
+      :
+      <h2>{input}에 대한 검색 결과가 없습니다.</h2>
+    }
   </>
 }
 export default BookList;
+
+
+const ImageButton = styled.button`
+  border: 0 none;
+  background-color: transparent;
+`
+
+const BookPosterImage = styled.img`
+  width:240px;
+  height:320px;
+  object-fit: cover;
+`
