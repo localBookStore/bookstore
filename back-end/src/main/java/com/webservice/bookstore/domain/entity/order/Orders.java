@@ -76,11 +76,9 @@ public class Orders {
                 .status(OrdersEnum.ORDER) // 주문 상태 초기화
                 .build();
 
-        // Orders/Delivery 엔티티 간 양방향 연관관계 데이터 주입
+        // Orders, Delivery 엔티티 간 연관 데이터 주입
         order.addDelivery(delivery);
-        for(OrderItem orderItem : orderItemList) {
-            order.addOrderItem(orderItem);
-        }
+        orderItemList.stream().forEach(orderItem -> order.addOrderItem(orderItem));
 
         return order;
     }

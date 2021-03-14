@@ -47,7 +47,7 @@ public class OrdersService {
                 .sorted(Comparator.comparing(OrderItemDto::getItem_id))
                 .collect(Collectors.toList());
 
-        // Member, Item 엔티티 조회
+        // Member, Item 엔티티 조회 (id 기준으로 오름차순을 조회함)
         Member member       = memberRepository.getOne(memberDto.getId());
         List<Item> itemList = itemRepository.findByIdIn(getItemIdList(orderItemDtoList));
 
@@ -60,7 +60,9 @@ public class OrdersService {
         // 주문 저장
         Orders savedOrders = orderRepository.save(orders);
 
-        return OrdersDto.of(savedOrders);
+        // 추후에 장바구니 아이템 삭제 요청 추가 예정
+
+       return OrdersDto.of(savedOrders);
     }
 
 }
