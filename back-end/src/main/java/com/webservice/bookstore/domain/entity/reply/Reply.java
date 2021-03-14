@@ -15,17 +15,19 @@ import javax.persistence.*;
 public class Reply extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     private String content;
+
     private String userid;
+
+    private int depth;
+
+    private int replyIdx;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 
-    private int height=0;
-
-    private int order;
 
 }
