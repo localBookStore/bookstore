@@ -1,15 +1,18 @@
 import styled from "styled-components"
 import CountBox from "./CountBox"
 
-const TopDetail = (props) => {
+const TopDetail = ({props}) => {
+  const {name, author, imageUrl, price, publisher, quantity, id} = props
+
+  console.log(props,name)
   return <TopComponent>
-    <Image />
-    <Title>Books Title</Title>
-    <Content top="80px">Author / Publisher</Content>
-    <Content top="120px">Price</Content>
-    <Content top="160px">Fee</Content>
-    <Content top="200px">Count </Content>
-    <CountBox />
+    <Image src={imageUrl} alt={id}/>
+    <Title>책제목: {name}</Title>
+    <Content top="80px">저자: {author} / 출판사: {publisher}</Content>
+    <Content top="120px">가격: {price}</Content>
+    <Content top="160px">택배비: 3000</Content>
+    <Content top="200px">남은 수량: {quantity}</Content>
+    <CountBox rest={quantity} />
     <Button left="600px">장바구니</Button>
     <Button left="760px">바로구매</Button>
   </TopComponent>
@@ -22,8 +25,8 @@ const TopComponent = styled.div`
   height: auto;
 `
 const Image = styled.img`
-  border:2px solid;
-  background-color: white;
+  border:1px solid black;
+  background-color: transparent;
   margin: 0;
 
   position:relative;

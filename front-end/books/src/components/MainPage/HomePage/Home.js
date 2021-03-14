@@ -1,17 +1,31 @@
 import SlideItems from "./SlideItems"
 import PickItems from "./PickItems"
 import MonthBooks from "./MonthBooks"
-import "./Home.css"
+import styled from "styled-components"
 
 const Main = () => {
 
-  return <div className="main">
+  return <MainContainer>
     <SlideItems />
-    <hr className="line" />
+    <HrLine />
     <PickItems />
-    <hr className="line" />
+    <HrLine />
     <MonthBooks />
-    <hr className="line" />
-  </div>
+    <HrLine />
+  </MainContainer>
 }
 export default Main
+
+
+const MainContainer = styled.div`
+  position: relative;
+  width: 100%;
+`
+
+const HrLine = styled.hr`
+  position: relative;
+  margin-top: 40px;
+  border: 0 none;
+  height: 5px;
+  background-color: rgba(0, 0, 0, 0.13);
+`

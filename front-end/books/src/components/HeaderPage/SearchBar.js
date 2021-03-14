@@ -10,6 +10,7 @@ const SearchBar = () => {
   const [input, setInput] = useState("");
   const [tag, setTag] = useState("name");
   const [books, setBooks] = useState(null);
+  const [isSearch, setIsSearch] = useState(false);
   const history = useHistory();
 
   const getBooklist = async () => {
@@ -22,23 +23,28 @@ const SearchBar = () => {
       .then(res => {
         setBooks(res.data._embedded.itemDtoList)
       })
-      .catch(err => {
-        console.log(err.response)
-        setBooks(null)
+      .catch(() => {
+        setBooks(false)
       })
   }
 
   useEffect(() => {
-    history.push({
-      pathname:"/booklist",
-      search:`?${tag}=${input}`,
-      state:{
-        tag,
-        input,
-        books
-      }
-    })
-    return setInput("")
+    if (isSearch) {
+      history.push({
+        pathname:"/booklist",
+        search:`?${tag}=${input}`,
+        state:{
+          tag,
+          input,
+          books
+        }
+      })
+    }
+    return (
+      setInput(""),
+      setIsSearch(false),
+      setBooks(null)
+    )
   }, [books])
 
   const enterEvent = (event) => {
@@ -47,6 +53,7 @@ const SearchBar = () => {
     }
   }
   const clickEvent = () => {
+    setIsSearch(true);
     if (input) {
       getBooklist()
     }
