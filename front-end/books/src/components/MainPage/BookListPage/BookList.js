@@ -3,20 +3,19 @@ import { useHistory } from "react-router-dom"
 
 const BookList = ({ location }) => {
   const { input, tag, books } = location.state
-  console.log(books)
   const history = useHistory();
 
   const clickEvent = (book) => {
     history.push({
-      pathname:"/detail",
-      search:`?id=${book.id}`,
+      pathname: "/detail",
+      search: `?id=${book.id}`,
       state: book
     })
   }
-
+  
   return <>
-    {/* <div>태그명 : {tag} </div>
-    <div>검색어 : {input}</div> */}
+    {(input && tag) && <div>태그명 : {tag} </div>}
+    {(input && tag) && <div>검색어 : {input}</div>}
     {books ?
       books.map((book, idx) => {
         return <div key={idx}>

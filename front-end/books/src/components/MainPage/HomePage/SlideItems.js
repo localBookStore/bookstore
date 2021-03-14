@@ -46,7 +46,7 @@ const SlideItems = () => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />
   };
-
+  
   return <WholeContrainer>
     <Slider {...settings} className="slider">
       {promoteImage && promoteImage.map((res, idx) => {

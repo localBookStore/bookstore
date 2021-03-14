@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import axios from "axios"
 
@@ -9,29 +9,19 @@ import styled from "styled-components"
 const SearchBar = () => {
   const [input, setInput] = useState("");
   const [tag, setTag] = useState("name");
-  const [books, setBooks] = useState(null);
-  const [isSearch, setIsSearch] = useState(false);
   const history = useHistory();
 
   const getBooklist = async () => {
     await axios.get("http://localhost:8080/api/items/", { params: { input, tag } })
-      .then(res => setBooks(res.data._embedded.itemDtoList))
-      .catch(err => setBooks(null))
-  }
-
-  useEffect(() => {
-    if (isSearch) {
-      history.push({
-        pathname:"/booklist",
-        state:{ tag, input, books }
+      .then(res => {
+        const books = res.data._embedded.itemDtoList
+        history.push({
+          pathname:"/booklist",
+          state:{ tag, input, books }
+        })
       })
-    }
-    return (
-      setInput(""),
-      setIsSearch(false),
-      setBooks(false)
-    )
-  }, [books])
+      .catch(err => console.log(err.response))
+  }
 
   const enterEvent = (event) => {
     if (event.key === 'Enter') {
@@ -39,7 +29,6 @@ const SearchBar = () => {
     }
   }
   const clickEvent = () => {
-    setIsSearch(true);
     if (input) {
       getBooklist()
     }

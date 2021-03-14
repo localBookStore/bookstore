@@ -9,20 +9,12 @@ const CategoryBar = () => {
   // const [books, setBooks] = useState(null);
   const history = useHistory()
 
-  const ShowOnHover = () => {
-    setIsHover(true)
-  }
-
-  const ShowOffHover = () => {
-    setIsHover(false)
-  }
-
   const getBestBooks = async () => {
     await axios.get("http://localhost:8080/api/items/bestitems/")
       .then(res => {
         const books = res.data._embedded.itemDtoList
         history.push({
-          pathname:"/booklist",
+          pathname: "/booklist",
           state: { books }
         })
       })
@@ -30,13 +22,14 @@ const CategoryBar = () => {
   }
 
   return <AllContainer
-    onMouseLeave={ShowOffHover}
-  >
-    <ItemButton onMouseEnter={ShowOnHover}>장르별</ItemButton>
+    onMouseLeave={() => setIsHover(false)}>
+    <ItemButton
+      onMouseEnter={() => setIsHover(true)}
+    >장르별</ItemButton>
     <ItemButton onClick={getBestBooks}>베스트</ItemButton>
     <ItemButton>최신작</ItemButton>
     <ItemButton>커뮤니티</ItemButton>
-    {isHover && <CategoryHoverDetail/>}
+    {isHover && <CategoryHoverDetail />}
   </AllContainer>
 }
 export default CategoryBar;
