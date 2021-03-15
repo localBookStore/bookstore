@@ -23,4 +23,3 @@ public class Delivery {
     private DeliveryEnum status;
 
 }
-

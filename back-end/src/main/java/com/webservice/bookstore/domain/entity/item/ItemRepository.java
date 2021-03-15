@@ -11,15 +11,13 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item,Long> {
 
-
-   @Query(value = "select * from Item order by rand() limit :cnt",nativeQuery = true)
-   List<Item> getThisMonthbooks(@Param("cnt") int cnt);
+    @Query(value = "select * from Item order by rand() limit :cnt",nativeQuery = true)
+    List<Item> getThisMonthbooks(@Param("cnt") int cnt);
 
     @Query(value = "select * from (select I.*, row_number() over(partition by category_id order by rand()) rn from item I) I where rn <= 3", nativeQuery = true)
-   List<Item> getRandomListByGenre();
+    List<Item> getRandomListByGenre();
 
-   @EntityGraph(value = "Item.category")
-   List<Item> findAllByCategoryId(Long id);
+    List<Item> findByCategoryId(Long id);
 
     @Transactional
     @Modifying(clearAutomatically = true)
@@ -29,5 +27,6 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     @Query("select i from Item i order by i.viewCount desc")
     List<Item> bestItems();
 
+    List<Item> findByIdIn(List<Long> itemIdList);
 
 }

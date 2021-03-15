@@ -27,7 +27,7 @@ public class CartController {
     public ResponseEntity<List<CartDto>> getCartItemList() {
 
         // 세션에 저장된 로그인 계정 정보를 통해 장바구니 목록 조회 예정
-        List<CartDto> cartList = cartService.findByMemberId((long) 1);
+        List<CartDto> cartList = cartService.findByMemberId(1L);
 
         return new ResponseEntity<>(cartList, HttpStatus.OK);
     }
@@ -38,7 +38,7 @@ public class CartController {
     @PostMapping(value = "/cart/{item_id}")
     public ResponseEntity<CartDto> addCartItem(@PathVariable("item_id") Long item_id,
                                                @RequestBody CartDto cartDto) {
-        cartDto.setMember_id((long) 12);
+        cartDto.setMember_id(1L);
         cartDto.setItem_id(item_id);
 
         CartDto resCartDto = cartService.addCartEntity(cartDto);
