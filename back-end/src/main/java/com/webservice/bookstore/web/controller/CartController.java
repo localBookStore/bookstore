@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,12 @@ public class CartController {
         cartDto.setMember_id(1L);
         cartDto.setItem_id(item_id);
 
-        CartDto resCartDto = cartService.addCartEntity(cartDto);
+        CartDto resCartDto = null;
+        try {
+            resCartDto = cartService.addCartEntity(cartDto);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity(resCartDto, HttpStatus.OK);
     }
