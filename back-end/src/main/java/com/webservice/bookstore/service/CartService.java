@@ -32,10 +32,11 @@ public class CartService {
         List<Cart> cartEntityList = cartRepository.findByMemberId(id);
 
         List<CartDto> cartDtoList = new ArrayList<>();
-        for(Cart cartEntity : cartEntityList) {
-            CartDto cartDto = CartDto.of(cartEntity);
-            cartDtoList.add(cartDto);
-        }
+        cartEntityList.stream().forEach(cart -> cartDtoList.add(CartDto.of(cart)));
+//        for(Cart cartEntity : cartEntityList) {
+//            CartDto cartDto = CartDto.of(cartEntity);
+//            cartDtoList.add(cartDto);
+//        }
         return cartDtoList;
     }
 
