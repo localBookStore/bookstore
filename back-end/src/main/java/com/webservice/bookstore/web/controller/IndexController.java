@@ -56,6 +56,11 @@ public class IndexController {
 
     /*
     hover 시 각 카테고리 번호별 item 정보 3개씩 총 30개 아이템 랜덤 조회 요청
+    (
+     주의사항 :
+       HATEOAS가 맘대로 [ [{}, {}, {}], [{}, {}, {}], [{}, {}, {}], ...] json 구조를
+       [ {}, {}, {}, {}, {}, {}, {}, {}, {}, ...] json 구조로 바꿔 버림. 원인 알 수 없음.
+    )
     */
     @GetMapping(value = "/genre/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
     public ResponseEntity getRandomListByGenre() {
