@@ -4,26 +4,25 @@ import axios from "axios"
 import Slider from "react-slick"
 import PrevArrow from "./CustomArrow/PrevArrow"
 import NextArrow from "./CustomArrow/NextArrow"
-import "./SlideItems.css"
+import styled from "styled-components"
 
 const SlideItems = () => {
   const [promoteImage, setPromoteImage] = useState(false)
   const history = useHistory();
 
-  const GoItemDetail = (idx) => {
-    history.push('/detail')
+  const clickEvent = (book) => {
+    history.push({
+      pathname: '/detail',
+      search: `?id=${book.id}`,
+      state: book
+    })
   }
 
   useEffect(() => {
     const getPromoteImage = async () => {
       await axios.get("http://localhost:8080/api/index/image/")
-        .then(res => {
-          const {data} = res
-          setPromoteImage(data)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+        .then(res => setPromoteImage(res.data))
+        .catch(err => console.log(err))
     }
     getPromoteImage()
   }, [])
@@ -48,21 +47,38 @@ const SlideItems = () => {
     prevArrow: <PrevArrow />
   };
 
-  return <div>
+  return <WholeContrainer>
     <Slider {...settings} className="slider">
-      {promoteImage && promoteImage.map((value, idx) => {
-        return <button
+      {promoteImage && promoteImage.map((res, idx) => {
+        return <SliderButton
           key={idx}
           className="slider-image"
-          onClick={() => { GoItemDetail(idx) }}
+          onClick={() => clickEvent(res)}
         >
-          <img
+          <SliderImage
             className="w-100"
-            src={value.imageUrl}
+            src={res.imageUrl}
             alt="First slide"
           />
-        </button>
+        </SliderButton>
       })}
-    </Slider></div>
+    </Slider></WholeContrainer>
 }
 export default SlideItems;
+
+const WholeContrainer = styled.div`
+  margin: 0 auto;
+  width:80%;
+  height: auto;
+`
+
+const SliderButton = styled.button`
+  width:100%;
+  border: 0 none;
+  background-color: transparent;
+`
+
+const SliderImage = styled.img`
+  height: 480px;
+  object-fit: cover;
+`

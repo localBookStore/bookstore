@@ -1,11 +1,11 @@
 import styled from "styled-components"
 import { useState } from "react"
 
-const CountBox = () => {
+const CountBox = ({rest}) => {
   const [count, setCount] = useState(0);
 
   const Upper = () => {
-    setCount(count === 999 ? 999: count+1)
+    setCount(count === rest ? rest: count+1)
   }
   const Lower = () => {
     setCount(count === 0 ? 0 : count-1)
@@ -31,7 +31,7 @@ export default CountBox;
 const Counter = styled.div`
   position: absolute;
   bottom: 53px;
-  left: 710px;
+  left: 750px;
 `
 const Button = styled.button`
   border: 1 solid #4CAF50;

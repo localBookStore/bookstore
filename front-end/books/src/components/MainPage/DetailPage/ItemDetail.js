@@ -4,11 +4,13 @@ import BottomDetail from "./BottomDetail";
 
 import styled from "styled-components";
 
-const ItemDetail = () => {
+const ItemDetail = ({location}) => {
+  const book = location.state
+
   return <DetailComponent>
-    <TopDetail />
+    <TopDetail props={book}/>
     <Divider />
-    <MidDetail />
+    <MidDetail props={book}/>
     <Divider margin-top="20px"/>
     <BottomDetail />
   </DetailComponent>
