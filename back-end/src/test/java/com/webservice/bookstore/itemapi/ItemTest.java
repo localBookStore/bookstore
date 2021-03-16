@@ -1,7 +1,7 @@
 package com.webservice.bookstore.itemapi;
 
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
-import com.webservice.bookstore.service.ItemServiceImpl;
+import com.webservice.bookstore.service.ItemService;
 import com.webservice.bookstore.web.dto.ItemDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class ItemTest {
     private ItemRepository itemRepository;
 
     @Autowired
-    private ItemServiceImpl itemService;
+    private ItemService itemService;
 
     @Test
     public void apiTest(){
