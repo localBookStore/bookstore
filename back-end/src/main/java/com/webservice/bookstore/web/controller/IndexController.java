@@ -24,9 +24,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/")
 @Log4j2
 @RequiredArgsConstructor
+@RequestMapping(value = "/api/index/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
 @CrossOrigin(origins = {"http://localhost:3000"})
 public class IndexController {
 
@@ -34,7 +34,7 @@ public class IndexController {
 
     private final ItemService itemService;
 
-    @GetMapping("/index/image/")
+    @GetMapping("/image/")
     public ResponseEntity<List<ItemDto>> getPromotionalImage() {
 
         log.info("Index 홍보 이미지");
@@ -44,7 +44,7 @@ public class IndexController {
         return new ResponseEntity<>(itemDtoList, HttpStatus.OK);
     }
 
-    @GetMapping("/index/thismonth/")
+    @GetMapping("/thismonth/")
     public ResponseEntity<List<ItemDto>> getThisMonthList(){
         log.info("이달의 도서 보내기");
 
@@ -98,7 +98,7 @@ public class IndexController {
         return new ResponseEntity(collectionModel, HttpStatus.OK);
     }
 
-    @GetMapping("/index/newitems")
+    @GetMapping("/newitems")
     public ResponseEntity getNewItems() {
         List<Item> newItems = this.itemService.getNewItems();
         List<ItemDto> itemDtos = newItems.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
