@@ -20,6 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -244,6 +246,7 @@ class ItemControllerTest {
                 .quantity(i)
                 .description("최고의 책")
                 .publisher("한빛미디어")
+                .publicationDate(LocalDate.of(2020, 7, i))
                 .build();
         this.itemRepository.save(item);
     }
@@ -271,5 +274,32 @@ class ItemControllerTest {
         //when
         return this.itemRepository.save(book);
     }
+
+    @Test
+    @DisplayName("카테고리 new 정상적인 리스트 조회")
+    public void getNewItems() throws Exception {
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
+
+        //when
+        IntStream.rangeClosed(1,20).forEach(i -> saveItem(i,category));
+
+        //when
+
+
+        //then
+        this.mockMvc.perform(get("/api/index/newitems/"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("_embedded.itemDtoList[0]._links.self").exists())
+                .andExpect(jsonPath("_embedded.itemDtoList[0].quantity").value(20))
+//                .andExpect(jsonPath("_embedded.itemDtoList[0].publicationDate").value(LocalDate.of(2020,7,20)))
+                ;
+
+    }
+
 
 }

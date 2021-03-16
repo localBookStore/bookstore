@@ -5,8 +5,6 @@ import com.webservice.bookstore.domain.entity.item.ItemQueryRespository;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +35,11 @@ public class ItemService {
     }
 
     public List<Item> bestItems() {
-        return this.itemRepository.bestItems();
+        return this.itemRepository.getBestItems();
+    }
+
+    public List<Item> getNewItems() {
+        return this.itemRepository.getNewItems();
     }
 
 }

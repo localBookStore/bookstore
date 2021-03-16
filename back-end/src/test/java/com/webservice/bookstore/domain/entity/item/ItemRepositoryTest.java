@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -64,7 +63,7 @@ class ItemRepositoryTest {
         IntStream.rangeClosed(1,10).forEach(this::saveItem);
 
         //when
-        List<Item> items = this.itemRepository.bestItems();
+        List<Item> items = this.itemRepository.getBestItems();
 
         //then
         assertThat(items.get(0).getViewCount()).isEqualTo(10);
