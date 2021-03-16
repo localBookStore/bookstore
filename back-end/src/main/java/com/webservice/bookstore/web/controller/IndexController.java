@@ -107,4 +107,14 @@ public class IndexController {
         CollectionModel<ItemLinkResource> collectionModel = CollectionModel.of(itemLinkResources);
         return ResponseEntity.ok(collectionModel);
     }
+
+    @GetMapping("/bestitems/")
+    public ResponseEntity bestItems() {
+        List<Item> items = this.itemService.bestItems();
+        List<ItemDto> itemDtos = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
+        List<ItemLinkResource> itemLinkResources = itemDtos.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel()))
+                .collect(Collectors.toList());
+        CollectionModel<ItemLinkResource> collectionModel = CollectionModel.of(itemLinkResources);
+        return ResponseEntity.ok(collectionModel);
+    }
 }
