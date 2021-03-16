@@ -20,6 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -147,13 +149,34 @@ class ItemControllerTest {
     @DisplayName("기존의 책 하나 조회하기")
     public void getItem() throws Exception {
         //given
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
+
+        Item books = Item.builder()
+                .name("BOOk")
+                .author("아무개")
+                .category(category)
+                .imageUrl(null)
+                .isbn("12344")
+                .price(3)
+                .quantity(3)
+                .description("최고의 책")
+                .publisher("한빛미디어")
+                .build();
+        this.itemRepository.save(books);
+
         Item book = generateEntity();
 
         this.mockMvc.perform(get("/api/items/{id}", book.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("DATABASE BOOk"))
-                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("id").value(2))
+                .andExpect(jsonPath("category_id").value(10))
+                .andExpect(jsonPath("category_name").value("총류"))
                 .andExpect(jsonPath("author").value("아무개"))
                 .andExpect(jsonPath("_links.self").exists())
 //                .andExpect(jsonPath("_links.purchase-item").exists())
@@ -168,7 +191,7 @@ class ItemControllerTest {
         Item savedItem = generateEntity();
 
         //then
-        this.mockMvc.perform(get("/api/items/{id}", 123))
+        this.mockMvc.perform(get("/api/items/{id}", 123123))
                 .andDo(print())
                 .andExpect(status().isNotFound())
         ;
@@ -197,14 +220,15 @@ class ItemControllerTest {
         categoryRepository.save(category);
 
         //when
-        IntStream.rangeClosed(1,10).forEach(i -> saveItem(i,category));
+        IntStream.rangeClosed(1,40).forEach(i -> saveItem(i,category));
 
         //then
         this.mockMvc.perform(get("/api/items/bestitems/"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("_embedded.itemDtoList[0]._links.self").exists())
-                .andExpect(jsonPath("_embedded.itemDtoList[0].quantity").value(10))
+                .andExpect(jsonPath("_embedded.itemDtoList[0].quantity").value(40))
+                .andExpect(jsonPath("_embedded.itemDtoList[29]").exists())
                 ;
 
     }
@@ -222,6 +246,7 @@ class ItemControllerTest {
                 .quantity(i)
                 .description("최고의 책")
                 .publisher("한빛미디어")
+                .publicationDate(LocalDate.of(2020, 7, i))
                 .build();
         this.itemRepository.save(item);
     }
@@ -249,5 +274,32 @@ class ItemControllerTest {
         //when
         return this.itemRepository.save(book);
     }
+
+    @Test
+    @DisplayName("카테고리 new 정상적인 리스트 조회")
+    public void getNewItems() throws Exception {
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
+
+        //when
+        IntStream.rangeClosed(1,20).forEach(i -> saveItem(i,category));
+
+        //when
+
+
+        //then
+        this.mockMvc.perform(get("/api/index/newitems/"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("_embedded.itemDtoList[0]._links.self").exists())
+                .andExpect(jsonPath("_embedded.itemDtoList[0].quantity").value(20))
+//                .andExpect(jsonPath("_embedded.itemDtoList[0].publicationDate").value(LocalDate.of(2020,7,20)))
+                ;
+
+    }
+
 
 }
