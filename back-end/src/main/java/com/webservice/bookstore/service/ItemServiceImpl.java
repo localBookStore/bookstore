@@ -42,7 +42,7 @@ public class ItemServiceImpl implements ItemServices{
     @Override
     public List<ItemDto> getListByGenre(Long category_id) {
 
-        List<Item> itemList = itemRepository.findAllByCategoryId(category_id);
+        List<Item> itemList = itemRepository.findByCategoryId(category_id);
 
         List<ItemDto> itemDtoList = new ArrayList<>();
         for(Item item : itemList) {

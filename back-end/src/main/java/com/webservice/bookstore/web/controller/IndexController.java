@@ -59,7 +59,7 @@ public class IndexController {
     }
 
     /*
-    hover 시 각 장르별 item 정보 3개씩 랜덤 조회 요청
+    hover 시 각 카테고리 번호별 item 정보 3개씩 총 30개 아이템 랜덤 조회 요청
     */
     @GetMapping(value = "/genre/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
     public ResponseEntity getRandomListByGenre() {
@@ -72,14 +72,12 @@ public class IndexController {
                 .collect(Collectors.toList());
 
         // 카테고리 번호별로 분류한 json 구조로 직렬화(selialize)
-        Map<String, List<ItemLinkResource>> first = new HashMap<>();
+        List<List<ItemLinkResource>> first = new ArrayList<>();
         for(int i = 0; i < emList.size(); i+=3) {
-            first.put(String.valueOf(i/3), new ArrayList<>(emList.subList(i, Math.min(i+3, emList.size()))));
+            first.add(new ArrayList<>(emList.subList(i, Math.min(i+3, emList.size()))));
         }
 
-        RepresentationModel<?> model = CollectionModel.of(first);
-
-        return new ResponseEntity<>(model, HttpStatus.OK);
+        return new ResponseEntity<>(first, HttpStatus.OK);
     }
 
     /*
