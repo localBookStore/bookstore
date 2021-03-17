@@ -6,11 +6,10 @@ import styled from "styled-components";
 
 const CategoryBar = () => {
   const [isHover, setIsHover] = useState(false);
-  // const [books, setBooks] = useState(null);
   const history = useHistory()
 
-  const getBestBooks = async () => {
-    await axios.get("http://localhost:8080/api/items/bestitems/")
+  const getBooks = async (url) => {
+    await axios.get(`http://localhost:8080/api/items/${url}`)
       .then(res => {
         const books = res.data._embedded.itemDtoList
         history.push({
@@ -24,10 +23,9 @@ const CategoryBar = () => {
   return <AllContainer
     onMouseLeave={() => setIsHover(false)}>
     <ItemButton
-      onMouseEnter={() => setIsHover(true)}
-    >장르별</ItemButton>
-    <ItemButton onClick={getBestBooks}>베스트</ItemButton>
-    <ItemButton>최신작</ItemButton>
+      onMouseEnter={() => setIsHover(true)}>장르별</ItemButton>
+    <ItemButton onClick={() => getBooks("bestitems/")}>베스트</ItemButton>
+    <ItemButton onClick={() => getBooks("")}>최신작</ItemButton>
     <ItemButton>커뮤니티</ItemButton>
     {isHover && <CategoryHoverDetail />}
   </AllContainer>

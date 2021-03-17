@@ -11,16 +11,24 @@ const SearchBar = () => {
   const [tag, setTag] = useState("name");
   const history = useHistory();
 
+  const routing = (items) => {
+    history.push({
+      pathname: "/booklist",
+      state: { items }
+    })
+  }
+
   const getBooklist = async () => {
+
     await axios.get("http://localhost:8080/api/items/", { params: { input, tag } })
       .then(res => {
         const books = res.data._embedded.itemDtoList
-        history.push({
-          pathname:"/booklist",
-          state:{ tag, input, books }
-        })
+        routing(books)
       })
-      .catch(err => console.log(err.response))
+      .catch(() => {
+        routing(null)
+      })
+    setInput("")
   }
 
   const enterEvent = (event) => {

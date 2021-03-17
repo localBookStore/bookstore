@@ -2,10 +2,10 @@ import styled, { keyframes } from "styled-components"
 import { useState, useEffect } from "react"
 import axios from "axios"
 
-const tagMap = {0:"총류", 1:"철학", 2:"종교", 3:"사회과학", 4:"자연과학", 
-                  5:"기술과학", 6:"예술", 7:"언어", 8:"문학", 9:"역사"}
+const tagMap = ["총류", "철학", "종교", "사회과학", "자연과학", 
+                  "기술과학", "예술", "언어", "문학", "역사"]
 
-const CategoryHoverDetail = () => {
+const CategoryHoverDetail = ({}) => {
   const [genreData, setGenreData] = useState(null);
 
   useEffect(() => {
@@ -16,11 +16,20 @@ const CategoryHoverDetail = () => {
     }
     getGenreBooks()
   }, [])
+  
+  const EachGenreBooks = () => {
+    return <div>
+    </div>
+  }
 
   return <HoverComponent>
-    {console.log(genreData)}
-    
-    
+    {genreData && console.log(genreData)}
+    {genreData && tagMap.map((tagName, idx) => {
+      return <button key={idx}>
+        {tagName}
+      </button>
+    })}
+    {/* {genreData && <EachGenreBooks />} */}
   </HoverComponent>
 }
 export default CategoryHoverDetail;
