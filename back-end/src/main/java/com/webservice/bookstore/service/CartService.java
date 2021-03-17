@@ -5,16 +5,14 @@ import com.webservice.bookstore.domain.entity.cart.CartRepository;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.web.dto.CartDto;
-import com.webservice.bookstore.web.dto.ItemDto;
-import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,10 +30,11 @@ public class CartService {
         List<Cart> cartEntityList = cartRepository.findByMemberId(id);
 
         List<CartDto> cartDtoList = new ArrayList<>();
-        for(Cart cartEntity : cartEntityList) {
-            CartDto cartDto = CartDto.of(cartEntity);
-            cartDtoList.add(cartDto);
-        }
+        cartEntityList.stream().forEach(cart -> cartDtoList.add(CartDto.of(cart)));
+//        for(Cart cartEntity : cartEntityList) {
+//            CartDto cartDto = CartDto.of(cartEntity);
+//            cartDtoList.add(cartDto);
+//        }
         return cartDtoList;
     }
 
@@ -45,7 +44,7 @@ public class CartService {
     @Transactional
     public CartDto addCartEntity(CartDto cartDto) {
 
-        Item item = itemRepository.getOne(cartDto.getItem_id());
+        Item item = itemRepository.findById(cartDto.getItem_id()).orElseThrow(() -> new EntityNotFoundException());
         cartDto.setPrice(item.getPrice());
 
         Cart cart = cartDto.toEntity();
