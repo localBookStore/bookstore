@@ -16,11 +16,6 @@ const CategoryHoverDetail = ({}) => {
     }
     getGenreBooks()
   }, [])
-  
-  const EachGenreBooks = () => {
-    return <div>
-    </div>
-  }
 
   return <HoverComponent>
     {genreData && console.log(genreData)}
@@ -36,11 +31,14 @@ export default CategoryHoverDetail;
 
 
 const slideUp = keyframes`
-  from {
-    transform: translateY(-50px);
+  0% {
+    opacity: 0;
   }
-  to {
-    transform: translateY(10px);
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
   }
 `
 
@@ -49,8 +47,8 @@ const HoverComponent = styled.div`
   top: 60px;
   left: 40px;
 
-  background-color: rgba(224, 255, 239, 0.9);
-  border-radius: 5px;
+  background-color: rgba(235, 235, 235, 0.95);
+  border-radius: 10px;
   width:90.5vw;
   height: 300px;
 

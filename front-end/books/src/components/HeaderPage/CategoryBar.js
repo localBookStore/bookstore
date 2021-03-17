@@ -1,7 +1,8 @@
 import CategoryHoverDetail from "./CategoryHover/CategoryHoverDetail";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 import axios from "axios"
+
 import styled from "styled-components";
 
 const CategoryBar = () => {
@@ -9,15 +10,22 @@ const CategoryBar = () => {
   const history = useHistory()
 
   const getBooks = async (url) => {
-    await axios.get(`http://localhost:8080/api/items/${url}`)
+    await axios.get(`http://localhost:8080/api/index/${url}`)
       .then(res => {
-        const books = res.data._embedded.itemDtoList
+        const items = res.data._embedded.itemDtoList
         history.push({
           pathname: "/booklist",
-          state: { books }
+          state: { items }
         })
       })
       .catch(err => console.log(err.response))
+  }
+
+  const getArticle = async (url) => {
+    // await axios.get(`http://localhost:8080/api/${url}`)
+    //   .then(res => {
+
+    //   })
   }
 
   return <AllContainer
@@ -25,8 +33,8 @@ const CategoryBar = () => {
     <ItemButton
       onMouseEnter={() => setIsHover(true)}>장르별</ItemButton>
     <ItemButton onClick={() => getBooks("bestitems/")}>베스트</ItemButton>
-    <ItemButton onClick={() => getBooks("")}>최신작</ItemButton>
-    <ItemButton>커뮤니티</ItemButton>
+    <ItemButton onClick={() => getBooks("newitems/")}>최신작</ItemButton>
+    <ItemButton onClick={() => getArticle("board/")}>커뮤니티</ItemButton>
     {isHover && <CategoryHoverDetail />}
   </AllContainer>
 }
