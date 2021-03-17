@@ -26,8 +26,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @CrossOrigin(origins = {"http://localhost:3000"})
 public class IndexController {
 
-    private final ItemService itemServices;
-
     private final ItemService itemService;
 
     @GetMapping("/image/")
@@ -35,7 +33,7 @@ public class IndexController {
 
         log.info("Index 홍보 이미지");
 
-        List<ItemDto> itemDtoList = itemServices.getRandomList(3);
+        List<ItemDto> itemDtoList = itemService.getRandomList(3);
 
         return new ResponseEntity<>(itemDtoList, HttpStatus.OK);
     }
@@ -44,14 +42,14 @@ public class IndexController {
     public ResponseEntity<List<ItemDto>> getThisMonthList(){
         log.info("이달의 도서 보내기");
 
-        List<ItemDto> list= itemServices.getRandomList(12);
+        List<ItemDto> list= itemService.getRandomList(12);
 
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
     public ResponseEntity<List<ItemDto>> getWePickItem(){
         log.info("우리의 PICK 보내기");
-        return new ResponseEntity<>(itemServices.getRandomList(12) ,HttpStatus.OK);
+        return new ResponseEntity<>(itemService.getRandomList(12) ,HttpStatus.OK);
     }
 
     /*
@@ -65,7 +63,7 @@ public class IndexController {
     @GetMapping(value = "/genre/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
     public ResponseEntity getRandomListByGenre() {
 
-        List<ItemDto> itemDtoList = itemServices.getRandomListByGenre();
+        List<ItemDto> itemDtoList = itemService.getRandomListByGenre();
 
         List<ItemLinkResource> emList = itemDtoList.stream()
                 .map(itemDto -> new ItemLinkResource(itemDto,
@@ -87,7 +85,7 @@ public class IndexController {
     @GetMapping(value = "/genre/{category_id}/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
     public ResponseEntity<CollectionModel> getListByGenre(@PathVariable("category_id") Long category_id) {
 
-        List<ItemDto> itemList = itemServices.getListByGenre(category_id);
+        List<ItemDto> itemList = itemService.getListByGenre(category_id);
 
         List<ItemLinkResource> emList = itemList.stream()
                 .map(itemDto -> new ItemLinkResource(itemDto,
@@ -110,7 +108,7 @@ public class IndexController {
     }
 
     @GetMapping("/bestitems/")
-    public ResponseEntity bestItems() {
+    public ResponseEntity getBestItems() {
         List<Item> items = this.itemService.bestItems();
         List<ItemDto> itemDtos = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
         List<ItemLinkResource> itemLinkResources = itemDtos.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel()))

@@ -281,7 +281,7 @@ class ItemControllerTest {
         Category category = Category.builder()
                 .id(10L)
                 .name("총류")
-                .build();
+                .build();   
         categoryRepository.save(category);
 
         //when
