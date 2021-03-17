@@ -99,7 +99,7 @@ public class IndexController {
         return new ResponseEntity(collectionModel, HttpStatus.OK);
     }
 
-    @GetMapping("/newitems")
+    @GetMapping("/newitems/")
     public ResponseEntity getNewItems() {
         List<Item> newItems = this.itemService.getNewItems();
         List<ItemDto> itemDtos = newItems.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
