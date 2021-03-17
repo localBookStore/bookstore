@@ -220,15 +220,15 @@ class ItemControllerTest {
         categoryRepository.save(category);
 
         //when
-        IntStream.rangeClosed(1,40).forEach(i -> saveItem(i,category));
+        IntStream.rangeClosed(1,20).forEach(i -> saveItem(i,category));
 
         //then
-        this.mockMvc.perform(get("/api/items/bestitems/"))
+        this.mockMvc.perform(get("/api/index/bestitems/"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("_embedded.itemDtoList[0]._links.self").exists())
-                .andExpect(jsonPath("_embedded.itemDtoList[0].quantity").value(40))
-                .andExpect(jsonPath("_embedded.itemDtoList[29]").exists())
+                .andExpect(jsonPath("_embedded.itemDtoList[0].quantity").value(20))
+                .andExpect(jsonPath("_embedded.itemDtoList[19]").exists())
                 ;
 
     }
@@ -281,7 +281,7 @@ class ItemControllerTest {
         Category category = Category.builder()
                 .id(10L)
                 .name("총류")
-                .build();
+                .build();   
         categoryRepository.save(category);
 
         //when
