@@ -63,7 +63,4 @@ public class ItemController {
 //        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
         return ResponseEntity.ok(itemResource);
     }
-
-
-
 }
