@@ -4,12 +4,12 @@ import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemQueryRespository;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
+import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +37,45 @@ public class ItemService {
     }
 
     public List<Item> bestItems() {
-        return this.itemRepository.bestItems();
+        return this.itemRepository.getBestItems();
     }
 
+    public List<Item> getNewItems() {
+        return this.itemRepository.getNewItems();
+    }
+
+
+    public List<ItemDto> getRandomList(int cnt) {
+        List<Item> list=itemRepository.getThisMonthbooks(cnt);
+        List<ItemDto> res = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            res.add(ItemDto.of(list.get(i)));
+        }
+        return res;
+    }
+
+    public List<ItemDto> getRandomListByGenre() {
+
+        List<Item> itemList = itemRepository.getRandomListByGenre();
+
+        List<ItemDto> itemDtoList = new ArrayList<>();
+        for (Item item : itemList) {
+            itemDtoList.add(ItemDto.of(item));
+        }
+
+        return itemDtoList;
+    }
+
+    public List<ItemDto> getListByGenre(Long category_id) {
+
+        List<Item> itemList = itemRepository.findByCategoryId(category_id);
+
+        List<ItemDto> itemDtoList = new ArrayList<>();
+        for(Item item : itemList) {
+            ItemDto dto = ItemDto.of(item);
+            itemDtoList.add(dto);
+        }
+
+        return itemDtoList;
+    }
 }
