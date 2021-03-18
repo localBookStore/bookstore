@@ -19,8 +19,8 @@ const MonthBooks = () => {
         .then(res => setImages(res.data))
         .catch(err => console.log(err))
     }
-    getImage();
-    setIsLoading(true);
+    getImage()
+    return setIsLoading(true);
   }, [])
 
   const clickEvent = (book) => {
@@ -80,11 +80,19 @@ const ContainerTitle = styled.span`
 
 const EachBook = styled.div`
   position: relative;
-  overflow: hidden;
+  width: auto;
   max-height: 400px;
+  overflow: hidden;
+  object-fit: cover;
+  border-radius: 5px;
+  
 `
 
 const BookButton = styled.button`
   border: 0 none;
   background-color: transparent;
+
+  width:220px;
+  height:280px;
+  
 `

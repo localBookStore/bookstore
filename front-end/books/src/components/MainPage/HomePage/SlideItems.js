@@ -11,6 +11,7 @@ const SlideItems = () => {
   const history = useHistory();
 
   const clickEvent = (book) => {
+    console.log(book)
     history.push({
       pathname: '/detail',
       search: `?id=${book.id}`,
@@ -29,40 +30,33 @@ const SlideItems = () => {
 
 
   const settings = {
-    // className: "center",
-    // centerPadding: "60px",
-    // centerMode: true,
-    fade: true,
-    pauseOnHover: true,
     dots: true,
-    autoplay: true,
-    arrows: true,
     infinite: true,
-    speed: 1000,
-    autoplaySpeed: 2500,
+    speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    swipeToSlide: false,
+    lazyLoad: 'ondemand',
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />
   };
-  
+
   return <WholeContrainer>
-    <Slider {...settings} className="slider">
+    {console.log(promoteImage)}
+    <Slider {...settings}>
       {promoteImage && promoteImage.map((res, idx) => {
         return <SliderButton
           key={idx}
-          className="slider-image"
           onClick={() => clickEvent(res)}
         >
           <SliderImage
             className="w-100"
             src={res.imageUrl}
-            alt="First slide"
+            alt={idx}
           />
         </SliderButton>
       })}
-    </Slider></WholeContrainer>
+    </Slider>
+  </WholeContrainer>
 }
 export default SlideItems;
 
@@ -73,7 +67,7 @@ const WholeContrainer = styled.div`
 `
 
 const SliderButton = styled.button`
-  width:100%;
+  width:700px;
   border: 0 none;
   background-color: transparent;
 `
