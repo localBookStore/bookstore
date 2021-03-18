@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 const MidDetail = ({props}) => {
-
   const {description, category_id} = props
-  console.log(description, category_id)
+
   return <MidComponent>
+    <div>{category_id}</div>
     <Descript>{description}</Descript>
   </MidComponent>
 }

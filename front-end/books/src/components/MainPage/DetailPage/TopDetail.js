@@ -4,7 +4,6 @@ import CountBox from "./CountBox"
 const TopDetail = ({props}) => {
   const {name, author, imageUrl, price, publisher, quantity, id} = props
 
-  console.log(props,name)
   return <TopComponent>
     <Image src={imageUrl} alt={id}/>
     <Title>책제목: {name}</Title>
