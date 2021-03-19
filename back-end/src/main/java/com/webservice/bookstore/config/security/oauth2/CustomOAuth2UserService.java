@@ -75,27 +75,25 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("지원하고 있는 " + registrationId + "에서 email을 찾을 수 없습니다.");
         }
 
-        String userid = oAuth2UserInfo.getProvider() + oAuth2UserInfo.getProviderId();
-        Optional<Member> optionalMember = memberRepository.findByUserid(userid);
+        String email = oAuth2UserInfo.getEmail();
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
         Member memberEntity;
 
-        if(optionalMember.isPresent()) {
-
+        if(!optionalMember.isPresent()) {
+            log.info("DB에 존재하지않으므로 바로 회원가입");
+            // DB에 존재하지 않을 경우 강제 회원가입
+            memberEntity = registerNewMember(userRequest, oAuth2UserInfo);
+        } else {
             memberEntity = optionalMember.get();
 
             if(!memberEntity.getProvider().equals(AuthProvider.valueOf(registrationId))) {
                 throw new OAuth2AuthenticationProcessingException(memberEntity.getProvider() + "계정을 사용하기 위해서 로그인을 해야합니다.");
             }
             log.info("DB에 존재할 경우, 변경된 정보만 업데이트");
-            log.info("ID 확인 : " + memberEntity.getUserid());
+            log.info("ID 확인 : " + memberEntity.getEmail());
             // DB에 존재할 경우, 변경된 정보만 업데이트
-            memberEntity.updateMemberInfo(oAuth2UserInfo.getName());
-
-        } else {
-            log.info("DB에 존재하지않으므로 바로 회원가입");
-            // DB에 존재하지 않을 경우 강제 회원가입
-            memberEntity = registerNewMember(userRequest, oAuth2UserInfo);
+            memberEntity.updateMemberInfo(oAuth2UserInfo.getName(), oAuth2UserInfo.getImageUrl());
         }
 
         return new CustomUserDetails(memberEntity, oAuth2User.getAttributes());
@@ -104,9 +102,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private Member registerNewMember(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
 
         Member newMember = Member.builder()
-                                .name(oAuth2UserInfo.getName())
-                                .userid(oAuth2UserInfo.getProvider() + oAuth2UserInfo.getProviderId())
-                                .email(oAuth2UserInfo.getEmail())
+                .email(oAuth2UserInfo.getEmail())
+                                .nickName(oAuth2UserInfo.getName())
                                 .role(MemberRole.valueOf("USER"))
                                 .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase()))
                                 .providerId(oAuth2UserInfo.getProviderId())

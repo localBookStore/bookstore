@@ -25,8 +25,8 @@ public class CookieUtil {
         return Optional.empty();
     }
 
-    public static void addCookie(HttpServletResponse response, String cookieName,
-                                 String value, int maxAge) {
+    public static void addCookie(HttpServletResponse response,
+                                 String cookieName, String value, int maxAge) {
 
         Cookie cookie = new Cookie(cookieName, value);
         cookie.setHttpOnly(true);
@@ -42,9 +42,9 @@ public class CookieUtil {
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie: cookies) {
                 if (cookie.getName().equals(cookieName)) {
-                    cookie.setValue("");
-                    cookie.setPath("/");
-                    cookie.setMaxAge(0);
+                    cookie.setValue("");    // 쿠키의 값을 설정/수정
+                    cookie.setPath("/");    // setPath(String uri) 메서드를 통해 설정
+                    cookie.setMaxAge(0);    // 쿠키의 유효한 기간 0초로 설정 (-1 : 브라우저가 끄면 사라진다.)
                     response.addCookie(cookie);
                 }
             }

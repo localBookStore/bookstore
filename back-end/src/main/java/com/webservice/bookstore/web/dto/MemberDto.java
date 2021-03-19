@@ -1,6 +1,9 @@
 package com.webservice.bookstore.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.domain.entity.member.MemberRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,25 +16,32 @@ import lombok.NoArgsConstructor;
 public class MemberDto {
 
     private Long id;
-    private String name;
-    private String userid;
-    private String password;
     private String email;
+    private String nickName;
+    private String password;
     private String address;
     private String phone;
     private String role;
+
+    private String provider;
+    private String providerId;
+    private String refreshTokenValue;
+    private boolean enabled;
 
     // Entity -> DTO
     public static MemberDto of(Member member) {
         return MemberDto.builder()
                 .id(member.getId())
-                .name(member.getName())
-                .userid(member.getUserid())
-                .password(member.getPassword())
                 .email(member.getEmail())
+                .nickName(member.getEmail())
+                .password(member.getPassword())
                 .address(member.getAddress())
                 .phone(member.getPhone())
-                .role(member.getRole())
+                .role(String.valueOf(member.getRole()))
+                .provider(String.valueOf(member.getProvider()))
+                .providerId(member.getProviderId())
+                .refreshTokenValue(member.getRefreshTokenValue())
+                .enabled(member.getEnabled())
                 .build();
     }
 
@@ -39,13 +49,16 @@ public class MemberDto {
     public Member toEntity() {
         return Member.builder()
                 .id(this.id)
-                .name(this.name)
-                .userid(this.userid)
-                .password(this.password)
                 .email(this.email)
+                .nickName(this.nickName)
+                .password(this.password)
                 .address(this.address)
                 .phone(this.phone)
-                .role(this.role)
+                .role(MemberRole.valueOf(this.role))
+                .provider(AuthProvider.valueOf(this.provider))
+                .providerId(this.providerId)
+                .refreshTokenValue(this.refreshTokenValue)
+                .enabled(this.enabled)
                 .build();
     }
 }

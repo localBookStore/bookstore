@@ -37,6 +37,23 @@ dependencies {
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     // HATEOAS 추가 : RESTFul API 개발에 편의성 제공하는 라이브러리
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+    // 스프링 시큐리티 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+    // OAuth2.0 Client 라이브러리 추가
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // jwt 러이브러리 추가
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
+
+
+    /*
+    다른 서버로 request를 보내 response 받아 데이터를 처리해야 할 때 HttpClient를 이용.
+    (HttpGet, HttpHead, HttpPost, HttpPut, HttpDelete, HttpTrace, HttpOption)
+    */
+    implementation 'org.apache.httpcomponents:httpclient'
+    // HttpClient의 Multipart 설정을 위한 라이브러리 설정
+    implementation 'org.apache.httpcomponents:httpmime'
 
     compile("com.querydsl:querydsl-core") // querydsl
     compile("com.querydsl:querydsl-jpa") // querydsl

@@ -32,4 +32,9 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
         Map<String, Object> sub2 = (Map) sub.get("profile");
         return sub2.get("nickname").toString();
     }
+
+    @Override
+    public String getImageUrl() {
+        return this.attributes.get("imageUrl").toString();
+    }
 }
