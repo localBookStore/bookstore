@@ -1,24 +1,21 @@
 import styled from "styled-components"
-import { useHistory } from "react-router-dom"
 
-const BookList = ({ location }) => {
-  const { input, tag, books } = location.state
-  console.log(books)
-  const history = useHistory();
+const BookList = ({ history }) => {
+  const { input, tag, items } = history.location.state
 
   const clickEvent = (book) => {
     history.push({
-      pathname:"/detail",
-      search:`?id=${book.id}`,
+      pathname: "/detail",
+      search: `?id=${book.id}`,
       state: book
     })
   }
-
+  
   return <>
-    {/* <div>태그명 : {tag} </div>
-    <div>검색어 : {input}</div> */}
-    {books ?
-      books.map((book, idx) => {
+    {(input && tag) && <div>태그명 : {tag} </div>}
+    {(input && tag) && <div>검색어 : {input}</div>}
+    {items ?
+      items.map((book, idx) => {
         return <div key={idx}>
           <ImageButton onClick={() => clickEvent(book)}>
             <BookPosterImage src={book.imageUrl} alt="idx" />

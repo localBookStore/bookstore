@@ -3,13 +3,14 @@ import { faHandPointDown } from '@fortawesome/free-solid-svg-icons'
 import NextArrow from "./CustomArrow/NextArrow"
 import PrevArrow from "./CustomArrow/PrevArrow"
 import { useState, useEffect } from "react"
-import {useHistory} from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 import axios from "axios"
 import Slider from "react-slick";
 
 const MonthBooks = () => {
   const [images, setImages] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const histroy = useHistory();
 
   useEffect(() => {
@@ -19,12 +20,13 @@ const MonthBooks = () => {
         .catch(err => console.log(err))
     }
     getImage()
+    return setIsLoading(true);
   }, [])
 
   const clickEvent = (book) => {
     histroy.push({
-      pathname:"/detail",
-      search:`?id=${book.id}`,
+      pathname: "/detail",
+      search: `?id=${book.id}`,
       state: book
     })
   }
@@ -44,15 +46,19 @@ const MonthBooks = () => {
     <ContainerTitle>이달의 Books!</ContainerTitle>
     <FontAwesomeIcon icon={faHandPointDown} style={{ fontSize: "60px", color: "#74ABE3" }} />
 
-    <Slider {...settings}>
-      {images && images.map((res, idx) => {
-        return <EachBook key={idx}>
-          <BookButton onClick={() => clickEvent(res)}>
-            <img src={res.imageUrl} alt={idx} />
-          </BookButton>
-        </EachBook>
-      })}
-    </Slider>
+    { isLoading ? 
+      <Slider {...settings}>
+        {images && images.map((res, idx) => {
+          return <EachBook key={idx}>
+            <BookButton onClick={() => clickEvent(res)}>
+              <img src={res.imageUrl} alt={idx} />
+            </BookButton>
+          </EachBook>
+        })}
+      </Slider>
+    :
+    <h1>Loading....</h1>
+    }
   </Container>
 }
 export default MonthBooks;
@@ -74,11 +80,19 @@ const ContainerTitle = styled.span`
 
 const EachBook = styled.div`
   position: relative;
-  overflow: hidden;
+  width: auto;
   max-height: 400px;
+  overflow: hidden;
+  object-fit: cover;
+  border-radius: 5px;
+  
 `
 
 const BookButton = styled.button`
   border: 0 none;
   background-color: transparent;
+
+  width:220px;
+  height:280px;
+  
 `
