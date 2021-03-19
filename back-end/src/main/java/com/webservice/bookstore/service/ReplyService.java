@@ -26,6 +26,7 @@ public class ReplyService {
 
     //댓글등록
     public void registerReply(ReplyDTO replyDTO){
+        replyDTO.setGroupOrder(replyRepository.getReplyOrder(replyDTO.getBoardId())+1);
         Board board = boardRepository.getOne(replyDTO.getBoardId());
         Reply reply =  ReplyDTO.toEntity(replyDTO,board);
         replyRepository.save(reply);
