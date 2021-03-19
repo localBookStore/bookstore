@@ -38,8 +38,8 @@ public class BoardController {
         return new ResponseEntity<>(pageResultDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/board/{board_id}")
-    ResponseEntity<Object> showDetatilBoard(@PathVariable("board_id") long id){
+    @GetMapping("/board/{board_id}/")
+    public ResponseEntity<Object> showDetatilBoard(@PathVariable("board_id") long id){
         BoardDTO boardDTO = boardService.showBoardDetailPage(id);
         List<ReplyDTO> replylist = replyService.getBoardReplylist(boardDTO);
         List<Object> list=new ArrayList<>();
@@ -47,5 +47,11 @@ public class BoardController {
         list.add((Object) replylist);
 
         return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
+    @PostMapping("/board/")
+    public ResponseEntity<String> boardRegister(@RequestBody BoardDTO boardDTO){
+        boardService.boardRegister(boardDTO);
+        return new ResponseEntity<>("string",HttpStatus.OK);
     }
 }

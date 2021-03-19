@@ -10,10 +10,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -30,12 +27,10 @@ public class ReplyController {
     private final BoardService boardService;
 
     @PostMapping("/board/reply/comment/")
-    public ResponseEntity<String> replyRegister(ReplyDTO replyDTO){
+    public ResponseEntity<String> replyRegister(@RequestBody ReplyDTO replyDTO){
 
-        log.info("replyDyo : {}", replyDTO);
-        //replyService.registerReply(replyDTO);
-        System.out.println("요청왓다-------------------------------------");
-        System.out.println(replyDTO);
+        log.info("replyDto : {}", replyDTO);
+        replyService.registerReply(replyDTO);
         return new ResponseEntity<>("success",HttpStatus.OK);
     }
 }
