@@ -26,7 +26,7 @@ public class BoardDTO {
 
     private String memberUserid;//작성자 아이디
 
-    private String replyCount; //게시글수
+    private String replyCount; //댓글수
 
     private String category;
 
