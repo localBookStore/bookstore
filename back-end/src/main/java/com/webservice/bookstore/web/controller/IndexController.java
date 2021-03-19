@@ -38,7 +38,7 @@ public class IndexController {
         return new ResponseEntity<>(itemDtoList, HttpStatus.OK);
     }
 
-    @GetMapping("/thismonth/")
+    @GetMapping({"/thismonth/","/wepickitem/"})
     public ResponseEntity<List<ItemDto>> getThisMonthList(){
         log.info("이달의 도서 보내기");
 
@@ -47,10 +47,6 @@ public class IndexController {
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
-    public ResponseEntity<List<ItemDto>> getWePickItem(){
-        log.info("우리의 PICK 보내기");
-        return new ResponseEntity<>(itemService.getRandomList(12) ,HttpStatus.OK);
-    }
 
     /*
     hover 시 각 카테고리 번호별 item 정보 3개씩 총 30개 아이템 랜덤 조회 요청
