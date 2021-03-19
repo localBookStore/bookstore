@@ -44,11 +44,11 @@ public class BoardService {
         Board board = BoardDTO.toEntity(boardDTO,member);
         boardRepository.save(board);
     }
-
     //상세페이지 댓글은 아직 미완성
     public BoardDTO showBoardDetailPage(Long id){
         Board board = boardRepository.getOne(id);
         BoardDTO dto = BoardDTO.entityToDTO(board);
+
         return dto;
     }
 }
