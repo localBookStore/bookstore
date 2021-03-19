@@ -35,11 +35,14 @@ const CategoryBar = () => {
     <ItemButton onClick={() => getBooks("bestitems/")}>베스트</ItemButton>
     <ItemButton onClick={() => getBooks("newitems/")}>최신작</ItemButton>
     <ItemButton onClick={() => getArticle("board/")}>커뮤니티</ItemButton>
-    {isHover && <CategoryHoverDetail />}
+    <IsShow show={isHover}><CategoryHoverDetail /></IsShow>
   </AllContainer>
 }
 export default CategoryBar;
 
+const IsShow = styled.div`
+  display: ${props => props.show? "block": "none"};
+`
 
 const AllContainer = styled.div`
   position: relative;

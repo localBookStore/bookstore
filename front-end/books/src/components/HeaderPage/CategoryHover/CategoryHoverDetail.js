@@ -19,7 +19,6 @@ const CategoryHoverDetail = ({ }) => {
   }, [])
 
   const onHoverEvent = (idx) => {
-    console.log(genreData[idx])
     setChoiceGenre(genreData[idx])
   }
 
