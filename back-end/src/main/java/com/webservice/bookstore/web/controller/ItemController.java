@@ -60,7 +60,7 @@ public class ItemController {
         Item newItem = savedItem.get();
         GetItemDto itemDto = GetItemDto.toDto(newItem);
         ItemResource itemResource = new ItemResource(itemDto);
-//        itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
+//      itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
         return ResponseEntity.ok(itemResource);
     }
 }
