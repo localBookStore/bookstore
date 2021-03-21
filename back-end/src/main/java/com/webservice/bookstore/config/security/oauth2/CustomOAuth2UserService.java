@@ -47,6 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw e;
         } catch (Exception e) {
             // Throwing an instance of AuthenticationException will trigger the OAuth2AuthenticationFailureHandler
+            // 존재하는 아이디가 아닐 때 발생하는 예외
             throw new InternalAuthenticationServiceException(e.getMessage(), e.getCause());
         }
 
@@ -102,7 +103,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private Member registerNewMember(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
 
         Member newMember = Member.builder()
-                .email(oAuth2UserInfo.getEmail())
+                                .email(oAuth2UserInfo.getEmail())
                                 .nickName(oAuth2UserInfo.getName())
                                 .role(MemberRole.valueOf("USER"))
                                 .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase()))
