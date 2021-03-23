@@ -9,8 +9,10 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -33,7 +35,13 @@ public class CartController {
     public ResponseEntity getCartItemList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         // 세션에 저장된 로그인 계정 정보를 통해 장바구니 목록 조회 예정
-        List<CartDto> cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
+        List<CartDto> cartList = null;
+        try {
+            cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
+        } catch (NullPointerException e) {
+            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
+            throw new AuthenticationException("인증 오류가 발생했습니다.", e.getCause()) {};
+        }
 
         List<CartLinkResource> emList = cartList.stream()
                 .map(cartDto -> new CartLinkResource(cartDto,
@@ -52,8 +60,12 @@ public class CartController {
     public ResponseEntity<CartDto> addCartItem(@PathVariable("item_id") Long item_id,
                                                @RequestBody CartDto cartDto,
                                                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        cartDto.setMember_id(customUserDetails.getMember().getId());
+        try {
+            cartDto.setMember_id(customUserDetails.getMember().getId());
+        } catch (NullPointerException e) {
+            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
+            throw new AuthenticationException("인증 오류가 발생했습니다.", e.getCause()) {};
+        }
         cartDto.setItem_id(item_id);
 
         CartDto resCartDto = null;

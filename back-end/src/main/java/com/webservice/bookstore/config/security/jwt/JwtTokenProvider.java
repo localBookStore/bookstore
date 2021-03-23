@@ -51,8 +51,6 @@ public class JwtTokenProvider {
                 }})
                 .withExpiresAt(expiresAt(60, 2))
                 .withSubject(customUserDetails.getMember().getEmail())
-                .withClaim("nickName", customUserDetails.getMember().getNickName())
-                .withClaim("role", String.valueOf(customUserDetails.getMember().getRole()))
                 .withClaim("IssuedDate", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 

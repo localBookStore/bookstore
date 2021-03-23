@@ -42,9 +42,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // JWT 토큰 값이 없거나 'Bearer ' 문자열로 시작하지 않는다면 다음 필터로 넘겨줌
         if (authorizationValue == null || !authorizationValue.startsWith(JwtProperties.TOKEN_PREFIX)) {
             log.error("JWT이 없거나, JWT 구조 문제");
-            throw new MalformedJwtException("JWT이 없거나, JWT 구조 문제");
-//            filterChain.doFilter(request, response);
-//            return;
+            filterChain.doFilter(request, response);
+            return;
         }
 
         String jwtToken = authorizationValue.replace(JwtProperties.TOKEN_PREFIX, "");
@@ -57,6 +56,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             log.info("액세스 토큰이 유효합니다. DB의 Member 테이블을 조회합니다...");
 
             optionalMember = checkMemberEmail(email);
+//            Optional<Member> optionalMember = checkMemberEmail(email);
 //            CustomUserDetails customUserDetails = new CustomUserDetails(optionalMember.get());
 //
 //            Authentication authentication
@@ -64,10 +64,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 //
 //            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        } catch (JWTVerificationException e) {
+        } catch (TokenExpiredException e) {
             // 액세스 토큰이 만료되었다면, Refresh Token을 검사해서 유효하면 재발급, 만료가 됬다면 로그인 창으로 이동
             log.info("JWTVerificationException : " + e.getMessage());
             String email = JWT.decode(jwtToken).getSubject();
+//            Optional<Member> optionalMember = checkMemberEmail(email);
             optionalMember = checkMemberEmail(email);
 
             Member memberEntity = optionalMember.get();
@@ -79,10 +80,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 String newAccessToken = jwtTokenProvider.createAccessToken(new CustomUserDetails(memberEntity));
                 log.info("Create New Access Token");    // Access Token 재발급
                 response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
-            } catch (JWTVerificationException ex) {
+            } catch (TokenExpiredException ex) {
                 log.info("JWTVerificationException : " + ex.getMessage());
-                log.info("Refresh Token이 만료가 되었으므로, 다시 로그인 해야합니다.");
-                throw new TokenExpiredException("Refresh Token이 만료가 되었으므로, 다시 로그인 해야합니다.");
+                throw new TokenExpiredException(ex.getMessage());
             }
 
         }
