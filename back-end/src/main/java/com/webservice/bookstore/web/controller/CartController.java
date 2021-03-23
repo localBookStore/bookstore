@@ -1,16 +1,15 @@
 package com.webservice.bookstore.web.controller;
 
+import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.cart.CartLinkResource;
-import com.webservice.bookstore.domain.entity.item.ItemLinkResource;
 import com.webservice.bookstore.service.CartService;
 import com.webservice.bookstore.web.dto.CartDto;
-import com.webservice.bookstore.web.dto.ItemDto;
-import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -31,10 +30,10 @@ public class CartController {
     장바구니 목록 조회 요청 핸들러
     */
     @GetMapping(value = "/cart/", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity getCartItemList() {
+    public ResponseEntity getCartItemList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         // 세션에 저장된 로그인 계정 정보를 통해 장바구니 목록 조회 예정
-        List<CartDto> cartList = cartService.findByMemberId(1L);
+        List<CartDto> cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
 
         List<CartLinkResource> emList = cartList.stream()
                 .map(cartDto -> new CartLinkResource(cartDto,
@@ -51,8 +50,10 @@ public class CartController {
     */
     @PostMapping(value = "/cart/{item_id}")
     public ResponseEntity<CartDto> addCartItem(@PathVariable("item_id") Long item_id,
-                                               @RequestBody CartDto cartDto) {
-        cartDto.setMember_id(1L);
+                                               @RequestBody CartDto cartDto,
+                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        cartDto.setMember_id(customUserDetails.getMember().getId());
         cartDto.setItem_id(item_id);
 
         CartDto resCartDto = null;
