@@ -1,6 +1,7 @@
 package com.webservice.bookstore.config.security.oauth2;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
+import com.webservice.bookstore.config.security.jwt.JwtTokenProvider;
 import com.webservice.bookstore.config.security.oauth2.provider.GoogleOAuth2UserInfo;
 import com.webservice.bookstore.config.security.oauth2.provider.KakaoOAuth2UserInfo;
 import com.webservice.bookstore.config.security.oauth2.provider.NaverOAuth2UserInfo;
@@ -28,10 +29,11 @@ import java.util.Optional;
 @Log4j2
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
+    private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
-    @Override
     @Transactional
+    @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         log.info("getClientRegistration : " + userRequest.getClientRegistration());
@@ -56,24 +58,24 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     // 시용자 정보 추출
     private OAuth2User processOAuth2User(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
 
-        String registrationId   // google, naver, kakao
+        String provider   // google, naver, kakao
                 = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
-        log.info("Who is Provider? : " + registrationId);
+        log.info("Who is Provider? : " + provider);
 
         OAuth2UserInfo oAuth2UserInfo = null;
-        if(registrationId.equals("GOOGLE")) {
+        if(provider.equals("GOOGLE")) {
             oAuth2UserInfo = new GoogleOAuth2UserInfo(oAuth2User.getAttributes());
-        } else if (registrationId.equals("NAVER")) {
+        } else if (provider.equals("NAVER")) {
             oAuth2UserInfo = new NaverOAuth2UserInfo(oAuth2User.getAttributes());
-        } else if (registrationId.equals("KAKAO")) {
+        } else if (provider.equals("KAKAO")) {
             oAuth2UserInfo = new KakaoOAuth2UserInfo(oAuth2User.getAttributes());
         } else {
-            throw new OAuth2AuthenticationProcessingException(registrationId + "(으)로 로그인 할 수 없습니다.");
+            throw new OAuth2AuthenticationProcessingException(provider + "(으)로 로그인 할 수 없습니다.");
         }
 
         if(oAuth2UserInfo.getEmail() == null || oAuth2UserInfo.getEmail().isEmpty()) {
-            throw new OAuth2AuthenticationProcessingException("지원하고 있는 " + registrationId + "에서 email을 찾을 수 없습니다.");
+            throw new OAuth2AuthenticationProcessingException(provider + " 인증 서버에서 email을 찾을 수 없습니다.");
         }
 
         String email = oAuth2UserInfo.getEmail();
@@ -83,17 +85,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if(!optionalMember.isPresent()) {
             log.info("DB에 존재하지않으므로 바로 회원가입");
-            // DB에 존재하지 않을 경우 강제 회원가입
             memberEntity = registerNewMember(userRequest, oAuth2UserInfo);
         } else {
             memberEntity = optionalMember.get();
 
-            if(!memberEntity.getProvider().equals(AuthProvider.valueOf(registrationId))) {
+            if(!memberEntity.getProvider().equals(AuthProvider.valueOf(provider))) {
                 throw new OAuth2AuthenticationProcessingException(memberEntity.getProvider() + "계정을 사용하기 위해서 로그인을 해야합니다.");
             }
             log.info("DB에 존재할 경우, 변경된 정보만 업데이트");
             log.info("ID 확인 : " + memberEntity.getEmail());
-            // DB에 존재할 경우, 변경된 정보만 업데이트
             memberEntity.updateMemberInfo(oAuth2UserInfo.getName(), oAuth2UserInfo.getImageUrl());
         }
 
@@ -108,7 +108,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                                 .role(MemberRole.valueOf("USER"))
                                 .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase()))
                                 .providerId(oAuth2UserInfo.getProviderId())
+                                .enabled(false)
                                 .build();
+        newMember.updateRefreshToken(jwtTokenProvider.createRefreshToken(new CustomUserDetails(newMember)));
 
         return memberRepository.save(newMember);
     }

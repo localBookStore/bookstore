@@ -1,8 +1,10 @@
 package com.webservice.bookstore.config.security.jwt;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -28,31 +30,26 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final MemberRepository memberRepository;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        log.info("JwtAuthenticationFilter의 attemptAuthentication() 호출 : 로그인 시도 중...");
+        log.info("JwtAuthenticationFilter.attemptAuthentication : 로그인 인증 시도 중...");
 
         try {
 
             ObjectMapper objectMapper = new ObjectMapper();
             Member member = objectMapper.readValue(request.getInputStream(), Member.class);
-            System.out.println("member : " + member);
 
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(member.getEmail(), member.getPassword());
-            System.out.println("authenticationToken : " + authenticationToken);
 
             // authentication에 로그인한 정보가 담긴다.
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-            // 권한(Role) 확인을 위해 세션에 임시로 저장하여 successfulAuthentication/unsuccessfulAuthentication 메소드에 넘겨줌
-            CustomUserDetails customUserDetails =
-                    (CustomUserDetails) authentication.getPrincipal();
-            log.info("로그인 완료 (customUserDetails.getMember().getEmail()) : " + customUserDetails.getMember().getEmail());
-
+            // 권한(Role) 확인을 위해 세션에 임시로 저장하여 un/successfulAuthentication 메소드에 넘겨줌
             return authentication;
 
         } catch (IOException e) {
@@ -69,12 +66,26 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication authentication) throws IOException, ServletException {
 
+        // DB에 저장되어 있는 Refresh Token 검증
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        try {
+            log.info("Call jwtTokenProvider.verify");
+            jwtTokenProvider.verify(customUserDetails.getMember().getRefreshTokenValue());
+        } catch (JWTVerificationException e) { // 토큰 만료 시
+            log.info("JWTVerificationException : " + e.getMessage());
+            String newRefreshToken = jwtTokenProvider.createRefreshToken(customUserDetails);
+            customUserDetails.getMember().updateRefreshToken(newRefreshToken);
+            memberRepository.save(customUserDetails.getMember());
+        }
+
         log.info("JwtAuthenticationFilter.successfulAuthentication : 'OK'");
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=utf-8");
+
+//        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         response.setHeader(JwtProperties.HEADER_STRING,
-                JwtProperties.TOKEN_PREFIX + jwtTokenProvider.createAccessToken(authentication));
+                JwtProperties.TOKEN_PREFIX + jwtTokenProvider.createAccessToken(customUserDetails));
 
         Map<String, Object> resultAttributes = new HashMap<>();
         resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
@@ -111,38 +122,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
 
-        // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
-        // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,
-        // 별도로 tomcat 설정을 수정하거나 ServletOutputStream 객체가 아닌 위처럼 PrintWriter 객체로 넘겨주어야한다.
-        //response.getOutputStream().println(objectMapper.writeValueAsString(errorAttributes));
-
-//        super.unsuccessfulAuthentication(request, response, failed);
     }
-
-
-
-
-
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request,
-//                                    HttpServletResponse response,
-//                                    FilterChain filterChain) throws ServletException, IOException {
-//
-//        String jwtToken = request.getHeader("Authorization");
-//        // JWT 토큰을 검증해서 정상적인 사용자인지 확인 (헤더값 확인)
-//        if (jwtToken == null || !jwtToken.startsWith("Bearer ")) {
-//            // JWT 토큰값이 없거나 'Bearer ' 문자열로 시작하지 않는다면 다음 필터로 넘겨줌
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-//        jwtToken = jwtToken.replace("Bearer ", "");
-//
-//        if (jwtToken != null && jwtTokenProvider.isTokenValid(jwtToken)) { // jwt이 not null이면서 유효 기간이 지나지 않았다면,
-//            Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//        }
-//
-//        filterChain.doFilter(request, response);
-//    }
 
 }

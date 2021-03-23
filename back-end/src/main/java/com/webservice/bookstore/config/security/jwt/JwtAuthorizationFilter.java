@@ -1,68 +1,110 @@
 package com.webservice.bookstore.config.security.jwt;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import io.jsonwebtoken.MalformedJwtException;
+
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
-import com.webservice.bookstore.config.security.auth.CustomUserDetailsService;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
-//public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 @Log4j2
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final MemberRepository memberRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws IOException, ServletException {
 
-        log.info("인가 확인을 위한 JwtAuthorizationFilter 동작");
+        log.info("JwtAuthorizationFilter.doFilterInternal : 인가 검증 시도...");
 
         String authorizationValue = request.getHeader("Authorization");  // jwt 토큰 값
-        System.out.println("request header Authorization 키값 : " + authorizationValue);
 
         // JWT 토큰 값이 없거나 'Bearer ' 문자열로 시작하지 않는다면 다음 필터로 넘겨줌
         if (authorizationValue == null || !authorizationValue.startsWith(JwtProperties.TOKEN_PREFIX)) {
-            log.error("Value 값이 없거나, 유효하지 않은 JWT 토큰");
-            filterChain.doFilter(request, response);
-            return;
+            log.error("JWT이 없거나, JWT 구조 문제");
+            throw new MalformedJwtException("JWT이 없거나, JWT 구조 문제");
+//            filterChain.doFilter(request, response);
+//            return;
         }
 
-        String jwtToken = authorizationValue.replace("Bearer", "");
+        String jwtToken = authorizationValue.replace(JwtProperties.TOKEN_PREFIX, "");
+        Optional<Member> optionalMember = null;
 
-        VerifyResult verifyResult = jwtTokenProvider.verify(jwtToken);
-        if(verifyResult.isResult()) {
-            log.info("토큰이 유효합니다. DB를 조회합니다...");
+        try {
+            VerifyResult verifyResult = jwtTokenProvider.verify(jwtToken);  // Access Token 유효성 검사
 
-            CustomUserDetails userDetails
-                    = (CustomUserDetails) customUserDetailsService.loadUserByUsername(verifyResult.getEmail());
+            String email = verifyResult.getEmail();
+            log.info("액세스 토큰이 유효합니다. DB의 Member 테이블을 조회합니다...");
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            optionalMember = checkMemberEmail(email);
+//            CustomUserDetails customUserDetails = new CustomUserDetails(optionalMember.get());
+//
+//            Authentication authentication
+//                    = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+//
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        } catch (JWTVerificationException e) {
+            // 액세스 토큰이 만료되었다면, Refresh Token을 검사해서 유효하면 재발급, 만료가 됬다면 로그인 창으로 이동
+            log.info("JWTVerificationException : " + e.getMessage());
+            String email = JWT.decode(jwtToken).getSubject();
+            optionalMember = checkMemberEmail(email);
+
+            Member memberEntity = optionalMember.get();
+
+            try {
+                log.info("Call jwtTokenProvider.verify");
+                jwtTokenProvider.verify(memberEntity.getRefreshTokenValue());
+
+                String newAccessToken = jwtTokenProvider.createAccessToken(new CustomUserDetails(memberEntity));
+                log.info("Create New Access Token");    // Access Token 재발급
+                response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
+            } catch (JWTVerificationException ex) {
+                log.info("JWTVerificationException : " + ex.getMessage());
+                log.info("Refresh Token이 만료가 되었으므로, 다시 로그인 해야합니다.");
+                throw new TokenExpiredException("Refresh Token이 만료가 되었으므로, 다시 로그인 해야합니다.");
+            }
+
         }
+
+        CustomUserDetails customUserDetails = new CustomUserDetails(optionalMember.get());
+
+        Authentication authentication
+                = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
+    }
+
+    private Optional<Member> checkMemberEmail(String email) {
+
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        if(!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException(email);
+        }
+
+        return optionalMember;
     }
 
 }

@@ -1,12 +1,12 @@
 package com.webservice.bookstore.config.security;
 
-import com.webservice.bookstore.config.security.auth.CustomUserDetailsService;
 import com.webservice.bookstore.config.security.jwt.JwtAuthenticationFilter;
 import com.webservice.bookstore.config.security.jwt.JwtAuthorizationFilter;
 import com.webservice.bookstore.config.security.jwt.JwtTokenProvider;
 import com.webservice.bookstore.config.security.oauth2.CustomOAuth2UserService;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final MemberRepository memberRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
@@ -49,9 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .addFilter(corsFilter)
-            .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider),
+            .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider, memberRepository),
                     UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider, customUserDetailsService),
+            .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider, memberRepository),
                     BasicAuthenticationFilter.class)
             .formLogin().disable()
             .httpBasic().disable()
@@ -68,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 .accessDeniedHandler(new AccessDeniedHandler() {
-                    // 특정 권한만 접근할 수 있는 페이지에 대해 접근 권한이 없는 (인증 받은) 계정이 접근하려고 하면 아래 메소드가 호출
+                    // 특정 권한만 접근할 수 있는 페이지에 대해 접근 권한이 없는 (인증된) 계정이 접근하려고 하면 아래 메소드가 호출
                     @Override
                     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Deny Access");
@@ -87,7 +87,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler)     // OAuth2 인증 성공 시 해당 핸들러 수행
                 .failureHandler(oAuth2AuthenticationFailureHandler);    // OAuth2 인증 실패 시 해당 핸들러 수행
-
 
     }
 

@@ -38,6 +38,8 @@ public class Member extends BaseTimeEntity {
 
     private String providerId;
 
+    @Lob
+    @Column(length = 512)
     private String refreshTokenValue;
 
     private Boolean enabled;
@@ -48,6 +50,10 @@ public class Member extends BaseTimeEntity {
         this.nickName = name;
         this.imageUrl = imageUrl;
         return this;
+    }
+
+    public void updateRefreshToken(String refreshTokenValue) {
+        this.refreshTokenValue= refreshTokenValue;
     }
 
 }

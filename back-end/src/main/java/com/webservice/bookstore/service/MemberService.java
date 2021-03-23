@@ -1,5 +1,7 @@
 package com.webservice.bookstore.service;
 
+import com.webservice.bookstore.config.security.auth.CustomUserDetails;
+import com.webservice.bookstore.config.security.jwt.JwtTokenProvider;
 import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
@@ -17,8 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private final MemberRepository memberRepository;
     private final PasswordEncoder encoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public MemberDto signup(MemberDto memberDto) {
@@ -30,6 +33,7 @@ public class MemberService {
         memberDto.setProvider(String.valueOf(AuthProvider.DEFAULT));
 
         Member savedMember = memberRepository.save(memberDto.toEntity());
+        savedMember.updateRefreshToken(jwtTokenProvider.createRefreshToken(new CustomUserDetails(savedMember)));
         memberDto = MemberDto.of(savedMember);
 
         return memberDto;

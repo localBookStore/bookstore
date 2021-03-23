@@ -1,8 +1,11 @@
 package com.webservice.bookstore.config.security.oauth2.handler;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.config.security.jwt.JwtProperties;
 import com.webservice.bookstore.config.security.jwt.JwtTokenProvider;
+import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,7 @@ import java.util.Map;
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberRepository memberRepository;
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -34,24 +38,54 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         log.info("OAuth2AuthenticationSuccessHandler.onAuthenticationSuccess : 'OK'");
 
-        response.setStatus(HttpStatus.OK.value());
+        // DB에 저장되어 있는 Refresh Token 검증
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        try {
+            log.info("Call jwtTokenProvider.verify");
+            jwtTokenProvider.verify(customUserDetails.getMember().getRefreshTokenValue());
+        } catch (JWTVerificationException e) { // 토큰 만료 시
+            log.info("JWTVerificationException : " + e.getMessage());
+            String newRefreshToken = jwtTokenProvider.createRefreshToken(customUserDetails);
+            customUserDetails.getMember().updateRefreshToken(newRefreshToken);
+            memberRepository.save(customUserDetails.getMember());
+        }
 
-        String jwtToken = JwtProperties.TOKEN_PREFIX + jwtTokenProvider.createAccessToken(authentication);
-        response.setHeader(JwtProperties.HEADER_STRING, jwtToken);
-        response.setContentType("application/json;charset=utf-8");
+        // 이메일 인증 여부 확인 (enabled 필드 값 TRUE/FALSE 확인)
+        if(customUserDetails.getMember().getEnabled().booleanValue()) {
 
-        Map<String, Object> resultAttributes = new HashMap<>();
-        resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        resultAttributes.put("status", HttpStatus.OK);
-        resultAttributes.put("message", "Authentication completed (Default)");
-        resultAttributes.put("path", request.getRequestURI());
+            response.setStatus(HttpStatus.OK.value());
 
-        response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
+            String jwtToken = JwtProperties.TOKEN_PREFIX + jwtTokenProvider.createAccessToken(customUserDetails);
+            response.setHeader(JwtProperties.HEADER_STRING, jwtToken);
+            response.setContentType("application/json;charset=utf-8");
 
-        // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
-        // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,
-        // 별도로 tomcat 설정을 수정하거나 ServletOutputStream 객체가 아닌 위처럼 PrintWriter 객체로 넘겨주어야한다.
-        // response.getOutputStream().println(objectMapper.writeValueAsString(resultAttributes));
+            Map<String, Object> resultAttributes = new HashMap<>();
+            resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            resultAttributes.put("status", HttpStatus.OK);
+            resultAttributes.put("message", "Authentication completed (OAuth2.0)");
+            resultAttributes.put("path", request.getRequestURI());
+
+            response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
+
+            // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
+            // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,
+            // 별도로 tomcat 설정을 수정하거나 ServletOutputStream 객체가 아닌 위처럼 PrintWriter 객체로 넘겨주어야한다.
+            // response.getOutputStream().println(objectMapper.writeValueAsString(resultAttributes));
+
+        } else {
+
+            response.setStatus(HttpStatus.LOCKED.value()); // 423 응답값
+            response.setContentType("application/json;charset=utf-8");
+
+            Map<String, Object> resultAttributes = new HashMap<>();
+            resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            resultAttributes.put("status", HttpStatus.LOCKED);
+            resultAttributes.put("message", "Email authentication has not yet been performed. (OAuth2.0)");
+            resultAttributes.put("path", request.getRequestURI());
+
+            response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
+
+        }
 
     }
 
