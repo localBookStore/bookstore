@@ -21,11 +21,8 @@ const CategoryBar = () => {
       .catch(err => console.log(err.response))
   }
 
-  const getArticle = async (url) => {
-    // await axios.get(`http://localhost:8080/api/${url}`)
-    //   .then(res => {
-
-    //   })
+  const getArticle = (url) => {
+    history.push("/comunity")
   }
 
   return <AllContainer
@@ -42,6 +39,7 @@ export default CategoryBar;
 
 const IsShow = styled.div`
   display: ${props => props.show? "block": "none"};
+  width:0px;
 `
 
 const AllContainer = styled.div`
@@ -51,8 +49,8 @@ const AllContainer = styled.div`
   padding: 0;
   width: 100%;
   top: 150px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  justify-content: space-between;
   z-index: 1;
 `
 const ItemButton = styled.button`

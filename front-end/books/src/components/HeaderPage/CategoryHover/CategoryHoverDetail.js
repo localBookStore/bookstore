@@ -1,13 +1,14 @@
 import styled, { keyframes } from "styled-components"
 import { useState, useEffect } from "react"
+import { useHistory } from "react-router-dom"
 import axios from "axios"
 
-const tagMap = ["총류", "철학", "종교", "사회과학", "자연과학",
-  "기술과학", "예술", "언어", "문학", "역사"]
+const tagMap = ["총류", "철학", "종교", "사회과학", "자연과학", "기술과학", "예술", "언어", "문학", "역사"]
 
-const CategoryHoverDetail = ({ }) => {
+const CategoryHoverDetail = () => {
   const [genreData, setGenreData] = useState(null);
   const [choiceGenre, setChoiceGenre] = useState(null);
+  const history = useHistory();
 
   useEffect(() => {
     const getGenreBooks = async () => {
@@ -20,6 +21,14 @@ const CategoryHoverDetail = ({ }) => {
 
   const onHoverEvent = (idx) => {
     setChoiceGenre(genreData[idx])
+  }
+
+  const toDetailEvent = book => {
+    history.push({
+      pathname:"/detail",
+      search:`?id=${book.id}`,
+      state:book
+    })
   }
 
   return <HoverComponent>
@@ -37,7 +46,9 @@ const CategoryHoverDetail = ({ }) => {
     <Items>
       {choiceGenre && choiceGenre.map((res, idx) => {
         return <div key={idx}>
-          <EachItemButton><ItemImage src={res.imageUrl} alt={idx} /></EachItemButton>
+          <EachItemButton onClick={() => toDetailEvent(res)}>
+            <ItemImage src={res.imageUrl} alt={idx} />
+          </EachItemButton>
           <ItemTitle>{res.name}</ItemTitle>
         </div>
       })}
@@ -65,11 +76,11 @@ const HoverComponent = styled.div`
   top: 60px;
 
   left: 2%;
-  margin: auto;
+  margin: 0;
 
   background-color: rgba(235, 235, 235, 0.95);
   border-radius: 10px;
-  width:95%;
+  width:90%;
   height: 400px;
 
   animation-duration: 0.3s;
