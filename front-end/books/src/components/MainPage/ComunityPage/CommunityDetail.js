@@ -1,5 +1,9 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
+import ArticleDetail from "./ArticleDetail"
+import CommentsDetail from "./CommentsDetail"
+
+import styled from "styled-components"
 
 const CommunityDetail = ({ match }) => {
   const articleId = match.params.id;
@@ -23,14 +27,20 @@ const CommunityDetail = ({ match }) => {
 
   return <>
     {isloading ?
-      <div>
-        {console.log(article)}
-        {console.log(comments)}
-      </div>
+      <BoardContainer>
+        <ArticleDetail props={article}/>
+        <hr />
+        <CommentsDetail props={comments}/>
+      </BoardContainer>
       :
-      <div>
+      <BoardContainer>
         로딩중
-      </div>}
+      </BoardContainer>}
   </>
 }
 export default CommunityDetail;
+
+const BoardContainer = styled.div`
+  margin: 30px;
+  height:auto;
+`
