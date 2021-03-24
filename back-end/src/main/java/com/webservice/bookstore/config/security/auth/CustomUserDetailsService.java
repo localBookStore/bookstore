@@ -1,6 +1,6 @@
 package com.webservice.bookstore.config.security.auth;
 
-import com.webservice.bookstore.config.security.jwt.JwtTokenProvider;
+import com.webservice.bookstore.config.security.jwt.JwtUtil;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

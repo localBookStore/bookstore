@@ -1,6 +1,6 @@
 package com.webservice.bookstore.web.controller;
 
-import com.webservice.bookstore.config.security.jwt.JwtTokenProvider;
+import com.webservice.bookstore.config.security.jwt.JwtUtil;
 import com.webservice.bookstore.service.MemberService;
 import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
 
     @PostMapping(value = "/signup/")
     public ResponseEntity signup(@RequestBody MemberDto dto) {

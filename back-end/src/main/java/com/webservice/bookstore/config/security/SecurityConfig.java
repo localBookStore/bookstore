@@ -2,7 +2,7 @@ package com.webservice.bookstore.config.security;
 
 import com.webservice.bookstore.config.security.jwt.JwtAuthenticationFilter;
 import com.webservice.bookstore.config.security.jwt.JwtAuthorizationFilter;
-import com.webservice.bookstore.config.security.jwt.JwtTokenProvider;
+import com.webservice.bookstore.config.security.jwt.JwtUtil;
 import com.webservice.bookstore.config.security.oauth2.CustomOAuth2UserService;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
@@ -35,11 +35,16 @@ import java.io.IOException;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final MemberRepository memberRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -49,9 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .addFilter(corsFilter)
-            .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider, memberRepository),
+            .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, memberRepository),
                     UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider, memberRepository),
+            .addFilterBefore(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, memberRepository),
                     BasicAuthenticationFilter.class)
             .formLogin().disable()
             .httpBasic().disable()
@@ -64,14 +69,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     // 특정 권한만 접근할 수 있는 페이지에 대해 로그인 없이 접근하려고 하면 아래 메소드가 호출
                     @Override
                     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-                        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unable to access without login authentication.");
                     }
                 })
                 .accessDeniedHandler(new AccessDeniedHandler() {
                     // 특정 권한만 접근할 수 있는 페이지에 대해 접근 권한이 없는 (인증된) 계정이 접근하려고 하면 아래 메소드가 호출
                     @Override
                     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-                        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Deny Access");
+                        response.sendError(HttpServletResponse.SC_FORBIDDEN, "You do not have access.");
                     }
                 })
                 .and()
@@ -88,11 +93,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(oAuth2AuthenticationSuccessHandler)     // OAuth2 인증 성공 시 해당 핸들러 수행
                 .failureHandler(oAuth2AuthenticationFailureHandler);    // OAuth2 인증 실패 시 해당 핸들러 수행
 
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
 }

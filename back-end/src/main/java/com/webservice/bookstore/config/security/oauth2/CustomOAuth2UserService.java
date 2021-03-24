@@ -1,7 +1,7 @@
 package com.webservice.bookstore.config.security.oauth2;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
-import com.webservice.bookstore.config.security.jwt.JwtTokenProvider;
+import com.webservice.bookstore.config.security.jwt.JwtUtil;
 import com.webservice.bookstore.config.security.oauth2.provider.GoogleOAuth2UserInfo;
 import com.webservice.bookstore.config.security.oauth2.provider.KakaoOAuth2UserInfo;
 import com.webservice.bookstore.config.security.oauth2.provider.NaverOAuth2UserInfo;
@@ -29,7 +29,7 @@ import java.util.Optional;
 @Log4j2
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -110,7 +110,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                                 .providerId(oAuth2UserInfo.getProviderId())
                                 .enabled(false)
                                 .build();
-        newMember.updateRefreshToken(jwtTokenProvider.createRefreshToken(new CustomUserDetails(newMember)));
+        newMember.updateRefreshToken(jwtUtil.createRefreshToken(new CustomUserDetails(newMember)));
 
         return memberRepository.save(newMember);
     }

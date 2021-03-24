@@ -1,88 +1,93 @@
 package com.webservice.bookstore.config.security.jwt;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import io.jsonwebtoken.MalformedJwtException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Log4j2
-@RequiredArgsConstructor
-public class JwtAuthorizationFilter extends OncePerRequestFilter {
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final MemberRepository memberRepository;
+    private JwtUtil jwtUtil;
+    private MemberRepository memberRepository;
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+                                  JwtUtil jwtUtil, MemberRepository memberRepository) {
+        super(authenticationManager);
+        this.jwtUtil = jwtUtil;
+        this.memberRepository = memberRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws IOException, ServletException {
 
-        log.info("JwtAuthorizationFilter.doFilterInternal : 인가 검증 시도...");
+        log.info("JwtAuthorizationFilter.doFilterInternal :");
 
-        String authorizationValue = request.getHeader("Authorization");  // jwt 토큰 값
+        String authorizationValue = request.getHeader(JwtProperties.HEADER_STRING);  // jwt 토큰 값
 
         // JWT 토큰 값이 없거나 'Bearer ' 문자열로 시작하지 않는다면 다음 필터로 넘겨줌
         if (authorizationValue == null || !authorizationValue.startsWith(JwtProperties.TOKEN_PREFIX)) {
-            log.error("JWT이 없거나, JWT 구조 문제");
+            log.info("No JWT, JWT structure issue :");
             filterChain.doFilter(request, response);
             return;
         }
 
         String jwtToken = authorizationValue.replace(JwtProperties.TOKEN_PREFIX, "");
         Optional<Member> optionalMember = null;
+        String email = JWT.decode(jwtToken).getSubject();
 
         try {
-            VerifyResult verifyResult = jwtTokenProvider.verify(jwtToken);  // Access Token 유효성 검사
-
-            String email = verifyResult.getEmail();
-            log.info("액세스 토큰이 유효합니다. DB의 Member 테이블을 조회합니다...");
+            log.info("Verify a Access Token :");
+            JwtUtil.verify(jwtToken);
+            log.info("The Access Token is valid. Query the member table of the Database :");
 
             optionalMember = checkMemberEmail(email);
-//            Optional<Member> optionalMember = checkMemberEmail(email);
-//            CustomUserDetails customUserDetails = new CustomUserDetails(optionalMember.get());
-//
-//            Authentication authentication
-//                    = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-//
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
 
         } catch (TokenExpiredException e) {
-            // 액세스 토큰이 만료되었다면, Refresh Token을 검사해서 유효하면 재발급, 만료가 됬다면 로그인 창으로 이동
+            // Access Token이 만료되었다면, Refresh Token을 검사해서 유효하면 재발급, 만료가 됬다면 로그인 창으로 이동
             log.info("JWTVerificationException : " + e.getMessage());
-            String email = JWT.decode(jwtToken).getSubject();
-//            Optional<Member> optionalMember = checkMemberEmail(email);
-            optionalMember = checkMemberEmail(email);
 
+            optionalMember = checkMemberEmail(email);
             Member memberEntity = optionalMember.get();
 
             try {
-                log.info("Call jwtTokenProvider.verify");
-                jwtTokenProvider.verify(memberEntity.getRefreshTokenValue());
+                log.info("Verify a Refresh Token :");
+                JwtUtil.verify(memberEntity.getRefreshTokenValue());
+                log.info("Queried Access Token is valid. Create a new Access Token :");
 
-                String newAccessToken = jwtTokenProvider.createAccessToken(new CustomUserDetails(memberEntity));
-                log.info("Create New Access Token");    // Access Token 재발급
+                String newAccessToken = jwtUtil.createAccessToken(new CustomUserDetails(memberEntity));
                 response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
             } catch (TokenExpiredException ex) {
                 log.info("JWTVerificationException : " + ex.getMessage());
-                throw new TokenExpiredException(ex.getMessage());
+//                throw new TokenExpiredException(ex.getMessage());
+                this.onUnsuccessfulAuthentication(request, response, new AuthenticationException(ex.getMessage(), ex.getCause()) {});
+                return;
             }
 
         }
@@ -91,7 +96,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         Authentication authentication
                 = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
@@ -107,4 +111,25 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         return optionalMember;
     }
 
+    @Override
+    protected void onUnsuccessfulAuthentication(HttpServletRequest request,
+                                                HttpServletResponse response,
+                                                AuthenticationException failed) throws IOException {
+
+        // 401(Unauthorized) 상태 발생
+        log.info("JwtAuthorizationFilter.onUnsuccessfulAuthentication : 'Expired'");
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json;charset=utf-8");
+
+        Map<String, Object> errorAttributes = new HashMap<>();
+        errorAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        errorAttributes.put("status", HttpStatus.UNAUTHORIZED);
+        errorAttributes.put("exception", failed.getMessage());
+        errorAttributes.put("path", request.getRequestURI());
+
+        response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
+
+
+    }
 }

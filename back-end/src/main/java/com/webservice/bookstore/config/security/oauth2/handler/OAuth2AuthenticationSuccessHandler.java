@@ -4,12 +4,13 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.config.security.jwt.JwtProperties;
-import com.webservice.bookstore.config.security.jwt.JwtTokenProvider;
+import com.webservice.bookstore.config.security.jwt.JwtUtil;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -42,10 +43,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         try {
             log.info("Call jwtTokenProvider.verify");
-            jwtTokenProvider.verify(customUserDetails.getMember().getRefreshTokenValue());
+            jwtUtil.verify(customUserDetails.getMember().getRefreshTokenValue());
         } catch (JWTVerificationException e) { // 토큰 만료 시
             log.info("JWTVerificationException : " + e.getMessage());
-            String newRefreshToken = jwtTokenProvider.createRefreshToken(customUserDetails);
+            String newRefreshToken = jwtUtil.createRefreshToken(customUserDetails);
             customUserDetails.getMember().updateRefreshToken(newRefreshToken);
             memberRepository.save(customUserDetails.getMember());
         }
@@ -55,7 +56,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
             response.setStatus(HttpStatus.OK.value());
 
-            String jwtToken = JwtProperties.TOKEN_PREFIX + jwtTokenProvider.createAccessToken(customUserDetails);
+            String jwtToken = JwtProperties.TOKEN_PREFIX + jwtUtil.createAccessToken(customUserDetails);
             response.setHeader(JwtProperties.HEADER_STRING, jwtToken);
             response.setContentType("application/json;charset=utf-8");
 
@@ -80,10 +81,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             Map<String, Object> resultAttributes = new HashMap<>();
             resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             resultAttributes.put("status", HttpStatus.LOCKED);
-            resultAttributes.put("message", "Email authentication has not yet been performed. (OAuth2.0)");
+            resultAttributes.put("message", "Email authentication has not yet been performed.");
             resultAttributes.put("path", request.getRequestURI());
 
             response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
+
+            SecurityContextHolder.getContext().setAuthentication(null);
 
         }
 

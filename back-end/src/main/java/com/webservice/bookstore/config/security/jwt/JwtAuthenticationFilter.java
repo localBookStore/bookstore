@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -70,37 +71,49 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         try {
             log.info("Call jwtTokenProvider.verify");
-            jwtTokenProvider.verify(customUserDetails.getMember().getRefreshTokenValue());
+            jwtUtil.verify(customUserDetails.getMember().getRefreshTokenValue());
         } catch (JWTVerificationException e) { // 토큰 만료 시
             log.info("JWTVerificationException : " + e.getMessage());
-            String newRefreshToken = jwtTokenProvider.createRefreshToken(customUserDetails);
+            String newRefreshToken = jwtUtil.createRefreshToken(customUserDetails);
             customUserDetails.getMember().updateRefreshToken(newRefreshToken);
             memberRepository.save(customUserDetails.getMember());
         }
 
         log.info("JwtAuthenticationFilter.successfulAuthentication : 'OK'");
 
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType("application/json;charset=utf-8");
+        if(customUserDetails.getMember().getEnabled().booleanValue()) {
+            response.setStatus(HttpStatus.OK.value());
+            response.setContentType("application/json;charset=utf-8");
+            response.setHeader(JwtProperties.HEADER_STRING,
+                    JwtProperties.TOKEN_PREFIX + jwtUtil.createAccessToken(customUserDetails));
 
-//        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        response.setHeader(JwtProperties.HEADER_STRING,
-                JwtProperties.TOKEN_PREFIX + jwtTokenProvider.createAccessToken(customUserDetails));
+            Map<String, Object> resultAttributes = new HashMap<>();
+            resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            resultAttributes.put("status", HttpStatus.OK);
+            resultAttributes.put("message", "Authentication completed (Default)");
+            resultAttributes.put("path", request.getRequestURI());
 
-        Map<String, Object> resultAttributes = new HashMap<>();
-        resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        resultAttributes.put("status", HttpStatus.OK);
-        resultAttributes.put("message", "Authentication completed (Default)");
-        resultAttributes.put("path", request.getRequestURI());
+            response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
 
-        response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
+            // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
+            // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,
+            // 별도로 tomcat 설정을 수정하거나 ServletOutputStream 객체가 아닌 위처럼 PrintWriter 객체로 넘겨주어야한다.
+            //response.getOutputStream().println(objectMapper.writeValueAsString(resultAttributes));
 
-        // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
-        // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,
-        // 별도로 tomcat 설정을 수정하거나 ServletOutputStream 객체가 아닌 위처럼 PrintWriter 객체로 넘겨주어야한다.
-        //response.getOutputStream().println(objectMapper.writeValueAsString(resultAttributes));
+        } else {
+            response.setStatus(HttpStatus.LOCKED.value()); // 423 응답값
+            response.setContentType("application/json;charset=utf-8");
 
-//        super.successfulAuthentication(request, response, chain, authentication);
+            Map<String, Object> resultAttributes = new HashMap<>();
+            resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            resultAttributes.put("status", HttpStatus.LOCKED);
+            resultAttributes.put("message", "Email authentication has not yet been performed.");
+            resultAttributes.put("path", request.getRequestURI());
+
+            response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
+
+            SecurityContextHolder.getContext().setAuthentication(null);
+        }
 
     }
 
