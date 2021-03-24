@@ -1,12 +1,15 @@
 package com.webservice.bookstore.config.security.jwt;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
+import com.webservice.bookstore.config.security.auth.CustomUserDetailsService;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
+import com.webservice.bookstore.util.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -32,14 +36,21 @@ import java.util.Optional;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private JwtUtil jwtUtil;
+    private RedisUtil redisUtil;
     private MemberRepository memberRepository;
+    private CustomUserDetailsService customUserDetailsService;
     private ObjectMapper objectMapper = new ObjectMapper();
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
-                                  JwtUtil jwtUtil, MemberRepository memberRepository) {
+                                  JwtUtil jwtUtil, RedisUtil redisUtil,
+                                  MemberRepository memberRepository,
+                                  CustomUserDetailsService customUserDetailsService
+                                  ) {
         super(authenticationManager);
-        this.jwtUtil = jwtUtil;
+        this.jwtUtil    = jwtUtil;
+        this.redisUtil      = redisUtil;
         this.memberRepository = memberRepository;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
@@ -59,46 +70,91 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         String jwtToken = authorizationValue.replace(JwtProperties.TOKEN_PREFIX, "");
-        Optional<Member> optionalMember = null;
-        String email = JWT.decode(jwtToken).getSubject();
+//        Optional<Member> optionalMember = null;
+//        String email = JWT.decode(jwtToken).getSubject();
 
-        try {
-            log.info("Verify a Access Token :");
-            JwtUtil.verify(jwtToken);
-            log.info("The Access Token is valid. Query the member table of the Database :");
+        VerifyResult verify = jwtUtil.verify(jwtToken);
+        if(verify.isResult()) {
+            log.info("액세스 토큰 검증 성공");
+            CustomUserDetails customUserDetails
+                    = (CustomUserDetails) customUserDetailsService.loadUserByUsername(verify.getEmail());
+            log.info("조회된 닉네임 : " + customUserDetails.getMember().getNickName());
+            Authentication auth
+                    = new UsernamePasswordAuthenticationToken(customUserDetails ,null, customUserDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(auth);
 
-            optionalMember = checkMemberEmail(email);
+            filterChain.doFilter(request, response);
+            return;
+        } else {
+            log.info("액세스 토큰 검증 실패");
+            String email = verify.getEmail();   // abc@gmail.com
 
-        } catch (TokenExpiredException e) {
-            // Access Token이 만료되었다면, Refresh Token을 검사해서 유효하면 재발급, 만료가 됬다면 로그인 창으로 이동
-            log.info("JWTVerificationException : " + e.getMessage());
+            String refreshToken = redisUtil.getRefreshToken(email);
+            log.info("Saved Refresh Token in Redis : {}", refreshToken);
 
-            optionalMember = checkMemberEmail(email);
-            Member memberEntity = optionalMember.get();
-
-            try {
-                log.info("Verify a Refresh Token :");
-                JwtUtil.verify(memberEntity.getRefreshTokenValue());
-                log.info("Queried Access Token is valid. Create a new Access Token :");
-
-                String newAccessToken = jwtUtil.createAccessToken(new CustomUserDetails(memberEntity));
+            VerifyResult refreshVerify = jwtUtil.verify(refreshToken);
+            if(refreshVerify.isResult()) {
+                log.info("리프레시 토큰 검증 성공");
+                String newAccessToken = jwtUtil.createAccessToken(refreshVerify.getEmail());
                 response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
-            } catch (TokenExpiredException ex) {
-                log.info("JWTVerificationException : " + ex.getMessage());
-//                throw new TokenExpiredException(ex.getMessage());
-                this.onUnsuccessfulAuthentication(request, response, new AuthenticationException(ex.getMessage(), ex.getCause()) {});
+
+                CustomUserDetails customUserDetails
+                        = (CustomUserDetails) customUserDetailsService.loadUserByUsername(verify.getEmail());
+                Authentication auth
+                        = new UsernamePasswordAuthenticationToken(customUserDetails ,null, customUserDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
+                filterChain.doFilter(request,response);
                 return;
+
+            } else {
+                log.info("리프레시 토큰 검증 실패");
+                redisUtil.deleteRefreshToken(email);
+                throw new TokenExpiredException("리프레쉬 토큰 만료.");
             }
 
         }
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(optionalMember.get());
+//        filterChain.doFilter(request,response);
 
-        Authentication authentication
-                = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        filterChain.doFilter(request, response);
+//        try {
+//            log.info("Verify a Access Token :");
+//            VerifyResult verifyResult = JwtUtil.verify(jwtToken);
+//            log.info("The Access Token is valid. Query the member table of the Database :");
+//
+//            optionalMember = checkMemberEmail(verifyResult.getEmail());
+//
+//        } catch (JWTVerificationException e) {
+//            // Access Token이 만료되었다면, Refresh Token을 검사해서 유효하면 재발급, 만료가 됬다면 로그인 창으로 이동
+//            log.info("JWTVerificationException : " + e.getMessage());
+//
+//            optionalMember = checkMemberEmail(email);
+//            Member memberEntity = optionalMember.get();
+//
+//            try {
+//                log.info("Verify a Refresh Token :");
+//                JwtUtil.verify(memberEntity.getRefreshTokenValue());
+//                log.info("Queried Access Token is valid. Create a new Access Token :");
+//
+//                String newAccessToken = jwtUtil.createAccessToken(new CustomUserDetails(memberEntity));
+//                response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
+//            } catch (JWTVerificationException ex) {
+//                log.info("JWTVerificationException : " + ex.getMessage());
+////                throw new TokenExpiredException(ex.getMessage());
+//                this.onUnsuccessfulAuthentication(request, response, new AuthenticationException(ex.getMessage(), ex.getCause()) {});
+//                return;
+//            }
+//
+//        }
+
+//        CustomUserDetails customUserDetails = new CustomUserDetails(optionalMember.get());
+//
+//        Authentication authentication
+//                = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        filterChain.doFilter(request, response);
     }
 
     private Optional<Member> checkMemberEmail(String email) {

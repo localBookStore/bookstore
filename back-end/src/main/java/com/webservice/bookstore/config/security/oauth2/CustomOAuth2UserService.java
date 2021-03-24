@@ -108,9 +108,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                                 .role(MemberRole.valueOf("USER"))
                                 .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase()))
                                 .providerId(oAuth2UserInfo.getProviderId())
-                                .enabled(false)
+                                .enabled(true)  // OAuth 계정은 굳이 이메일 인증 절차가 필요없다고 판단
                                 .build();
-        newMember.updateRefreshToken(jwtUtil.createRefreshToken(new CustomUserDetails(newMember)));
+        newMember.updateRefreshToken(jwtUtil.createRefreshToken(newMember.getEmail()));
 
         return memberRepository.save(newMember);
     }

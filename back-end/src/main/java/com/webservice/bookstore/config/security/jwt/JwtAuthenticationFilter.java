@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
+import com.webservice.bookstore.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -31,6 +34,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final RedisUtil redisUtil;
     private final MemberRepository memberRepository;
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -67,28 +71,34 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication authentication) throws IOException, ServletException {
 
-        // DB에 저장되어 있는 Refresh Token 검증
+        //Redis에 Refresh 토큰 저장
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        try {
-            log.info("Call jwtTokenProvider.verify");
-            jwtUtil.verify(customUserDetails.getMember().getRefreshTokenValue());
-        } catch (JWTVerificationException e) { // 토큰 만료 시
-            log.info("JWTVerificationException : " + e.getMessage());
-            String newRefreshToken = jwtUtil.createRefreshToken(customUserDetails);
-            customUserDetails.getMember().updateRefreshToken(newRefreshToken);
-            memberRepository.save(customUserDetails.getMember());
-        }
+        Member member = customUserDetails.getMember();
+        String email = member.getEmail();
+
+        // DB에 저장되어 있는 Refresh Token 검증
+//        try {
+//            log.info("Call jwtTokenProvider.verify");
+//            jwtUtil.verify(customUserDetails.getMember().getRefreshTokenValue());
+//        } catch (JWTVerificationException e) { // 토큰 만료 시
+//            log.info("JWTVerificationException : " + e.getMessage());
+//            String newRefreshToken = jwtUtil.createRefreshToken(customUserDetails);
+//            customUserDetails.getMember().updateRefreshToken(newRefreshToken);
+//            memberRepository.save(customUserDetails.getMember());
+//        }
 
         log.info("JwtAuthenticationFilter.successfulAuthentication : 'OK'");
 
-        if(customUserDetails.getMember().getEnabled().booleanValue()) {
+        if(customUserDetails.isEnabled()) {
+            redisUtil.setRefreshToken(email, jwtUtil.createRefreshToken(email), 60L);
+
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json;charset=utf-8");
             response.setHeader(JwtProperties.HEADER_STRING,
-                    JwtProperties.TOKEN_PREFIX + jwtUtil.createAccessToken(customUserDetails));
+                    JwtProperties.TOKEN_PREFIX + jwtUtil.createAccessToken(customUserDetails.getMember().getEmail()));
 
             Map<String, Object> resultAttributes = new HashMap<>();
-            resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            resultAttributes.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             resultAttributes.put("status", HttpStatus.OK);
             resultAttributes.put("message", "Authentication completed (Default)");
             resultAttributes.put("path", request.getRequestURI());
@@ -105,7 +115,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             response.setContentType("application/json;charset=utf-8");
 
             Map<String, Object> resultAttributes = new HashMap<>();
-            resultAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            resultAttributes.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             resultAttributes.put("status", HttpStatus.LOCKED);
             resultAttributes.put("message", "Email authentication has not yet been performed.");
             resultAttributes.put("path", request.getRequestURI());

@@ -31,9 +31,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(email);
         }
 
-        Member memberEntity = optionalMember.get();
+        CustomUserDetails customUserDetails = CustomUserDetails.builder().member(optionalMember.get()).build();
 
-        return new CustomUserDetails(memberEntity);
+        return customUserDetails;
 
     }
 }

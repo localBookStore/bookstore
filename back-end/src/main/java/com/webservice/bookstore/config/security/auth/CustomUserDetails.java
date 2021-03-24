@@ -1,7 +1,7 @@
 package com.webservice.bookstore.config.security.auth;
 
 import com.webservice.bookstore.domain.entity.member.Member;
-import lombok.Data;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -10,20 +10,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-@Data
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomUserDetails implements UserDetails, OAuth2User {
 
     private Member member;
     private Map<String, Object> attributes;
-
-    public CustomUserDetails(Member member) {
-        this.member = member;
-    }
-
-    public CustomUserDetails(Member member, Map<String, Object> attributes) {
-        this.member = member;
-        this.attributes = attributes;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -64,7 +58,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return member.getEnabled();
     }
 
     @Override

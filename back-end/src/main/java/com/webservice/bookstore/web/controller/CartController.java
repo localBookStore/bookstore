@@ -2,9 +2,12 @@ package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.cart.CartLinkResource;
+import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.service.CartService;
 import com.webservice.bookstore.web.dto.CartDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+@Log4j2
 @RestController
 @RequestMapping(value = "/api")
 @RequiredArgsConstructor
@@ -40,7 +44,7 @@ public class CartController {
             cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
         } catch (NullPointerException e) {
             // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
-            throw new AuthenticationException("인증 오류가 발생했습니다.", e.getCause()) {};
+            throw new UnauthorizedException("인증 오류가 발생했습니다.", e.getCause());
         }
 
         List<CartLinkResource> emList = cartList.stream()
@@ -60,12 +64,12 @@ public class CartController {
     public ResponseEntity<CartDto> addCartItem(@PathVariable("item_id") Long item_id,
                                                @RequestBody CartDto cartDto,
                                                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        try {
+//        try {
             cartDto.setMember_id(customUserDetails.getMember().getId());
-        } catch (NullPointerException e) {
-            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
-            throw new AuthenticationException("인증 오류가 발생했습니다.", e.getCause()) {};
-        }
+//        } catch (NullPointerException e) {
+//            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
+//            throw new AuthenticationException("인증 오류가 발생했습니다.", e.getCause()) {};
+//        }
         cartDto.setItem_id(item_id);
 
         CartDto resCartDto = null;

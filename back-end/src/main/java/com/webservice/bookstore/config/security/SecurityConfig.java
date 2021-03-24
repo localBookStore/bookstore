@@ -1,5 +1,6 @@
 package com.webservice.bookstore.config.security;
 
+import com.webservice.bookstore.config.security.auth.CustomUserDetailsService;
 import com.webservice.bookstore.config.security.jwt.JwtAuthenticationFilter;
 import com.webservice.bookstore.config.security.jwt.JwtAuthorizationFilter;
 import com.webservice.bookstore.config.security.jwt.JwtUtil;
@@ -7,6 +8,7 @@ import com.webservice.bookstore.config.security.oauth2.CustomOAuth2UserService;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
+import com.webservice.bookstore.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
     private final JwtUtil jwtUtil;
+    private final RedisUtil redisUtil;
+    private final CustomUserDetailsService customUserDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final MemberRepository memberRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
@@ -54,9 +58,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .addFilter(corsFilter)
-            .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, memberRepository),
+            .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, redisUtil, memberRepository),
                     UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, memberRepository),
+            .addFilterBefore(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, redisUtil, memberRepository, customUserDetailsService),
                     BasicAuthenticationFilter.class)
             .formLogin().disable()
             .httpBasic().disable()
@@ -80,6 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 .and()
+//            .logout()
+//                .and()
             .oauth2Login()
                 .authorizationEndpoint()
                     .baseUri("/oauth2/authorization")

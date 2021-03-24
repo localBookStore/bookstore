@@ -45,8 +45,10 @@ dependencies {
     // jwt 러이브러리 추가
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
-    // 이메일 인증
+    // 이메일 인증 : 위한 이메일 관련 객체 사용
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    // Redis 추가 : Refresh 토큰 관리를 DB 대신 캐시 메모리에서 관리하기 위함
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     /*
     다른 서버로 request를 보내 response 받아 데이터를 처리해야 할 때 HttpClient를 이용.

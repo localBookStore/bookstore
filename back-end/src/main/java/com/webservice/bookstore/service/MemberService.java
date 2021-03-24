@@ -1,12 +1,10 @@
 package com.webservice.bookstore.service;
 
-import com.webservice.bookstore.config.security.auth.CustomUserDetails;
-import com.webservice.bookstore.config.security.jwt.JwtUtil;
 import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
-import com.webservice.bookstore.domain.entity.member.MemberRole;
-import com.webservice.bookstore.web.dto.MemberDto;
+import com.webservice.bookstore.util.EmailUtil;
+import com.webservice.bookstore.web.dto.SignUpRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final PasswordEncoder encoder;
-    private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
 
     @Transactional
