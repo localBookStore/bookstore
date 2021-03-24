@@ -30,7 +30,7 @@ const CommunityDetail = ({ match }) => {
       <BoardContainer>
         <ArticleDetail props={article}/>
         <hr />
-        <CommentsDetail props={comments}/>
+        <CommentsDetail comments={comments}/>
       </BoardContainer>
       :
       <BoardContainer>

@@ -23,7 +23,7 @@ const CommunityRegister = ({ history }) => {
     axios.post("http://localhost:8080/api/board/", {
       ...inputData
     })
-      .then(res => setIsSummit(true))
+      .then(() => setIsSummit(true))
       .catch(err => console.log(err.response))
   }
   useEffect(() => {

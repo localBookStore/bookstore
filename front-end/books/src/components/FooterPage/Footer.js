@@ -2,6 +2,7 @@ import styled from "styled-components"
 
 const Footer = () => {
   return <FooterContainer>
+    <ClassifyLine />
     <TeamTitle>Made By. 동네책방</TeamTitle>
   </FooterContainer>
 }
@@ -25,4 +26,8 @@ const TeamTitle = styled.span`
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   transform: translate(-50%, -50%);
   color: #777;
+`
+const ClassifyLine = styled.hr`
+  border: 2px solid #787787;
+  background-color: #787787;
 `

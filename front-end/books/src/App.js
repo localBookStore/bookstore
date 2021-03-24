@@ -1,4 +1,3 @@
-import './App.css';
 import Header from "./components/HeaderPage/Header"
 import Home from "./components/MainPage/HomePage/Home"
 import ItemDetail from "./components/MainPage/DetailPage/ItemDetail"
@@ -11,9 +10,10 @@ import Footer from "./components/FooterPage/Footer"
 import ScrollToTop from "./ScrollToTop"
 import { Route, Switch } from "react-router-dom"
 
+import styled from "styled-components"
 
 function App() {
-  return <div className="app">
+  return <AppContainer>
     <ScrollToTop />
     <Header />
       <Switch>
@@ -25,7 +25,11 @@ function App() {
         <Route path="/community/register" component={CommunityRegister} />
       </Switch>
     <Footer />
-  </div>
+  </AppContainer>
 }
-
 export default App;
+
+const AppContainer = styled.div`
+  margin: 20px 8%;
+  height: 100vh;
+`
