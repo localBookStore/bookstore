@@ -1,4 +1,4 @@
-package com.webservice.bookstore.domain.entity.item;
+package com.webservice.bookstore.exception;
 
 public class NotEnoughStockException extends RuntimeException {
 

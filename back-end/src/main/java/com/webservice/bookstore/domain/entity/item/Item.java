@@ -1,11 +1,11 @@
 package com.webservice.bookstore.domain.entity.item;
 
 import com.webservice.bookstore.domain.entity.category.Category;
+import com.webservice.bookstore.exception.NotEnoughStockException;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Builder

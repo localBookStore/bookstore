@@ -1,11 +1,9 @@
 package com.webservice.bookstore.domain.entity.member;
 
+import com.webservice.bookstore.domain.entity.BaseTimeEntity;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Builder
@@ -14,26 +12,48 @@ import javax.persistence.Id;
 @Getter
 @ToString
 @EqualsAndHashCode(of = "id")
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String email;
 
-    private String userid;
+    private String nickName;
 
     private String password;
+
+    private String imageUrl;
 
     private String address;
 
     private String phone;
 
-    private String email;
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
 
-    private String enabled;
+    private String providerId;
+
+    @Lob
+    @Column(length = 512)
+    private String refreshTokenValue;
+
+    private Boolean enabled;
+
+    private String certificated;
+
+    public Member updateMemberInfo(String name, String imageUrl) {
+        this.nickName = name;
+        this.imageUrl = imageUrl;
+        return this;
+    }
+
+    public void updateRefreshToken(String refreshTokenValue) {
+        this.refreshTokenValue= refreshTokenValue;
+    }
 
 }

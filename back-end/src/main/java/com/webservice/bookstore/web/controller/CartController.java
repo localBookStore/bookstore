@@ -1,17 +1,21 @@
 package com.webservice.bookstore.web.controller;
 
+import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.cart.CartLinkResource;
-import com.webservice.bookstore.domain.entity.item.ItemLinkResource;
+import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.service.CartService;
 import com.webservice.bookstore.web.dto.CartDto;
-import com.webservice.bookstore.web.dto.ItemDto;
-import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+@Log4j2
 @RestController
 @RequestMapping(value = "/api")
 @RequiredArgsConstructor
@@ -31,10 +36,16 @@ public class CartController {
     장바구니 목록 조회 요청 핸들러
     */
     @GetMapping(value = "/cart/", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity getCartItemList() {
+    public ResponseEntity getCartItemList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         // 세션에 저장된 로그인 계정 정보를 통해 장바구니 목록 조회 예정
-        List<CartDto> cartList = cartService.findByMemberId(1L);
+        List<CartDto> cartList = null;
+        try {
+            cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
+        } catch (NullPointerException e) {
+            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
+            throw new UnauthorizedException("인증 오류가 발생했습니다.", e.getCause());
+        }
 
         List<CartLinkResource> emList = cartList.stream()
                 .map(cartDto -> new CartLinkResource(cartDto,
@@ -51,8 +62,14 @@ public class CartController {
     */
     @PostMapping(value = "/cart/{item_id}")
     public ResponseEntity<CartDto> addCartItem(@PathVariable("item_id") Long item_id,
-                                               @RequestBody CartDto cartDto) {
-        cartDto.setMember_id(1L);
+                                               @RequestBody CartDto cartDto,
+                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+//        try {
+            cartDto.setMember_id(customUserDetails.getMember().getId());
+//        } catch (NullPointerException e) {
+//            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
+//            throw new AuthenticationException("인증 오류가 발생했습니다.", e.getCause()) {};
+//        }
         cartDto.setItem_id(item_id);
 
         CartDto resCartDto = null;
