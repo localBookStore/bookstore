@@ -21,6 +21,10 @@ const Community = ({ history }) => {
     history.push("/community/register")
   }
 
+  const articleDetailEvent = (id) => {
+    history.push(`/community/detail/${id}`)
+  }
+
   return <div>
     {articles && articles.length ?
       <Table hover bordered >
@@ -34,7 +38,7 @@ const Community = ({ history }) => {
         <tbody>
           {articles.map((res, idx) => {
             const { id, title, category, createdDate } = res
-            return <tr key={idx}>
+            return <tr key={idx} onClick={() => articleDetailEvent(id)}>
               <td>{id}</td>
               <td>{category}</td>
               <td>{title}</td>
