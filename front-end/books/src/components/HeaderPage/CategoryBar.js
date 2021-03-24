@@ -1,4 +1,4 @@
-import CategoryHoverDetail from "./CategoryHover/CategoryHoverDetail";
+import CategoryHoverDetail from "./CategoryHoverDetail";
 import { useState } from "react";
 import { useHistory, NavLink } from "react-router-dom";
 import axios from "axios"
@@ -44,13 +44,15 @@ const IsShow = styled.div`
 
 const AllContainer = styled.div`
   position: relative;
-  text-align: center;
-  height: 70px;
-  padding: 0;
-  width: 100%;
-  top: 150px;
   display: flex;
   justify-content: space-between;
+  text-align: center;
+  
+  margin: 30px 0 60px 0;
+  padding: 0;
+
+  width: 100%;
+  height: auto;
   z-index: 1;
 `
 const ItemButton = styled.button`

@@ -25,6 +25,7 @@ npm start
 'styled-components' # apply for CSS in js
 'poished'   # interactive utill funcion
 'qs'    # using query string
+'react-cookie'  # Using Cookie in Browser
 ```
 
 ### File Structure (In Progress...)
