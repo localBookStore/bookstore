@@ -22,7 +22,7 @@ const CategoryBar = () => {
   }
 
   const getArticle = (url) => {
-    history.push("/comunity")
+    history.push("/community")
   }
 
   return <AllContainer

@@ -9,8 +9,6 @@ export default Footer;
 
 const FooterContainer = styled.div`
   position: relative;
-  bottom: 20px;
-  z-index: 0;
 
   width: 100%;
   height: 88px;

@@ -3,8 +3,8 @@ import Header from "./components/HeaderPage/Header"
 import Home from "./components/MainPage/HomePage/Home"
 import ItemDetail from "./components/MainPage/DetailPage/ItemDetail"
 import BookList from "./components/MainPage/BookListPage/BookList"
-import Comunity from "./components/MainPage/ComunityPage/Comunity"
-import CommunityRegister from "./components/MainPage/ComunityPage/ComunityRegister"
+import Community from "./components/MainPage/ComunityPage/Community"
+import CommunityRegister from "./components/MainPage/ComunityPage/CommunityRegister"
 import Footer from "./components/FooterPage/Footer"
 
 import ScrollToTop from "./ScrollToTop"
@@ -19,7 +19,7 @@ function App() {
         <Route exact path="/" component={Home} />
         <Route path="/detail" component={ItemDetail} />
         <Route path="/booklist" component={BookList} />
-        <Route exact path="/comunity" component={Comunity} />
+        <Route exact path="/community" component={Community} />
         <Route path="/community/register" component={CommunityRegister} />
       </Switch>
     <Footer />

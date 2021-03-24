@@ -1,10 +1,12 @@
 import axios from "axios";
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import styled from "styled-components";
 
 const CommunityRegister = ({ history }) => {
+  const [isSummit, setIsSummit] = useState(false);
   const [inputData, setInputData] = useState({
+    memberId:1,
     category: "사고팝니다",
     title: null,
     content: null,
@@ -18,17 +20,18 @@ const CommunityRegister = ({ history }) => {
     })
   }
   const summitEvent = () => {
-    const { category, title, content } = inputData
     axios.post("http://localhost:8080/api/board/", {
-      category: category,
-      title: title,
-      content: content
+      ...inputData
     })
-      .then(res => console.log(res))
+      .then(res => setIsSummit(true))
       .catch(err => console.log(err.response))
-    console.log({ ...inputData })
-
   }
+  useEffect(() => {
+    if (isSummit) {
+      history.push("/community")
+    }
+    return setIsSummit(false)
+  }, [isSummit])
 
 
   return <Container>
