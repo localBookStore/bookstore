@@ -1,8 +1,41 @@
-import {Button} from "react-bootstrap"
+import axios from "axios";
+import { useState, useEffect } from "react"
+
+import { Button, Modal } from "react-bootstrap"
 import styled from "styled-components";
 
-const ArticleDetail = ({props}) => {
-  const {category, content, createdDate, title} = props
+const ArticleDetail = ({ props }) => {
+  const [isDelete, setIsDelete] = useState(false);
+  const [isShow, setIsShow] = useState(false);
+  const { category, content, createdDate, title, id } = props
+
+  useEffect(() => {
+    if (isDelete) {
+      axios.delete(`http://localhost:8080/api/board/${id}/`)
+        .then(res => console.log("삭제되었습니다."))
+        .catch(err => console.log(err.response))
+    }
+    return setIsDelete(false)
+  }, [isDelete])
+
+  const DeleteCheckModal = () => {
+    return <Modal show={isShow} onHide={() => setIsShow(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>정말로 삭제하시겠습니까?</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>글을 삭제하시면 내용과 함께 작성한 댓글까지 삭제됩니다.</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setIsShow(false)}>
+          취소</Button>
+        <Button variant="danger" onClick={() => {
+          setIsShow(false)
+          setIsDelete(true)
+        }}>
+          삭제</Button>
+      </Modal.Footer>
+    </Modal>
+  }
+
 
   return <ArticleContainer>
     <ArticleTag>{category}</ArticleTag>
@@ -12,8 +45,10 @@ const ArticleDetail = ({props}) => {
     <ArticleDate>{createdDate}</ArticleDate>
     <ButtonFeature>
       <EditButton variant="primary">수정</EditButton>
-      <EditButton variant="danger">삭제</EditButton>
+      <EditButton variant="danger" onClick={() => setIsShow(true)}>삭제</EditButton>
     </ButtonFeature>
+    {isShow && <DeleteCheckModal />}
+
   </ArticleContainer>
 }
 export default ArticleDetail;
