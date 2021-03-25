@@ -1,7 +1,5 @@
 package com.webservice.bookstore.config.security.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -89,7 +86,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             log.info("액세스 토큰 검증 실패");
             String email = verify.getEmail();   // abc@gmail.com
 
-            String refreshToken = redisUtil.getRefreshToken(email);
+            String refreshToken = redisUtil.getData(email);
             log.info("Saved Refresh Token in Redis : {}", refreshToken);
 
             VerifyResult refreshVerify = jwtUtil.verify(refreshToken);

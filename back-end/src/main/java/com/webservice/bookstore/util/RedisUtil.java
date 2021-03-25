@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisUtil {
 
-//    private final StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public String getRefreshToken(String key){
+    public String getData(String key){
         return redisTemplate.opsForValue().get(key);
     }
 
@@ -26,6 +26,11 @@ public class RedisUtil {
 
     public void deleteRefreshToken(String key){
         redisTemplate.delete(key);
+    }
+
+    public void setData(String key, String value){
+        ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
+        valueOperations.set(key,value);
     }
 
 }
