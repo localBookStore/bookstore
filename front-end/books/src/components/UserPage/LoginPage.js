@@ -12,13 +12,15 @@ const LoginPage = () => {
   })
   const clickEvent = () => {
     console.log(userInfo)
-    axios.post("http://localhost:8080/login", userInfo, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
-      }
-    })
+    axios.post("http://localhost:8080/login", userInfo,
+    //     {
+    //   headers: {
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+    //     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
+    //   }
+    // }
+    )
       .then(res => console.log(res))
       .catch(err => console.log(err.response))
   }
