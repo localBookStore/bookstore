@@ -6,7 +6,7 @@ import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
 
-const SignupPage = () => {
+const SignupPage = ({history}) => {
   const { register, handleSubmit, errors, watch } = useForm();
   const password = useRef({});
   password.current = watch("password", "");
@@ -18,7 +18,7 @@ const SignupPage = () => {
       password,
       nickName
     })
-    .then(res => console.log(res))
+    .then(res => history.replace("/"))
     .catch(err => console.log(err.response))
   }
 

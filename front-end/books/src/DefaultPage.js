@@ -1,33 +1,44 @@
 import { useState } from "react"
 import { useHistory, NavLink } from "react-router-dom"
+import { useCookies } from "react-cookie"
 
 import styled from "styled-components"
 import { Button } from "react-bootstrap"
 import logo from "./icons/bookshop.svg"
 
 const DefaultPage = ({ state, dispatch }) => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(['token'])
   const history = useHistory();
 
   const goHome = () => {
     dispatch(!state)
     history.push("/")
   }
+  const LogoutEvent = () => {
+    removeCookie('token')
+    goHome()
+  }
 
   return <DefaultContainer>
     <ImageButton onClick={() => goHome()}>
       <ImageLogo src={logo} alt="logo" />
     </ImageButton>
-    {isLogin ? <div>로그인 됨</div>
+    {cookies.token !== undefined ?
+      <>
+        <IsLoginedDiv>로그인 됨</IsLoginedDiv>
+        <LogoutButton variant="danger" onClick={LogoutEvent}>로그아웃</LogoutButton>
+      </>
       :
       <>
-        <NavLink to='/login'><AuthButton variant="outline-info" right="160px" width="105px">Log In</AuthButton></NavLink>
-        <NavLink to='/signup'><AuthButton variant="outline-info" right="30px" width="100px">Sign Up</AuthButton></NavLink>
+        <NavLink to='/login' replace><AuthButton variant="outline-info" right="160px" width="105px">Log In</AuthButton></NavLink>
+        <NavLink to='/signup' replace><AuthButton variant="outline-info" right="30px" width="100px">Sign Up</AuthButton></NavLink>
       </>
     }
   </DefaultContainer >
 }
 export default DefaultPage;
+
+
 const DefaultContainer = styled.div`
   position: relative;
   width: 100%;
@@ -49,6 +60,18 @@ const AuthButton = styled(Button)`
   width: ${props => props.width};
   font-size: 18px;
   font-weight: 800;
+`
+const IsLoginedDiv = styled.div`
+  position:absolute;
+  top: 4px;
+  right: 110px;
+
+  font-size: 20px;
+`
+const LogoutButton = styled(Button)`
+  position:absolute;
+  top:0;
+  right:0;
 `
 
 const ImageLogo = styled.img`

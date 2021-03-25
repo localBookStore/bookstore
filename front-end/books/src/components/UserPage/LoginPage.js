@@ -5,7 +5,7 @@ import { useCookies } from "react-cookie"
 import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
-const LoginPage = () => {
+const LoginPage = ({history}) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const [isError, setIsError] = useState(false);
   const [userInfo, setUserInfo] = useState({
@@ -25,6 +25,7 @@ const LoginPage = () => {
       .then(res => {
         const token = res.headers.authorization
         setCookie("token", token.split(" ")[1])
+        history.replace("/")
       })
       .catch(() => setIsError(true))
   }
