@@ -4,17 +4,17 @@ import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.service.MemberService;
 import com.webservice.bookstore.util.EmailUtil;
 import com.webservice.bookstore.util.RedisUtil;
-import com.webservice.bookstore.web.dto.CeriticateCode;
-import com.webservice.bookstore.web.dto.EmailCerticatedDto;
-import com.webservice.bookstore.web.dto.EmailCheckDto;
 import com.webservice.bookstore.web.dto.SignUpRequest;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 @Log4j2
 @RestController
@@ -76,4 +76,29 @@ public class MemberController {
         return ResponseEntity.ok("인증 성공하였습니디.");
 
     }
+
+    @Data
+    static class EmailCerticatedDto {
+        private String email;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class EmailCheckDto {
+
+        @NotBlank(message = "이메일을 입력해주세요")
+        @Email(message = "이메일 형식이 잘못되었습니다.")
+        private String Email;
+    }
+
+
+    @Getter @Setter
+    static class CeriticateCode {
+
+        private String certificated;
+    }
+
+
 }
