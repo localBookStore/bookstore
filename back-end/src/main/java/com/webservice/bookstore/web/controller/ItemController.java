@@ -20,7 +20,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Log4j2
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping(value = "/api/items/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
 public class ItemController {

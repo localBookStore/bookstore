@@ -88,7 +88,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             VerifyResult refreshVerify = jwtUtil.verify(refreshToken);
             if(refreshVerify.isResult()) {
                 log.info("The Refresh Token is valid! Create new Access Token :");
-                String newAccessToken = jwtUtil.createAccessToken(refreshVerify.getEmail());
+                String newAccessToken
+                        = jwtUtil.createAccessToken(refreshVerify.getEmail(), refreshVerify.getNickName());
                 response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
 
                 saveAuthSecuritySession(verifyResult);

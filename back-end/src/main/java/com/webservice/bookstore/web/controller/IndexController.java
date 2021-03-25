@@ -23,7 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/index/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
-@CrossOrigin(origins = {"http://localhost:3000"})
 public class IndexController {
 
     private final ItemService itemService;

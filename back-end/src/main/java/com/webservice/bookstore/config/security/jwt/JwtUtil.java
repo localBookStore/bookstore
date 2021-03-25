@@ -28,10 +28,11 @@ public class JwtUtil {
         return new Date(System.currentTimeMillis() + seconds);
     }
 
-    public String createAccessToken(String email) {
+    public String createAccessToken(String email, String nickName) {
 
         return JWT.create()
                 .withSubject(email)
+                .withClaim("nickName", nickName)
                 .withClaim("exp", Instant.now().getEpochSecond() + 60)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
@@ -59,6 +60,7 @@ public class JwtUtil {
             log.info("JWT decoding successful");
             return VerifyResult.builder()
                                 .email(decodedJWT.getSubject())
+                                .nickName(String.valueOf(decodedJWT.getClaim("nickName")))
                                 .result(true)
                                 .build();
 
