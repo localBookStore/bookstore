@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class VerifyResult {
 
     private String email;
+    private String nickName;
     private boolean result;
 
 }

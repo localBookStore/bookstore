@@ -41,31 +41,22 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        //Redis에 Refresh 토큰 저장
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = customUserDetails.getMember();
         String email = member.getEmail();
 
-        // DB에 저장되어 있는 Refresh Token 검증
-//        try {
-//            log.info("Call jwtTokenProvider.verify");
-//            jwtUtil.verify(customUserDetails.getMember().getRefreshTokenValue());
-//        } catch (JWTVerificationException e) { // 토큰 만료 시
-//            log.info("JWTVerificationException : " + e.getMessage());
-//            String newRefreshToken = jwtUtil.createRefreshToken(customUserDetails);
-//            customUserDetails.getMember().updateRefreshToken(newRefreshToken);
-//            memberRepository.save(customUserDetails.getMember());
-//        }
-
         log.info("JwtAuthenticationFilter.successfulAuthentication : 'OK'");
 
         if(customUserDetails.isEnabled()) {
+            // Refresh 토큰 생성하여 Redis에 저장
             redisUtil.setRefreshToken(email, jwtUtil.createRefreshToken(email), 60L);
 
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json;charset=utf-8");
             response.setHeader(JwtProperties.HEADER_STRING,
-                    JwtProperties.TOKEN_PREFIX + jwtUtil.createAccessToken(customUserDetails.getMember().getEmail()));
+                         JwtProperties.TOKEN_PREFIX
+                                + jwtUtil.createAccessToken(customUserDetails.getMember().getEmail(),
+                                                            customUserDetails.getMember().getNickName()));
 
             Map<String, Object> resultAttributes = new HashMap<>();
             resultAttributes.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

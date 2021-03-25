@@ -27,7 +27,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RestController
 @RequestMapping(value = "/api")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000/"})
 public class CartController {
 
     private final CartService cartService;

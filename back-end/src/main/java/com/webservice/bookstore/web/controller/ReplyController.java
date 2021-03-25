@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Log4j2
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE+";charset=utf-8")
 

@@ -73,6 +73,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String email = customUserDetails.getMember().getEmail();
+        String nickName = customUserDetails.getMember().getNickName();
 
         if(customUserDetails.isEnabled()) {
             // 새로운 Refresh 토큰 생서 및 Redis에 저장
@@ -81,7 +82,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json;charset=utf-8");
             response.setHeader(JwtProperties.HEADER_STRING,
-                    JwtProperties.TOKEN_PREFIX + jwtUtil.createAccessToken(customUserDetails.getMember().getEmail()));
+                    JwtProperties.TOKEN_PREFIX + jwtUtil.createAccessToken(email, nickName));
 
             Map<String, Object> resultAttributes = new HashMap<>();
             resultAttributes.put("timestamp", writeTimeNow());
