@@ -11,7 +11,6 @@ const SlideItems = () => {
   const history = useHistory();
 
   const clickEvent = (book) => {
-    console.log(book)
     history.push({
       pathname: '/detail',
       search: `?id=${book.id}`,
@@ -41,7 +40,6 @@ const SlideItems = () => {
   };
 
   return <WholeContrainer>
-    {console.log(promoteImage)}
     <Slider {...settings}>
       {promoteImage && promoteImage.map((res, idx) => {
         return <SliderButton

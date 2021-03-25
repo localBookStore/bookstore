@@ -35,7 +35,7 @@ const Image = styled.img`
   width:220px;
   height:280px;
 `
-const Title = styled.h2`
+const Title = styled.h3`
   position: absolute;
   top: 20px;
   left: 600px;
