@@ -31,7 +31,6 @@ public class JwtUtil {
     public String createAccessToken(String email) {
 
         return JWT.create()
-//                .withExpiresAt(expiresAt(5))
                 .withSubject(email)
                 .withClaim("exp", Instant.now().getEpochSecond() + 60)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
@@ -64,10 +63,16 @@ public class JwtUtil {
                                 .build();
 
         } catch (JWTVerificationException e) {
+            log.info("JWT has expired");
             DecodedJWT decodedJWT = JWT.decode(jwtToken);
 
             return VerifyResult.builder()
                                 .email(decodedJWT.getSubject())
+                                .result(false)
+                                .build();
+        } catch (NullPointerException e) {  // Redis에 특정 Refresh 토큰이 존재하지 않는 경우(null) 예외 발생
+            log.info("JWT does not exist.");
+            return VerifyResult.builder()
                                 .result(false)
                                 .build();
         }
