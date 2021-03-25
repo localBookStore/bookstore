@@ -1,5 +1,6 @@
 import { useRef } from "react"
 import { useForm } from "react-hook-form";
+import axios from "axios"
 
 import { Button } from "react-bootstrap"
 import styled from "styled-components"
@@ -8,10 +9,17 @@ import styled from "styled-components"
 const SignupPage = () => {
   const { register, handleSubmit, errors, watch } = useForm();
   const password = useRef({});
-  password.current = watch("password1", "");
+  password.current = watch("password", "");
 
-  const onSummitEvent = data => {
-    console.log(data);
+  const onSummitEvent = userInfo => {
+    const { email, password, nickName } = userInfo
+    axios.post("http://localhost:8080/api/signup/", {
+      email,
+      password,
+      nickName
+    })
+    .then(res => console.log(res))
+    .catch(err => console.log(err.response))
   }
 
   return <SignupContainer>
@@ -35,16 +43,17 @@ const SignupPage = () => {
       <SignupName>닉네임</SignupName>
       <SignupInput
         type="text"
-        name="nickname"
+        name="nickName"
         ref={register({
           required: 'this is a required',
         })}
       />
-      <div>{errors.nickname && errors.nickname.message}</div>
+      <div>{errors.nickName && errors.nickName.message}</div>
+
       <SignupName>패스워드</SignupName>
       <SignupInput
         type="password"
-        name="password1"
+        name="password"
         ref={register({
           required: 'this is a required',
           minLength: {
@@ -57,7 +66,8 @@ const SignupPage = () => {
           },
         })}
       />
-      <div>{errors.password1 && errors.password1.message}</div>
+      <div>{errors.password && errors.password.message}</div>
+
       <SignupName>패스워드2</SignupName>
       <SignupInput
         type="password"
