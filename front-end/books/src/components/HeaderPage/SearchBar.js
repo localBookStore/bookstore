@@ -63,43 +63,45 @@ export default SearchBar
 
 const EntireBar = styled.div`
   position: relative;
-  width: 850px;
-  top: 80px;
-  left: 280px;
+  width: 100%;
+  height: auto;
 `
 const SearchInput = styled.input`
   position: relative;
   left: 125px;
+  margin: 0px;
 
   border: 1.5px solid;
   background-color: whitesmoke;
   border-radius: 5px 5px 5px 5px;
-  width: 680px;
-  height: 70px;
+  width: 840px;
+  height: 60px;
   
   font-weight: 500;
   
   padding-left: 20px;
 `
 const SearchButton = styled.button`
-  position: absolute;
+  position: relative;
+  top: 5px;
+  margin: 0 10px;
+  
+  border-radius: 15px 15px 15px 15px;
   background-color: #E8D6A5;
-  top: 10px;
-  left: 680px;
   width: 110px;
   height: 50px;
-  margin: 0 10px;
+  
   font-size: 18px;
   font-weight: 700;
-  border-radius: 15px 15px 15px 15px;
 `
 const SelectTag = styled.select`
-  position: absolute;
-  left: 0px;
-  top: 10px;
+  position: relative;
+  left: 100px;
+  margin: 40px 0;
+  
   width: 110px;
   height: 50px;
-  margin: 0 10px;
+  
   font-size: 18px;
   font-weight: 700;
   z-index: 1;
