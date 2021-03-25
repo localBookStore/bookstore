@@ -1,10 +1,12 @@
-import { useHistory } from "react-router-dom"
+import { useState } from "react"
+import { useHistory, NavLink } from "react-router-dom"
 
 import styled from "styled-components"
-import {Button} from "react-bootstrap"
+import { Button } from "react-bootstrap"
 import logo from "./icons/bookshop.svg"
 
-const DefaultPage = ({state, dispatch}) => {
+const DefaultPage = ({ state, dispatch }) => {
+  const [isLogin, setIsLogin] = useState(false);
   const history = useHistory();
 
   const goHome = () => {
@@ -16,9 +18,14 @@ const DefaultPage = ({state, dispatch}) => {
     <ImageButton onClick={() => goHome()}>
       <ImageLogo src={logo} alt="logo" />
     </ImageButton>
-    <AuthButton variant="outline-info" right="160px" width="105px">Log In</AuthButton>
-    <AuthButton variant="outline-info" right="30px" width="100px">Sign Up</AuthButton>
-  </DefaultContainer>
+    {isLogin ? <div>로그인 됨</div>
+      :
+      <>
+        <NavLink to='/login'><AuthButton variant="outline-info" right="160px" width="105px">Log In</AuthButton></NavLink>
+        <NavLink to='/signup'><AuthButton variant="outline-info" right="30px" width="100px">Sign Up</AuthButton></NavLink>
+      </>
+    }
+  </DefaultContainer >
 }
 export default DefaultPage;
 const DefaultContainer = styled.div`
