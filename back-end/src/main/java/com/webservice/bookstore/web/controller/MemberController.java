@@ -4,7 +4,7 @@ import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.service.MemberService;
 import com.webservice.bookstore.util.EmailUtil;
 import com.webservice.bookstore.util.RedisUtil;
-import com.webservice.bookstore.web.dto.SignUpRequest;
+import com.webservice.bookstore.web.dto.Email;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -12,9 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 @Log4j2
 @RestController
@@ -28,7 +25,7 @@ public class MemberController {
     private final RedisUtil redisUtil;
 
     @PostMapping
-    public ResponseEntity signup(@RequestBody SignUpRequest signUpRequest, BindingResult bindingResult) {
+    public ResponseEntity signup(@RequestBody Email.SignUpRequest signUpRequest, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             throw new ValidationException("회원가입 유효성 실패", bindingResult.getFieldErrors());
@@ -40,7 +37,7 @@ public class MemberController {
     }
 
     @PostMapping("/duplicated")
-    public ResponseEntity duplicatedEmail(@RequestBody EmailCheckDto emailCheckDto, BindingResult bindingResult){
+    public ResponseEntity duplicatedEmail(@RequestBody Email.EmailCheckDto emailCheckDto, BindingResult bindingResult){
 
         if (bindingResult.hasErrors()) {
             throw new ValidationException("이메일 형식이 맞지 않습니다.", bindingResult.getFieldErrors());
@@ -52,7 +49,7 @@ public class MemberController {
     }
 
     @PostMapping("/request-certificated")
-    public ResponseEntity RequestCertificatedEmail(@RequestBody EmailCerticatedDto email) {
+    public ResponseEntity RequestCertificatedEmail(@RequestBody Email.EmailCerticatedDto email) {
 
         log.info("email: " + email);
         String certificated = String.valueOf(EmailUtil.randomint());
@@ -64,7 +61,7 @@ public class MemberController {
 
 
     @PostMapping("/check-certificated")
-    public ResponseEntity ResponseCertificatedEmail(@RequestBody CeriticateCode ceriticateCode) {
+    public ResponseEntity ResponseCertificatedEmail(@RequestBody Email.CeriticateCode ceriticateCode) {
 
         String certificateCode = ceriticateCode.getCertificated();
         String savedCode = redisUtil.getData(certificateCode);
@@ -76,29 +73,5 @@ public class MemberController {
         return ResponseEntity.ok("인증 성공하였습니디.");
 
     }
-
-    @Data
-    static class EmailCerticatedDto {
-        private String email;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    static class EmailCheckDto {
-
-        @NotBlank(message = "이메일을 입력해주세요")
-        @Email(message = "이메일 형식이 잘못되었습니다.")
-        private String Email;
-    }
-
-
-    @Getter @Setter
-    static class CeriticateCode {
-
-        private String certificated;
-    }
-
 
 }

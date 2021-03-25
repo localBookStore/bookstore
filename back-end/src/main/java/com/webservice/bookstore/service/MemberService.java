@@ -5,8 +5,7 @@ import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import com.webservice.bookstore.exception.DuplicateUserException;
 import com.webservice.bookstore.exception.SimpleFieldError;
-import com.webservice.bookstore.util.EmailUtil;
-import com.webservice.bookstore.web.dto.SignUpRequest;
+import com.webservice.bookstore.web.dto.Email;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,7 +24,7 @@ public class MemberService {
     private final JavaMailSender javaMailSender;
 
     @Transactional
-    public void signup(SignUpRequest signUpRequest) {
+    public void signup(Email.SignUpRequest signUpRequest) {
 
         log.info("signup memberDto : " + signUpRequest);
 
