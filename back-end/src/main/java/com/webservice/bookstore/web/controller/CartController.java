@@ -32,6 +32,12 @@ public class CartController {
 
     private final CartService cartService;
 
+    private void verifyAuthentication(CustomUserDetails customUserDetails) {
+        if(customUserDetails == null || customUserDetails.equals("")) {
+            throw new UnauthorizedException("인증 오류가 발생했습니다.");
+        }
+    }
+
     /*
     장바구니 목록 조회 요청 핸들러
     */
@@ -40,12 +46,15 @@ public class CartController {
 
         // 세션에 저장된 로그인 계정 정보를 통해 장바구니 목록 조회 예정
         List<CartDto> cartList = null;
-        try {
-            cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
-        } catch (NullPointerException e) {
-            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
-            throw new UnauthorizedException("인증 오류가 발생했습니다.", e.getCause());
-        }
+//        try {
+//            cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
+//        } catch (NullPointerException e) {
+//            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
+//            throw new UnauthorizedException("인증 오류가 발생했습니다.", e.getCause());
+//        }
+
+        verifyAuthentication(customUserDetails);
+        cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
 
         List<CartLinkResource> emList = cartList.stream()
                 .map(cartDto -> new CartLinkResource(cartDto,
@@ -64,12 +73,9 @@ public class CartController {
     public ResponseEntity<CartDto> addCartItem(@PathVariable("item_id") Long item_id,
                                                @RequestBody CartDto cartDto,
                                                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-//        try {
-            cartDto.setMember_id(customUserDetails.getMember().getId());
-//        } catch (NullPointerException e) {
-//            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
-//            throw new AuthenticationException("인증 오류가 발생했습니다.", e.getCause()) {};
-//        }
+
+        verifyAuthentication(customUserDetails);
+        cartDto.setMember_id(customUserDetails.getMember().getId());
         cartDto.setItem_id(item_id);
 
         CartDto resCartDto = null;
@@ -87,8 +93,10 @@ public class CartController {
     */
     @PatchMapping(value = "/cart/{cart_id}/")
     public ResponseEntity updateCartItem(@PathVariable("cart_id") Long cart_id,
-                                         @RequestBody CartDto cartDto) {
+                                         @RequestBody CartDto cartDto,
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
+        verifyAuthentication(customUserDetails);
         cartService.updateQuantity(cart_id, cartDto.getQuantity());
 
         return new ResponseEntity("success", HttpStatus.OK);
@@ -98,8 +106,10 @@ public class CartController {
     장바구니 아이템 삭제 요청 핸들러
     */
     @DeleteMapping(value = "/cart/{cart_id}/")
-    public ResponseEntity  deleteCartItem(@PathVariable("cart_id") Long cart_id) {
+    public ResponseEntity deleteCartItem(@PathVariable("cart_id") Long cart_id,
+                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
+        verifyAuthentication(customUserDetails);
         cartService.deleteCartItem(cart_id);
 
         return new ResponseEntity("success", HttpStatus.OK);
