@@ -38,12 +38,13 @@ const Community = ({ history }) => {
         <tbody>
           {articles.map((res, idx) => {
             const { id, title, category, createdDate } = res
+            const [day, time] = createdDate.split("T")
             return <tr key={idx} onClick={() => articleDetailEvent(id)}>
               <td>{id}</td>
               <td>{category}</td>
               <td>{title}</td>
               <td>0</td>
-              <td>{createdDate}</td>
+              <td>{day}  {time}</td>
             </tr>
           })}
         </tbody>
