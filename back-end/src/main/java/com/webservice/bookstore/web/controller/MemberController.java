@@ -4,7 +4,7 @@ import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.service.MemberService;
 import com.webservice.bookstore.util.EmailUtil;
 import com.webservice.bookstore.util.RedisUtil;
-import com.webservice.bookstore.web.dto.Email;
+import com.webservice.bookstore.web.dto.EmailDto;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class MemberController {
     private final RedisUtil redisUtil;
 
     @PostMapping
-    public ResponseEntity signup(@RequestBody @Valid Email.SignUpRequest signUpRequest, BindingResult bindingResult) {
+    public ResponseEntity signup(@RequestBody @Valid EmailDto.SignUpRequest signUpRequest, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             throw new ValidationException("회원가입 유효성 실패", bindingResult.getFieldErrors());
@@ -38,7 +38,7 @@ public class MemberController {
     }
 
     @PostMapping("/duplicated")
-    public ResponseEntity duplicatedEmail(@RequestBody @Valid Email.EmailCheckDto emailCheckDto, BindingResult bindingResult){
+    public ResponseEntity duplicatedEmail(@RequestBody @Valid EmailDto.EmailCheckDto emailCheckDto, BindingResult bindingResult){
 
         if (bindingResult.hasErrors()) {
             throw new ValidationException("이메일 형식이 맞지 않습니다.", bindingResult.getFieldErrors());
@@ -50,7 +50,7 @@ public class MemberController {
     }
 
     @PostMapping("/request-certificated")
-    public ResponseEntity RequestCertificatedEmail(@RequestBody Email.EmailCerticatedDto email) {
+    public ResponseEntity RequestCertificatedEmail(@RequestBody EmailDto.EmailCerticatedDto email) {
 
         log.info("email: " + email);
         String certificated = String.valueOf(EmailUtil.randomint());
@@ -62,7 +62,7 @@ public class MemberController {
 
 
     @PostMapping("/check-certificated")
-    public ResponseEntity ResponseCertificatedEmail(@RequestBody Email.CeriticateCode ceriticateCode) {
+    public ResponseEntity ResponseCertificatedEmail(@RequestBody EmailDto.CeriticateCode ceriticateCode) {
 
         String certificateCode = ceriticateCode.getCertificated();
         String savedCode = redisUtil.getData(certificateCode);
