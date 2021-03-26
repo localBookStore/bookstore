@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 @RequiredArgsConstructor
 public class RedisUtil {
@@ -20,7 +22,7 @@ public class RedisUtil {
 
     public void setData(String key, String value, Long time){
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(value.getClass()));
-        redisTemplate.opsForValue().set(key, value);
+        redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
     }
 
     public void deleteData(String key){
@@ -31,5 +33,8 @@ public class RedisUtil {
         ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
         valueOperations.set(key,value);
     }
+
+
+
 
 }

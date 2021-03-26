@@ -105,7 +105,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Member newMember = Member.builder()
                                 .email(oAuth2UserInfo.getEmail())
                                 .nickName(oAuth2UserInfo.getName())
-                                .role(MemberRole.valueOf("USER"))
+                                .role(MemberRole.USER)
                                 .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase()))
                                 .providerId(oAuth2UserInfo.getProviderId())
                                 .enabled(true)  // OAuth 계정은 굳이 이메일 인증 절차가 필요없다고 판단
