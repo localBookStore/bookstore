@@ -58,9 +58,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .addFilter(corsFilter)
-            .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, redisUtil, memberRepository),
+            .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, redisUtil),
                     UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, redisUtil, memberRepository, customUserDetailsService),
+            .addFilterBefore(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, redisUtil, customUserDetailsService),
                     BasicAuthenticationFilter.class)
             .formLogin().disable()
             .httpBasic().disable()

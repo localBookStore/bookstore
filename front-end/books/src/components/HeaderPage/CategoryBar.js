@@ -1,4 +1,4 @@
-import CategoryHoverDetail from "./CategoryHover/CategoryHoverDetail";
+import CategoryHoverDetail from "./CategoryHoverDetail";
 import { useState } from "react";
 import { useHistory, NavLink } from "react-router-dom";
 import axios from "axios"
@@ -21,11 +21,8 @@ const CategoryBar = () => {
       .catch(err => console.log(err.response))
   }
 
-  const getArticle = async (url) => {
-    // await axios.get(`http://localhost:8080/api/${url}`)
-    //   .then(res => {
-
-    //   })
+  const getArticle = (url) => {
+    history.push("/community")
   }
 
   return <AllContainer
@@ -35,21 +32,27 @@ const CategoryBar = () => {
     <ItemButton onClick={() => getBooks("bestitems/")}>베스트</ItemButton>
     <ItemButton onClick={() => getBooks("newitems/")}>최신작</ItemButton>
     <ItemButton onClick={() => getArticle("board/")}>커뮤니티</ItemButton>
-    {isHover && <CategoryHoverDetail />}
+    <IsShow show={isHover}><CategoryHoverDetail /></IsShow>
   </AllContainer>
 }
 export default CategoryBar;
 
+const IsShow = styled.div`
+  display: ${props => props.show? "block": "none"};
+  width:0px;
+`
 
 const AllContainer = styled.div`
   position: relative;
+  display: flex;
+  justify-content: space-between;
   text-align: center;
-  height: 70px;
+  
+  margin: 30px 0 60px 0;
   padding: 0;
+
   width: 100%;
-  top: 150px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  height: auto;
   z-index: 1;
 `
 const ItemButton = styled.button`

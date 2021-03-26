@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/signup")
-@CrossOrigin(origins = {"http://localhost:3000/"})
 public class MemberController {
 
     private final MemberService memberService;
@@ -69,7 +68,7 @@ public class MemberController {
             throw new IllegalArgumentException("인증코드가 맞지 않습니다.");
         }
 
-        redisUtil.deleteRefreshToken(certificateCode);
+        redisUtil.deleteData(certificateCode);
         return ResponseEntity.ok("인증 성공하였습니디.");
 
     }

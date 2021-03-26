@@ -1,25 +1,19 @@
-import logo from "../../icons/bookshop.svg"
 import SearchBar from "./SearchBar"
 import CategoryBar from "./CategoryBar"
-import {useHistory} from "react-router-dom"
-import "./Header.css"
-
+import styled from "styled-components"
 const Header = () => {
-  const history = useHistory()
+  if (window.location.pathname === '/login') return null;
+  if (window.location.pathname === '/signup') return null;
 
-  const goHome = () => {
-    history.push('/')
-  }
-
-  return <div className="header">
-    <button 
-    className="logo-button"
-    onClick={goHome}
-    >
-      <img src={logo} className="logo" alt="logo" />
-    </button>
+  return <HeaderContainer>
     <SearchBar />
     <CategoryBar />
-  </div>
+  </HeaderContainer>
 }
 export default Header;
+
+const HeaderContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: auto;
+`
