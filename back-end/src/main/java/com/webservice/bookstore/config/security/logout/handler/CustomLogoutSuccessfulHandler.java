@@ -25,7 +25,7 @@ public class CustomLogoutSuccessfulHandler implements LogoutSuccessHandler {
 
         String token = request.getHeader(JwtProperties.HEADER_STRING);
 
-        if (token != null || token.isEmpty()) {
+        if ((token != null) || !token.isEmpty()) {
             log.info("로그아웃 액세스 토큰 : " + token);
             token = token.substring(JwtProperties.TOKEN_PREFIX.length());
             String email = JWT.decode(token).getSubject();
