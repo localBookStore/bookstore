@@ -1,6 +1,6 @@
 import { useState } from "react"
-import axios from "axios"
 import { useCookies } from "react-cookie"
+import axios from "axios"
 
 import { Button } from "react-bootstrap"
 import styled from "styled-components"
@@ -49,6 +49,7 @@ const LoginPage = ({history}) => {
     <LoginButton varirant="primary"
       onClick={clickEvent}
     >로그인</LoginButton>
+    <Button variant="light">구글 로그인</Button>
   </LoginContainer>
 }
 export default LoginPage;
