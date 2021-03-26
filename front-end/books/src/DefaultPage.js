@@ -17,8 +17,15 @@ const DefaultPage = ({ state, dispatch }) => {
   const LogoutEvent = () => {
     const token = cookies.token
     removeCookie('token')
+<<<<<<< HEAD
     axios.post("http://localhost:8080/logout", null, {
       Authorization: token
+=======
+    axios.post("http://localhost:8080/logout",null, {
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
+>>>>>>> 9c74fee547c69ab59f5b22c7bd39dda0cf150a69
     })
       .then(() => console.log("로그아웃"))
       .catch(err => Comment.log("에러"))

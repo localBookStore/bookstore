@@ -1,9 +1,8 @@
 package com.webservice.bookstore.config.security;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetailsService;
-import com.webservice.bookstore.config.security.jwt.JwtAuthenticationFilter;
-import com.webservice.bookstore.config.security.jwt.JwtAuthorizationFilter;
-import com.webservice.bookstore.config.security.jwt.JwtUtil;
+import com.webservice.bookstore.config.security.jwt.*;
+import com.webservice.bookstore.config.security.logout.handler.CustomLogoutSuccessfulHandler;
 import com.webservice.bookstore.config.security.oauth2.CustomOAuth2UserService;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
@@ -65,7 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin().disable()
             .httpBasic().disable()
             .authorizeRequests()
-                .antMatchers("/api/admin/**").access("hasRole('ADMIN')")
+                .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/api/mypage/**").access("hasRole('ROLE_USER')")
                 .anyRequest().permitAll()
                 .and()
             .exceptionHandling()
@@ -84,8 +84,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 .and()
-//            .logout()
-//                .and()
+            .logout()
+                .logoutSuccessHandler(new CustomLogoutSuccessfulHandler(redisUtil))
+                .and()
             .oauth2Login()
                 .authorizationEndpoint()
                     .baseUri("/oauth2/authorization")
