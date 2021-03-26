@@ -2,19 +2,20 @@ package com.webservice.bookstore.web.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class Email {
+public class EmailDto {
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public class SignUpRequest {
+    public static class SignUpRequest {
 
         @NotBlank(message = "이메일을 입력해주세요")
-        @javax.validation.constraints.Email(message = "이메일 형식이 잘못되었습니다.")
+        @Email(message = "이메일 형식이 잘못되었습니다.")
         private String email;
 
         @Size(min = 1, max = 20, message = "닉네임을 입력해주세요.")
