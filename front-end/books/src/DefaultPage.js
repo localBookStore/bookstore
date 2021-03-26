@@ -1,6 +1,6 @@
-import { useState } from "react"
 import { useHistory, NavLink } from "react-router-dom"
 import { useCookies } from "react-cookie"
+import axios from "axios"
 
 import styled from "styled-components"
 import { Button } from "react-bootstrap"
@@ -15,7 +15,14 @@ const DefaultPage = ({ state, dispatch }) => {
     history.push("/")
   }
   const LogoutEvent = () => {
+    const token = cookies.token
     removeCookie('token')
+    axios.post("http://localhost:8080/logout",null,{
+      Authorization: token
+    })
+      .then(() => console.log("로그아웃"))
+      .catch(err => Comment.log("에러"))
+
     goHome()
   }
 
