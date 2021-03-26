@@ -13,6 +13,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class MemberController {
     private final RedisUtil redisUtil;
 
     @PostMapping
-    public ResponseEntity signup(@RequestBody Email.SignUpRequest signUpRequest, BindingResult bindingResult) {
+    public ResponseEntity signup(@RequestBody @Valid Email.SignUpRequest signUpRequest, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             throw new ValidationException("회원가입 유효성 실패", bindingResult.getFieldErrors());
@@ -36,7 +38,7 @@ public class MemberController {
     }
 
     @PostMapping("/duplicated")
-    public ResponseEntity duplicatedEmail(@RequestBody Email.EmailCheckDto emailCheckDto, BindingResult bindingResult){
+    public ResponseEntity duplicatedEmail(@RequestBody @Valid Email.EmailCheckDto emailCheckDto, BindingResult bindingResult){
 
         if (bindingResult.hasErrors()) {
             throw new ValidationException("이메일 형식이 맞지 않습니다.", bindingResult.getFieldErrors());
