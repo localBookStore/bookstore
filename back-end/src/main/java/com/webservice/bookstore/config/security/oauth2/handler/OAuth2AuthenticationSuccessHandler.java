@@ -1,6 +1,5 @@
 package com.webservice.bookstore.config.security.oauth2.handler;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.config.security.jwt.JwtProperties;
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +47,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         if(customUserDetails.isEnabled()) {
             // Refresh 토큰 생성하여 Redis에 저장
-            redisUtil.setRefreshToken(email, jwtUtil.createRefreshToken(email), 60L);
+            redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L);
 
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json;charset=utf-8");

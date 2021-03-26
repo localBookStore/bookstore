@@ -1,28 +1,32 @@
 package com.webservice.bookstore.web.controller;
 
-import com.webservice.bookstore.config.security.jwt.JwtUtil;
 import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.service.MemberService;
-import com.webservice.bookstore.web.dto.SignUpRequest;
-import lombok.RequiredArgsConstructor;
+import com.webservice.bookstore.util.EmailUtil;
+import com.webservice.bookstore.util.RedisUtil;
+import com.webservice.bookstore.web.dto.EmailDto;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api")
-//@CrossOrigin(origins = {"http://localhost:3000"})
+@RequestMapping(value = "/api/signup")
 public class MemberController {
 
     private final MemberService memberService;
-    private final JwtUtil jwtUtil;
+    private final JavaMailSender javaMailSender;
+    private final RedisUtil redisUtil;
 
-    @PostMapping(value = "/signup/")
-    public ResponseEntity signup(@RequestBody SignUpRequest signUpRequest, BindingResult bindingResult) {
+    @PostMapping
+    public ResponseEntity signup(@RequestBody @Valid EmailDto.SignUpRequest signUpRequest, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             throw new ValidationException("회원가입 유효성 실패", bindingResult.getFieldErrors());
@@ -31,6 +35,44 @@ public class MemberController {
         memberService.signup(signUpRequest);
 
         return new ResponseEntity("Success", HttpStatus.OK);
+    }
+
+    @PostMapping("/duplicated")
+    public ResponseEntity duplicatedEmail(@RequestBody @Valid EmailDto.EmailCheckDto emailCheckDto, BindingResult bindingResult){
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException("이메일 형식이 맞지 않습니다.", bindingResult.getFieldErrors());
+        }
+
+        memberService.duplicatedEmail(emailCheckDto.getEmail());
+        return ResponseEntity.ok("이메일 중복 체크 성공");
+
+    }
+
+    @PostMapping("/request-certificated")
+    public ResponseEntity RequestCertificatedEmail(@RequestBody EmailDto.EmailCerticatedDto email) {
+
+        log.info("email: " + email);
+        String certificated = String.valueOf(EmailUtil.randomint());
+        EmailUtil.sendEmail(javaMailSender, email.getEmail(), certificated);
+        redisUtil.setData(certificated, certificated);
+
+        return ResponseEntity.ok("이메일 인증 요청 메일을 보냈습니다.");
+    }
+
+
+    @PostMapping("/check-certificated")
+    public ResponseEntity ResponseCertificatedEmail(@RequestBody EmailDto.CeriticateCode ceriticateCode) {
+
+        String certificateCode = ceriticateCode.getCertificated();
+        String savedCode = redisUtil.getData(certificateCode);
+        if (!certificateCode.equals(savedCode)) {
+            throw new IllegalArgumentException("인증코드가 맞지 않습니다.");
+        }
+
+        redisUtil.deleteData(certificateCode);
+        return ResponseEntity.ok("인증 성공하였습니디.");
+
     }
 
 }

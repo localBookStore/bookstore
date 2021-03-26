@@ -3,8 +3,9 @@ package com.webservice.bookstore.service;
 import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
-import com.webservice.bookstore.util.EmailUtil;
-import com.webservice.bookstore.web.dto.SignUpRequest;
+import com.webservice.bookstore.exception.DuplicateUserException;
+import com.webservice.bookstore.exception.SimpleFieldError;
+import com.webservice.bookstore.web.dto.EmailDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -23,11 +24,10 @@ public class MemberService {
     private final JavaMailSender javaMailSender;
 
     @Transactional
-    public void signup(SignUpRequest signUpRequest) {
+    public void signup(EmailDto.SignUpRequest signUpRequest) {
 
         log.info("signup memberDto : " + signUpRequest);
 
-        String certificated = String.valueOf(EmailUtil.randomint());
 
         Member member = Member.builder()
                 .email(signUpRequest.getEmail())
@@ -36,13 +36,17 @@ public class MemberService {
                 .address(signUpRequest.getAddress())
                 .phone(signUpRequest.getPhone())
                 .provider(AuthProvider.DEFAULT)
-                .enabled(Boolean.FALSE)
-                .certificated(certificated)
+                .enabled(Boolean.TRUE)
                 .build();
 
-        EmailUtil.sendEmail(javaMailSender, member.getEmail(), certificated);
 
         memberRepository.save(member);
+    }
+
+    public void duplicatedEmail(String email) {
+        if(this.memberRepository.existsByEmail(email)) {
+            throw new DuplicateUserException("사용 중인 이메일 입니다.", new SimpleFieldError("email", "사용중인 이메일"));
+        }
     }
 
 }

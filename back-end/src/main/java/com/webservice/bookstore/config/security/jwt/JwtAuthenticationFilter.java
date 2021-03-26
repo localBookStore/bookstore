@@ -77,7 +77,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         if(customUserDetails.isEnabled()) {
             // 새로운 Refresh 토큰 생서 및 Redis에 저장
-            redisUtil.setRefreshToken(email, jwtUtil.createRefreshToken(email), 60L);
+            redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L);
 
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json;charset=utf-8");

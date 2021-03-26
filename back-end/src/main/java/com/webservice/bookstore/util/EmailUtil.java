@@ -26,8 +26,9 @@ public class EmailUtil {
 
         String subject	= "[BookStore] 이메일 인증";
         String from		= "bookstore0324@gmail.com";
-        String content	= "아래 링크를 통해 회원가입을 마무리할 수 있습니다!\n"
-                            + "링크: http://localhost:8080/api/emailcheck/?email=%s&certificated=%s";
+        String content	= "이메일 인증 확인 메일입니다.\n"
+                            + "인증코드: " + certificated;
+
         String text	= String.format(content, email, certificated);
 
         try {

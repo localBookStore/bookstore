@@ -43,8 +43,8 @@ public class Member extends BaseTimeEntity {
     private String refreshTokenValue;
 
     private Boolean enabled;
-
-    private String certificated;
+//
+//    private String certificated;
 
     public Member updateMemberInfo(String name, String imageUrl) {
         this.nickName = name;

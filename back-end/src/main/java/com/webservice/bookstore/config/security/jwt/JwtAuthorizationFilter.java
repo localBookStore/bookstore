@@ -81,8 +81,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             log.info("The input Access Token is invalid... :");
             String email = verifyResult.getEmail();   // abc@gmail.com
 
-            String refreshToken = redisUtil.getRefreshToken(email);
-            log.info("Get Refresh Token from Redis : " + refreshToken);
+            String refreshToken = redisUtil.getData(email);
+            log.info("Saved Refresh Token in Redis : {}", refreshToken);
+
 
             log.info("Verify the Refresh Token :");
             VerifyResult refreshVerify = jwtUtil.verify(refreshToken);
@@ -96,7 +97,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
             } else {
                 log.info("The Refresh Token is invalid... :");
-                redisUtil.deleteRefreshToken(email);
+                redisUtil.deleteData(email);
                 RuntimeException e = new TokenExpiredException("The Refresh Token is invalid");
                 this.onUnsuccessfulAuthentication(
                             request, response, new AuthenticationException(e.getMessage(), e.getCause()) {}
