@@ -1,34 +1,93 @@
-import { useRef } from "react"
-import { useForm } from "react-hook-form";
+import { doLogin } from "./LoginPage"
+
+import { useState, useRef } from "react"
+import { useForm } from "react-hook-form"
+import { useCookies } from "react-cookie"
 import axios from "axios"
 
 import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
 
-const SignupPage = () => {
+const SignupPage = ({ history }) => {
+  const [cookies, setCookie] = useCookies(['token']);
   const { register, handleSubmit, errors, watch } = useForm();
-  const password = useRef({});
-  password.current = watch("password", "");
+  const [isCheck, setIsCheck] = useState({
+    overlab: false,
+    checkCode: false,
+  })
 
-  const onSummitEvent = userInfo => {
-    const { email, password, nickName } = userInfo
-    axios.post("http://localhost:8080/api/signup/", {
-      email,
-      password,
-      nickName
+  const EMAIL = useRef(null);
+  const PASSWORD = useRef(null);
+  const AUTHCODE = useRef(null);
+  EMAIL.current = watch("email", "");
+  PASSWORD.current = watch("password", "");
+  AUTHCODE.current = watch("authCode", "");
+
+  const doSignup = data => {
+    const { email, password, nickName } = data
+    const { overlab, checkCode } = isCheck
+
+    if (overlab && checkCode) {
+      axios.post("http://localhost:8080/api/signup/", {
+        email,
+        password,
+        nickName
+      })
+        .then(res => {
+          history.replace("/login")
+        })
+        .catch(err => console.log("에러"))
+    } else {
+      console.log("중복확인과 이메일 인증을 마무리 하세요")
+    }
+  }
+
+  const sendEmailCode = () => {
+    axios.post("http://localhost:8080/api/signup/request-certificated", {
+      email: EMAIL.current
     })
-    .then(res => console.log(res))
-    .catch(err => console.log(err.response))
+      .then(res => console.log("이메일을 보냈습니다."))
+      .catch(err => console.log(err.response))
+  }
+
+  const checkEmailCode = () => {
+    axios.post("http://localhost:8080/api/signup/check-certificated", {
+      certificated: AUTHCODE.current
+    })
+      .then(() => {
+        setIsCheck({
+          ...isCheck,
+          checkCode: true
+        })
+        console.log("인증되었습니다.")
+      })
+      .catch(err => console.log(err.response))
+  }
+
+  const checkOverlab = () => {
+    axios.post("http://localhost:8080/api/signup/duplicated", {
+      "email": EMAIL.current
+    })
+      .then(res => {
+        setIsCheck({
+          ...isCheck,
+          overlab: true
+        })
+        console.log(res.data)
+      })
+      .catch(err => console.log(err.response.data.message))
   }
 
   return <SignupContainer>
     <SignupTitle>회원가입</SignupTitle>
-    <form onSubmit={handleSubmit(onSummitEvent)}>
+
+    <form onSubmit={handleSubmit(doSignup)}>
       <SignupName>이메일</SignupName>
       <SignupInput
         type="text"
         name="email"
+        readOnly={isCheck.overlab}
         ref={register({
           required: 'this is a required',
           pattern: {
@@ -37,8 +96,17 @@ const SignupPage = () => {
           },
         })}
       />
-      <CheckEmail>확인</CheckEmail>
-      <div>{errors.email && errors.email.message}</div>
+      <CheckButton onClick={() => checkOverlab()}>중복확인</CheckButton>
+      <span>{errors.email && errors.email.message}</span>
+      <SendEmailCodeButton variant="secondary" onClick={sendEmailCode}>인증 코드 보내기</SendEmailCodeButton>
+      <SignupName>인증코드입력</SignupName>
+      <SignupInput
+        type="password"
+        name="authCode"
+        readOnly={isCheck.checkCode}
+        ref={register({ required: "값이 필요합니다" })}
+      /><CheckButton variant="secondary" onClick={checkEmailCode}>인증코드확인</CheckButton>
+
 
       <SignupName>닉네임</SignupName>
       <SignupInput
@@ -75,17 +143,22 @@ const SignupPage = () => {
         ref={register({
           required: 'this is a required',
           validate: value =>
-          value === password.current || "비밀번호가 일치하지 않습니다."
+            value === PASSWORD.current || "비밀번호가 일치하지 않습니다."
         })}
       />
       <div>{errors.password2 && errors.password2.message}</div>
-      <button type="submit">버튼</button>
+
+      <SignupSummitButton variant="success" type="submit">회원가입</SignupSummitButton>
     </form>
+
 
   </SignupContainer>
 }
 export default SignupPage;
 
+const SendEmailCodeButton = styled(Button)`
+  display:block;
+`
 
 const SignupContainer = styled.div`
   width: 100%;
@@ -102,10 +175,11 @@ const SignupName = styled.div`
 const SignupInput = styled.input`
   display: inline-block;
 `
-const SignupButton = styled(Button)`
+
+const SignupSummitButton = styled(Button)`
   display: block;
   margin: 20px;
 `
-const CheckEmail = styled(Button)`
+const CheckButton = styled(Button)`
   margin: 0 20px;
 `

@@ -1,29 +1,32 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import axios from "axios"
+import { useCookies } from "react-cookie"
 
 import { Button } from "react-bootstrap"
 import styled from "styled-components"
-import Header from "../HeaderPage/Header"
 
-const LoginPage = () => {
+
+export const doLogin = (history, userInfo, dispatch) => {
+  axios.post("http://localhost:8080/login", userInfo)
+    .then(res => {
+      const token = res.headers.authorization
+      dispatch("token", token.split(" ")[1])
+      history.replace("/")
+    })
+    .catch(() => alert("아이디 혹은 비밀번호가 틀렸습니다."))
+}
+
+const LoginPage = ({history}) => {
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: ""
-  })
+  });
+
   const clickEvent = () => {
-    console.log(userInfo)
-    axios.post("http://localhost:8080/login", userInfo,
-    //     {
-    //   headers: {
-    //     "Access-Control-Allow-Origin": "*",
-    //     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-    //     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
-    //   }
-    // }
-    )
-      .then(res => console.log(res))
-      .catch(err => console.log(err.response))
+    doLogin(history, userInfo, setCookie)
   }
+
   const changeEvent = event => {
     const { name, value } = event.target
     setUserInfo({
