@@ -80,8 +80,7 @@ public class MemberController {
     @PostMapping("/withdrawal")
     public ResponseEntity withDrawal(@RequestBody(required = false) WithdrawalRequest withdrawalRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
-        String password = customUserDetails.getPassword();
-        this.memberService.withdraw(email, password);
+        this.memberService.withdraw(email, withdrawalRequest.getPassword());
         return ResponseEntity.ok("정상적으로 회원탈퇴하였습니다.");
     }
 

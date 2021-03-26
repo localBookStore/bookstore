@@ -14,12 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Log4j2
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class MemberService {
 
     private final PasswordEncoder encoder;
@@ -27,7 +25,6 @@ public class MemberService {
     private final JavaMailSender javaMailSender;
     private final RedisUtil redisUtil;
 
-    @Transactional
     public void signup(EmailDto.SignUpRequest signUpRequest) {
 
         log.info("signup memberDto : " + signUpRequest);
@@ -47,19 +44,16 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    @Transactional
     public void duplicatedEmail(String email) {
         if(this.memberRepository.existsByEmail(email)) {
             throw new DuplicateUserException("사용 중인 이메일 입니다.", new SimpleFieldError("email", "사용중인 이메일"));
         }
     }
 
-    @Transactional
     public void withdraw(String email, String password) {
         Member member = this.memberRepository.findByEmail(email).get();
-        String encodePassword = encoder.encode(password);
         if(password != null) {
-            if(!member.getPassword().equals(encodePassword)) {
+            if(!encoder.matches(password, member.getPassword())) {
                 throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
             }
         }
