@@ -99,7 +99,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Map<String, Object> resultAttributes = new HashMap<>();
             resultAttributes.put("timestamp", writeTimeNow());
             resultAttributes.put("status", HttpStatus.LOCKED);
-            resultAttributes.put("message", "Email authentication has not yet been performed.");
+            resultAttributes.put("message", "This Email is locked (Default)");
             resultAttributes.put("path", request.getRequestURI());
 
             response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
