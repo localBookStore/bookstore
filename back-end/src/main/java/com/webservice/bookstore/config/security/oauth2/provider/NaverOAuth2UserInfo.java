@@ -7,17 +7,12 @@ public class NaverOAuth2UserInfo implements OAuth2UserInfo {
     private Map<String, Object> attributes;
 
     public NaverOAuth2UserInfo(Map<String, Object> attributes) {
-        this.attributes = attributes;
-    }
-
-    @Override
-    public String getProviderId() {
-        return this.attributes.get("id").toString();
+        this.attributes = (Map) attributes.get("response");
     }
 
     @Override
     public String getProvider() {
-        return "naver";
+        return "NAVER";
     }
 
     @Override
@@ -32,6 +27,6 @@ public class NaverOAuth2UserInfo implements OAuth2UserInfo {
 
     @Override
     public String getImageUrl() {
-        return this.attributes.get("imageUrl").toString();
+        return String.valueOf(this.attributes.get("profile_image"));
     }
 }

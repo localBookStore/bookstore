@@ -116,6 +116,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                                                 HttpServletResponse response,
                                                 AuthenticationException failed) throws IOException {
 
+        SecurityContextHolder.getContext().setAuthentication(null);
+
         // 401(Unauthorized) 상태 발생
         log.info("JwtAuthorizationFilter.onUnsuccessfulAuthentication : 'Expired'");
 
@@ -129,7 +131,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         errorAttributes.put("path", request.getRequestURI());
 
         response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
-
 
     }
 }

@@ -27,7 +27,7 @@ public class MemberController {
     private final JavaMailSender javaMailSender;
     private final RedisUtil redisUtil;
 
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody @Valid EmailDto.SignUpRequest signUpRequest, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {

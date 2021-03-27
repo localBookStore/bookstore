@@ -29,7 +29,6 @@ import java.util.Optional;
 @Log4j2
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -81,16 +80,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2UserInfo.getEmail();
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
-        Member memberEntity;
+        Member memberEntity = null;
 
         if(!optionalMember.isPresent()) {
-            log.info("DB에 존재하지않으므로 바로 회원가입");
-            memberEntity = registerNewMember(userRequest, oAuth2UserInfo);
+            log.info("DB에 존재하지 않으므로 바로 회원가입");
+            memberEntity = registerNewMember(oAuth2UserInfo);
         } else {
             memberEntity = optionalMember.get();
 
+            // DB에서 조회한 계정이 일반 계정인지 판단
             if(!memberEntity.getProvider().equals(AuthProvider.valueOf(provider))) {
-                throw new OAuth2AuthenticationProcessingException(memberEntity.getProvider() + "계정을 사용하기 위해서 로그인을 해야합니다.");
+                throw new OAuth2AuthenticationProcessingException("\'"+ email +"\'계정은 이미 사용하려면 일반 로그인으로 수행해야합니다.");
             }
             log.info("DB에 존재할 경우, 변경된 정보만 업데이트");
             log.info("ID 확인 : " + memberEntity.getEmail());
@@ -100,17 +100,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return new CustomUserDetails(memberEntity, oAuth2User.getAttributes());
     }
 
-    private Member registerNewMember(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+    private Member registerNewMember(OAuth2UserInfo oAuth2UserInfo) {
 
         Member newMember = Member.builder()
                                 .email(oAuth2UserInfo.getEmail())
                                 .nickName(oAuth2UserInfo.getName())
                                 .role(MemberRole.USER)
-                                .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase()))
-                                .providerId(oAuth2UserInfo.getProviderId())
+                                .provider(AuthProvider.valueOf(oAuth2UserInfo.getProvider()))
                                 .enabled(true)  // OAuth 계정은 굳이 이메일 인증 절차가 필요없다고 판단
                                 .build();
-        newMember.updateRefreshToken(jwtUtil.createRefreshToken(newMember.getEmail()));
 
         return memberRepository.save(newMember);
     }

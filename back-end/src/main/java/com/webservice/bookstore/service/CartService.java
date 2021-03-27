@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -42,15 +43,23 @@ public class CartService {
     장바구니 아이템 추가 요청 핸들러
     */
     @Transactional
-    public CartDto addCartEntity(CartDto cartDto) {
+    public void addCartEntity(CartDto cartDto) {
+
+        isExistInCart(cartDto);
 
         Item item = itemRepository.findById(cartDto.getItem_id()).orElseThrow(() -> new EntityNotFoundException());
         cartDto.setPrice(item.getPrice());
 
         Cart cart = cartDto.toEntity();
-        Cart savedCart = cartRepository.save(cart);
+        cartRepository.save(cart);
 
-        return CartDto.of(savedCart);
+    }
+    private void isExistInCart(CartDto cartDto) {
+        Optional<Cart> optionalCart
+                = cartRepository.findByMemberIdAndItemId(cartDto.getMember_id(), cartDto.getItem_id());
+        if(optionalCart.isPresent()) {
+            throw new RuntimeException();
+        }
     }
 
     /*
@@ -69,8 +78,15 @@ public class CartService {
     select 데이터가 없으면 EmptyResultDataAccessException 예외 발생
     */
     @Transactional
-    public void deleteCartItem(Long id) throws EmptyResultDataAccessException {
-        cartRepository.deleteById(id);
+    public List<CartDto> deleteCartItem(Long member_id, Long cart_id) throws EmptyResultDataAccessException {
+
+        cartRepository.deleteById(cart_id);
+
+        List<Cart> cartEntityList = cartRepository.findByMemberId(member_id);
+        List<CartDto> cartDtoList = new ArrayList<>();
+        cartEntityList.stream().forEach(cart -> cartDtoList.add(CartDto.of(cart)));
+
+        return cartDtoList;
     }
 
 }
