@@ -43,7 +43,7 @@ public class JwtUtil {
         return JWT.create()
                 .withSubject(email)
 //                .withExpiresAt(expiresAt(30))
-                .withClaim("exp", Instant.now().getEpochSecond() + 70)
+                .withClaim("exp", Instant.now().getEpochSecond() + 60*20)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
     }

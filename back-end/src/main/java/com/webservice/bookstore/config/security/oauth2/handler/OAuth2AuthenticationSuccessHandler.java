@@ -47,7 +47,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         if(customUserDetails.isEnabled()) {
             // Refresh 토큰 생성하여 Redis에 저장
-            redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L);
+            redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L*20);
 
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json;charset=utf-8");
