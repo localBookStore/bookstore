@@ -57,7 +57,7 @@ public class MemberController {
         log.info("email: " + email);
         String certificated = String.valueOf(EmailUtil.randomint());
         EmailUtil.sendEmail(javaMailSender, email.getEmail(), certificated);
-        redisUtil.setData(certificated, certificated, 80L);
+        redisUtil.setData(certificated, certificated, 60L*20);
 
         return ResponseEntity.ok("이메일 인증 요청 메일을 보냈습니다.");
     }
@@ -80,8 +80,7 @@ public class MemberController {
     @PostMapping("/withdrawal")
     public ResponseEntity withDrawal(@RequestBody(required = false) WithdrawalRequest withdrawalRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
-        String password = customUserDetails.getPassword();
-        this.memberService.withdraw(email, password);
+        this.memberService.withdraw(email, withdrawalRequest.getPassword());
         return ResponseEntity.ok("정상적으로 회원탈퇴하였습니다.");
     }
 
