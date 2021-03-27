@@ -27,6 +27,8 @@ npm start
 'qs'    # using query string
 'react-cookie'  # Using Cookie in Browser
 'react-hook-form'   # for Using user input form
+`jwt-decode`    # Do jwt decode library (using find user info)
+`react-google-login`    # for social login of google
 ```
 
 ### File Structure (In Progress...)

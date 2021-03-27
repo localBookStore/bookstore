@@ -9,6 +9,8 @@ import Footer from "./components/FooterPage/Footer"
 import LoginPage from "./components/UserPage/LoginPage"
 import SignupPage from "./components/UserPage/SignupPage"
 import DefaultPage from "./DefaultPage"
+import CartPage from "components/UserPage/CartPage"
+import MyPage from "components/UserPage/Mypage"
 
 import {useState} from "react"
 import { Route, Switch } from "react-router-dom"
@@ -37,6 +39,8 @@ const App = () => {
       <Route path="/community/register" component={CommunityRegister} />
       <Route path="/login" component={LoginPage} />
       <Route path="/signup" component={SignupPage} />
+      <Route path="/cart" component={CartPage} />
+      <Route path="/mypage" component={MyPage} />
     </Switch>
     <Footer />
   </AppContainer>
