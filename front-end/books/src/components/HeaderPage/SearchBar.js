@@ -74,7 +74,7 @@ const SearchInput = styled.input`
   border: 1.5px solid;
   background-color: whitesmoke;
   border-radius: 5px 5px 5px 5px;
-  width: 840px;
+  width: 70%;
   height: 60px;
   
   font-weight: 500;

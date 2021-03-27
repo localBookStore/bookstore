@@ -1,14 +1,25 @@
+import {useState, useEffect} from "react"
 import { useHistory, NavLink } from "react-router-dom"
 import { useCookies } from "react-cookie"
 import axios from "axios"
+
+import { jwtDecode } from "feature/JwtDecode"
 
 import styled from "styled-components"
 import { Button } from "react-bootstrap"
 import logo from "./icons/bookshop.svg"
 
 const DefaultPage = ({ state, dispatch }) => {
-  const [cookies, setCookie, removeCookie] = useCookies(['token'])
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
+  const [userName, setUserName] = useState(null);
   const history = useHistory();
+
+  useEffect(() => {
+    if (cookies.token !== undefined){
+      const {nickName} = jwtDecode(cookies.token)
+      setUserName(nickName)
+    }
+  }, [cookies.token])
 
   const goHome = () => {
     dispatch(!state)
@@ -16,13 +27,13 @@ const DefaultPage = ({ state, dispatch }) => {
   }
   const LogoutEvent = () => {
     const token = cookies.token
-    removeCookie('token')
-    axios.post("http://localhost:8080/logout",null, {
-      headers:{
-        Authorization: `Bearer ${token}`
+
+    axios.post("http://localhost:8080/logout", null, {
+      headers: {
+        Authorization: token
       }
     })
-      .then(() => console.log("로그아웃"))
+      .then(() => removeCookie('token'))
       .catch(err => Comment.log("에러"))
 
     goHome()
@@ -34,7 +45,9 @@ const DefaultPage = ({ state, dispatch }) => {
     </ImageButton>
     {cookies.token !== undefined ?
       <>
-        <IsLoginedDiv>로그인 됨</IsLoginedDiv>
+        <IsLoginedDiv>{userName}<span style={{fontSize:"14px"}}> 님 안녕하세요</span></IsLoginedDiv>
+        <NavLink to={{pathname:"/mypage", state:{token:cookies.token}}}><MyPageButton variant="success">마이페이지</MyPageButton></NavLink>
+        <NavLink to={{pathname:"/cart", state:{token:cookies.token}}}><CartButton variant="primary">장바구니</CartButton></NavLink>
         <LogoutButton variant="danger" onClick={LogoutEvent}>로그아웃</LogoutButton>
       </>
       :
@@ -72,17 +85,25 @@ const AuthButton = styled(Button)`
 `
 const IsLoginedDiv = styled.div`
   position:absolute;
-  top: 4px;
-  right: 110px;
-
+  top: 50px;
+  right: 10px;
   font-size: 20px;
 `
 const LogoutButton = styled(Button)`
   position:absolute;
   top:0;
-  right:0;
+  right:20px;
 `
-
+const CartButton = styled(Button)`
+  position:absolute;
+  top:0;
+  right:119px;
+`
+const MyPageButton = styled(Button)`
+  position:absolute;
+  top:0;
+  right:220px;
+`
 const ImageLogo = styled.img`
   margin: 0 auto;
   width: 200px;

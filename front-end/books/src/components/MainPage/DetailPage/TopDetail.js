@@ -1,8 +1,27 @@
-import styled from "styled-components"
+import { useState } from "react"
+import {Cookies, useCookies} from "react-cookie"
 import CountBox from "./CountBox"
+import axios from "axios"
+
+import styled from "styled-components"
 
 const TopDetail = ({props}) => {
   const {name, author, imageUrl, price, publisher, quantity, id} = props
+  const [bookCount, setBookCount] = useState(0);
+  const [cookies] = useCookies(['token']);
+
+  const addCart = () => {
+    console.log(cookies.token, id)
+    axios.post(`http://localhost:8080/api/cart/${id}/`, {
+      quantity:bookCount
+    },{
+      headers:{
+        Authorization:cookies.token
+      }
+    })
+      .then(res => console.log("책이 장바구니에 담겨졌습니다"))
+      .catch(err => console.log(err.response))
+  }
 
   return <TopComponent>
     <Image src={imageUrl} alt={id}/>
@@ -11,8 +30,8 @@ const TopDetail = ({props}) => {
     <Content top="120px">가격: {price}</Content>
     <Content top="160px">택배비: 3000</Content>
     <Content top="200px">남은 수량: {quantity}</Content>
-    <CountBox rest={quantity} />
-    <Button left="600px">장바구니</Button>
+    <CountBox rest={quantity} bookCount={bookCount} setBookCount={setBookCount}/>
+    <Button left="600px" onClick={addCart}>장바구니</Button>
     <Button left="760px">바로구매</Button>
   </TopComponent>
 }

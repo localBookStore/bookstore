@@ -1,27 +1,26 @@
 import styled from "styled-components"
 import { useState } from "react"
 
-const CountBox = ({rest}) => {
-  const [count, setCount] = useState(0);
+const CountBox = ({rest, bookCount, setBookCount}) => {
 
   const Upper = () => {
-    setCount(count === rest ? rest: count+1)
+    setBookCount(bookCount === rest ? rest: bookCount+1)
   }
   const Lower = () => {
-    setCount(count === 0 ? 0 : count-1)
+    setBookCount(bookCount === 0 ? 0 : bookCount-1)
   }
   const inputValue = (e) => {
     const value = e.target.value;
     if (isFinite(value) && value*1 < 1000){
-      setCount(value*1)
+      setBookCount(value*1)
     } else {
-      setCount(count)
+      setBookCount(bookCount)
     }
   }
 
   return <Counter>
     <Button onClick={Lower}>-</Button>
-    <Number type="text" value={count} onChange={e => inputValue(e)} />
+    <Number type="text" value={bookCount} onChange={e => inputValue(e)} />
     <Button onClick={Upper}>+</Button>
   </Counter>
 }

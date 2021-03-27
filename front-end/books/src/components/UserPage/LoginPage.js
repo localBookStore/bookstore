@@ -1,6 +1,7 @@
 import { useState } from "react"
-import axios from "axios"
 import { useCookies } from "react-cookie"
+import axios from "axios"
+import GoogleButton from "./GoogleButton.js"
 
 import { Button } from "react-bootstrap"
 import styled from "styled-components"
@@ -10,13 +11,20 @@ export const doLogin = (history, userInfo, dispatch) => {
   axios.post("http://localhost:8080/login", userInfo)
     .then(res => {
       const token = res.headers.authorization
-      dispatch("token", token.split(" ")[1])
+      dispatch("token", token)
       history.replace("/")
     })
     .catch(() => alert("아이디 혹은 비밀번호가 틀렸습니다."))
+  }
+
+export const socialLogin = (provider) => {
+  // console.log(window.location.href)
+  window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`
+  return null;
+  // history.push(`/oauth2/authorization/${provider}`)
 }
 
-const LoginPage = ({history}) => {
+const LoginPage = ({ history }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const [userInfo, setUserInfo] = useState({
     email: "",
@@ -49,6 +57,10 @@ const LoginPage = ({history}) => {
     <LoginButton varirant="primary"
       onClick={clickEvent}
     >로그인</LoginButton>
+    {/* <Button variant="light" onClick={() => doGoogleLogin("google")}>구글 로그인</Button> */}
+    <GoogleButton>구글 로그인</GoogleButton>
+    <Button variant="light" onClick={() => socialLogin("naver")}>네이버 로그인</Button>
+    <Button variant="light" onClick={() => socialLogin("kakao")}>카카오 로그인</Button>
   </LoginContainer>
 }
 export default LoginPage;
