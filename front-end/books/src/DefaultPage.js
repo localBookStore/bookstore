@@ -1,14 +1,23 @@
+import {useState, useEffect} from "react"
 import { useHistory, NavLink } from "react-router-dom"
 import { useCookies } from "react-cookie"
 import axios from "axios"
+
+import { jwtDecode } from "feature/JwtDecode"
 
 import styled from "styled-components"
 import { Button } from "react-bootstrap"
 import logo from "./icons/bookshop.svg"
 
 const DefaultPage = ({ state, dispatch }) => {
-  const [cookies, setCookie, removeCookie] = useCookies(['token'])
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
+  const [userName, setUserName] = useState(null);
   const history = useHistory();
+
+  useEffect(() => {
+    const {nickName} = jwtDecode(cookies.token)
+    setUserName(nickName)
+  }, [])
 
   const goHome = () => {
     dispatch(!state)
@@ -17,15 +26,11 @@ const DefaultPage = ({ state, dispatch }) => {
   const LogoutEvent = () => {
     const token = cookies.token
     removeCookie('token')
-<<<<<<< HEAD
+
     axios.post("http://localhost:8080/logout", null, {
-      Authorization: token
-=======
-    axios.post("http://localhost:8080/logout",null, {
-      headers:{
-        Authorization: `Bearer ${token}`
+      headers: {
+        Authorization: token
       }
->>>>>>> 9c74fee547c69ab59f5b22c7bd39dda0cf150a69
     })
       .then(() => console.log("로그아웃"))
       .catch(err => Comment.log("에러"))
@@ -39,7 +44,7 @@ const DefaultPage = ({ state, dispatch }) => {
     </ImageButton>
     {cookies.token !== undefined ?
       <>
-        <IsLoginedDiv>로그인 됨</IsLoginedDiv>
+        <IsLoginedDiv>{userName}<span style={{fontSize:"14px"}}> 님 안녕하세요</span></IsLoginedDiv>
         <LogoutButton variant="danger" onClick={LogoutEvent}>로그아웃</LogoutButton>
       </>
       :
