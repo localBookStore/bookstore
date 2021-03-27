@@ -45,12 +45,6 @@ public class CartController {
 
         // 세션에 저장된 로그인 계정 정보를 통해 장바구니 목록 조회 예정
         List<CartDto> cartList = null;
-//        try {
-//            cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
-//        } catch (NullPointerException e) {
-//            // CustomUserDetails 객체가 null인 경우는 jwt 토큰으로 인증을 거치지 않았다는 의미
-//            throw new UnauthorizedException("인증 오류가 발생했습니다.", e.getCause());
-//        }
 
         verifyAuthentication(customUserDetails);
         cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
@@ -77,14 +71,15 @@ public class CartController {
         cartDto.setMember_id(customUserDetails.getMember().getId());
         cartDto.setItem_id(item_id);
 
-        CartDto resCartDto = null;
         try {
-            resCartDto = cartService.addCartEntity(cartDto);
+            cartService.addCartEntity(cartDto);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity("해당 아이템이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+        } catch (RuntimeException e) {
+            return new ResponseEntity("해당 아이템이 이미 장바구니에 담겨있습니다. 장바구니를 확인해주세요", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity(resCartDto, HttpStatus.OK);
+        return new ResponseEntity("success", HttpStatus.OK);
     }
 
     /*
@@ -106,11 +101,20 @@ public class CartController {
     */
     @DeleteMapping(value = "/cart/{cart_id}/")
     public ResponseEntity deleteCartItem(@PathVariable("cart_id") Long cart_id,
-                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         verifyAuthentication(customUserDetails);
-        cartService.deleteCartItem(cart_id);
 
-        return new ResponseEntity("success", HttpStatus.OK);
+        Long id = customUserDetails.getMember().getId();
+        List<CartDto> cartList = cartService.deleteCartItem(id, cart_id);
+
+        List<CartLinkResource> emList = cartList.stream()
+                .map(cartDto -> new CartLinkResource(cartDto,
+                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItem_id())).withRel("itemDetail")))
+                .collect(Collectors.toList());
+
+        CollectionModel<CartLinkResource> collectionModel = CollectionModel.of(emList);
+
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 }

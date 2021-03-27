@@ -3,6 +3,7 @@ package com.webservice.bookstore.service;
 import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
+import com.webservice.bookstore.domain.entity.member.MemberRole;
 import com.webservice.bookstore.exception.DuplicateUserException;
 import com.webservice.bookstore.exception.SimpleFieldError;
 import com.webservice.bookstore.util.RedisUtil;
@@ -34,8 +35,7 @@ public class MemberService {
                 .email(signUpRequest.getEmail())
                 .password(encoder.encode(signUpRequest.getPassword()))
                 .nickName(signUpRequest.getNickName())
-                .address(signUpRequest.getAddress())
-                .phone(signUpRequest.getPhone())
+                .role(MemberRole.USER)
                 .provider(AuthProvider.DEFAULT)
                 .enabled(Boolean.TRUE)
                 .build();
