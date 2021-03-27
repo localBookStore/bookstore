@@ -57,7 +57,7 @@ public class MemberController {
         log.info("email: " + email);
         String certificated = String.valueOf(EmailUtil.randomint());
         EmailUtil.sendEmail(javaMailSender, email.getEmail(), certificated);
-        redisUtil.setData(certificated, certificated, 80L);
+        redisUtil.setData(certificated, certificated, 60L*20);
 
         return ResponseEntity.ok("이메일 인증 요청 메일을 보냈습니다.");
     }
