@@ -47,7 +47,8 @@ public class CartService {
 
         isExistInCart(cartDto);
 
-        Item item = itemRepository.findById(cartDto.getItem_id()).orElseThrow(() -> new EntityNotFoundException());
+//        Item item = itemRepository.findById(cartDto.getItem_id()).orElseThrow(() -> new EntityNotFoundException());
+        Item item = itemRepository.findById(cartDto.getItemDto().getId()).orElseThrow(() -> new EntityNotFoundException());
         cartDto.setPrice(item.getPrice());
 
         Cart cart = cartDto.toEntity();
@@ -55,8 +56,10 @@ public class CartService {
 
     }
     private void isExistInCart(CartDto cartDto) {
+//        Optional<Cart> optionalCart
+//                = cartRepository.findByMemberIdAndItemId(cartDto.getMember_id(), cartDto.getItem_id());
         Optional<Cart> optionalCart
-                = cartRepository.findByMemberIdAndItemId(cartDto.getMember_id(), cartDto.getItem_id());
+                = cartRepository.findByMemberIdAndItemId(cartDto.getMember_id(), cartDto.getItemDto().getId());
         if(optionalCart.isPresent()) {
             throw new RuntimeException();
         }

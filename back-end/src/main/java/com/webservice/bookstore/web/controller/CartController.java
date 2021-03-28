@@ -6,6 +6,7 @@ import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.service.CartService;
 import com.webservice.bookstore.web.dto.CartDto;
+import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.hateoas.CollectionModel;
@@ -49,10 +50,15 @@ public class CartController {
         verifyAuthentication(customUserDetails);
         cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
 
+//        List<CartLinkResource> emList = cartList.stream()
+//                .map(cartDto -> new CartLinkResource(cartDto,
+//                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItem_id())).withRel("itemDetail")))
+//                .collect(Collectors.toList());
         List<CartLinkResource> emList = cartList.stream()
                 .map(cartDto -> new CartLinkResource(cartDto,
-                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItem_id())).withRel("itemDetail")))
+                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItemDto().getId())).withRel("itemDetail")))
                 .collect(Collectors.toList());
+
 
         CollectionModel<CartLinkResource> collectionModel = CollectionModel.of(emList);
 
@@ -69,7 +75,8 @@ public class CartController {
 
         verifyAuthentication(customUserDetails);
         cartDto.setMember_id(customUserDetails.getMember().getId());
-        cartDto.setItem_id(item_id);
+//        cartDto.setItem_id(item_id);
+        cartDto.setItemDto(ItemDto.builder().id(item_id).build());
 
         try {
             cartService.addCartEntity(cartDto);
@@ -108,9 +115,13 @@ public class CartController {
         Long id = customUserDetails.getMember().getId();
         List<CartDto> cartList = cartService.deleteCartItem(id, cart_id);
 
+//        List<CartLinkResource> emList = cartList.stream()
+//                .map(cartDto -> new CartLinkResource(cartDto,
+//                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItem_id())).withRel("itemDetail")))
+//                .collect(Collectors.toList());
         List<CartLinkResource> emList = cartList.stream()
                 .map(cartDto -> new CartLinkResource(cartDto,
-                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItem_id())).withRel("itemDetail")))
+                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItemDto().getId())).withRel("itemDetail")))
                 .collect(Collectors.toList());
 
         CollectionModel<CartLinkResource> collectionModel = CollectionModel.of(emList);
