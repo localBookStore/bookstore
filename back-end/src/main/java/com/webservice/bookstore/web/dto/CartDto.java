@@ -14,7 +14,8 @@ public class CartDto {
 
     private Long member_id;
 
-    private Long item_id;
+//    private Long item_id;
+    private ItemDto itemDto;
 
     private Integer price;
 
@@ -25,7 +26,8 @@ public class CartDto {
         return CartDto.builder()
                 .id(cart.getId())
                 .member_id(cart.getMember().getId())
-                .item_id(cart.getItem().getId())
+//                .item_id(cart.getItem().getId())
+                .itemDto(ItemDto.of(cart.getItem()))
                 .price(cart.getPrice())
                 .quantity(cart.getQuantity())
                 .build();
@@ -35,12 +37,13 @@ public class CartDto {
     public Cart toEntity() {
 
         Member member = Member.builder().id(this.member_id).build();
-        Item item = Item.builder().id(this.item_id).build();
+//        Item item = Item.builder().id(this.item_id).build();
 
         return Cart.builder()
                 .id(this.id)
                 .member(member)
-                .item(item)
+//                .item(item)
+                .item(this.itemDto.toEntity())
                 .price(this.price)
                 .quantity(this.quantity)
                 .build();
