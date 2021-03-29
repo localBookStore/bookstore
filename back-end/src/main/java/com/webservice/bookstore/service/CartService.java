@@ -5,6 +5,7 @@ import com.webservice.bookstore.domain.entity.cart.CartRepository;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.web.dto.CartDto;
+import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -81,15 +82,28 @@ public class CartService {
     select 데이터가 없으면 EmptyResultDataAccessException 예외 발생
     */
     @Transactional
-    public List<CartDto> deleteCartItem(Long member_id, Long cart_id) throws EmptyResultDataAccessException {
+    public List<CartDto> deleteCartItem(MemberDto memberDto, List<CartDto> cartDtoList) throws EmptyResultDataAccessException {
 
-        cartRepository.deleteById(cart_id);
+//        cartRepository.deleteById(cart_id);
+        cartRepository.deleteAllByIdInQuery(getCartIdList(cartDtoList));
 
-        List<Cart> cartEntityList = cartRepository.findByMemberId(member_id);
-        List<CartDto> cartDtoList = new ArrayList<>();
-        cartEntityList.stream().forEach(cart -> cartDtoList.add(CartDto.of(cart)));
+        List<Cart> cartEntityList = cartRepository.findByMemberId(memberDto.getId());
+        cartDtoList = new ArrayList<>();
+//        cartEntityList.stream().forEach(cart -> cartDtoList.add(CartDto.of(cart)));
+        setEntityListOfDtoList(cartEntityList, cartDtoList);
 
         return cartDtoList;
     }
-
+    // Cart Entity 리스트 내 cart_id만 리스트로 반환
+    private List<Long> getCartIdList(List<CartDto> cartDtoList) {
+        List<Long> cartIdList = new ArrayList<>();
+        for(CartDto dto : cartDtoList) {
+            cartIdList.add(dto.getId());
+        }
+        return cartIdList;
+    }
+    // Lambda는 'effectively final'(값이 재정의되지 않는 변수) 변수만 허용 가능하도록 하여 메소드로 분리
+    private static void setEntityListOfDtoList(List<Cart> cartEntityList, List<CartDto> cartDtoList) {
+        cartEntityList.stream().forEach(cart -> cartDtoList.add(CartDto.of(cart)));
+    }
 }
