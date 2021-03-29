@@ -6,42 +6,50 @@ import styled from "styled-components"
 
 const CartPage = ({ location }) => {
   const [cartList, setCartList] = useState(null);
-  // const [bookCount, setBookCount] = useState({});
+  const [checked, setChecked] = useState({});
   const { state: { token } } = location;
 
   useEffect(() => {
+    getCartBook()
+  }, [])
+
+  const getCartBook = props => {
     axios.get("http://localhost:8080/api/cart/", { headers: { Authorization: token } })
       .then(res => {
         const { data } = res
         if (Object.keys(data).length) {
           const { _embedded: { cartDtoList } } = data
           setCartList(cartDtoList)
-        } else {
-          setCartList(null)
-        }
+          cartDtoList.map(itemId => {
+            const cartNumber = itemId.itemDto.id
+            setChecked({
+              ...checked,
+              [cartNumber]:cartNumber
+            })
+          })
+        } else setCartList(null)
       })
       .catch(err => console.log("토큰이 만료 되었습니다."))
-  }, [])
-
-  const changeCount = (current, limit, e) => {
-    current = e.target.value
   }
+
   const deleteCartBook = cartId => {
-    axios.delete(`http://localhost:8080/api/cart/${cartId}/`, {
-      headers: {
-        Authorization: token
-      }
-    })
+    axios.delete(`http://localhost:8080/api/cart/${cartId}/`, { headers: { Authorization: token } })
       .then(res => {
         const { data } = res
         if (Object.keys(data).length) {
           const { _embedded: { cartDtoList } } = data
           setCartList(cartDtoList)
-        } else {
-          setCartList(null)
-        }
+
+        } else setCartList(null)
       })
       .catch(err => console.log(err.response))
+  }
+
+  const clickEvent = (e, cartId) => {
+    const isCheck = e.target.checked
+    if (isCheck) {
+      console.log(checked)
+    }
   }
 
   return <Container>
@@ -49,19 +57,28 @@ const CartPage = ({ location }) => {
       <div>
         장바구니가 비었습니다.
     </div> :
-      cartList.map((res, idx) => {
-        const bookCount = res.quantity;
-        const { id, name, imageUrl, price, quantity } = res.itemDto
-        return <EachBookContainer key={idx}>
-          <BookCheck type="checkbox" defaultChecked/>
-          <BookImage src={imageUrl} alt={id} />
-          <BookText>{name}</BookText>
-          <BookText>{price}</BookText>
-          <BookCount type="number" defaultValue={bookCount} name={id}
-            onChange={e => changeCount(bookCount, quantity, e)} />
-          <Button variant="danger" onClick={() => deleteCartBook(res.id)}>삭제</Button>
-        </EachBookContainer>
-      })}
+      <>
+        <div>
+          {cartList.map((res, idx) => {
+            console.log(res)
+            const bookCount = res.quantity;
+            const { id, name, imageUrl, price, quantity } = res.itemDto
+            return <EachBookContainer key={idx}>
+              <BookCheck type="checkbox" defaultChecked onClick={e => clickEvent(e, id)} />
+              <BookImage src={imageUrl} alt={id} />
+              <BookText>{name}</BookText>
+              <BookText>{price}</BookText>
+              <BookCount type="number" defaultValue={bookCount} name={id}
+                onChange={() => { }} />
+              <Button variant="danger" onClick={() => deleteCartBook(res.id)}>삭제</Button>
+            </EachBookContainer>
+          })}
+        </div>
+        <div>
+
+        </div>
+      </>
+    }
   </Container>
 }
 export default CartPage;
