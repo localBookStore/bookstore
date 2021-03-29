@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.order;
 
+import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.delivery.Delivery;
 import com.webservice.bookstore.domain.entity.delivery.DeliveryEnum;
 import com.webservice.bookstore.domain.entity.member.Member;
@@ -34,7 +35,8 @@ public class Orders {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
-    //private List<Coupon> coupons;
+    @OneToMany(mappedBy = "order")
+    private List<Coupon> coupons;
 
     private Integer paymentAmount;
 
