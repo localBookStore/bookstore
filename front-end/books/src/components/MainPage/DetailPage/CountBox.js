@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import { useState } from "react"
 
 const CountBox = ({rest, bookCount, setBookCount}) => {
 
@@ -7,7 +6,7 @@ const CountBox = ({rest, bookCount, setBookCount}) => {
     setBookCount(bookCount === rest ? rest: bookCount+1)
   }
   const Lower = () => {
-    setBookCount(bookCount === 0 ? 0 : bookCount-1)
+    setBookCount(bookCount === 1 ? 1 : bookCount-1)
   }
   const inputValue = (e) => {
     const value = e.target.value;

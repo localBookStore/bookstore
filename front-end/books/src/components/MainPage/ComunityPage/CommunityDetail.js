@@ -7,7 +7,7 @@ import styled from "styled-components"
 
 const CommunityDetail = ({ match }) => {
   const articleId = match.params.id;
-  const [isloading, setIsloading] = useState(false);
+  const [isloading, setIsloading] = useState(true);
   const [article, setArticle] = useState(null);
   const [comments, setComments] = useState(null);
 
@@ -18,7 +18,7 @@ const CommunityDetail = ({ match }) => {
           const { data } = res
           setArticle(data[0]);
           setComments(data[1]);
-          setIsloading(true);
+          setIsloading(false);
         })
         .catch(err => console.log(err.response))
     }
@@ -28,14 +28,15 @@ const CommunityDetail = ({ match }) => {
   return <>
     {isloading ?
       <BoardContainer>
-        <ArticleDetail props={article}/>
-        <hr />
-        <CommentsDetail comments={comments}/>
+        로딩중
       </BoardContainer>
       :
       <BoardContainer>
-        로딩중
-      </BoardContainer>}
+        <ArticleDetail props={article} />
+        <hr />
+        <CommentsDetail articleId={articleId}/>
+      </BoardContainer>
+    }
   </>
 }
 export default CommunityDetail;

@@ -15,14 +15,15 @@ const MyPage = ({ location }) => {
   ]
 
   useEffect(() => {
-    switch(selected) {
-      case "deleteaccount":
-        return console.log(selected)
-        break
-      default:
-        console.log("선택 안되었음")
-    }
+    if (selected === 'userInfo') {
 
+    } else if (selected === 'orderlist') {
+
+    } else if (selected === 'mypost') {
+
+    } else if (selected === 'deleteaccount') {
+      
+    }
   }, [selected])
 
 
