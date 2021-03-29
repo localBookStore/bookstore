@@ -12,6 +12,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,13 +29,23 @@ public class CouponController {
     private final CouponService couponServcie;
 
 
+    /*
+    *   쿠폰 조회
+    * */
     @GetMapping
     public ResponseEntity retrieveCoupons() {
         List<Coupon> coupons = couponServcie.findCoupons();
         List<CouponDto> couponDtos = coupons.stream().map(coupon -> CouponDto.toDto(coupon)).collect(Collectors.toList());
         List<CouponResource> linkList = couponDtos.stream().map(couponDto -> new CouponResource(couponDto)).collect(Collectors.toList());
         CollectionModel<CouponResource> collectionModel = CollectionModel.of(linkList);
-        return collectionModel
+        return ResponseEntity.ok(collectionModel);
+    }
+
+    /*
+        쿠폰 적용
+     */
+    @PostMapping("/{id}")
+    public ResponseEntity applyCoupons() {
 
     }
 
