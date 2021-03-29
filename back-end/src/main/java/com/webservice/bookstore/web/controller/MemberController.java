@@ -15,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 @Log4j2
@@ -57,7 +58,7 @@ public class MemberController {
         log.info("email: " + email);
         String certificated = String.valueOf(EmailUtil.randomint());
         EmailUtil.sendEmail(javaMailSender, email.getEmail(), certificated);
-        redisUtil.setData(certificated, certificated, 60L*20);
+        redisUtil.setData(certificated, certificated, 60L*5);
 
         return ResponseEntity.ok("이메일 인증 요청 메일을 보냈습니다.");
     }
@@ -89,4 +90,26 @@ public class MemberController {
     static class WithdrawalRequest {
         private String password;
     }
+
+    // 이메일 찾기 -> 어떤 기준으로 이메일을 찾을지 정해야함. 예를 들어 이름 + nickname + 생일 등
+
+    // 비밀번호 찾기
+    @PostMapping("/searchpwd")
+    public ResponseEntity searchpwd(@RequestBody @Valid EmailDto.findPwdRequest findPwdRequest,
+                                    BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException("비밀번호 찾기 요청 실패", bindingResult.getFieldErrors());
+        }
+
+        try {
+            String tempPassword = this.memberService.searchPassword(findPwdRequest);
+            EmailUtil.sendEmail(javaMailSender, findPwdRequest.getEmail(), tempPassword);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity("계정이 존재하지 않습니다", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity("임시 비밀번호 이메일 전송 완료", HttpStatus.OK);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.order;
 
+import com.webservice.bookstore.domain.entity.BaseTimeEntity;
 import com.webservice.bookstore.domain.entity.delivery.Delivery;
 import com.webservice.bookstore.domain.entity.delivery.DeliveryEnum;
 import com.webservice.bookstore.domain.entity.member.Member;
@@ -17,7 +18,7 @@ import java.util.List;
 @Getter
 @ToString(exclude = {"member","delivery"})
 @EqualsAndHashCode(of = "id")
-public class Orders {
+public class Orders extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.orderItem;
 
+import com.webservice.bookstore.domain.entity.BaseTimeEntity;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.order.Orders;
 import com.webservice.bookstore.web.dto.OrderItemDto;
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 @ToString
 @EqualsAndHashCode(of = "id")
-public class OrderItem {
+public class OrderItem extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

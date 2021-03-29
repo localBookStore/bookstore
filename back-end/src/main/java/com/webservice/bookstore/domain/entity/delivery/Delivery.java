@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.delivery;
 
+import com.webservice.bookstore.domain.entity.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @ToString
 @EqualsAndHashCode(of = "id")
-public class Delivery {
+public class Delivery extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
