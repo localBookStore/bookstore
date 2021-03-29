@@ -2,12 +2,8 @@ package com.webservice.bookstore.domain.entity.coupon;
 
 
 import com.webservice.bookstore.domain.entity.category.Category;
-import com.webservice.bookstore.domain.entity.order.Orders;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@ToString(exclude = {"orderItem", "category"})
 public class Coupon {
 
     @Id
@@ -41,5 +38,6 @@ public class Coupon {
     public void addOrderItem(OrderItem orderItem) {
         this.orderItem = orderItem;
     }
+
 
 }

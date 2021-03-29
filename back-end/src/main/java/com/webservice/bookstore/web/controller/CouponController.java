@@ -11,10 +11,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,9 +29,9 @@ public class CouponController {
     /*
     *   쿠폰 조회
     * */
-    @GetMapping
-    public ResponseEntity retrieveCoupons() {
-        List<Coupon> coupons = couponServcie.findCoupons();
+    @GetMapping("/{id}")
+    public ResponseEntity retrieveCoupons(@PathVariable Long id) {
+        List<Coupon> coupons = couponServcie.findCoupons(id);
         List<CouponDto> couponDtos = coupons.stream().map(coupon -> CouponDto.toDto(coupon)).collect(Collectors.toList());
         List<CouponResource> linkList = couponDtos.stream().map(couponDto -> new CouponResource(couponDto)).collect(Collectors.toList());
         CollectionModel<CouponResource> collectionModel = CollectionModel.of(linkList);
@@ -44,10 +41,10 @@ public class CouponController {
     /*
         쿠폰 적용
      */
-    @PostMapping("/{id}")
-    public ResponseEntity applyCoupons() {
-
-    }
+//    @PostMapping("/{id}")
+//    public ResponseEntity applyCoupons() {
+//
+//    }
 
 
 
