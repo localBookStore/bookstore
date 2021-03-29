@@ -35,9 +35,6 @@ public class Orders {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
-    @OneToMany(mappedBy = "order")
-    private List<Coupon> coupons;
-
     private Integer paymentAmount;
 
     private Integer deliveryCharge;

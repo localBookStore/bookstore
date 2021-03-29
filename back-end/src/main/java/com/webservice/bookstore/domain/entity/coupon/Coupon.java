@@ -3,6 +3,7 @@ package com.webservice.bookstore.domain.entity.coupon;
 
 import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.domain.entity.order.Orders;
+import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,14 +29,17 @@ public class Coupon {
     private LocalDate endDate;
 
 
-    @ManyToOne
-    @JoinColumn(name = "orders_id")
-    private Orders order;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_item_id")
+    private OrderItem orderItem;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
 
+    public void addOrderItem(OrderItem orderItem) {
+        this.orderItem = orderItem;
+    }
 
 }

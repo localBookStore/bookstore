@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.orderItem;
 
+import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.order.Orders;
 import com.webservice.bookstore.web.dto.OrderItemDto;
@@ -29,6 +30,9 @@ public class OrderItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    @OneToMany(mappedBy = "orderItem")
+    private List<Coupon> coupons;
+
     private Integer orderCount;
 
     private Integer orderPrice;
@@ -39,6 +43,11 @@ public class OrderItem {
     */
     public void addOrder(Orders orders) {
         this.order = orders;
+    }
+
+    public void addCoupon(Coupon coupon) {
+        this.coupons.add(coupon);
+        coupon.addOrderItem(this);
     }
 
     /*
