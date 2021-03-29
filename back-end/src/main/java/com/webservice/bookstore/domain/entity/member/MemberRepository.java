@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -20,4 +21,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     void withdraw(@Param("email") String email);
 
     Optional<Member> findByEmailAndNickName(String email, String nickName);
+
+    List<Member> findAllByRoleNot(MemberRole role);
 }

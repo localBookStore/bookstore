@@ -10,6 +10,7 @@ import com.webservice.bookstore.exception.SimpleFieldError;
 import com.webservice.bookstore.util.EmailUtil;
 import com.webservice.bookstore.util.RedisUtil;
 import com.webservice.bookstore.web.dto.EmailDto;
+import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -93,5 +96,13 @@ public class MemberService {
 
         return tempPassword;
 
+    }
+
+    public List<MemberDto> findAllMembers() {
+        List<Member> memberEntityList = memberRepository.findAllByRoleNot(MemberRole.ADMIN);
+        List<MemberDto> memberDtoList = new ArrayList<>();
+        memberEntityList.stream().forEach(member -> memberDtoList.add(MemberDto.of(member)));
+
+        return memberDtoList;
     }
 }

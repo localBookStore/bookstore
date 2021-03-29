@@ -42,7 +42,7 @@ public class OrdersService {
 
     @Transactional
     public OrdersDto addOrder(MemberDto memberDto, List<OrderItemDto> orderItemDtoList) {
-        // item_id 필드 기준으로 리스트 정렬 (오름차순)
+        // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
         orderItemDtoList = orderItemDtoList.stream()
                 .sorted(Comparator.comparing(OrderItemDto::getItem_id))
                 .collect(Collectors.toList());
@@ -65,4 +65,11 @@ public class OrdersService {
        return OrdersDto.of(savedOrders);
     }
 
+    public List<OrdersDto> findOrders(MemberDto memberDto) {
+        List<Orders> orderEntityList = orderRepository.findByMemberId(memberDto.getId());
+        List<OrdersDto> ordersDtoList = new ArrayList<>();
+        orderEntityList.stream().forEach(orders -> ordersDtoList.add(OrdersDto.of(orders)));
+
+        return ordersDtoList;
+    }
 }

@@ -33,7 +33,7 @@ public class Orders extends BaseTimeEntity {
     private Delivery delivery;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     //private List<Coupon> coupons;
 

@@ -1,11 +1,13 @@
 package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
+import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.service.MemberService;
 import com.webservice.bookstore.util.EmailUtil;
 import com.webservice.bookstore.util.RedisUtil;
 import com.webservice.bookstore.web.dto.EmailDto;
+import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -110,6 +113,22 @@ public class MemberController {
         }
 
         return new ResponseEntity("임시 비밀번호 이메일 전송 완료", HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/members")
+    public ResponseEntity searchMembers(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        verifyAuthentication(customUserDetails);
+
+        List<MemberDto> memberDtoList = memberService.findAllMembers();
+
+        return new ResponseEntity(memberDtoList, HttpStatus.OK);
+    }
+
+    private void verifyAuthentication(CustomUserDetails customUserDetails) {
+        if(customUserDetails == null || customUserDetails.equals("")) {
+            throw new UnauthorizedException("인증 오류가 발생했습니다.");
+        }
     }
 
 }

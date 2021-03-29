@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/order")
+@RequestMapping(value = "/api")
 @RequiredArgsConstructor
 public class OrdersController {
 
@@ -24,7 +24,7 @@ public class OrdersController {
     /*
     주문 생성
     */
-    @PostMapping(value = "/")
+    @PostMapping(value = "/order")
     public ResponseEntity createOrder(@RequestBody List<OrderItemDto> orderItemDtoList,
                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         MemberDto memberDto = null;
@@ -42,4 +42,16 @@ public class OrdersController {
         return new ResponseEntity(ordersDto, HttpStatus.OK);
     }
 
+    /*
+    각 회원 주문 리스트 (구매 내역) 조회
+    */
+    @GetMapping("/admin/members/{member_id}/orders")
+    public ResponseEntity getOrderList(@PathVariable(value = "member_id") Long member_id) {
+
+        MemberDto memberDto = MemberDto.builder().id(member_id).build();
+
+        List<OrdersDto> orderDtoList = orderService.findOrders(memberDto);
+
+        return new ResponseEntity(orderDtoList, HttpStatus.OK);
+    }
 }
