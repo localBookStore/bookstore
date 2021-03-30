@@ -57,8 +57,8 @@ const LoginPage = ({ history }) => {
     <LoginButton varirant="primary"
       onClick={clickEvent}
     >로그인</LoginButton>
+    {/* <GoogleButton>구글 로그인</GoogleButton> */}
     {/* <Button variant="light" onClick={() => doGoogleLogin("google")}>구글 로그인</Button> */}
-    <GoogleButton>구글 로그인</GoogleButton>
     <Button variant="light" onClick={() => socialLogin("naver")}>네이버 로그인</Button>
     <Button variant="light" onClick={() => socialLogin("kakao")}>카카오 로그인</Button>
   </LoginContainer>

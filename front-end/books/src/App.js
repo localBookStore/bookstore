@@ -12,7 +12,6 @@ import DefaultPage from "./DefaultPage"
 import CartPage from "components/UserPage/CartPage"
 import MyPage from "components/UserPage/Mypage"
 
-import {useState} from "react"
 import { Route, Switch } from "react-router-dom"
 import ScrollToTop from "./ScrollToTop"
 
@@ -20,15 +19,10 @@ import styled from "styled-components"
 
 
 const App = () => {
-  const [reRender, setReRender] = useState(false);
-
-  const doRendering = () => {
-    setReRender(prev => !prev)
-  }
-
+  
   return <AppContainer>
     <ScrollToTop />
-    <DefaultPage state={reRender} dispatch={doRendering} />
+    <DefaultPage />
     <Header />
     <Switch>
       <Route exact path="/" component={Home} />
