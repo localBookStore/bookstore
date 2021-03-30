@@ -68,11 +68,17 @@ public class Orders extends BaseTimeEntity {
                                     .status(DeliveryEnum.START)
                                     .build();
 
+        int paymentAmount = 0;
+        for(OrderItem orderItem: orderItemList) {
+            paymentAmount += (orderItem.getOrderPrice()*orderItem.getOrderCount());
+        }
+
         // Builder 패턴 사용법 주의사항 :
         Orders order = Orders.builder()
                 .member(member) // 결제자 정보 등록
                 .orderItems(new ArrayList<>()) // 'builder 패턴 사용 시 주의사항 숙지할 것'
-                .paymentAmount(orderItemList.stream().mapToInt(OrderItem::getOrderPrice).sum()) // 결제 금액(배송비 별도)
+//                .paymentAmount(orderItemList.stream().mapToInt(OrderItem::getOrderPrice).sum()) // 결제 금액(배송비 별도)
+                .paymentAmount(paymentAmount)
                 .deliveryCharge(2500) // 배송비 초기화
                 .status(OrdersEnum.ORDER) // 주문 상태 초기화
                 .build();

@@ -35,7 +35,8 @@ public class OrdersService {
     private List<Long> getItemIdList(List<OrderItemDto> orderItemDtoList) {
         List<Long> itemIdList = new ArrayList<>();
         for(OrderItemDto dto : orderItemDtoList) {
-            itemIdList.add(dto.getItem_id());
+//            itemIdList.add(dto.getItem_id());
+            itemIdList.add(dto.getItemDto().getId());
         }
         return itemIdList;
     }
@@ -44,10 +45,11 @@ public class OrdersService {
     public OrdersDto addOrder(MemberDto memberDto, List<OrderItemDto> orderItemDtoList) {
         // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
         orderItemDtoList = orderItemDtoList.stream()
-                .sorted(Comparator.comparing(OrderItemDto::getItem_id))
+//                .sorted(Comparator.comparing(OrderItemDto::getItem_id))
+                .sorted(Comparator.comparing(orderItemDto -> orderItemDto.getItemDto().getId()))
                 .collect(Collectors.toList());
 
-        // Member, Item 엔티티 조회 (id 기준으로 오름차순을 조회함)
+        // Member, Item 엔티티 조회 (자동으로 id 기준으로 오름차순을 조회함)
         Member member       = memberRepository.getOne(memberDto.getId());
         List<Item> itemList = itemRepository.findByIdIn(getItemIdList(orderItemDtoList));
 
