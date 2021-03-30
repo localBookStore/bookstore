@@ -69,4 +69,19 @@ public class OrdersController {
 
         return new ResponseEntity(orderDtoList, HttpStatus.OK);
     }
+
+    /*
+    관리자 페이지 주문 취소
+    */
+    @PatchMapping("/admin/orders/cancel/{order_id}")
+    public ResponseEntity cancelOrder(@RequestBody @PathVariable(value = "order_id") Long orders_id,
+                                      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        MemberDto memberDto = MemberDto.builder().id(customUserDetails.getMember().getId()).build();
+        OrdersDto ordersDto = OrdersDto.builder().id(orders_id).build();
+
+        orderService.cancelOrder(memberDto, ordersDto);
+
+        return new ResponseEntity("success", HttpStatus.OK);
+    }
 }

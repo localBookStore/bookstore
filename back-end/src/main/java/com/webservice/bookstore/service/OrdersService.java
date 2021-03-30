@@ -74,4 +74,11 @@ public class OrdersService {
 
         return ordersDtoList;
     }
+
+    @Transactional
+    public void cancelOrder(MemberDto memberDto, OrdersDto ordersDto) {
+
+        Orders order = orderRepository.getOne(ordersDto.getId());
+        order.cancel();
+    }
 }

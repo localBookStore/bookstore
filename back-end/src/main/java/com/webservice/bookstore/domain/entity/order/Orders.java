@@ -90,4 +90,20 @@ public class Orders extends BaseTimeEntity {
         return order;
     }
 
+    /*
+    주문 취소
+    */
+    public void cancel() {
+        // 배속(delivery) 상태가 이미 완료(complete)된 상태일 경우, 예외상태 반환
+        if(delivery.getStatus() != DeliveryEnum.START) {
+            throw new IllegalStateException("이미 배송된 상태이므로, 취소가 불가능 합니다.");
+        }
+
+        this.delivery.cancel();
+        this.status = OrdersEnum.CANCEL;
+        for (OrderItem orderItem: orderItems) {
+            orderItem.cancel();
+        }
+    }
+
 }

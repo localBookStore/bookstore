@@ -53,4 +53,11 @@ public class Item {
         }
     }
 
+    /*
+    (주문 취소 시) 재고량(stock) 증가
+    */
+    public void addStockQuantity(int quantity) {
+        this.quantity += quantity;
+    }
+
 }

@@ -23,4 +23,7 @@ public class Delivery extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private DeliveryEnum status;
 
+    public void cancel() {
+        this.status = DeliveryEnum.CANCEL;
+    }
 }

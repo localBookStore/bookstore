@@ -62,4 +62,11 @@ public class OrderItem extends BaseTimeEntity {
         }
         return orderItemList;
     }
+
+    /*
+    주문 상품 주문 취소
+    */
+    public void cancel() {
+        this.item.addStockQuantity(this.orderCount);
+    }
 }
