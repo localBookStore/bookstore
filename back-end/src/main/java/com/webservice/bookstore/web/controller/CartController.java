@@ -58,9 +58,9 @@ public class CartController {
                 .collect(Collectors.toList());
 
 
-        CollectionModel<CartLinkResource> collectionModel = CollectionModel.of(emList);
-
-        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+//        CollectionModel<CartLinkResource> collectionModel = CollectionModel.of(emList);
+//        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+        return new ResponseEntity<>(emList, HttpStatus.OK);
     }
 
     /*
@@ -122,8 +122,8 @@ public class CartController {
                         linkTo(methodOn(ItemController.class).getItem(cartDto.getItemDto().getId())).withRel("itemDetail")))
                 .collect(Collectors.toList());
 
-        CollectionModel<CartLinkResource> collectionModel = CollectionModel.of(emList);
-
-        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+//        CollectionModel<CartLinkResource> collectionModel = CollectionModel.of(emList);
+//        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+        return new ResponseEntity<>(emList, HttpStatus.OK);
     }
 }

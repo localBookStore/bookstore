@@ -35,19 +35,21 @@ public class OrdersService {
     private List<Long> getItemIdList(List<OrderItemDto> orderItemDtoList) {
         List<Long> itemIdList = new ArrayList<>();
         for(OrderItemDto dto : orderItemDtoList) {
-            itemIdList.add(dto.getItem_id());
+//            itemIdList.add(dto.getItem_id());
+            itemIdList.add(dto.getItemDto().getId());
         }
         return itemIdList;
     }
 
     @Transactional
     public OrdersDto addOrder(MemberDto memberDto, List<OrderItemDto> orderItemDtoList) {
-        // item_id 필드 기준으로 리스트 정렬 (오름차순)
+        // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
         orderItemDtoList = orderItemDtoList.stream()
-                .sorted(Comparator.comparing(OrderItemDto::getItem_id))
+//                .sorted(Comparator.comparing(OrderItemDto::getItem_id))
+                .sorted(Comparator.comparing(orderItemDto -> orderItemDto.getItemDto().getId()))
                 .collect(Collectors.toList());
 
-        // Member, Item 엔티티 조회 (id 기준으로 오름차순을 조회함)
+        // Member, Item 엔티티 조회 (자동으로 id 기준으로 오름차순을 조회함)
         Member member       = memberRepository.getOne(memberDto.getId());
         List<Item> itemList = itemRepository.findByIdIn(getItemIdList(orderItemDtoList));
 
@@ -65,4 +67,18 @@ public class OrdersService {
        return OrdersDto.of(savedOrders);
     }
 
+    public List<OrdersDto> findOrders(MemberDto memberDto) {
+        List<Orders> orderEntityList = orderRepository.findByMemberId(memberDto.getId());
+        List<OrdersDto> ordersDtoList = new ArrayList<>();
+        orderEntityList.stream().forEach(orders -> ordersDtoList.add(OrdersDto.of(orders)));
+
+        return ordersDtoList;
+    }
+
+    @Transactional
+    public void cancelOrder(MemberDto memberDto, OrdersDto ordersDto) {
+
+        Orders order = orderRepository.getOne(ordersDto.getId());
+        order.cancel();
+    }
 }

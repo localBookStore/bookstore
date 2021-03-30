@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.cart;
 
+import com.webservice.bookstore.domain.entity.BaseTimeEntity;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.member.Member;
 import lombok.*;
@@ -17,7 +18,7 @@ import javax.persistence.*;
 @Getter
 @ToString(exclude = {"member","item"})
 @EqualsAndHashCode(of = "id")
-public class Cart {
+public class Cart extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

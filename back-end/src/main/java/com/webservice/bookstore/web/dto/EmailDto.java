@@ -52,4 +52,18 @@ public class EmailDto {
 
         private String certificated;
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class findPwdRequest {
+
+        @NotBlank(message = "이메일을 입력해주세요")
+        @Email(message = "이메일 형식이 잘못되었습니다.")
+        private String email;
+
+        @Size(min = 1, max = 20, message = "닉네임을 입력해주세요.")
+        private String nickName;
+    }
 }
