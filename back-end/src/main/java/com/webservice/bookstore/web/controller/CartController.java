@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,8 +106,14 @@ public class CartController {
     장바구니 아이템 삭제 요청 핸들러
     */
     @DeleteMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity deleteCartItem(@RequestBody List<CartDto> cartDtoList,
+//    public ResponseEntity deleteCartItem(@RequestBody List<CartDto> cartDtoList,
+    public ResponseEntity deleteCartItem(@RequestBody List<Long> cartIdList,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        List<CartDto> cartDtoList = new ArrayList<>();
+        for(int i = 0 ; i < cartIdList.size() ; i++) {
+            cartDtoList.add(CartDto.builder().id(cartIdList.get(i)).build());
+        }
 
         verifyAuthentication(customUserDetails);
 
