@@ -34,11 +34,11 @@ public class Cart extends BaseTimeEntity {
 
     private Integer price;
 
-    private Integer quantity;
+    private Integer orderCount;
 
     // 장바구니 아이템 수량 업데이트 메소드 호출
-    public void updateQuantity(int quantity) {
-        this.quantity = quantity;
+    public void updateQuantity(int orderCount) {
+        this.orderCount = orderCount;
     }
 
 }

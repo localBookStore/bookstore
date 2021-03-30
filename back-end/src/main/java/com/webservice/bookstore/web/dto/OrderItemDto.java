@@ -26,7 +26,7 @@ public class OrderItemDto {
     public static OrderItemDto of(OrderItem orderItem) {
         return OrderItemDto.builder()
                 .id(orderItem.getId())
-                .orders_id(orderItem.getOrder().getId())
+                .orders_id(orderItem.getOrders().getId())
 //                .item_id(orderItem.getItem().getId())
                 .itemDto(ItemDto.of(orderItem.getItem()))
                 .orderCount(orderItem.getOrderCount())
@@ -43,7 +43,7 @@ public class OrderItemDto {
 
         return OrderItem.builder()
                 .id(this.id)
-                .order(orders)
+                .orders(orders)
                 .item(item)
                 .orderCount(this.orderCount)
                 .orderPrice(this.orderPrice)

@@ -36,11 +36,8 @@ public class MemberDto {
                 .nickName(member.getEmail())
                 .password(member.getPassword())
                 .address(member.getAddress())
-                .phone(member.getPhone())
                 .role(String.valueOf(member.getRole()))
                 .provider(String.valueOf(member.getProvider()))
-                .providerId(member.getProviderId())
-                .refreshTokenValue(member.getRefreshTokenValue())
                 .enabled(member.getEnabled())
                 .build();
     }
@@ -53,11 +50,8 @@ public class MemberDto {
                 .nickName(this.nickName)
                 .password(this.password)
                 .address(this.address)
-                .phone(this.phone)
                 .role(MemberRole.valueOf(this.role))
                 .provider(AuthProvider.valueOf(this.provider))
-                .providerId(this.providerId)
-                .refreshTokenValue(this.refreshTokenValue)
                 .enabled(this.enabled)
                 .build();
     }

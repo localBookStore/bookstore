@@ -19,7 +19,7 @@ public class CartDto {
 
     private Integer price;
 
-    private Integer quantity;
+    private Integer orderCount;
 
     // Entity -> DTO
     public static CartDto of(Cart cart) {
@@ -29,7 +29,7 @@ public class CartDto {
 //                .item_id(cart.getItem().getId())
                 .itemDto(ItemDto.of(cart.getItem()))
                 .price(cart.getPrice())
-                .quantity(cart.getQuantity())
+                .orderCount(cart.getOrderCount())
                 .build();
     }
 
@@ -45,7 +45,7 @@ public class CartDto {
 //                .item(item)
                 .item(this.itemDto.toEntity())
                 .price(this.price)
-                .quantity(this.quantity)
+                .orderCount(this.orderCount)
                 .build();
     }
 }

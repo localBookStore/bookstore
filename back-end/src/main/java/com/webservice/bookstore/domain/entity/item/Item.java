@@ -2,6 +2,7 @@ package com.webservice.bookstore.domain.entity.item;
 
 import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.exception.NotEnoughStockException;
+import com.webservice.bookstore.exception.SimpleFieldError;
 import lombok.*;
 
 import javax.persistence.*;
@@ -49,7 +50,8 @@ public class Item {
     public void removeStockQuantity(int quantity) {
         this.quantity -= quantity;
         if(this.quantity < 0) {
-            throw new NotEnoughStockException("We don't have enough stock.");   // 추후 수정할 예정
+            throw new NotEnoughStockException("We don't have enough stock.",
+                                                new SimpleFieldError("quantity", "재고량 부족"));
         }
     }
 

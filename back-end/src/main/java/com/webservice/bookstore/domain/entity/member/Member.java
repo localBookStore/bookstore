@@ -24,11 +24,13 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
+    private String name;
+
+    private String birth;
+
     private String imageUrl;
 
     private String address;
-
-    private String phone;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
@@ -36,15 +38,8 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
-    private String providerId;
-
-    @Lob
-    @Column(length = 512)
-    private String refreshTokenValue;
-
     private Boolean enabled;
-//
-//    private String certificated;
+
 
     public Member updateMemberInfo(String name, String imageUrl) {
         this.nickName = name;
