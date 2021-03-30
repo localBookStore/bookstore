@@ -1,19 +1,16 @@
 package com.webservice.bookstore.web.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.coupon.CouponResource;
 import com.webservice.bookstore.service.CouponService;
 import com.webservice.bookstore.web.dto.CouponDto;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +23,9 @@ public class CouponController {
     private final CouponService couponServcie;
 
 
+
     /*
-    *   쿠폰 조회
+    *   쿠폰 적용 버튼 눌러스시 해당 카테고리의 쿠폰들 조
     * */
     @GetMapping("/{id}")
     public ResponseEntity retrieveCoupons(@PathVariable Long id) {
@@ -41,10 +39,12 @@ public class CouponController {
     /*
         쿠폰 적용
      */
-//    @PostMapping("/{id}")
-//    public ResponseEntity applyCoupons() {
-//
-//    }
+    @PostMapping("/{coupon_id}/orderitems/{orderitem_id}")
+    public ResponseEntity applyCoupons(@PathVariable("coupon_id") Long couponId, @PathVariable("orderitem_id") Long orderItemId) {
+        Coupon coupon = couponServcie.findById(couponId).orElseThrow(() -> new NullPointerException("해당 쿠폰은 존재하지 않습니다."));
+        
+
+    }
 
 
 

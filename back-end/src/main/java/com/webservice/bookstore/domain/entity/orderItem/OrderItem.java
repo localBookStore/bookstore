@@ -50,6 +50,12 @@ public class OrderItem {
         coupon.addOrderItem(this);
     }
 
+    public int priceSumaddCoupon(Coupon coupon) {
+        int discountRate = coupon.getDiscountRate();
+        Integer sum = orderPrice * ((100-discountRate)/100);
+        return sum;
+    }
+
     /*
     주문아이템 생성 메소드
     */
