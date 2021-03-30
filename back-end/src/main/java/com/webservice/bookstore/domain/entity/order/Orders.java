@@ -59,8 +59,7 @@ public class Orders extends BaseTimeEntity {
     }
 
     // 주문 생성 메소드
-    public static Orders createOrder(Member member,
-                                     List<OrderItem> orderItemList) {
+    public static Orders createOrder(Member member, List<OrderItem> orderItemList) {
 
         // 배송 정보 생성
         Delivery delivery = Delivery.builder()
