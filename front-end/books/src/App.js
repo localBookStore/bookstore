@@ -12,7 +12,6 @@ import DefaultPage from "./DefaultPage"
 import CartPage from "components/UserPage/CartPage"
 import MyPage from "components/UserPage/Mypage"
 
-import {useState, useEffect} from "react"
 import { Route, Switch } from "react-router-dom"
 import ScrollToTop from "./ScrollToTop"
 

@@ -6,7 +6,7 @@ import styled from "styled-components"
 
 const CartPage = ({ location }) => {
   const [cartList, setCartList] = useState(null);
-  const [checked, setChecked] = useState({});
+  const [checkList, setCheckList] = useState(new Set());
   const { state: { token } } = location;
 
   useEffect(() => {
@@ -16,39 +16,31 @@ const CartPage = ({ location }) => {
   const getCartBook = props => {
     axios.get("http://localhost:8080/api/cart/", { headers: { Authorization: token } })
       .then(res => {
-        const { data } = res
-        if (Object.keys(data).length) {
-          const { _embedded: { cartDtoList } } = data
-          setCartList(cartDtoList)
-          cartDtoList.map(itemId => {
-            const cartNumber = itemId.itemDto.id
-            setChecked({
-              ...checked,
-              [cartNumber]:cartNumber
-            })
-          })
-        } else setCartList(null)
+        const { data } = res;
+        setCartList(data)
+        if (data) data.map(bookInfo => checkList.add(bookInfo.id))
       })
       .catch(err => console.log("토큰이 만료 되었습니다."))
   }
 
-  const deleteCartBook = cartId => {
-    axios.delete(`http://localhost:8080/api/cart/${cartId}/`, { headers: { Authorization: token } })
-      .then(res => {
-        const { data } = res
-        if (Object.keys(data).length) {
-          const { _embedded: { cartDtoList } } = data
-          setCartList(cartDtoList)
-
-        } else setCartList(null)
-      })
+  const deleteCartBook = () => {
+    axios.delete(`http://localhost:8080/api/cart/`, {
+      data: [
+        ...checkList
+      ],
+      headers: { Authorization: token }
+    })
+      .then(res => setCartList(res.data))
       .catch(err => console.log(err.response))
   }
 
-  const clickEvent = (e, cartId) => {
-    const isCheck = e.target.checked
-    if (isCheck) {
-      console.log(checked)
+  const clickEvent = (cartId, isChecked) => {
+    if (isChecked) {
+      checkList.add(cartId)
+      setCheckList(checkList)
+    } else {
+      checkList.delete(cartId)
+      setCheckList(checkList)
     }
   }
 
@@ -60,19 +52,20 @@ const CartPage = ({ location }) => {
       <>
         <div>
           {cartList.map((res, idx) => {
-            console.log(res)
             const bookCount = res.quantity;
+            const cartId = res.id;
             const { id, name, imageUrl, price, quantity } = res.itemDto
             return <EachBookContainer key={idx}>
-              <BookCheck type="checkbox" defaultChecked onClick={e => clickEvent(e, id)} />
+              <BookCheck type="checkbox" defaultChecked onClick={e => clickEvent(cartId, e.target.checked)} />
               <BookImage src={imageUrl} alt={id} />
               <BookText>{name}</BookText>
               <BookText>{price}</BookText>
               <BookCount type="number" defaultValue={bookCount} name={id}
                 onChange={() => { }} />
-              <Button variant="danger" onClick={() => deleteCartBook(res.id)}>삭제</Button>
             </EachBookContainer>
           })}
+          <Button variant="danger" onClick={deleteCartBook}>삭제</Button>
+          
         </div>
         <div>
 
