@@ -1,6 +1,7 @@
 package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
+import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.service.MemberService;
@@ -120,7 +121,7 @@ public class MemberController {
 
         verifyAuthentication(customUserDetails);
 
-        List<MemberDto> memberDtoList = memberService.findAllMembers();
+        List<MemberDto.Default> memberDtoList = memberService.findAllMembers();
 
         return new ResponseEntity(memberDtoList, HttpStatus.OK);
     }

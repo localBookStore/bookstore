@@ -117,7 +117,8 @@ public class CartController {
 
         verifyAuthentication(customUserDetails);
 
-        MemberDto memberDto = MemberDto.builder().id(customUserDetails.getMember().getId()).build();
+        MemberDto.Default memberDto = MemberDto.Default
+                                               .builder().id(customUserDetails.getMember().getId()).build();
         List<CartDto> cartList = cartService.deleteCartItem(memberDto, cartDtoList);
 
 //        List<CartLinkResource> emList = cartList.stream()

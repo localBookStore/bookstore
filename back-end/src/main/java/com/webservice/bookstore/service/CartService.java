@@ -82,7 +82,8 @@ public class CartService {
     select 데이터가 없으면 EmptyResultDataAccessException 예외 발생
     */
     @Transactional
-    public List<CartDto> deleteCartItem(MemberDto memberDto, List<CartDto> cartDtoList) throws EmptyResultDataAccessException {
+    public List<CartDto> deleteCartItem(MemberDto.Default memberDto,
+                                        List<CartDto> cartDtoList) throws EmptyResultDataAccessException {
 
 //        cartRepository.deleteById(cart_id);
         cartRepository.deleteAllByIdInQuery(getCartIdList(cartDtoList));

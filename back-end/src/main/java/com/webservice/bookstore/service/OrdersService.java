@@ -53,7 +53,10 @@ public class OrdersService {
     }
 
     @Transactional
-    public void addOrder(List<CartDto> cartDtoList, MemberDto memberDto, CouponDto couponDto, List<OrderItemDto> orderItemDtoList) {
+    public void addOrder(MemberDto.Default memberDto,
+                         List<CartDto> cartDtoList,
+                         CouponDto couponDto,
+                         List<OrderItemDto> orderItemDtoList) {
         // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
         orderItemDtoList = orderItemDtoList.stream()
 //                .sorted(Comparator.comparing(OrderItemDto::getItem_id))
@@ -83,7 +86,7 @@ public class OrdersService {
 
     }
 
-    public List<OrdersDto> findOrders(MemberDto memberDto) {
+    public List<OrdersDto> findOrders(MemberDto.Default memberDto) {
         List<Orders> orderEntityList = orderRepository.findByMemberId(memberDto.getId());
         List<OrdersDto> ordersDtoList = new ArrayList<>();
         orderEntityList.stream().forEach(orders -> ordersDtoList.add(OrdersDto.of(orders)));
@@ -92,7 +95,7 @@ public class OrdersService {
     }
 
     @Transactional
-    public void cancelOrder(MemberDto memberDto, OrdersDto ordersDto) {
+    public void cancelOrder(MemberDto.Default memberDto, OrdersDto ordersDto) {
 
         Orders order = orderRepository.getOne(ordersDto.getId());
         order.cancel();

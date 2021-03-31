@@ -39,10 +39,10 @@ public class OrdersController {
 
         verifyAuthentication(customUserDetails);
 
-        MemberDto memberDto = MemberDto.builder()
-                                        .id(customUserDetails.getMember().getId())
-                                        .address(String.valueOf(map.get("address")))
-                                        .build();
+        MemberDto.Default memberDto = MemberDto.Default.builder()
+                                               .id(customUserDetails.getMember().getId())
+                                               .address(String.valueOf(map.get("address")))
+                                               .build();
         CouponDto couponDto = CouponDto.builder()
                 .id(Long.parseLong(String.valueOf(map.get("coupon_id"))))
                 .build();
@@ -61,7 +61,7 @@ public class OrdersController {
                                 );
         }
 
-        orderService.addOrder(cartDtoList, memberDto, couponDto,orderItemDtoList);
+        orderService.addOrder(memberDto, cartDtoList, couponDto, orderItemDtoList);
 
         return new ResponseEntity("success", HttpStatus.OK);
 
@@ -73,7 +73,7 @@ public class OrdersController {
     @GetMapping("/admin/members/{member_id}/orders")
     public ResponseEntity getOrderList(@PathVariable(value = "member_id") Long member_id) {
 
-        MemberDto memberDto = MemberDto.builder().id(member_id).build();
+        MemberDto.Default memberDto = MemberDto.Default.builder().id(member_id).build();
 
         List<OrdersDto> orderDtoList = orderService.findOrders(memberDto);
 
@@ -87,7 +87,8 @@ public class OrdersController {
     public ResponseEntity cancelOrder(@RequestBody @PathVariable(value = "order_id") Long orders_id,
                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        MemberDto memberDto = MemberDto.builder().id(customUserDetails.getMember().getId()).build();
+        MemberDto.Default memberDto = MemberDto.Default
+                                               .builder().id(customUserDetails.getMember().getId()).build();
         OrdersDto ordersDto = OrdersDto.builder().id(orders_id).build();
 
         orderService.cancelOrder(memberDto, ordersDto);
