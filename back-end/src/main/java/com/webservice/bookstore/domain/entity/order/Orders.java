@@ -2,6 +2,7 @@ package com.webservice.bookstore.domain.entity.order;
 
 
 import com.webservice.bookstore.domain.entity.BaseTimeEntity;
+import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.delivery.Delivery;
 import com.webservice.bookstore.domain.entity.delivery.DeliveryEnum;
 import com.webservice.bookstore.domain.entity.member.Member;
@@ -59,7 +60,7 @@ public class Orders extends BaseTimeEntity {
     }
 
     // 주문 생성 메소드
-    public static Orders createOrder(Member member, List<OrderItem> orderItemList) {
+    public static Orders createOrder(Member member, Coupon coupon, List<OrderItem> orderItemList) {
 
         // 배송 정보 생성
         Delivery delivery = Delivery.builder()
@@ -70,6 +71,7 @@ public class Orders extends BaseTimeEntity {
         int paymentAmount = orderItemList.stream()
                                     .mapToInt(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
                                     .sum();
+        paymentAmount = paymentAmount * ((100 - coupon.getDiscountRate()) / 100);
 
         // Builder 패턴 사용법 주의사항 :
         Orders order = Orders.builder()

@@ -43,6 +43,9 @@ public class OrdersController {
                                         .id(customUserDetails.getMember().getId())
                                         .address(String.valueOf(map.get("address")))
                                         .build();
+        CouponDto couponDto = CouponDto.builder()
+                .id(Long.parseLong(String.valueOf(map.get("coupon_id"))))
+                .build();
 
         List<Map<String, Object>> orderList = (List<Map<String, Object>>) map.get("orderList");
 
@@ -58,7 +61,7 @@ public class OrdersController {
                                 );
         }
 
-        orderService.addOrder(cartDtoList, memberDto, orderItemDtoList);
+        orderService.addOrder(cartDtoList, memberDto, couponDto,orderItemDtoList);
 
         return new ResponseEntity("success", HttpStatus.OK);
 

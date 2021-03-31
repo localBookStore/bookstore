@@ -1,5 +1,6 @@
 package com.webservice.bookstore.service;
 
+import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.coupon.CouponRepository;
 import com.webservice.bookstore.domain.entity.cart.CartRepository;
 import com.webservice.bookstore.domain.entity.item.Item;
@@ -9,10 +10,7 @@ import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import com.webservice.bookstore.domain.entity.order.Orders;
 import com.webservice.bookstore.domain.entity.order.OrdersRepository;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
-import com.webservice.bookstore.web.dto.CartDto;
-import com.webservice.bookstore.web.dto.MemberDto;
-import com.webservice.bookstore.web.dto.OrderItemDto;
-import com.webservice.bookstore.web.dto.OrdersDto;
+import com.webservice.bookstore.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +53,7 @@ public class OrdersService {
     }
 
     @Transactional
-    public void addOrder(List<CartDto> cartDtoList, MemberDto memberDto, List<OrderItemDto> orderItemDtoList) {
+    public void addOrder(List<CartDto> cartDtoList, MemberDto memberDto, CouponDto couponDto, List<OrderItemDto> orderItemDtoList) {
         // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
         orderItemDtoList = orderItemDtoList.stream()
 //                .sorted(Comparator.comparing(OrderItemDto::getItem_id))
@@ -67,12 +65,15 @@ public class OrdersService {
         member.setAddress(memberDto.getAddress());
         List<Item> itemList = itemRepository.findByIdIn(getItemIdList(orderItemDtoList));
 
+        Coupon coupon = couponRepository.findById(couponDto.getId()).get();
+        coupon.isUsed(true);
+        member.addCoupon(coupon);
 
         // 주문상품 생성
         List<OrderItem> orderItemList = OrderItem.createOrderItem(itemList, orderItemDtoList);
 
         // 주문 생성
-        Orders orders = Orders.createOrder(member, orderItemList);
+        Orders orders = Orders.createOrder(member, coupon,orderItemList);
 
         // 주문 저장
         orderRepository.save(orders);
