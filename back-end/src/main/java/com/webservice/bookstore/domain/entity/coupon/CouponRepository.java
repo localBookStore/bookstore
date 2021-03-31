@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
-    @Query("select c from Coupon c join fetch c.category cc where cc.id = :id")
+    @Query("select c from Coupon c where c.member.id = :id")
     List<Coupon> findCouponList(@Param("id") Long id);
 
     @Query(value = "insert into coupon(member_id) select member_id from member", nativeQuery = true)

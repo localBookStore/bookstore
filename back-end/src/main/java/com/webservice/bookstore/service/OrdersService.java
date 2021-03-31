@@ -1,5 +1,7 @@
 package com.webservice.bookstore.service;
 
+import com.webservice.bookstore.domain.entity.coupon.Coupon;
+import com.webservice.bookstore.domain.entity.coupon.CouponRepository;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.member.Member;
@@ -27,6 +29,7 @@ public class OrdersService {
     private final OrdersRepository orderRepository;
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
+    private final CouponRepository couponRepository;
 
     /*
     주문 생성
@@ -50,6 +53,7 @@ public class OrdersService {
         // Member, Item 엔티티 조회 (id 기준으로 오름차순을 조회함)
         Member member       = memberRepository.getOne(memberDto.getId());
         List<Item> itemList = itemRepository.findByIdIn(getItemIdList(orderItemDtoList));
+
 
         // 주문상품 생성
         List<OrderItem> orderItemList = OrderItem.createOrderItem(itemList, orderItemDtoList);

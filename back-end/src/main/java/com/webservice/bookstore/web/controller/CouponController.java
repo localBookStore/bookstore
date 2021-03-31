@@ -7,6 +7,7 @@ import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import com.webservice.bookstore.service.CouponService;
 import com.webservice.bookstore.service.OrderItemService;
+import com.webservice.bookstore.web.dto.CartDto;
 import com.webservice.bookstore.web.dto.CouponDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,10 +33,11 @@ public class CouponController {
     /*
     *   쿠폰 적용 버튼 눌러스시 해당 카테고리의 쿠폰들 조
     * */
-    @GetMapping("/{id}")
-    public ResponseEntity retrieveCoupons(@PathVariable Long id) {
+    @GetMapping
+    public ResponseEntity retrieveCoupons(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 //        OrderItem orderItem = orderItemService.findByCategoryId(id);
-        List<Coupon> coupons = couponServcie.findCoupons(id);
+        Member member = customUserDetails.getMember();
+        List<Coupon> coupons = couponServcie.findCoupons(member.getId());
         List<CouponDto> couponDtos = coupons.stream().map(coupon -> CouponDto.toDto(coupon)).collect(Collectors.toList());
         List<CouponResource> linkList = couponDtos.stream().map(couponDto -> new CouponResource(couponDto)).collect(Collectors.toList());
         CollectionModel<CouponResource> collectionModel = CollectionModel.of(linkList);
@@ -45,17 +47,6 @@ public class CouponController {
     /*
         쿠폰 적용
      */
-//    @PostMapping("/{coupon_id}/orderitems/{orderitem_id}")
-//    public ResponseEntity applyCoupons(@PathVariable("coupon_id") Long couponId, @PathVariable("orderitem_id") Long orderItemId, @AuthenticationPrincipal CustomUserDetails userDetails) {
-//        Member member = userDetails.getMember();
-//        Coupon coupon = couponServcie.findById(couponId).orElseThrow(() -> new NullPointerException("해당 쿠폰은 존재하지 않습니다."));
-//        member.addCoupon(coupon);
-//        member.validateCoupon(coupon);
-//        coupon.isUsed(true);
-////        OrderItem orderItem = orderItemService.findById(orderItemId).orElseThrow(() -> new NullPointerException("해당 주문 상품은 존재하지 않습니다."));
-//
-//
-//    }
 
 
 

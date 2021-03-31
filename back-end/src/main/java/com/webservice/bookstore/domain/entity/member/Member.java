@@ -63,7 +63,6 @@ public class Member extends BaseTimeEntity {
 
     public void addCoupon(Coupon coupon) {
         this.coupons.add(coupon);
-        coupon.addMember(this);
     }
 
     public void usedCoupon(Coupon coupon) {
