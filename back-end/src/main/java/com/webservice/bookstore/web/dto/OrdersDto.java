@@ -8,7 +8,9 @@ import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @NoArgsConstructor
@@ -52,7 +54,8 @@ public class OrdersDto {
 
         Member member = Member.builder().id(this.member_id).build();
         Delivery delivery = Delivery.builder().id(this.delivery_id).build();
-        List<OrderItem> orderItemList = new ArrayList<>();
+//        List<OrderItem> orderItemList = new ArrayList<>();    // Orders : MultipleBagFetchException 발생 방지를 위해 List -> Set
+        Set<OrderItem> orderItemList = new HashSet<>();
         this.orderItemDtoList.stream().forEach(orderItemDto -> orderItemList.add(orderItemDto.toEntity()));
 
         return Orders.builder()

@@ -1,6 +1,7 @@
 package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
+import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.service.OrdersService;
 import com.webservice.bookstore.web.dto.*;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -43,10 +45,12 @@ public class OrdersController {
                                                .id(customUserDetails.getMember().getId())
                                                .address(String.valueOf(map.get("address")))
                                                .build();
-        CouponDto couponDto = CouponDto.builder()
-                .id(Long.parseLong(String.valueOf(map.get("coupon_id"))))
-                .build();
-
+        CouponDto couponDto = null;
+        if(!ObjectUtils.isEmpty(map.get("coupon_id"))){
+            couponDto = CouponDto.builder()
+                    .id(Long.parseLong(String.valueOf(map.get("coupon_id"))))
+                    .build();
+        }
         List<Map<String, Object>> orderList = (List<Map<String, Object>>) map.get("orderList");
 
         List<CartDto> cartDtoList           = new ArrayList<>();
@@ -61,17 +65,36 @@ public class OrdersController {
                                 );
         }
 
-        orderService.addOrder(memberDto, cartDtoList, couponDto, orderItemDtoList);
+        orderService.addOrder(memberDto, couponDto, cartDtoList, orderItemDtoList);
 
         return new ResponseEntity("success", HttpStatus.OK);
 
     }
 
     /*
+    마이페이지 주문 내역 조회
+    */
+    @GetMapping("/mypage/order")
+    public ResponseEntity getMyOrderList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        verifyAuthentication(customUserDetails);
+
+        Member member = customUserDetails.getMember();
+        MemberDto.Default memberDto = MemberDto.Default.builder().id(member.getId()).build();
+
+        List<OrdersDto> orderDtoList = orderService.findOrders(memberDto);
+
+        return new ResponseEntity(orderDtoList, HttpStatus.OK);
+    }
+
+    /*
     관리자 페이지 각 회원 주문 리스트 (구매 내역) 조회
     */
     @GetMapping("/admin/members/{member_id}/orders")
-    public ResponseEntity getOrderList(@PathVariable(value = "member_id") Long member_id) {
+    public ResponseEntity getOrderList(@PathVariable(value = "member_id") Long member_id,
+                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        verifyAuthentication(customUserDetails);
 
         MemberDto.Default memberDto = MemberDto.Default.builder().id(member_id).build();
 
