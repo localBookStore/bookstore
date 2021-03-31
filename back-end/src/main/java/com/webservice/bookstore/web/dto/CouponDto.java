@@ -27,6 +27,7 @@ public class CouponDto {
 
     public static CouponDto toDto(Coupon coupon) {
         return CouponDto.builder()
+                .id(coupon.getId())
                 .name(coupon.getName())
                 .description(coupon.getDescription())
                 .discountRate(coupon.getDiscountRate())

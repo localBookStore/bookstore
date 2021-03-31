@@ -1,9 +1,13 @@
 package com.webservice.bookstore.domain.entity.member;
 
 import com.webservice.bookstore.domain.entity.BaseTimeEntity;
+import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import lombok.*;
+import org.springframework.dao.DuplicateKeyException;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -43,6 +47,11 @@ public class Member extends BaseTimeEntity {
     private String refreshTokenValue;
 
     private Boolean enabled;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member")
+    private List<Coupon> coupons = new ArrayList<>();
+
 //
 //    private String certificated;
 
@@ -52,7 +61,33 @@ public class Member extends BaseTimeEntity {
         return this;
     }
 
-    public void updateRefreshToken(String refreshTokenValue) {
+    public void addCoupon(Coupon coupon) {
+        this.coupons.add(coupon);
+        coupon.addMember(this);
+    }
+
+    public void usedCoupon(Coupon coupon) {
+        this.coupons.stream().forEach(savedCoupon -> {
+            if(savedCoupon.getId() == coupon.getId()) {
+                savedCoupon.isUsed(true);
+                return;
+            }
+        });
+    }
+
+    public void validateCoupon(Coupon coupon) {
+        this.coupons.stream().forEach(savedCoupon -> {
+            if(savedCoupon.getId() == coupon.getId()) {
+                if(savedCoupon.getIsUsed()) {
+                    throw new DuplicateKeyException("사용한 쿠폰입니다.");
+                }
+            }
+        });
+    }
+
+
+
+    public void updateRefreshToke(String refreshTokenValue) {
         this.refreshTokenValue= refreshTokenValue;
     }
 

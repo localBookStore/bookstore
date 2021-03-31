@@ -26,4 +26,9 @@ public class CouponService {
         Optional<Coupon> coupon = couponRepository.findById(id);
         return coupon;
     }
+
+    public List<Coupon> giveCoupons() {
+        List<Coupon> coupons = this.couponRepository.giveCoupons();
+        return coupons;
+    }
 }

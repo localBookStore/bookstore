@@ -50,10 +50,14 @@ public class OrderItem {
         coupon.addOrderItem(this);
     }
 
-    public int priceSumaddCoupon(Coupon coupon) {
+    public int couponApplyOrderPrice(Coupon coupon) {
         int discountRate = coupon.getDiscountRate();
         Integer sum = orderPrice * ((100-discountRate)/100);
         return sum;
+    }
+
+    public void validateCoupon(Coupon coupon) {
+
     }
 
     /*

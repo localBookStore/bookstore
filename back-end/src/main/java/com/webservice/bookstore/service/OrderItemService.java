@@ -19,4 +19,9 @@ public class OrderItemService {
         Optional<OrderItem> orderItem = this.orderItemRepository.findById(id);
         return orderItem;
     }
+
+    public OrderItem findByCategoryId (Long id) {
+        return orderItemRepository.findByCategoryId(id);
+    }
+
 }
