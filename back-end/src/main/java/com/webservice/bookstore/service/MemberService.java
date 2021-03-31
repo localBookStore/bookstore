@@ -1,5 +1,6 @@
 package com.webservice.bookstore.service;
 
+import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
@@ -82,6 +83,7 @@ public class MemberService {
         redisUtil.deleteData(email);
         this.memberRepository.withdraw(email);
     }
+
 
     public String searchPassword(EmailDto.findPwdRequest findPwdRequest) {
 

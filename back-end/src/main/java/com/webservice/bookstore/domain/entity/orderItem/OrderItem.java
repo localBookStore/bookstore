@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.orderItem;
 
+import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.BaseTimeEntity;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.order.Orders;
@@ -23,12 +24,15 @@ public class OrderItem extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orders_item")
-    private Orders order;
+    @JoinColumn(name = "orders_id")
+    private Orders orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+//    @OneToMany(mappedBy = "orderItem")
+//    private List<Coupon> coupons;
 
     private Integer orderCount;
 
@@ -39,7 +43,17 @@ public class OrderItem extends BaseTimeEntity {
     주문 생성 로직
     */
     public void addOrder(Orders orders) {
-        this.order = orders;
+        this.orders = orders;
+    }
+
+    public int couponApplyOrderPrice(Coupon coupon) {
+        int discountRate = coupon.getDiscountRate();
+        Integer sum = orderPrice * ((100-discountRate)/100);
+        return sum;
+    }
+
+    public void validateCoupon(Coupon coupon) {
+
     }
 
     /*
@@ -51,10 +65,10 @@ public class OrderItem extends BaseTimeEntity {
         List<OrderItem> orderItemList = new ArrayList<>();
         for(int i = 0; i < itemList.size(); i++) {
             OrderItem orderItem = OrderItem.builder()
-                    .item(itemList.get(i))
-                    .orderPrice(itemList.get(i).getPrice())
-                    .orderCount(orderItemDtoList.get(i).getOrderCount())
-                    .build();
+                                           .item(itemList.get(i))
+                                           .orderPrice(itemList.get(i).getPrice())
+                                           .orderCount(orderItemDtoList.get(i).getOrderCount())
+                                           .build();
             orderItemList.add(orderItem);
 
             // (주문 생성 시) 재고량(stock) 감소

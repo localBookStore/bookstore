@@ -1,16 +1,20 @@
 package com.webservice.bookstore.domain.entity.order;
 
+
 import com.webservice.bookstore.domain.entity.BaseTimeEntity;
+import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.delivery.Delivery;
 import com.webservice.bookstore.domain.entity.delivery.DeliveryEnum;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @Entity
 @Builder
 @AllArgsConstructor
@@ -32,12 +36,11 @@ public class Orders extends BaseTimeEntity {
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @Builder.Default
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    //private List<Coupon> coupons;
-
-    private Integer paymentAmount;
+    private int paymentAmount;
 
     private Integer deliveryCharge;
 
@@ -59,8 +62,7 @@ public class Orders extends BaseTimeEntity {
     }
 
     // 주문 생성 메소드
-    public static Orders createOrder(Member member,
-                                     List<OrderItem> orderItemList) {
+    public static Orders createOrder(Member member, Coupon coupon, List<OrderItem> orderItemList) {
 
         // 배송 정보 생성
         Delivery delivery = Delivery.builder()
@@ -68,20 +70,19 @@ public class Orders extends BaseTimeEntity {
                                     .status(DeliveryEnum.START)
                                     .build();
 
-        int paymentAmount = 0;
-        for(OrderItem orderItem: orderItemList) {
-            paymentAmount += (orderItem.getOrderPrice()*orderItem.getOrderCount());
-        }
+        int paymentAmount = orderItemList.stream()
+                                    .mapToInt(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
+                                    .sum();
+
+        double result = (paymentAmount * ((100 - coupon.getDiscountRate()) / (double)100));
 
         // Builder 패턴 사용법 주의사항 :
         Orders order = Orders.builder()
-                .member(member) // 결제자 정보 등록
-                .orderItems(new ArrayList<>()) // 'builder 패턴 사용 시 주의사항 숙지할 것'
-//                .paymentAmount(orderItemList.stream().mapToInt(OrderItem::getOrderPrice).sum()) // 결제 금액(배송비 별도)
-                .paymentAmount(paymentAmount)
-                .deliveryCharge(2500) // 배송비 초기화
-                .status(OrdersEnum.ORDER) // 주문 상태 초기화
-                .build();
+                             .member(member) // 결제자 정보 등록
+                             .paymentAmount((int) result)
+                             .deliveryCharge(2500) // 배송비 초기화
+                             .status(OrdersEnum.ORDER) // 주문 상태 초기화
+                             .build();
 
         // Orders, Delivery 엔티티 간 연관 데이터 주입
         order.addDelivery(delivery);
@@ -100,10 +101,8 @@ public class Orders extends BaseTimeEntity {
         }
 
         this.delivery.cancel();
-        this.status = OrdersEnum.CANCEL;
-        for (OrderItem orderItem: orderItems) {
-            orderItem.cancel();
-        }
+        this.updateOrderStatus(OrdersEnum.CANCEL);
+        orderItems.forEach(OrderItem::cancel);
     }
 
 }

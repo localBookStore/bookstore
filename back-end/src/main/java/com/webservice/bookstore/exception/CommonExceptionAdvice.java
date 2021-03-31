@@ -40,6 +40,13 @@ public class CommonExceptionAdvice  {
         return new ErrorResponse(401, e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = {NullPointerException.class})
+    public ErrorResponse notFoundHandler(Exception e) {
+        log.error(e.getMessage(), e);
+        return new ErrorResponse(404, e.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     public ErrorResponse methodNotAllowedHandler(Exception e) {

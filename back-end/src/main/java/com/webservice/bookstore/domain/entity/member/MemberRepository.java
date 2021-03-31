@@ -15,7 +15,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Boolean existsByEmail(String email);
 
-    @Transactional
     @Modifying(clearAutomatically = true)
     @Query("update Member m set m.enabled = false where m.email = :email")
     void withdraw(@Param("email") String email);

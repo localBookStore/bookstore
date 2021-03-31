@@ -70,11 +70,11 @@ public class CartService {
     장바구니 아이템 수량 업데이트 서비스 단계
     */
     @Transactional
-    public void updateQuantity(Long id, int quantity) {
+    public void updateQuantity(Long id, int orderCount) {
 
         Cart cartEntity = cartRepository.getOne(id);
 
-        cartEntity.updateQuantity(quantity); // 장바구니 아이템 수량 업데이트 메소드 호출
+        cartEntity.updateQuantity(orderCount); // 장바구니 아이템 수량 업데이트 메소드 호출
     }
 
     /*

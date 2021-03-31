@@ -97,7 +97,7 @@ public class CartController {
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         verifyAuthentication(customUserDetails);
-        cartService.updateQuantity(cart_id, cartDto.getQuantity());
+        cartService.updateQuantity(cart_id, cartDto.getOrderCount());
 
         return new ResponseEntity("success", HttpStatus.OK);
     }
