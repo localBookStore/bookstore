@@ -7,10 +7,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@NamedEntityGraph(
-        name = "Cart.item",
-        attributeNodes = @NamedAttributeNode("item")
-)
 @Entity
 @Builder
 @AllArgsConstructor
