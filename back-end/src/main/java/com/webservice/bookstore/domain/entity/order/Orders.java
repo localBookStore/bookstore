@@ -22,7 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"member","delivery"})
+@ToString(exclude = {"member", "delivery", "orderItems"})
 @EqualsAndHashCode(of = "id")
 public class Orders extends BaseTimeEntity {
 
@@ -40,8 +40,8 @@ public class Orders extends BaseTimeEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
-//    private List<OrderItem> orderItems = new ArrayList<>();
-    private Set<OrderItem> orderItems = new HashSet<>();    // MultipleBagFetchException 발생 방지를 위해 List -> Set
+    private List<OrderItem> orderItems = new ArrayList<>();
+//    private Set<OrderItem> orderItems = new HashSet<>();    // MultipleBagFetchException 발생 방지를 위해 List -> Set
 
     private int paymentAmount;
 
