@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 import { useHistory, NavLink } from "react-router-dom"
 import { useCookies } from "react-cookie"
 import axios from "axios"
@@ -15,15 +15,14 @@ const DefaultPage = ({ state, dispatch }) => {
   const history = useHistory();
 
   useEffect(() => {
-    if (cookies.token !== undefined){
-      const {nickName} = jwtDecode(cookies.token)
+    if (cookies.token !== undefined) {
+      const { nickName } = jwtDecode(cookies.token)
       setUserName(nickName)
     }
   }, [cookies.token])
 
   const goHome = () => {
-    dispatch(!state)
-    history.push("/")
+    history.replace("/")
   }
   const LogoutEvent = () => {
     const token = cookies.token
@@ -33,7 +32,11 @@ const DefaultPage = ({ state, dispatch }) => {
         Authorization: token
       }
     })
-      .then(() => removeCookie('token'))
+      .then(() => {
+        removeCookie('token')
+        console.log("로그아웃댐")
+      })
+
       .catch(err => Comment.log("에러"))
 
     goHome()
@@ -45,14 +48,14 @@ const DefaultPage = ({ state, dispatch }) => {
     </ImageButton>
     {cookies.token !== undefined ?
       <>
-        <IsLoginedDiv>{userName}<span style={{fontSize:"14px"}}> 님 안녕하세요</span></IsLoginedDiv>
-        <NavLink to={{pathname:"/mypage", state:{token:cookies.token}}}><MyPageButton variant="success">마이페이지</MyPageButton></NavLink>
-        <NavLink to={{pathname:"/cart", state:{token:cookies.token}}}><CartButton variant="primary">장바구니</CartButton></NavLink>
+        <IsLoginedDiv>{userName}<span style={{ fontSize: "14px" }}> 님 안녕하세요</span></IsLoginedDiv>
+        <NavLink to={{ pathname: "/mypage", state: { token: cookies.token } }}><MyPageButton variant="success">마이페이지</MyPageButton></NavLink>
+        <NavLink to={{ pathname: "/cart", state: { token: cookies.token } }}><CartButton variant="primary">장바구니</CartButton></NavLink>
         <LogoutButton variant="danger" onClick={LogoutEvent}>로그아웃</LogoutButton>
       </>
       :
       <>
-        <NavLink to='/login' replace><AuthButton variant="outline-info" right="160px" width="105px">Log In</AuthButton></NavLink>
+        <NavLink to='/login'><AuthButton variant="outline-info" right="160px" width="105px">Log In</AuthButton></NavLink>
         <NavLink to='/signup' replace><AuthButton variant="outline-info" right="30px" width="100px">Sign Up</AuthButton></NavLink>
       </>
     }

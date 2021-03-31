@@ -1,6 +1,7 @@
 package com.webservice.bookstore.domain.entity.order;
 
-import com.webservice.bookstore.domain.entity.coupon.Coupon;
+
+import com.webservice.bookstore.domain.entity.BaseTimeEntity;
 import com.webservice.bookstore.domain.entity.delivery.Delivery;
 import com.webservice.bookstore.domain.entity.delivery.DeliveryEnum;
 import com.webservice.bookstore.domain.entity.member.Member;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @ToString(exclude = {"member","delivery"})
 @EqualsAndHashCode(of = "id")
-public class Orders {
+public class Orders extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +33,9 @@ public class Orders {
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
+    @Builder.Default
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     private Integer paymentAmount;
 
@@ -57,8 +59,7 @@ public class Orders {
     }
 
     // 주문 생성 메소드
-    public static Orders createOrder(Member member,
-                                     List<OrderItem> orderItemList) {
+    public static Orders createOrder(Member member, List<OrderItem> orderItemList) {
 
         // 배송 정보 생성
         Delivery delivery = Delivery.builder()
@@ -66,20 +67,37 @@ public class Orders {
                                     .status(DeliveryEnum.START)
                                     .build();
 
+        int paymentAmount = orderItemList.stream()
+                                    .mapToInt(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
+                                    .sum();
+
         // Builder 패턴 사용법 주의사항 :
         Orders order = Orders.builder()
-                .member(member) // 결제자 정보 등록
-                .orderItems(new ArrayList<>()) // 'builder 패턴 사용 시 주의사항 숙지할 것'
-                .paymentAmount(orderItemList.stream().mapToInt(OrderItem::getOrderPrice).sum()) // 결제 금액(배송비 별도)
-                .deliveryCharge(2500) // 배송비 초기화
-                .status(OrdersEnum.ORDER) // 주문 상태 초기화
-                .build();
+                             .member(member) // 결제자 정보 등록
+                             .paymentAmount(paymentAmount)
+                             .deliveryCharge(2500) // 배송비 초기화
+                             .status(OrdersEnum.ORDER) // 주문 상태 초기화
+                             .build();
 
         // Orders, Delivery 엔티티 간 연관 데이터 주입
         order.addDelivery(delivery);
         orderItemList.stream().forEach(orderItem -> order.addOrderItem(orderItem));
 
         return order;
+    }
+
+    /*
+    주문 취소
+    */
+    public void cancel() {
+        // 배속(delivery) 상태가 이미 완료(complete)된 상태일 경우, 예외상태 반환
+        if(delivery.getStatus() != DeliveryEnum.START) {
+            throw new IllegalStateException("이미 배송된 상태이므로, 취소가 불가능 합니다.");
+        }
+
+        this.delivery.cancel();
+        this.updateOrderStatus(OrdersEnum.CANCEL);
+        orderItems.forEach(OrderItem::cancel);
     }
 
 }

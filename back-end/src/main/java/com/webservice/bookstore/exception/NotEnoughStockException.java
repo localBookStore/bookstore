@@ -1,21 +1,28 @@
 package com.webservice.bookstore.exception;
 
-public class NotEnoughStockException extends RuntimeException {
+import org.springframework.validation.FieldError;
+
+import java.util.List;
+
+public class NotEnoughStockException extends ValidationException {
 
     public NotEnoughStockException() {
-        super();
     }
 
-    public NotEnoughStockException(String message) {
-        super(message);
+    public NotEnoughStockException(String message, FieldError fieldError) {
+        super(message, fieldError);
     }
 
-    public NotEnoughStockException(String message, Throwable cause) {
-        super(message, cause);
+    public NotEnoughStockException(String message, Throwable cause, FieldError fieldError) {
+        super(message, cause, fieldError);
     }
 
-    public NotEnoughStockException(Throwable cause) {
-        super(cause);
+    public NotEnoughStockException(String message, List<FieldError> errors) {
+        super(message, errors);
+    }
+
+    public NotEnoughStockException(String message, Throwable cause, List<FieldError> errors) {
+        super(message, cause, errors);
     }
 
 }

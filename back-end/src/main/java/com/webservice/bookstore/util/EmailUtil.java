@@ -20,14 +20,39 @@ public class EmailUtil {
 
     }
 
+    // 비밀번호 찾기를 위한 숫자 및 알파벳으로 이루어진 랜덤 문자열 생성
+    public static String randomString() {
+
+        int leftLimit   = 48;   // numeral '0'
+        int rightLimit  = 122;  // letter 'z'
+        int targetStringLength = 12;
+        Random random = new Random();
+
+        return random.ints(leftLimit,rightLimit + 1)
+                    .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                    .limit(targetStringLength)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+
+    }
+
     // 회원가입 요청 이메일 주소로 인증 메세지 송신
     public static void sendEmail(JavaMailSender javaMailSender,
                                  String email, String certificated) {
 
-        String subject	= "[BookStore] 이메일 인증";
         String from		= "bookstore0324@gmail.com";
-        String content	= "이메일 인증 확인 메일입니다.\n"
-                            + "인증코드: " + certificated;
+        String subject  = null;
+        String content  = null;
+        if(certificated.length() > 7) {
+            subject = "[BookStore] 임시 비밀번호 발급";
+            content = "임시 비밀번호를 발급해드립니다.\n"
+                           + "임시 비밀번호: " + certificated + "\n"
+                           + "로그인하신 후에는 꼭 비밀번호를 변경해주세요!";
+        } else {
+            subject = "[BookStore] 이메일 인증";
+            content = "이메일 인증 확인 메일입니다.\n"
+                           + "인증코드: " + certificated;
+        }
 
         String text	= String.format(content, email, certificated);
 

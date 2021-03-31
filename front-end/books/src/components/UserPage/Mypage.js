@@ -1,37 +1,86 @@
 import axios from "axios"
-import { useState, useEffect } from "react"
+import { useState } from "react"
+import { useHistory } from "react-router-dom"
+import { useCookies } from "react-cookie"
 
-import { Button } from "react-bootstrap"
+import { Button, Modal } from "react-bootstrap"
 import styled from "styled-components"
 
 const MyPage = ({ location }) => {
-  const { state: { token } } = location;
+  const history = useHistory();
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const token = cookies.token;
   const [selected, setSelected] = useState("");
-  const sideMenu = [
-    { title: "회원정보", name: "userinfo" },
-    { title: "주문내역", name: "orderlist" },
-    { title: "쓴 글보기", name: "mypost" },
-    { title: "회원탈퇴", name: "deleteaccount" },
-  ]
+  const [show, setShow] = useState(false);
+  const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    switch(selected) {
-      case "deleteaccount":
-        return console.log(selected)
-        break
+  const modalOpen = () => setShow(true);
+  const modalClose = () => setShow(false);
+
+  const clickEvent = e => {
+    setSelected(e.target.name)
+  }
+
+  const deleteAccout = e => {
+    modalClose()
+    axios.post("http://localhost:8080/api/withdrawal", {
+      password
+    },
+      {
+        headers: {
+          Authorization: token
+        }
+      })
+      .then(() => {
+        removeCookie("token")
+        history.replace("/")
+      })
+      .catch(err => console.log(err.response))
+  }
+
+  const ShowComponent = () => {
+    switch (selected) {
+      case "userinfo":
+        return <div>유저정보</div>
+
+      case "orderlist":
+        return <div>주문내역</div>
+
+      case "mypost":
+        return <div>쓴 글 보기</div>
+
       default:
-        console.log("선택 안되었음")
+        return <div>없음</div>
     }
-
-  }, [selected])
-
+  }
 
   return <Container>
-    {sideMenu.map((menu, idx) => {
-      return <MenuButton key={idx} onClick={() => setSelected(menu.name)}>
-        {menu.title}
-      </MenuButton>
-    })}
+    <SideBar>
+      <Button name="userinfo" onClick={clickEvent}>회원정보</Button>
+      <Button name="orderlist" onClick={clickEvent}>주문내역</Button>
+      <Button name="mypost" onClick={clickEvent}>쓴 글보기</Button>
+      <Button name="deleteaccount" onClick={modalOpen}>회원탈퇴</Button>
+    </SideBar>
+    {<ShowComponent />}
+
+    <Modal show={show} onHide={modalClose} size="lg">
+      <Modal.Header closeButton>
+        <Modal.Title>정말로 탈퇴하겠습니까?</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        탈퇴시 개인정보와 함께 모든 이용내역이 지워집니다.<br />
+            마지막으로 PASSWORD를 입력하시고 회원 탈퇴를 눌러주세요.
+        <input type="password" onChange={e => setPassword(e.target.value)} />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="danger" onClick={deleteAccout}>
+          회원탈퇴
+        </Button>
+        <Button variant="secondary" onClick={modalClose}>
+          취소
+        </Button>
+      </Modal.Footer>
+    </Modal>
   </Container>
 }
 export default MyPage;
@@ -39,7 +88,7 @@ export default MyPage;
 const Container = styled.div`
 
 `
-const SideBar = styled(Button)`
+const SideBar = styled.div`
 
 `
 const MenuButton = styled(Button)`
