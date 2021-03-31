@@ -11,6 +11,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     @Query("select c from Coupon c where c.member.id = :id")
     List<Coupon> findCouponList(@Param("id") Long id);
 
-    @Query(value = "insert into coupon(member_id) select member_id from member", nativeQuery = true)
+    @Query(value = "insert into coupon values (null, '봄', 20, null, false, 'spring', 3, (select id from member))", nativeQuery = true)
     List<Coupon> giveCoupons();
 }

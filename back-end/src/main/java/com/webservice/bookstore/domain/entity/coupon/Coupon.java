@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"orderItem", "category"})
+@ToString(exclude = {"category", "member"})
 public class Coupon {
 
     @Id
@@ -34,18 +34,13 @@ public class Coupon {
 //    @JoinColumn(name = "order_item_id")
 //    private OrderItem orderItem;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "category_id")
-//    private Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-
-//    public void addOrderItem(OrderItem orderItem) {
-//        this.orderItem = orderItem;
-//    }
 
     public void isUsed(Boolean isUsed) {
         this.isUsed = isUsed;

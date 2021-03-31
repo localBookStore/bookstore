@@ -31,8 +31,8 @@ public class OrderItem extends BaseTimeEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @OneToMany(mappedBy = "orderItem")
-    private List<Coupon> coupons;
+//    @OneToMany(mappedBy = "orderItem")
+//    private List<Coupon> coupons;
 
     private Integer orderCount;
 
@@ -44,11 +44,6 @@ public class OrderItem extends BaseTimeEntity {
     */
     public void addOrder(Orders orders) {
         this.orders = orders;
-    }
-
-    public void addCoupon(Coupon coupon) {
-        this.coupons.add(coupon);
-        coupon.addOrderItem(this);
     }
 
     public int couponApplyOrderPrice(Coupon coupon) {

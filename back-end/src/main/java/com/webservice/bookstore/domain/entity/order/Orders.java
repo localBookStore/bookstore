@@ -8,11 +8,13 @@ import com.webservice.bookstore.domain.entity.delivery.DeliveryEnum;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @Entity
 @Builder
 @AllArgsConstructor
@@ -38,7 +40,7 @@ public class Orders extends BaseTimeEntity {
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    private Integer paymentAmount;
+    private int paymentAmount;
 
     private Integer deliveryCharge;
 
@@ -71,12 +73,13 @@ public class Orders extends BaseTimeEntity {
         int paymentAmount = orderItemList.stream()
                                     .mapToInt(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
                                     .sum();
-        paymentAmount = paymentAmount * ((100 - coupon.getDiscountRate()) / 100);
+
+        double result = (paymentAmount * ((100 - coupon.getDiscountRate()) / (double)100));
 
         // Builder 패턴 사용법 주의사항 :
         Orders order = Orders.builder()
                              .member(member) // 결제자 정보 등록
-                             .paymentAmount(paymentAmount)
+                             .paymentAmount((int) result)
                              .deliveryCharge(2500) // 배송비 초기화
                              .status(OrdersEnum.ORDER) // 주문 상태 초기화
                              .build();
