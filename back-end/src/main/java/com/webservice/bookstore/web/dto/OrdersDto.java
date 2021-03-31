@@ -1,5 +1,6 @@
 package com.webservice.bookstore.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservice.bookstore.domain.entity.delivery.Delivery;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.order.Orders;
@@ -7,6 +8,7 @@ import com.webservice.bookstore.domain.entity.order.OrdersEnum;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +34,9 @@ public class OrdersDto {
 
     private OrdersEnum status;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime createDate;
+
     // Entity -> DTO
     public static OrdersDto of(Orders orders) {
 
@@ -46,6 +51,7 @@ public class OrdersDto {
                 .paymentAmount(orders.getPaymentAmount())
                 .deliveryCharge(orders.getDeliveryCharge())
                 .status(orders.getStatus())
+                .createDate(orders.getCreatedDate())
                 .build();
     }
 
