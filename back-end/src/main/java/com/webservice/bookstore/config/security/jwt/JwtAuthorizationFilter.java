@@ -80,17 +80,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         } else {
             log.info("The input Access Token is invalid... :");
             String email = verifyResult.getEmail();   // abc@gmail.com
+            String nickName = verifyResult.getNickName();
+            String role = verifyResult.getRole();
 
             String refreshToken = redisUtil.getData(email);
             log.info("Saved Refresh Token in Redis : {}", refreshToken);
-
 
             log.info("Verify the Refresh Token :");
             VerifyResult refreshVerify = jwtUtil.verify(refreshToken);
             if(refreshVerify.isResult()) {
                 log.info("The Refresh Token is valid! Create new Access Token :");
                 String newAccessToken
-                        = jwtUtil.createAccessToken(refreshVerify.getEmail(), refreshVerify.getNickName());
+                        = jwtUtil.createAccessToken(refreshVerify.getEmail(), nickName, role);
                 response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
 
                 saveAuthSecuritySession(verifyResult);

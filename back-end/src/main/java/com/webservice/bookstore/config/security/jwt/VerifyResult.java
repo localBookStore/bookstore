@@ -13,6 +13,7 @@ public class VerifyResult {
 
     private String email;
     private String nickName;
+    private String role;
     private boolean result;
 
 }
