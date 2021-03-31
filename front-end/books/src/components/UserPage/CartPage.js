@@ -5,25 +5,59 @@ import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
 const CartPage = ({ location }) => {
-  console.log(location)
   const [cartList, setCartList] = useState(null);
   const [checkList, setCheckList] = useState(new Set());
+  const [isChange, setIsChange] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0)
   const { state: { token } } = location;
 
   useEffect(() => {
     getCartBook()
   }, [])
 
+  useEffect(() => {
+    if (isChange) {
+      setTimeout(() => {
+        let total = 0
+        cartList.map(obj => {
+          const { quantity, price, id } = obj
+          if (checkList.has(id)) total += quantity * price
+        })
+        setTotalPrice(total)
+
+        return clearTimeout()
+      }, 200)
+      return setIsChange(false)
+    }
+  }, [isChange])
+
+
+  const minus = (idx) => {
+    const newCartList = [...cartList]
+    const nowValue = newCartList[idx].quantity
+    newCartList[idx].quantity = nowValue > 1 ? nowValue - 1 : 1
+    setCartList(newCartList)
+    setIsChange(true)
+  }
+  const plus = (idx, maxValue) => {
+    const newCartList = [...cartList]
+    const nowValue = newCartList[idx].quantity
+    newCartList[idx].quantity = nowValue === maxValue ? nowValue : nowValue + 1
+    setCartList(newCartList)
+    setIsChange(true)
+  }
   const getCartBook = props => {
     axios.get("http://localhost:8080/api/cart/", { headers: { Authorization: token } })
       .then(res => {
         const { data } = res;
-        setCartList(data)
-        if (data) data.map(bookInfo => checkList.add(bookInfo.id))
+        if (data) {
+          data.map(bookInfo => checkList.add(bookInfo.id))
+          setCartList(data)
+          setIsChange(true)
+        }
       })
       .catch(err => console.log("토큰이 만료 되었습니다."))
   }
-
   const deleteCartBook = () => {
     axios.delete(`http://localhost:8080/api/cart/`, {
       data: [
@@ -31,11 +65,15 @@ const CartPage = ({ location }) => {
       ],
       headers: { Authorization: token }
     })
-      .then(res => setCartList(res.data))
+      .then(res => {
+        setCartList(res.data)
+        setIsChange(true)
+      })
       .catch(err => console.log(err.response))
   }
 
   const clickEvent = (cartId, isChecked) => {
+    setIsChange(true)
     if (isChecked) {
       checkList.add(cartId)
       setCheckList(checkList)
@@ -59,16 +97,21 @@ const CartPage = ({ location }) => {
               <BookCheck type="checkbox" defaultChecked onClick={e => clickEvent(cartId, e.target.checked)} />
               <BookImage src={imageUrl} alt={id} />
               <BookText>{name}</BookText>
-              <BookText>{price}</BookText>
-              <BookCountInput type="number"
-                defaultValue={res.quantity}
-                name="inputCount"
-                required />
+              <div>
+                <Button onClick={() => minus(idx)}>-</Button>
+                {res.quantity}
+                <Button onClick={() => plus(idx, quantity)}>+</Button>
+              </div>
+              <BookText>{price * res.quantity}</BookText>
             </EachBookContainer>
           })}
+          <Button variant="danger" onClick={deleteCartBook}>삭제</Button>
         </div>
-        <Button variant="danger" onClick={deleteCartBook}>삭제</Button>
+        <div>
+          총 가격은 {totalPrice} 입니다.
+        </div>
       </>
+
     }
   </Container>
 }

@@ -14,7 +14,7 @@ const TopDetail = ({ props }) => {
   const addCart = e => {
     const feature = e.target.name;
     axios.post(`http://localhost:8080/api/cart/${id}/`, {
-      quantity: 1
+      orderCount: 1
     }, {
       headers: {
         Authorization: cookies.token
