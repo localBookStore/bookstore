@@ -107,13 +107,19 @@ const CartPage = ({ location }) => {
           })}
           <Button variant="danger" onClick={deleteCartBook}>삭제</Button>
         </div>
-        <div>
-          총 가격은 {totalPrice} 입니다.
-        </div>
-      </>
+        <ResultContainer>
+          <CouponContainer>
 
+          </CouponContainer>
+
+          <TotalPriceContainer>
+            <TotalTitle>Total</TotalTitle>
+            <TotalContent>{totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</TotalContent>
+          </TotalPriceContainer>
+        </ResultContainer>
+      </>
     }
-  </Container>
+  </Container >
 }
 export default CartPage;
 
@@ -146,4 +152,44 @@ const BookCountInput = styled.input`
   margin: 0px 20px;
 
   text-align: center;
+`
+
+const ResultContainer = styled.div`
+  display: flex;
+  height: 100vh;
+
+  margin: 30px;
+`
+const CouponContainer = styled.div`
+  border: 2px solid black;
+  margin: 30px;
+  width: 90%;
+`
+
+const TotalPriceContainer = styled.div`
+  float: right;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  border: 2px solid black;
+  width: 30%;
+
+  margin: 30px;
+`
+const TotalTitle = styled.div`
+  margin: 20px;
+
+  font-size: 50px;
+  font-weight: bolder;
+  text-align: center;
+`
+const TotalContent = styled.div`
+  margin: 20px;
+
+  text-align: center;
+  font-weight: 600;
+  font-size: 200%;
 `
