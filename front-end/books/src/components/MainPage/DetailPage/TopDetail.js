@@ -1,24 +1,34 @@
 import { useState } from "react"
 import { useCookies } from "react-cookie"
-import CountBox from "./CountBox"
+import { useHistory } from "react-router-dom"
+// import CountBox from "./CountBox"
 import axios from "axios"
 
 import styled from "styled-components"
 
 const TopDetail = ({ props }) => {
   const { name, author, imageUrl, price, publisher, quantity, id } = props
-  const [bookCount, setBookCount] = useState(1);
+  const history = useHistory();
   const [cookies] = useCookies(['token']);
 
-  const addCart = () => {
+  const addCart = e => {
+    const feature = e.target.name;
     axios.post(`http://localhost:8080/api/cart/${id}/`, {
-      quantity: bookCount
+      quantity: 1
     }, {
       headers: {
         Authorization: cookies.token
       }
     })
-      .then(res => console.log("책이 장바구니에 담겨졌습니다"))
+      .then(res => {
+        console.log(feature)
+        if (feature === "directBuy") history.push({
+          pathname: "/cart",
+          state: {
+            token: cookies.token
+          }
+        })
+      })
       .catch(err => console.log(err.response))
   }
 
@@ -29,9 +39,9 @@ const TopDetail = ({ props }) => {
     <Content top="120px">가격: {price}</Content>
     <Content top="160px">택배비: 3000</Content>
     <Content top="200px">남은 수량: {quantity}</Content>
-    <CountBox rest={quantity} bookCount={bookCount} setBookCount={setBookCount} />
-    <Button left="600px" onClick={addCart}>장바구니</Button>
-    <Button left="760px">바로구매</Button>
+    {/* <CountBox rest={quantity} bookCount={bookCount} setBookCount={setBookCount} /> */}
+    <Button left="600px" onClick={addCart} name="containItem">장바구니</Button>
+    <Button onClick={addCart} left="760px" name="directBuy">바로구매</Button>
   </TopComponent>
 }
 export default TopDetail;

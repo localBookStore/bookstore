@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
 const CartPage = ({ location }) => {
+  console.log(location)
   const [cartList, setCartList] = useState(null);
   const [checkList, setCheckList] = useState(new Set());
   const { state: { token } } = location;
@@ -52,24 +53,21 @@ const CartPage = ({ location }) => {
       <>
         <div>
           {cartList.map((res, idx) => {
-            const bookCount = res.quantity;
-            const cartId = res.id;
+            const cartId = res.id
             const { id, name, imageUrl, price, quantity } = res.itemDto
             return <EachBookContainer key={idx}>
               <BookCheck type="checkbox" defaultChecked onClick={e => clickEvent(cartId, e.target.checked)} />
               <BookImage src={imageUrl} alt={id} />
               <BookText>{name}</BookText>
               <BookText>{price}</BookText>
-              <BookCount type="number" defaultValue={bookCount} name={id}
-                onChange={() => { }} />
+              <BookCountInput type="number"
+                defaultValue={res.quantity}
+                name="inputCount"
+                required />
             </EachBookContainer>
           })}
-          <Button variant="danger" onClick={deleteCartBook}>삭제</Button>
-          
         </div>
-        <div>
-
-        </div>
+        <Button variant="danger" onClick={deleteCartBook}>삭제</Button>
       </>
     }
   </Container>
@@ -99,6 +97,10 @@ const BookCheck = styled.input`
   width: 24px;
   height: 24px;
 `
-const BookCount = styled.input`
+const BookCountInput = styled.input`
+  width: 10%;
+  height: 35px;
+  margin: 0px 20px;
 
+  text-align: center;
 `
