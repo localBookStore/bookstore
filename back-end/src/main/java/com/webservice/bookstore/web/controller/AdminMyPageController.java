@@ -1,28 +1,25 @@
 package com.webservice.bookstore.web.controller;
 
 
-import com.sun.mail.iap.Response;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemLinkResource;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
 import com.webservice.bookstore.service.ItemService;
 import com.webservice.bookstore.web.dto.ItemAddDto;
 import com.webservice.bookstore.web.dto.ItemDto;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @Log4j2
@@ -63,8 +60,12 @@ public class AdminMyPageController {
 
     @PostMapping(value = "/additem")
     public ResponseEntity addAdminItem(@RequestBody ItemAddDto itemDto) {
-        this.itemService.addItem(itemDto);
-        return ResponseEntity.ok("상품이 등록되었습니다.");
+        ItemDto savedItemDto = this.itemService.addItem(itemDto);
+        ItemLinkResource itemLinkResource = new ItemLinkResource(savedItemDto, linkTo(ItemController.class).slash(savedItemDto.getId()).withSelfRel());
+        URI uri = linkTo(ItemController.class).slash(savedItemDto.getId()).toUri();
+        itemLinkResource.add(linkTo(methodOn(AdminMyPageController.class).modifyItem(savedItemDto)).withRel("modify-item"));
+        itemLinkResource.add(linkTo(methodOn(AdminMyPageController.class).deleteItem(savedItemDto.getId())).withRel("delete-item"));
+        return ResponseEntity.created(uri).body(itemLinkResource);
     }
 
 
@@ -72,7 +73,6 @@ public class AdminMyPageController {
     public ResponseEntity modifyItem(@RequestBody ItemDto itemDto) {
         itemService.modifyItem(itemDto);
         return ResponseEntity.ok("상품이 수정되었습니다.");
-
     }
 
 

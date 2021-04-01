@@ -91,9 +91,10 @@ public class ItemService {
     }
 
     @Transactional
-    public void addItem(ItemAddDto itemDto) {
+    public ItemDto addItem(ItemAddDto itemDto) {
         Item item = itemDto.toEntity();
-        itemRepository.save(item);
+        Item savedItem = itemRepository.save(item);
+        return ItemDto.of(savedItem);
     }
 
     @Transactional

@@ -20,8 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,6 +47,36 @@ class AdminMyPageControllerTest {
         itemRepository.deleteAll();
 
     }
+
+    @DisplayName("상품 등록")
+    @Test
+    public void test1() throws Exception {
+        //given
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
+
+        ItemDto item = ItemDto.builder()
+                .name("좋은 책")
+                .quantity(3)
+                .category_id(category.getId())
+                .description("하하하하")
+                .build();
+
+        //when
+
+        //then
+        mockMvc.perform(post("/api/admin/additem")
+                        .content(objectMapper.writeValueAsString(item))
+                        .contentType(MediaTypes.HAL_JSON_VALUE)
+        )
+                .andDo(print())
+                .andExpect(status().isCreated())
+        ;
+    }
+
 
     @DisplayName("상품 수정하기")
     @Test
