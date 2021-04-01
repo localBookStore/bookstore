@@ -1,9 +1,12 @@
 package com.webservice.bookstore.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservice.bookstore.domain.entity.cart.Cart;
 import com.webservice.bookstore.domain.entity.item.ItemResource;
 import com.webservice.bookstore.domain.entity.member.Member;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 public class CartDto {
 
@@ -18,6 +21,8 @@ public class CartDto {
         private ItemDto itemDto;
         private Integer price;
         private Integer orderCount;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime createDate;
 
         // Entity -> DTO
         public static Default of(Cart cart) {
@@ -27,6 +32,7 @@ public class CartDto {
                           .itemDto(ItemDto.of(cart.getItem()))
                           .price(cart.getPrice())
                           .orderCount(cart.getOrderCount())
+                          .createDate(cart.getCreatedDate())
                           .build();
         }
 
@@ -45,14 +51,15 @@ public class CartDto {
         }
 
         // Default -> Response
-        public CartDto.Response toResponse() {
-            return CartDto.Response.builder()
-                    .id(this.getId())
-                    .member_id(this.getMember_id())
-                    .orderItem(new ItemResource(this.getItemDto()))
-                    .price(this.getPrice())
-                    .orderCount(this.getOrderCount())
-                    .build();
+        public Response toResponse() {
+            return Response.builder()
+                           .id(this.id)
+                           .member_id(this.member_id)
+                           .item(new ItemResource(this.itemDto))
+                           .price(this.price)
+                           .orderCount(this.orderCount)
+                           .createDate(this.createDate)
+                           .build();
         }
     }
 
@@ -64,9 +71,11 @@ public class CartDto {
 
         private Long id;
         private Long member_id;
-        private ItemResource orderItem;
+        private ItemResource item;
         private Integer price;
         private Integer orderCount;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime createDate;
     }
 
 

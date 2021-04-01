@@ -35,28 +35,23 @@ public class OrdersService {
     주문 생성
     */
     // OrderItemDto 리스트 내 item_id 리스트 반환
-    private List<Long> getItemIdList(List<OrderItemDto> orderItemDtoList) {
+    private List<Long> getItemIdList(List<OrderItemDto.Default> orderItemDtoList) {
         List<Long> itemIdList = new ArrayList<>();
-        for(OrderItemDto dto : orderItemDtoList) {
-//            itemIdList.add(dto.getItem_id());
-            itemIdList.add(dto.getItemDto().getId());
-        }
+        orderItemDtoList.stream().forEach(dto -> itemIdList.add(dto.getItemDto().getId()));
         return itemIdList;
     }
 
-    private List<Long> getCartIdList(List<CartDto> cartDtoList) {
+    private List<Long> getCartIdList(List<CartDto.Default> cartDtoList) {
         List<Long> cartIdList = new ArrayList<>();
-        for(CartDto dto : cartDtoList) {
-            cartIdList.add(dto.getId());
-        }
+        cartDtoList.stream().forEach(dto -> cartIdList.add(dto.getId()));
         return cartIdList;
     }
 
     @Transactional
     public void addOrder(MemberDto.Default memberDto,
                          CouponDto couponDto,
-                         List<CartDto> cartDtoList,
-                         List<OrderItemDto> orderItemDtoList) {
+                         List<CartDto.Default> cartDtoList,
+                         List<OrderItemDto.Default> orderItemDtoList) {
         // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
         orderItemDtoList = orderItemDtoList.stream()
                                            .sorted(Comparator.comparing(orderItemDto -> orderItemDto.getItemDto().getId()))
@@ -88,17 +83,17 @@ public class OrdersService {
 
     }
 
-    public List<OrdersDto> findOrders(MemberDto.Default memberDto) {
-//        List<Orders> orderEntityList = orderRepository.findByMemberId(memberDto.getId());
+    public List<OrdersDto.Default> findOrders(MemberDto.Default memberDto) {
+
         List<Orders> orderEntityList = orderRepository.getAllByMemberId(memberDto.getId());
-        List<OrdersDto> ordersDtoList = new ArrayList<>();
-        orderEntityList.stream().forEach(orders -> ordersDtoList.add(OrdersDto.of(orders)));
+        List<OrdersDto.Default> ordersDtoList = new ArrayList<>();
+        orderEntityList.stream().forEach(orders -> ordersDtoList.add(OrdersDto.Default.of(orders)));
 
         return ordersDtoList;
     }
 
     @Transactional
-    public void cancelOrder(MemberDto.Default memberDto, OrdersDto ordersDto) {
+    public void cancelOrder(MemberDto.Default memberDto, OrdersDto.Default ordersDto) {
 
         Orders order = orderRepository.getOne(ordersDto.getId());
         order.cancel();

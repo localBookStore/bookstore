@@ -2,7 +2,6 @@ package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.domain.entity.item.*;
 import com.webservice.bookstore.service.ItemService;
-import com.webservice.bookstore.web.dto.GetItemDto;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -42,9 +41,11 @@ public class ItemController {
         if(items == null || items.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<ItemDto> collect = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
-        List<ItemLinkResource> itemLinkResources = collect.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
-        CollectionModel<ItemLinkResource> result = CollectionModel.of(itemLinkResources);
+        List<ItemDto> itemDtoList = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
+        List<ItemResource> itemResources = itemDtoList.stream().map(itemDto -> new ItemResource(itemDto))
+                                                                   .collect(Collectors.toList());
+        CollectionModel<ItemResource> result = CollectionModel.of(itemResources);
+        System.out.println("result : " + result);
         return ResponseEntity.ok(result);
     }
 
@@ -57,7 +58,8 @@ public class ItemController {
             return ResponseEntity.notFound().build();
         }
         Item newItem = savedItem.get();
-        GetItemDto itemDto = GetItemDto.toDto(newItem);
+//        GetItemDto itemDto = GetItemDto.toDto(newItem);
+        ItemDto itemDto = ItemDto.of(newItem);
         ItemResource itemResource = new ItemResource(itemDto);
 //      itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
         return ResponseEntity.ok(itemResource);

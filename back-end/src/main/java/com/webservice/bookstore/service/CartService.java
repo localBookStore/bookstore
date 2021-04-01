@@ -29,7 +29,7 @@ public class CartService {
     */
     public List<CartDto.Default> findByMemberId(Long id) {
 
-        List<CartDto.Default> cartDtoList = setDtoListOfEntityList(cartRepository.findByMemberId(id));
+        List<CartDto.Default> cartDtoList = cartDtoListOf(cartRepository.findByMemberId(id));
 
         return cartDtoList;
     }
@@ -79,7 +79,7 @@ public class CartService {
         cartRepository.deleteAllByIdInQuery(getCartIdList(cartDtoList));
 
         List<Cart> cartEntityList = cartRepository.findByMemberId(memberDto.getId());
-        cartDtoList = setDtoListOfEntityList(cartEntityList);
+        cartDtoList = cartDtoListOf(cartEntityList);
 
         return cartDtoList;
     }
@@ -92,7 +92,7 @@ public class CartService {
         return cartIdList;
     }
     // Lambda는 'effectively final'(값이 재정의되지 않는 변수) 변수만 허용 가능하도록 하여 메소드로 분리
-    private static List<CartDto.Default> setDtoListOfEntityList(List<Cart> cartEntityList) {
+    private static List<CartDto.Default> cartDtoListOf(List<Cart> cartEntityList) {
         List<CartDto.Default> cartDtoList = new ArrayList<>();
         cartEntityList.stream().forEach(cart -> cartDtoList.add(CartDto.Default.of(cart)));
         return cartDtoList;
