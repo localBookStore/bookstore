@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = "orders")
 @EqualsAndHashCode(of = "id")
 public class OrderItem extends BaseTimeEntity {
     @Id

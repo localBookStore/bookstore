@@ -12,7 +12,9 @@ import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Log4j2
 @Entity
@@ -20,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"member","delivery"})
+@ToString(exclude = {"member", "delivery", "orderItems"})
 @EqualsAndHashCode(of = "id")
 public class Orders extends BaseTimeEntity {
 
@@ -39,6 +41,7 @@ public class Orders extends BaseTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
+//    private Set<OrderItem> orderItems = new HashSet<>();    // MultipleBagFetchException 발생 방지를 위해 List -> Set
 
     private int paymentAmount;
 
@@ -70,16 +73,18 @@ public class Orders extends BaseTimeEntity {
                                     .status(DeliveryEnum.START)
                                     .build();
 
-        int paymentAmount = orderItemList.stream()
-                                    .mapToInt(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
+        double paymentAmount = orderItemList.stream()
+                                    .mapToDouble(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
                                     .sum();
 
-        double result = (paymentAmount * ((100 - coupon.getDiscountRate()) / (double)100));
+        if(coupon != null) {
+            paymentAmount = (paymentAmount * ((100 - coupon.getDiscountRate()) / (double) 100));
+        }
 
         // Builder 패턴 사용법 주의사항 :
         Orders order = Orders.builder()
                              .member(member) // 결제자 정보 등록
-                             .paymentAmount((int) result)
+                             .paymentAmount((int) paymentAmount)
                              .deliveryCharge(2500) // 배송비 초기화
                              .status(OrdersEnum.ORDER) // 주문 상태 초기화
                              .build();

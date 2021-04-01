@@ -100,10 +100,10 @@ public class MemberService {
 
     }
 
-    public List<MemberDto> findAllMembers() {
+    public List<MemberDto.Default> findAllMembers() {
         List<Member> memberEntityList = memberRepository.findAllByRoleNot(MemberRole.ADMIN);
-        List<MemberDto> memberDtoList = new ArrayList<>();
-        memberEntityList.stream().forEach(member -> memberDtoList.add(MemberDto.of(member)));
+        List<MemberDto.Default> memberDtoList = new ArrayList<>();
+        memberEntityList.stream().forEach(member -> memberDtoList.add(MemberDto.Default.of(member)));
 
         return memberDtoList;
     }

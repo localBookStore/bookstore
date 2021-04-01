@@ -1,5 +1,6 @@
 package com.webservice.bookstore.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservice.bookstore.domain.entity.delivery.Delivery;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.order.Orders;
@@ -7,8 +8,11 @@ import com.webservice.bookstore.domain.entity.order.OrdersEnum;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @NoArgsConstructor
@@ -30,6 +34,9 @@ public class OrdersDto {
 
     private OrdersEnum status;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime createDate;
+
     // Entity -> DTO
     public static OrdersDto of(Orders orders) {
 
@@ -44,6 +51,7 @@ public class OrdersDto {
                 .paymentAmount(orders.getPaymentAmount())
                 .deliveryCharge(orders.getDeliveryCharge())
                 .status(orders.getStatus())
+                .createDate(orders.getCreatedDate())
                 .build();
     }
 
@@ -52,7 +60,8 @@ public class OrdersDto {
 
         Member member = Member.builder().id(this.member_id).build();
         Delivery delivery = Delivery.builder().id(this.delivery_id).build();
-        List<OrderItem> orderItemList = new ArrayList<>();
+        List<OrderItem> orderItemList = new ArrayList<>();    // Orders : MultipleBagFetchException 발생 방지를 위해 List -> Set
+//        Set<OrderItem> orderItemList = new HashSet<>();
         this.orderItemDtoList.stream().forEach(orderItemDto -> orderItemList.add(orderItemDto.toEntity()));
 
         return Orders.builder()

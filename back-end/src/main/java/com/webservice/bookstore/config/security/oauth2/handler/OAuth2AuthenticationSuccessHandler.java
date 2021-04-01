@@ -43,51 +43,58 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         Authentication authentication) throws IOException, ServletException {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = customUserDetails.getMember();
-        String email = member.getEmail();
+        log.info(customUserDetails.getMember());
+        String email    = customUserDetails.getMember().getEmail();
+        String nickName = customUserDetails.getMember().getNickName();
 
         log.info("JwtAuthenticationFilter.successfulAuthentication : 'OK'");
 
-        if(customUserDetails.isEnabled()) {
-            // Refresh 토큰 생성하여 Redis에 저장
-            redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L*20);
+//        response.setHeader(JwtProperties.HEADER_STRING,
+//                         JwtProperties.TOKEN_PREFIX + jwtUtil.createAccessToken(email, nickName));
+        log.info("request.getRequestURI() : " + request.getRequestURI());
+        log.info("request.getParameter(\"redirect_uri\") : " + request.getParameter("redirect_uri"));
+//        String targetUrl = String.format("/api/oauth2/success?email=%s&nickName=%s",
+//                                            email, URLEncoder.encode(nickName, "UTF-8"));
+//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
-            response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json;charset=utf-8");
-            response.setHeader(JwtProperties.HEADER_STRING,
-                         JwtProperties.TOKEN_PREFIX
-                                + jwtUtil.createAccessToken(customUserDetails.getMember().getEmail(),
-                                                            customUserDetails.getMember().getNickName()));
-
-            Map<String, Object> resultAttributes = new HashMap<>();
-            resultAttributes.put("timestamp", writeTimeNow());
-            resultAttributes.put("status", HttpStatus.OK);
-            resultAttributes.put("message", "Authentication completed (OAuth)");
-            resultAttributes.put("path", request.getRequestURI());
-
-            response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
-
-            // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
-            // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,
-            // 별도로 tomcat 설정을 수정하거나 ServletOutputStream 객체가 아닌 위처럼 PrintWriter 객체로 넘겨주어야한다.
-            //response.getOutputStream().println(objectMapper.writeValueAsString(resultAttributes));
-
-            response.sendRedirect("http://localhost:3000");
-
-        } else {
-            response.setStatus(HttpStatus.LOCKED.value()); // 423 응답값
-            response.setContentType("application/json;charset=utf-8");
-
-            Map<String, Object> resultAttributes = new HashMap<>();
-            resultAttributes.put("timestamp", writeTimeNow());
-            resultAttributes.put("status", HttpStatus.LOCKED);
-            resultAttributes.put("message", "This Email is locked (OAuth)");
-            resultAttributes.put("path", request.getRequestURI());
-
-            response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
-
-            SecurityContextHolder.getContext().setAuthentication(null);
-        }
+//        if(customUserDetails.isEnabled()) {
+//            // Refresh 토큰 생성하여 Redis에 저장
+//            redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L*20);
+//
+//            response.setStatus(HttpStatus.OK.value());
+//            response.setContentType("application/json;charset=utf-8");
+//            response.setHeader(JwtProperties.HEADER_STRING,
+//                         JwtProperties.TOKEN_PREFIX
+//                                + jwtUtil.createAccessToken(customUserDetails.getMember().getEmail(),
+//                                                            customUserDetails.getMember().getNickName()));
+//
+//            Map<String, Object> resultAttributes = new HashMap<>();
+//            resultAttributes.put("timestamp", writeTimeNow());
+//            resultAttributes.put("status", HttpStatus.OK);
+//            resultAttributes.put("message", "Authentication completed (OAuth)");
+//            resultAttributes.put("path", request.getRequestURI());
+//
+//            response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
+//
+//            // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
+//            // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,
+//            // 별도로 tomcat 설정을 수정하거나 ServletOutputStream 객체가 아닌 위처럼 PrintWriter 객체로 넘겨주어야한다.
+//            //response.getOutputStream().println(objectMapper.writeValueAsString(resultAttributes));
+//
+//        } else {
+//            response.setStatus(HttpStatus.LOCKED.value()); // 423 응답값
+//            response.setContentType("application/json;charset=utf-8");
+//
+//            Map<String, Object> resultAttributes = new HashMap<>();
+//            resultAttributes.put("timestamp", writeTimeNow());
+//            resultAttributes.put("status", HttpStatus.LOCKED);
+//            resultAttributes.put("message", "This Email is locked (OAuth)");
+//            resultAttributes.put("path", request.getRequestURI());
+//
+//            response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
+//
+//            SecurityContextHolder.getContext().setAuthentication(null);
+//        }
 
     }
 

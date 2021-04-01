@@ -53,27 +53,32 @@ public class OrdersService {
     }
 
     @Transactional
-    public void addOrder(List<CartDto> cartDtoList, MemberDto memberDto, CouponDto couponDto, List<OrderItemDto> orderItemDtoList) {
+    public void addOrder(MemberDto.Default memberDto,
+                         CouponDto couponDto,
+                         List<CartDto> cartDtoList,
+                         List<OrderItemDto> orderItemDtoList) {
         // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
         orderItemDtoList = orderItemDtoList.stream()
-//                .sorted(Comparator.comparing(OrderItemDto::getItem_id))
-                .sorted(Comparator.comparing(orderItemDto -> orderItemDto.getItemDto().getId()))
-                .collect(Collectors.toList());
+                                           .sorted(Comparator.comparing(orderItemDto -> orderItemDto.getItemDto().getId()))
+                                           .collect(Collectors.toList());
 
         // Member, Item 엔티티 조회 (자동으로 id 기준으로 오름차순을 조회함)
         Member member       = memberRepository.getOne(memberDto.getId());
         member.setAddress(memberDto.getAddress());
         List<Item> itemList = itemRepository.findByIdIn(getItemIdList(orderItemDtoList));
 
-        Coupon coupon = couponRepository.findById(couponDto.getId()).get();
-        coupon.isUsed(true);
-        member.addCoupon(coupon);
+        Coupon coupon = null;
+        if(couponDto != null) {
+            coupon = couponRepository.findById(couponDto.getId()).get();
+            coupon.isUsed(true);
+            member.addCoupon(coupon);
+        }
 
         // 주문상품 생성
         List<OrderItem> orderItemList = OrderItem.createOrderItem(itemList, orderItemDtoList);
 
         // 주문 생성
-        Orders orders = Orders.createOrder(member, coupon,orderItemList);
+        Orders orders = Orders.createOrder(member, coupon, orderItemList);
 
         // 주문 저장
         orderRepository.save(orders);
@@ -83,8 +88,9 @@ public class OrdersService {
 
     }
 
-    public List<OrdersDto> findOrders(MemberDto memberDto) {
-        List<Orders> orderEntityList = orderRepository.findByMemberId(memberDto.getId());
+    public List<OrdersDto> findOrders(MemberDto.Default memberDto) {
+//        List<Orders> orderEntityList = orderRepository.findByMemberId(memberDto.getId());
+        List<Orders> orderEntityList = orderRepository.getAllByMemberId(memberDto.getId());
         List<OrdersDto> ordersDtoList = new ArrayList<>();
         orderEntityList.stream().forEach(orders -> ordersDtoList.add(OrdersDto.of(orders)));
 
@@ -92,7 +98,7 @@ public class OrdersService {
     }
 
     @Transactional
-    public void cancelOrder(MemberDto memberDto, OrdersDto ordersDto) {
+    public void cancelOrder(MemberDto.Default memberDto, OrdersDto ordersDto) {
 
         Orders order = orderRepository.getOne(ordersDto.getId());
         order.cancel();

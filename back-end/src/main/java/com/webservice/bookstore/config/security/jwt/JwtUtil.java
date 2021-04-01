@@ -19,20 +19,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    private Date expiresAt(Integer... nums)  {
-        // 1000L -> 1초, 1000L*60 -> 1분, 1000L*60*60 -> 1시간, ...
-        Long seconds = 1000L;
-        for(Integer num : nums) {
-            seconds*=num;
-        }
-        return new Date(System.currentTimeMillis() + seconds);
-    }
-
-    public String createAccessToken(String email, String nickName) {
+    public String createAccessToken(String email, String nickName, String role) {
 
         return JWT.create()
                 .withSubject(email)
                 .withClaim("nickName", nickName)
+                .withClaim("role", role)
                 .withClaim("exp", Instant.now().getEpochSecond() + 60)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
@@ -42,7 +34,6 @@ public class JwtUtil {
 
         return JWT.create()
                 .withSubject(email)
-//                .withExpiresAt(expiresAt(30))
                 .withClaim("exp", Instant.now().getEpochSecond() + 60*20)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
@@ -60,7 +51,8 @@ public class JwtUtil {
             log.info("JWT decoding successful");
             return VerifyResult.builder()
                                 .email(decodedJWT.getSubject())
-                                .nickName(String.valueOf(decodedJWT.getClaim("nickName")))
+                                .nickName(String.valueOf(decodedJWT.getClaim("nickName").asString()))
+                                .role(String.valueOf(decodedJWT.getClaim("role").asString()))
                                 .result(true)
                                 .build();
 
@@ -68,8 +60,11 @@ public class JwtUtil {
             log.info("JWT has expired");
             DecodedJWT decodedJWT = JWT.decode(jwtToken);
 
+            log.info("JWT has expired");
             return VerifyResult.builder()
                                 .email(decodedJWT.getSubject())
+                                .nickName(String.valueOf(decodedJWT.getClaim("nickName").asString()))
+                                .role(String.valueOf(decodedJWT.getClaim("role").asString()))
                                 .result(false)
                                 .build();
         } catch (NullPointerException e) {  // Redis에 특정 Refresh 토큰이 존재하지 않는 경우(null) 예외 발생
