@@ -59,24 +59,24 @@ public class Member extends BaseTimeEntity {
         this.coupons.add(coupon);
     }
 
-    public void usedCoupon(Coupon coupon) {
-        this.coupons.stream().forEach(savedCoupon -> {
-            if(savedCoupon.getId() == coupon.getId()) {
-                savedCoupon.isUsed(true);
-                return;
-            }
-        });
-    }
-
-    public void validateCoupon(Coupon coupon) {
-        this.coupons.stream().forEach(savedCoupon -> {
-            if(savedCoupon.getId() == coupon.getId()) {
-                if(savedCoupon.getIsUsed()) {
-                    throw new DuplicateKeyException("사용한 쿠폰입니다.");
-                }
-            }
-        });
-    }
+//    public void usedCoupon(Coupon coupon) {
+//        this.coupons.stream().forEach(savedCoupon -> {
+//            if(savedCoupon.getId() == coupon.getId()) {
+//                savedCoupon.isUsed(true);
+//                return;
+//            }
+//        });
+//    }
+//
+//    public void validateCoupon(Coupon coupon) {
+//        this.coupons.stream().forEach(savedCoupon -> {
+//            if(savedCoupon.getId() == coupon.getId()) {
+//                if(savedCoupon.getIsUsed()) {
+//                    throw new DuplicateKeyException("사용한 쿠폰입니다.");
+//                }
+//            }
+//        });
+//    }
 
 
     public void setAddress(String address) {

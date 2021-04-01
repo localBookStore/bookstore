@@ -4,15 +4,20 @@ import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemQueryRespository;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
+import com.webservice.bookstore.web.dto.ItemAddDto;
 import com.webservice.bookstore.web.dto.ItemDto;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -77,5 +82,31 @@ public class ItemService {
         }
 
         return itemDtoList;
+    }
+
+    public List<ItemDto> findItems() {
+        List<Item> items = itemRepository.findAll();
+        List<ItemDto> collect = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
+        return collect;
+    }
+
+    @Transactional
+    public void addItem(ItemAddDto itemDto) {
+        Item item = itemDto.toEntity();
+        itemRepository.save(item);
+    }
+
+    @Transactional
+    public void modifyItem(ItemDto itemDto) {
+        Item item = itemDto.toEntity();
+        itemRepository.save(item);
+    }
+
+    @Transactional
+    public ItemDto deleteItem(Item item) {
+        itemRepository.delete(item);
+        ItemDto itemDto = ItemDto.of(item);
+        return itemDto;
+
     }
 }
