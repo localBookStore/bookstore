@@ -11,23 +11,29 @@ import logo from "./icons/bookshop.svg";
 
 const DefaultPage = ({ state, dispatch }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userName, setUserName] = useState(null);
+  const [user, setUser] = useState({
+    name: "",
+    role: false,
+  });
   const history = useHistory();
 
   useEffect(() => {
     if (cookies.token !== undefined) {
-      const { nickName } = jwtDecode(cookies.token);
-      setUserName(nickName);
+      const { nickName, role } = jwtDecode(cookies.token);
+      setUser({
+        ...user,
+        name: nickName,
+        role,
+      });
     }
   }, [cookies.token]);
 
   const goHome = () => {
     history.replace("/");
   };
-  const LogoutEvent = () => {
-    const token = cookies.token;
 
+  const logoutEvent = () => {
+    const token = cookies.token;
     axios
       .post("http://localhost:8080/logout", null, {
         headers: {
@@ -38,10 +44,46 @@ const DefaultPage = ({ state, dispatch }) => {
         removeCookie("token");
         console.log("로그아웃댐");
       })
-
       .catch((err) => Comment.log("에러"));
 
     goHome();
+  };
+
+  const regularUser = () => {
+    return (
+      <>
+        <IsLoginedDiv>
+          {user.name}
+          <span style={{ fontSize: "14px" }}> 님 안녕하세요</span>
+        </IsLoginedDiv>
+        <NavLink to={{ pathname: "/mypage", state: { token: cookies.token } }}>
+          <MyPageButton variant="success">마이페이지</MyPageButton>
+        </NavLink>
+        <NavLink to={{ pathname: "/cart", state: { token: cookies.token } }}>
+          <CartButton variant="primary">장바구니</CartButton>
+        </NavLink>
+        <LogoutButton variant="danger" onClick={logoutEvent}>
+          로그아웃
+        </LogoutButton>
+      </>
+    );
+  };
+
+  const adminUser = () => {
+    return (
+      <>
+        <IsLoginedDiv>
+          {user.name}
+          <span style={{ fontSize: "14px" }}> 님 안녕하세요</span>
+        </IsLoginedDiv>
+        <NavLink to={{ pathname: "/admin", state: { token: cookies.token } }}>
+          <CartButton variant="primary">관리 페이지</CartButton>
+        </NavLink>
+        <LogoutButton variant="danger" onClick={logoutEvent}>
+          로그아웃
+        </LogoutButton>
+      </>
+    );
   };
 
   return (
@@ -50,25 +92,13 @@ const DefaultPage = ({ state, dispatch }) => {
         <ImageLogo src={logo} alt="logo" />
       </ImageButton>
       {cookies.token !== undefined ? (
-        <>
-          <IsLoginedDiv>
-            {userName}
-            <span style={{ fontSize: "14px" }}> 님 안녕하세요</span>
-          </IsLoginedDiv>
-          <NavLink
-            to={{ pathname: "/mypage", state: { token: cookies.token } }}
-          >
-            <MyPageButton variant="success">마이페이지</MyPageButton>
-          </NavLink>
-          <NavLink to={{ pathname: "/cart", state: { token: cookies.token } }}>
-            <CartButton variant="primary">장바구니</CartButton>
-          </NavLink>
-          <LogoutButton variant="danger" onClick={LogoutEvent}>
-            로그아웃
-          </LogoutButton>
-        </>
+        user.role === "USER" ? (
+          regularUser()
+        ) : (
+          adminUser()
+        )
       ) : (
-        <>
+        <div>
           <NavLink to="/login">
             <AuthButton variant="outline-info" right="160px" width="105px">
               Log In
@@ -79,7 +109,7 @@ const DefaultPage = ({ state, dispatch }) => {
               Sign Up
             </AuthButton>
           </NavLink>
-        </>
+        </div>
       )}
     </DefaultContainer>
   );
