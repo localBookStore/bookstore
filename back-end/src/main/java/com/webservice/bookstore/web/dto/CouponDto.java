@@ -30,7 +30,7 @@ public class CouponDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate endDate;
 
-    public static CouponDto toDto(Coupon coupon) {
+    public static CouponDto of(Coupon coupon) {
         return CouponDto.builder()
                 .id(coupon.getId())
                 .name(coupon.getName())

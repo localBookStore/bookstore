@@ -11,6 +11,9 @@ import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item,Long> {
 
+    @Query("select i from Item i join fetch i.category ic")
+    List<Item> findAll();
+
     @Query(value = "select * from Item order by rand() limit :cnt",nativeQuery = true)
     List<Item> getThisMonthbooks(@Param("cnt") int cnt);
 

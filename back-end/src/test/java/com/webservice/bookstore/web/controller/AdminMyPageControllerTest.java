@@ -18,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.stream.IntStream;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,8 +47,52 @@ class AdminMyPageControllerTest {
     @BeforeEach
     void setUp() {
         itemRepository.deleteAll();
-
+        categoryRepository.deleteAll();
     }
+
+    @Test
+    public void 상품_검색_테스트() throws Exception {
+        //given
+        Category category = Category.builder()
+                .id(10L)
+                .name("총류")
+                .build();
+        categoryRepository.save(category);
+
+        Category category2 = Category.builder()
+                .id(2L)
+                .name("역")
+                .build();
+        categoryRepository.save(category2);
+
+        IntStream.rangeClosed(1,3).forEach(i -> {
+            Item item = Item.builder()
+                    .name("상품 " + i)
+                    .category(category)
+                    .quantity(5)
+                    .description("하하")
+                    .build();
+            itemRepository.save(item);
+        });
+        IntStream.rangeClosed(4,8).forEach(i -> {
+            Item item = Item.builder()
+                    .name("상품 " + i)
+                    .category(category2)
+                    .quantity(5)
+                    .description("하하")
+                    .build();
+            itemRepository.save(item);
+        });
+
+        //when
+
+        //then
+        this.mockMvc.perform(get("/api/admin/items"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                ;
+    }
+
 
     @DisplayName("상품 등록")
     @Test

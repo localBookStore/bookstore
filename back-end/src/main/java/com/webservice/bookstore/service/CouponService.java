@@ -1,8 +1,11 @@
 package com.webservice.bookstore.service;
 
+import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.coupon.CouponRepository;
+import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
+import com.webservice.bookstore.web.dto.CouponAddDto;
 import com.webservice.bookstore.web.dto.CouponDto;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +34,28 @@ public class CouponService {
         return coupon;
     }
 
-//    @Transactional
-//    public void giveCoupon(CouponDto couponDto) {
-//        List<Long> memberIds = memberRepository.findAllMemberId();
-//        for (Long memberId : memberIds) {
-//            this.couponRepository.addCoupon(couponDto.getDescription(),couponDto.getDiscountRate(),couponDto.getName(), couponDto.getCategory_id(), memberId);
-//        }
-//    }
+    @Transactional
+    public void issueCoupon(CouponAddDto couponDto) {
+        List<Member> members = this.memberRepository.findAll();
+        Category category = Category.builder().id(couponDto.getCategory_id()).name(couponDto.getCategory_name()).build();
+
+        members.stream().forEach(member -> {
+            Coupon savedCoupon = savedNewCoupon(couponDto, category);
+            member.addCoupon(savedCoupon);
+        });
+    }
+
+    private Coupon savedNewCoupon(CouponAddDto couponDto, Category category) {
+        Coupon coupon = Coupon.builder()
+                .name(couponDto.getName())
+                .endDate(couponDto.getEndDate())
+                .discountRate(couponDto.getDiscountRate())
+                .category(category)
+                .description(couponDto.getDescription())
+                .build();
+
+        return couponRepository.save(coupon);
+    }
 
 
 }

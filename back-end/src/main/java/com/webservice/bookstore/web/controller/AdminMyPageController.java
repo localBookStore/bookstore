@@ -33,8 +33,7 @@ public class AdminMyPageController {
     public ResponseEntity getAdminItems() {
         List<ItemDto> itemDtos = this.itemService.findItems();
         List<ItemLinkResource> itemLinkResources = itemDtos.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
-        CollectionModel<ItemLinkResource> collectionModel = CollectionModel.of(itemLinkResources);
-        return ResponseEntity.ok(collectionModel);
+        return ResponseEntity.ok(itemLinkResources);
     }
 
     @GetMapping("/items/search")
@@ -53,8 +52,7 @@ public class AdminMyPageController {
         }
         List<ItemDto> collect = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
         List<ItemLinkResource> itemLinkResources = collect.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
-        CollectionModel<ItemLinkResource> result = CollectionModel.of(itemLinkResources);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(itemLinkResources);
     }
 
 

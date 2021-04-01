@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = "coupons")
 @EqualsAndHashCode(of = "id")
 public class Member extends BaseTimeEntity {
 
@@ -57,6 +57,7 @@ public class Member extends BaseTimeEntity {
 
     public void addCoupon(Coupon coupon) {
         this.coupons.add(coupon);
+        coupon.addMember(this);
     }
 
 //    public void usedCoupon(Coupon coupon) {

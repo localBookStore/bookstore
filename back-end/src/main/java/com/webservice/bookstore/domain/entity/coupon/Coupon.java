@@ -46,4 +46,8 @@ public class Coupon {
     public void isUsed(Boolean isUsed) {
         this.isUsed = isUsed;
     }
+
+    public void addMember(Member member) {
+        this.member = member;
+    }
 }
