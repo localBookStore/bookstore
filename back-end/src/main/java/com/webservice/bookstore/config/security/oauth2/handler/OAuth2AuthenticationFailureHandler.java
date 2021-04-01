@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -24,20 +25,27 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        AuthenticationException exception) throws IOException, ServletException {
 
-        log.info("OAuth2AuthenticationSuccessHandler.onAuthenticationFailure : 'Unauthorized'");
+        log.info("OAuth2AuthenticationFailureHandler.onAuthenticationFailure : ");
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json;charset=utf-8");
+        String targetUrl = "/api/oauth2/failure";
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
-        Map<String, Object> errorAttributes = new HashMap<>();
-        errorAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        errorAttributes.put("status", HttpStatus.UNAUTHORIZED);
-        errorAttributes.put("exception", exception.getMessage());
-        errorAttributes.put("path", request.getRequestURI());
-
-        response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
+//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//        response.setContentType("application/json;charset=utf-8");
+//
+//        Map<String, Object> errorAttributes = new HashMap<>();
+//        errorAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+//        errorAttributes.put("status", HttpStatus.UNAUTHORIZED);
+//        errorAttributes.put("exception", exception.getMessage());
+//        errorAttributes.put("path", request.getRequestURI());
+//
+//        response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
+//
+//        response.sendRedirect("localhost:3000");
 
         // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
         // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,

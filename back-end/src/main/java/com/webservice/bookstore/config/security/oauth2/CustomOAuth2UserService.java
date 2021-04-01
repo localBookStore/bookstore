@@ -24,9 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
-@Log4j2
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;

@@ -17,17 +17,17 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        return attributes.get("email").toString();
+        return String.valueOf(attributes.get("email"));
     }
 
     @Override
     public String getName() {
-        Map<String, Object> map = (Map) attributes.get("profile");
-        return String.valueOf(map.get("nickname"));
+        Map profile = (Map) attributes.get("profile");
+        return String.valueOf(profile.get("nickname"));
     }
 
     @Override
     public String getImageUrl() {
-        return this.attributes.get("imageUrl").toString();
+        return String.valueOf(this.attributes.get("imageUrl"));
     }
 }
