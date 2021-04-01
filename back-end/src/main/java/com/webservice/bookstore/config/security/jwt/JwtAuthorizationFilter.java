@@ -79,7 +79,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         } else {
             log.info("The input Access Token is invalid... :");
-            String email = verifyResult.getEmail();
+            String email = verifyResult.getEmail();   // abc@gmail.com
             String nickName = verifyResult.getNickName();
             String role = verifyResult.getRole();
 
