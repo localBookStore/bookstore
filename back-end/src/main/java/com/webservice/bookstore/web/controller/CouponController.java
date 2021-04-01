@@ -37,9 +37,8 @@ public class CouponController {
         Member member = customUserDetails.getMember();
         List<Coupon> coupons = couponService.findCoupons(member.getId());
         List<CouponDto> couponDtos = coupons.stream().map(coupon -> CouponDto.of(coupon)).collect(Collectors.toList());
-        List<CouponResource> linkList = couponDtos.stream().map(couponDto -> new CouponResource(couponDto)).collect(Collectors.toList());
-        CollectionModel<CouponResource> collectionModel = CollectionModel.of(linkList);
-        return ResponseEntity.ok(collectionModel);
+        List<CouponResource> couponResources = couponDtos.stream().map(couponDto -> new CouponResource(couponDto)).collect(Collectors.toList());
+        return ResponseEntity.ok(couponResources);
     }
 
     /*
