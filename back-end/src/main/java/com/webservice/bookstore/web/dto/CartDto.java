@@ -1,73 +1,51 @@
 package com.webservice.bookstore.web.dto;
 
 import com.webservice.bookstore.domain.entity.cart.Cart;
-import com.webservice.bookstore.domain.entity.item.ItemResource;
+import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.member.Member;
 import lombok.*;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CartDto {
+    private Long id;
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Default {
+    private Long member_id;
 
-        private Long id;
-        private Long member_id;
-        private ItemDto itemDto;
-        private Integer price;
-        private Integer orderCount;
+//    private Long item_id;
+    private ItemDto itemDto;
 
-        // Entity -> DTO
-        public static Default of(Cart cart) {
-            return Default.builder()
-                          .id(cart.getId())
-                          .member_id(cart.getMember().getId())
-                          .itemDto(ItemDto.of(cart.getItem()))
-                          .price(cart.getPrice())
-                          .orderCount(cart.getOrderCount())
-                          .build();
-        }
+    private Integer price;
 
-        // DTO -> Entity
-        public Cart toEntity() {
+    private Integer orderCount;
 
-            Member member = Member.builder().id(this.member_id).build();
-
-            return Cart.builder()
-                       .id(this.id)
-                       .member(member)
-                       .item(this.itemDto.toEntity())
-                       .price(this.price)
-                       .orderCount(this.orderCount)
-                       .build();
-        }
-
-        // Default -> Response
-        public CartDto.Response toResponse() {
-            return CartDto.Response.builder()
-                    .id(this.getId())
-                    .member_id(this.getMember_id())
-                    .orderItem(new ItemResource(this.getItemDto()))
-                    .price(this.getPrice())
-                    .orderCount(this.getOrderCount())
-                    .build();
-        }
+    // Entity -> DTO
+    public static CartDto of(Cart cart) {
+        return CartDto.builder()
+                .id(cart.getId())
+                .member_id(cart.getMember().getId())
+//                .item_id(cart.getItem().getId())
+                .itemDto(ItemDto.of(cart.getItem()))
+                .price(cart.getPrice())
+                .orderCount(cart.getOrderCount())
+                .build();
     }
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
+    // DTO -> Entity
+    public Cart toEntity() {
 
-        private Long id;
-        private Long member_id;
-        private ItemResource orderItem;
-        private Integer price;
-        private Integer orderCount;
+        Member member = Member.builder().id(this.member_id).build();
+//        Item item = Item.builder().id(this.item_id).build();
+
+        return Cart.builder()
+                .id(this.id)
+                .member(member)
+//                .item(item)
+                .item(this.itemDto.toEntity())
+                .price(this.price)
+                .orderCount(this.orderCount)
+                .build();
     }
-
-
 }
