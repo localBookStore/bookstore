@@ -1,7 +1,6 @@
 package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
-import com.webservice.bookstore.domain.entity.cart.CartLinkResource;
 import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.service.CartService;
 import com.webservice.bookstore.web.dto.CartDto;
@@ -9,7 +8,6 @@ import com.webservice.bookstore.web.dto.ItemDto;
 import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +18,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Log4j2
 @RestController
@@ -44,32 +40,23 @@ public class CartController {
     public ResponseEntity getCartItemList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         // 세션에 저장된 로그인 계정 정보를 통해 장바구니 목록 조회 예정
-        List<CartDto> cartList = null;
+        List<CartDto.Default> cartDtoList = null;
 
         verifyAuthentication(customUserDetails);
-        cartList = cartService.findByMemberId(customUserDetails.getMember().getId());
+        cartDtoList = cartService.findByMemberId(customUserDetails.getMember().getId());
 
-//        List<CartLinkResource> emList = cartList.stream()
-//                .map(cartDto -> new CartLinkResource(cartDto,
-//                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItem_id())).withRel("itemDetail")))
-//                .collect(Collectors.toList());
-        List<CartLinkResource> emList = cartList.stream()
-                .map(cartDto -> new CartLinkResource(cartDto,
-                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItemDto().getId())).withRel("itemDetail")))
-                .collect(Collectors.toList());
-
-
-//        CollectionModel<CartLinkResource> collectionModel = CollectionModel.of(emList);
-//        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
-        return new ResponseEntity<>(emList, HttpStatus.OK);
+        List<CartDto.Response> cartList = cartDtoList.stream()
+                                                     .map(cartDto -> cartDto.toResponse())
+                                                     .collect(Collectors.toList());
+        return ResponseEntity.ok(cartList);
     }
 
     /*
     장바구니 아이템 추가 요청 핸들러
     */
     @PostMapping(value = "/{item_id}")
-    public ResponseEntity<CartDto> addCartItem(@PathVariable("item_id") Long item_id,
-                                               @RequestBody CartDto cartDto,
+    public ResponseEntity addCartItem(@PathVariable("item_id") Long item_id,
+                                               @RequestBody CartDto.Default cartDto,
                                                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         verifyAuthentication(customUserDetails);
@@ -93,7 +80,7 @@ public class CartController {
     */
     @PatchMapping(value = "/{cart_id}")
     public ResponseEntity updateCartItem(@PathVariable("cart_id") Long cart_id,
-                                         @RequestBody CartDto cartDto,
+                                         @RequestBody CartDto.Default cartDto,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         verifyAuthentication(customUserDetails);
@@ -110,28 +97,21 @@ public class CartController {
     public ResponseEntity deleteCartItem(@RequestBody List<Long> cartIdList,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        List<CartDto> cartDtoList = new ArrayList<>();
+        List<CartDto.Default> cartDtoList = new ArrayList<>();
         for(int i = 0 ; i < cartIdList.size() ; i++) {
-            cartDtoList.add(CartDto.builder().id(cartIdList.get(i)).build());
+            cartDtoList.add(CartDto.Default.builder().id(cartIdList.get(i)).build());
         }
 
         verifyAuthentication(customUserDetails);
 
         MemberDto.Default memberDto = MemberDto.Default
                                                .builder().id(customUserDetails.getMember().getId()).build();
-        List<CartDto> cartList = cartService.deleteCartItem(memberDto, cartDtoList);
+        cartDtoList = cartService.deleteCartItem(memberDto, cartDtoList);
 
-//        List<CartLinkResource> emList = cartList.stream()
-//                .map(cartDto -> new CartLinkResource(cartDto,
-//                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItem_id())).withRel("itemDetail")))
-//                .collect(Collectors.toList());
-        List<CartLinkResource> emList = cartList.stream()
-                .map(cartDto -> new CartLinkResource(cartDto,
-                        linkTo(methodOn(ItemController.class).getItem(cartDto.getItemDto().getId())).withRel("itemDetail")))
-                .collect(Collectors.toList());
+        List<CartDto.Response> cartList = cartDtoList.stream()
+                                                     .map(cartDto -> cartDto.toResponse())
+                                                     .collect(Collectors.toList());
 
-//        CollectionModel<CartLinkResource> collectionModel = CollectionModel.of(emList);
-//        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
-        return new ResponseEntity<>(emList, HttpStatus.OK);
+        return new ResponseEntity(cartList, HttpStatus.OK);
     }
 }
