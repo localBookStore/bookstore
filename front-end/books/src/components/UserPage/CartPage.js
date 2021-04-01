@@ -53,7 +53,6 @@ const CartPage = ({ location }) => {
         if (data) {
           data.map(bookInfo => checkList.add(bookInfo.id))
           setCartList(data)
-          setIsChange(true)
         }
       })
       .catch(err => console.log("토큰이 만료 되었습니다."))
@@ -82,7 +81,7 @@ const CartPage = ({ location }) => {
       setCheckList(checkList)
     }
   }
-
+  {console.log(cartList)}
   return <Container>
     {cartList === null ?
       <div>
@@ -92,7 +91,7 @@ const CartPage = ({ location }) => {
         <div>
           {cartList.map((res, idx) => {
             const cartId = res.id
-            const { id, name, imageUrl, price, quantity } = res.itemDto
+            const { id, name, imageUrl, price, orderCount } = res.itemDto
             return <EachBookContainer key={idx}>
               <BookCheck type="checkbox" defaultChecked onClick={e => clickEvent(cartId, e.target.checked)} />
               <BookImage src={imageUrl} alt={id} />
@@ -100,7 +99,7 @@ const CartPage = ({ location }) => {
               <div>
                 <Button onClick={() => minus(idx)}>-</Button>
                 {res.quantity}
-                <Button onClick={() => plus(idx, quantity)}>+</Button>
+                <Button onClick={() => plus(idx, orderCount)}>+</Button>
               </div>
               <BookText>{price * res.quantity}</BookText>
             </EachBookContainer>

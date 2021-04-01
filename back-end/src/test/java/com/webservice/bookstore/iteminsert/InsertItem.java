@@ -21,7 +21,7 @@ public class InsertItem {
 
     @Test
     void JsonInsert() throws Exception{
-        JsonData data = new JsonData("/Users/johangjin/workspace/input.txt");
+        JsonData data = new JsonData("/Users/user/Desktop/JaeHo/bookstore/final2.json");
         JSONArray jsonArray = data.getJsonArray();
 
         for(int i=0;i<jsonArray.size();i++){
