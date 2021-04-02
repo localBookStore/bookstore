@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 
 import styled from "styled-components";
+import { Button } from "react-bootstrap";
 
 const AllItemList = ({ location }) => {
   const token = location.state.token;
@@ -21,6 +22,30 @@ const AllItemList = ({ location }) => {
       .catch((err) => console.log(err.response));
   }, []);
 
+  const itemCheck = (itemId, isCheck) => {
+    if (isCheck) selected.add(itemId);
+    else selected.delete(itemId);
+    setSelected(selected);
+    console.log(selected);
+  };
+
+  const deleteItem = () => {
+    axios
+      .delete(
+        "http://localhost:8080/api/admin/items/",
+        {
+          data: [...selected],
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err.response));
+  };
+
   const ShowCurrentData = () => {
     const startIdx = currentPage * 10;
     const currentData = items.slice(startIdx, startIdx + 10);
@@ -30,7 +55,10 @@ const AllItemList = ({ location }) => {
         {currentData.map((data, idx) => {
           return (
             <EachItem key={idx}>
-              {/* <CheckBoxInput type="checkbox" onChange={() => isChecked(data.id, )}/> */}
+              <CheckBoxInput
+                type="checkbox"
+                onChange={(e) => itemCheck(data.id, e.target.checked)}
+              />
               <ItemImage src={data.imageUrl} alt={idx}></ItemImage>
               <ItemName>{data.name}</ItemName>
             </EachItem>
@@ -57,6 +85,9 @@ const AllItemList = ({ location }) => {
               onPageChange={({ selected }) => setCurrentPage(selected)}
             />
           </ReactPaginateStyled>
+          <Button variant="danger" onClick={deleteItem}>
+            삭제
+          </Button>
         </Container>
       )}
     </>
