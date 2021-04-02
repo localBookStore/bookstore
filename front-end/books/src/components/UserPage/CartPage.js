@@ -7,22 +7,56 @@ import styled from "styled-components"
 const CartPage = ({ location }) => {
   const [cartList, setCartList] = useState(null);
   const [checkList, setCheckList] = useState(new Set());
+  const [isChange, setIsChange] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0)
   const { state: { token } } = location;
 
   useEffect(() => {
     getCartBook()
   }, [])
 
+  useEffect(() => {
+    if (isChange) {
+      setTimeout(() => {
+        let total = 0
+        cartList.map(obj => {
+          const { quantity, price, id } = obj
+          if (checkList.has(id)) total += quantity * price
+        })
+        setTotalPrice(total)
+
+        return clearTimeout()
+      }, 200)
+      return setIsChange(false)
+    }
+  }, [isChange])
+
+
+  const minus = (idx) => {
+    const newCartList = [...cartList]
+    const nowValue = newCartList[idx].quantity
+    newCartList[idx].quantity = nowValue > 1 ? nowValue - 1 : 1
+    setCartList(newCartList)
+    setIsChange(true)
+  }
+  const plus = (idx, maxValue) => {
+    const newCartList = [...cartList]
+    const nowValue = newCartList[idx].quantity
+    newCartList[idx].quantity = nowValue === maxValue ? nowValue : nowValue + 1
+    setCartList(newCartList)
+    setIsChange(true)
+  }
   const getCartBook = props => {
     axios.get("http://localhost:8080/api/cart/", { headers: { Authorization: token } })
       .then(res => {
         const { data } = res;
-        setCartList(data)
-        if (data) data.map(bookInfo => checkList.add(bookInfo.id))
+        if (data) {
+          data.map(bookInfo => checkList.add(bookInfo.id))
+          setCartList(data)
+        }
       })
       .catch(err => console.log("토큰이 만료 되었습니다."))
   }
-
   const deleteCartBook = () => {
     axios.delete(`http://localhost:8080/api/cart/`, {
       data: [
@@ -30,11 +64,15 @@ const CartPage = ({ location }) => {
       ],
       headers: { Authorization: token }
     })
-      .then(res => setCartList(res.data))
+      .then(res => {
+        setCartList(res.data)
+        setIsChange(true)
+      })
       .catch(err => console.log(err.response))
   }
 
   const clickEvent = (cartId, isChecked) => {
+    setIsChange(true)
     if (isChecked) {
       checkList.add(cartId)
       setCheckList(checkList)
@@ -43,7 +81,7 @@ const CartPage = ({ location }) => {
       setCheckList(checkList)
     }
   }
-
+  {console.log(cartList)}
   return <Container>
     {cartList === null ?
       <div>
@@ -52,27 +90,35 @@ const CartPage = ({ location }) => {
       <>
         <div>
           {cartList.map((res, idx) => {
-            const bookCount = res.quantity;
-            const cartId = res.id;
-            const { id, name, imageUrl, price, quantity } = res.itemDto
+            const cartId = res.id
+            const { id, name, imageUrl, price, orderCount } = res.itemDto
             return <EachBookContainer key={idx}>
               <BookCheck type="checkbox" defaultChecked onClick={e => clickEvent(cartId, e.target.checked)} />
               <BookImage src={imageUrl} alt={id} />
               <BookText>{name}</BookText>
-              <BookText>{price}</BookText>
-              <BookCount type="number" defaultValue={bookCount} name={id}
-                onChange={() => { }} />
+              <div>
+                <Button onClick={() => minus(idx)}>-</Button>
+                {res.quantity}
+                <Button onClick={() => plus(idx, orderCount)}>+</Button>
+              </div>
+              <BookText>{price * res.quantity}</BookText>
             </EachBookContainer>
           })}
           <Button variant="danger" onClick={deleteCartBook}>삭제</Button>
-          
         </div>
-        <div>
+        <ResultContainer>
+          <CouponContainer>
 
-        </div>
+          </CouponContainer>
+
+          <TotalPriceContainer>
+            <TotalTitle>Total</TotalTitle>
+            <TotalContent>{totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</TotalContent>
+          </TotalPriceContainer>
+        </ResultContainer>
       </>
     }
-  </Container>
+  </Container >
 }
 export default CartPage;
 
@@ -99,6 +145,50 @@ const BookCheck = styled.input`
   width: 24px;
   height: 24px;
 `
-const BookCount = styled.input`
+const BookCountInput = styled.input`
+  width: 10%;
+  height: 35px;
+  margin: 0px 20px;
 
+  text-align: center;
+`
+
+const ResultContainer = styled.div`
+  display: flex;
+  height: 100vh;
+
+  margin: 30px;
+`
+const CouponContainer = styled.div`
+  border: 2px solid black;
+  margin: 30px;
+  width: 90%;
+`
+
+const TotalPriceContainer = styled.div`
+  float: right;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  border: 2px solid black;
+  width: 30%;
+
+  margin: 30px;
+`
+const TotalTitle = styled.div`
+  margin: 20px;
+
+  font-size: 50px;
+  font-weight: bolder;
+  text-align: center;
+`
+const TotalContent = styled.div`
+  margin: 20px;
+
+  text-align: center;
+  font-weight: 600;
+  font-size: 200%;
 `
