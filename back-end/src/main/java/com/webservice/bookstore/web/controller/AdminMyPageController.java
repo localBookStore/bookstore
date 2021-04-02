@@ -1,6 +1,5 @@
 package com.webservice.bookstore.web.controller;
 
-
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.member.Member;
@@ -10,6 +9,7 @@ import com.webservice.bookstore.web.dto.MemberDto;
 import com.webservice.bookstore.web.resource.DefaultItemResource;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
 import com.webservice.bookstore.service.ItemService;
+import com.webservice.bookstore.web.dto.DeleteRequestDto;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -67,7 +67,7 @@ public class AdminMyPageController {
         DefaultItemResource defaultItemResource = new DefaultItemResource(savedItemDto);
         URI uri = linkTo(ItemController.class).slash(savedItemDto.getId()).toUri();
         defaultItemResource.add(linkTo(methodOn(AdminMyPageController.class).modifyItem(savedItemDto)).withRel("modify-item"));
-        defaultItemResource.add(linkTo(methodOn(AdminMyPageController.class).deleteItem(savedItemDto.getId())).withRel("delete-item"));
+        defaultItemResource.add(linkTo(methodOn(AdminMyPageController.class).deleteItems(null)).withRel("delete-item"));
         return ResponseEntity.created(uri).body(defaultItemResource);
     }
 
@@ -79,10 +79,9 @@ public class AdminMyPageController {
     }
 
 
-    @DeleteMapping("/items/{id}")
-    public ResponseEntity deleteItem(@PathVariable Long id) {
-        Item item = itemService.findById(id).orElseThrow(() -> new NullPointerException("해당 상품은 존재하지 않습니다."));
-        ItemDto.Default itemDto = itemService.deleteItem(item);
+    @DeleteMapping("/items")
+    public ResponseEntity deleteItems(@RequestBody DeleteRequestDto deleteRequestDto) {
+        List<ItemDto.Default> itemDto = itemService.deleteItem(deleteRequestDto.getIds());
         return ResponseEntity.ok(itemDto);
 
     }

@@ -69,7 +69,7 @@ public class OrdersService {
         Coupon coupon = null;
         if(couponDto != null) {
             coupon = couponRepository.findById(couponDto.getId()).get();
-            Coupon.validateCoupon(coupon);
+            Coupon.validateCoupon(CouponDto.of(coupon));
             coupon.isUsed(true);
 //            member.addCoupon(coupon);
         }

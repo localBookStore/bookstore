@@ -51,8 +51,8 @@ public class Coupon {
         this.member = member;
     }
 
-    public static void validateCoupon(Coupon coupon) {
-        if(LocalDate.now().isAfter(coupon.getEndDate())){
+    public static void validateCoupon(CouponDto couponDto) {
+        if(LocalDate.now().isAfter(couponDto.getEndDate())){
             throw new AfterDateException("날짜가 지난 쿠폰입니다.");
         }
     }
