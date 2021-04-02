@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.util.List;
 
 @Log4j2
@@ -96,7 +98,25 @@ public class MemberController {
     }
 
     // 이메일 찾기 -> 어떤 기준으로 이메일을 찾을지 정해야함. 예를 들어 이름 + nickname + 생일 등
+    @PostMapping("/searchid")
+    public ResponseEntity searchid(@RequestBody @Valid FindIdRequest findIdRequest, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException("아이디 찾기 실패", bindingResult.getFieldErrors());
+        }
+        String email = this.memberService.findId(findIdRequest.getBirth(), findIdRequest.getNickName());
+        return ResponseEntity.ok(email);
+    }
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class FindIdRequest {
+        @NotBlank(message = "닉네임을 입력해주세요")
+        private String nickName;
+        @NotBlank(message = "생년월일 입력해주세요 ( ex) 980723)")
+        private String birth;
+    }
 
 
     // 비밀번호 찾기

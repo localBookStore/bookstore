@@ -12,6 +12,7 @@ import com.webservice.bookstore.util.EmailUtil;
 import com.webservice.bookstore.util.RedisUtil;
 import com.webservice.bookstore.web.dto.EmailDto;
 import com.webservice.bookstore.web.dto.MemberDto;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -106,5 +107,10 @@ public class MemberService {
         memberEntityList.stream().forEach(member -> memberDtoList.add(MemberDto.Default.of(member)));
 
         return memberDtoList;
+    }
+
+    public String findId(String birth, String nickName) {
+        Member member = this.memberRepository.findByBirthAndNickName(birth, nickName).orElseThrow(() -> new NullPointerException("조건에 부합하는 아이디는 존재하지 않습니다."));
+        return member.getEmail();
     }
 }
