@@ -1,15 +1,13 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Paging } from "feature/Paging";
+import ReactPaginate from "react-paginate";
 
 import styled from "styled-components";
 
 const AllItemList = ({ location }) => {
   const token = location.state.token;
   const [items, setItems] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(20);
-  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     axios
@@ -18,16 +16,49 @@ const AllItemList = ({ location }) => {
           Authorization: token,
         },
       })
-      .then((res) => {
-        setItems(res.data);
-        setIsLoading(false);
-      })
+      .then((res) => setItems(res.data))
       .catch((err) => console.log(err.response));
   }, []);
 
+  const pageChangeEvent = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const ShowCurrentData = () => {
+    const startIdx = currentPage * 10;
+    const currentData = items.slice(startIdx, startIdx + 10);
+
+    return (
+      <ItemContainer>
+        {currentData.map((data, idx) => {
+          return (
+            <EachItem>
+              <ItemImage src={data.imageUrl} alt={idx}></ItemImage>
+              <ItemName>{data.name}</ItemName>
+            </EachItem>
+          );
+        })}
+      </ItemContainer>
+    );
+  };
+
   return (
     <Container>
-      {items && !isLoading && Paging(items, currentPage, setCurrentPage, 20)}
+      {items && (
+        <>
+          <ShowCurrentData />
+          <ReactPaginate
+            pageCount={Math.ceil(items.length / 10)}
+            pageRangeDisplayed={10}
+            marginPagesDisplayed={0}
+            previousLabel="prev"
+            nextLabel="next"
+            containerClassName={"pagination"}
+            activeClassName={"active"}
+            onPageChange={pageChangeEvent}
+          />
+        </>
+      )}
     </Container>
   );
 };
@@ -45,3 +76,5 @@ const ItemImage = styled.img`
   object-fit: cover;
   margin: 10px;
 `;
+const EachItem = styled.div``;
+const ItemName = styled.span``;
