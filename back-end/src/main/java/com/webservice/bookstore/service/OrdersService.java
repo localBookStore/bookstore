@@ -71,7 +71,6 @@ public class OrdersService {
             coupon = couponRepository.findById(couponDto.getId()).get();
             Coupon.validateCoupon(CouponDto.of(coupon));
             coupon.isUsed(true);
-//            member.addCoupon(coupon);
         }
 
         // 주문상품 생성
@@ -98,9 +97,13 @@ public class OrdersService {
     }
 
     @Transactional
-    public void cancelOrder(MemberDto.Default memberDto, OrdersDto.Default ordersDto) {
+    public List<OrdersDto.Default> cancelOrder(OrdersDto.Default ordersDto) {
 
         Orders order = orderRepository.getOne(ordersDto.getId());
         order.cancel();
+
+        MemberDto.Default memberDto = MemberDto.Default.builder().id(ordersDto.getMember_id()).build();
+        List<OrdersDto.Default> ordersList = this.findOrders(memberDto);
+        return ordersList;
     }
 }

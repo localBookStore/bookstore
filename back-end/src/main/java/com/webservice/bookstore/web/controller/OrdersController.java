@@ -36,8 +36,6 @@ public class OrdersController {
     /*
     주문 생성
     */
-//    @PostMapping(value = "/order")
-//    public ResponseEntity createOrder(@RequestBody List<OrderItemDto> orderItemDtoList,
     @PostMapping(value = "/order")
     public ResponseEntity createOrder(@RequestBody Map<String, Object> map,
                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -74,61 +72,4 @@ public class OrdersController {
 
     }
 
-    /*
-    마이페이지 주문 내역 조회
-    */
-    @GetMapping("/mypage/order")
-    public ResponseEntity getMyOrderList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        verifyAuthentication(customUserDetails);
-
-        Member member = customUserDetails.getMember();
-        MemberDto.Default memberDto = MemberDto.Default.builder().id(member.getId()).build();
-
-        List<OrdersDto.Default> orderDtoList = orderService.findOrders(memberDto);
-
-        List<OrdersDto.Response> orderList = new ArrayList<>();
-        for (OrdersDto.Default orderDto : orderDtoList) {
-            orderList.add(orderDto.toResponse());
-        }
-
-        return new ResponseEntity(orderList, HttpStatus.OK);
-    }
-
-    /*
-    관리자 페이지 각 회원 주문 리스트 (구매 내역) 조회
-    */
-    @GetMapping("/admin/members/{member_id}/orders")
-    public ResponseEntity getOrderList(@PathVariable(value = "member_id") Long member_id,
-                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        verifyAuthentication(customUserDetails);
-
-        MemberDto.Default memberDto = MemberDto.Default.builder().id(member_id).build();
-
-        List<OrdersDto.Default> orderDtoList = orderService.findOrders(memberDto);
-
-        List<OrdersDto.Response> orderList = new ArrayList<>();
-        for (OrdersDto.Default orderDto : orderDtoList) {
-            orderList.add(orderDto.toResponse());
-        }
-
-        return new ResponseEntity(orderList, HttpStatus.OK);
-    }
-
-    /*
-    관리자 페이지 주문 취소
-    */
-    @PatchMapping("/admin/orders/cancel/{order_id}")
-    public ResponseEntity cancelOrder(@RequestBody @PathVariable(value = "order_id") Long orders_id,
-                                      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        MemberDto.Default memberDto = MemberDto.Default
-                .builder().id(customUserDetails.getMember().getId()).build();
-        OrdersDto.Default ordersDto = OrdersDto.Default.builder().id(orders_id).build();
-
-        orderService.cancelOrder(memberDto, ordersDto);
-
-        return new ResponseEntity("success", HttpStatus.OK);
-    }
 }
