@@ -1,17 +1,23 @@
 # Front Part - React
 
 ```markdown
-#### React app 사용 ####
+#### React app 사용
 
 # react 앱 생성 (최초에만)
-npx install create-react-app {app 이름}  
+
+npx install create-react-app {app 이름}
+
 # react dependency & library 설치
-npm install 
+
+npm install
+
 # react server 실행 (3000 포트)
-npm start 
+
+npm start
 ```
 
 ### Library
+
 ```bash
 'react-router-dom' # Apply Domain Routing
 'axios' # Asynchronous Request
@@ -27,8 +33,9 @@ npm start
 'qs'    # using query string
 'react-cookie'  # Using Cookie in Browser
 'react-hook-form'   # for Using user input form
-`jwt-decode`    # Do jwt decode library (using find user info)
-`react-google-login`    # for social login of google
+'jwt-decode'    # Do jwt decode library (using find user info)
+'react-google-login'    # for social login of google
+'react-paginate'    # apply paginate of items
 ```
 
 ### File Structure (In Progress...)
@@ -41,20 +48,19 @@ books
 ├── package.json
 ├── .gitignore
 ├── public
-│   ├── favicon.ico
-│   └── index.html
+│ ├── favicon.ico
+│ └── index.html
 └── src
-    ├── App.css
-    ├── App.js
-    ├── icons
-    │	├── books.jpg
-    │	└── open-book.jpg	
-    ├── index.css
-    ├── index.js
-    ├── components
-    │	├── HeaderPage
-    │	├── MainPage
-    │	└── FooterPage
-    └── router
+├── App.css
+├── App.js
+├── icons
+│ ├── books.jpg
+│ └── open-book.jpg
+├── index.css
+├── index.js
+├── components
+│ ├── HeaderPage
+│ ├── MainPage
+│ └── FooterPage
+└── router
 ```
-
