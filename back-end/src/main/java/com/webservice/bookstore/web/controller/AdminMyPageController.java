@@ -5,11 +5,11 @@ import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemLinkResource;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
 import com.webservice.bookstore.service.ItemService;
+import com.webservice.bookstore.web.dto.DeleteRequestDto;
 import com.webservice.bookstore.web.dto.ItemAddDto;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +62,7 @@ public class AdminMyPageController {
         ItemLinkResource itemLinkResource = new ItemLinkResource(savedItemDto, linkTo(ItemController.class).slash(savedItemDto.getId()).withSelfRel());
         URI uri = linkTo(ItemController.class).slash(savedItemDto.getId()).toUri();
         itemLinkResource.add(linkTo(methodOn(AdminMyPageController.class).modifyItem(savedItemDto)).withRel("modify-item"));
-        itemLinkResource.add(linkTo(methodOn(AdminMyPageController.class).deleteItem(savedItemDto.getId())).withRel("delete-item"));
+        itemLinkResource.add(linkTo(methodOn(AdminMyPageController.class).deleteItems(null)).withRel("delete-item"));
         return ResponseEntity.created(uri).body(itemLinkResource);
     }
 
@@ -74,11 +74,11 @@ public class AdminMyPageController {
     }
 
 
-    @DeleteMapping("/items/{id}")
-    public ResponseEntity deleteItem(@PathVariable Long id) {
-        Item item = itemService.findById(id).orElseThrow(() -> new NullPointerException("해당 상품은 존재하지 않습니다."));
-        ItemDto itemDto = itemService.deleteItem(item);
-        return ResponseEntity.ok(itemDto);
+    @DeleteMapping("/items")
+    public ResponseEntity deleteItems(@RequestBody DeleteRequestDto deleteRequestDto) {
+        List<ItemDto> remainItems = itemService.deleteItem(deleteRequestDto.getIds());
+        List<ItemLinkResource> itemLinkResources = remainItems.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
+        return ResponseEntity.ok(itemLinkResources);
 
     }
 

@@ -37,4 +37,9 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
 
     @Query(value = "select * from Item i order by i.publication_date desc limit 30", nativeQuery = true)
     List<Item> getNewItems();
+
+
+    @Modifying(clearAutomatically = true)
+    @Query("delete from Item i where i.id in :ids")
+    void deleteIn(@Param("ids") List<Long> ids);
 }

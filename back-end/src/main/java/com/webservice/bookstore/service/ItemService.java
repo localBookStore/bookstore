@@ -104,10 +104,10 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemDto deleteItem(Item item) {
-        itemRepository.delete(item);
-        ItemDto itemDto = ItemDto.of(item);
-        return itemDto;
-
+    public List<ItemDto> deleteItem(List<Long> ids) {
+        itemRepository.deleteIn(ids);
+        List<Item> remainItems = itemRepository.findAll();
+        List<ItemDto> remainItemDtoList = remainItems.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
+        return remainItemDtoList;
     }
 }
