@@ -22,4 +22,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmailAndNickName(String email, String nickName);
 
     List<Member> findAllByRoleNot(MemberRole role);
+
+    @Query("select m.id from Member m")
+    List<Long> findAllMemberId();
 }

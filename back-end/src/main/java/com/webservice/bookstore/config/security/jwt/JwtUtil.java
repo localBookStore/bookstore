@@ -51,8 +51,8 @@ public class JwtUtil {
             log.info("JWT decoding successful");
             return VerifyResult.builder()
                                 .email(decodedJWT.getSubject())
-                                .nickName(String.valueOf(decodedJWT.getClaim("nickName").asString()))
-                                .role(String.valueOf(decodedJWT.getClaim("role").asString()))
+                                .nickName(decodedJWT.getClaim("nickName").asString())
+                                .role(decodedJWT.getClaim("role").asString())
                                 .result(true)
                                 .build();
 
@@ -63,8 +63,8 @@ public class JwtUtil {
             log.info("JWT has expired");
             return VerifyResult.builder()
                                 .email(decodedJWT.getSubject())
-                                .nickName(String.valueOf(decodedJWT.getClaim("nickName").asString()))
-                                .role(String.valueOf(decodedJWT.getClaim("role").asString()))
+                                .nickName(decodedJWT.getClaim("nickName").asString())
+                                .role(decodedJWT.getClaim("role").asString())
                                 .result(false)
                                 .build();
         } catch (NullPointerException e) {  // Redis에 특정 Refresh 토큰이 존재하지 않는 경우(null) 예외 발생

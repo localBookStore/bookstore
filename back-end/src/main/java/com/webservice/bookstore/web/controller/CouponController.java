@@ -4,10 +4,9 @@ import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.coupon.CouponResource;
 import com.webservice.bookstore.domain.entity.member.Member;
-import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import com.webservice.bookstore.service.CouponService;
 import com.webservice.bookstore.service.OrderItemService;
-import com.webservice.bookstore.web.dto.CartDto;
+import com.webservice.bookstore.web.dto.CouponAddDto;
 import com.webservice.bookstore.web.dto.CouponDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,8 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CouponController {
 
-    private final CouponService couponServcie;
-    private final OrderItemService orderItemService;
+    private final CouponService couponService;
 
 
     /*
@@ -37,27 +35,24 @@ public class CouponController {
     public ResponseEntity retrieveCoupons(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 //        OrderItem orderItem = orderItemService.findByCategoryId(id);
         Member member = customUserDetails.getMember();
-        List<Coupon> coupons = couponServcie.findCoupons(member.getId());
-        List<CouponDto> couponDtos = coupons.stream().map(coupon -> CouponDto.toDto(coupon)).collect(Collectors.toList());
-        List<CouponResource> linkList = couponDtos.stream().map(couponDto -> new CouponResource(couponDto)).collect(Collectors.toList());
-        CollectionModel<CouponResource> collectionModel = CollectionModel.of(linkList);
-        return ResponseEntity.ok(collectionModel);
+        List<Coupon> coupons = couponService.findCoupons(member.getId());
+        List<CouponDto> couponDtos = coupons.stream().map(coupon -> CouponDto.of(coupon)).collect(Collectors.toList());
+        List<CouponResource> couponResources = couponDtos.stream().map(couponDto -> new CouponResource(couponDto)).collect(Collectors.toList());
+        return ResponseEntity.ok(couponResources);
     }
 
     /*
-        쿠폰 적용
+        쿠폰 발급
      */
 
-
-
-    @PostMapping("/givecoupon")
-    public ResponseEntity giveCoupon() {
-        List<Coupon> coupons = this.couponServcie.giveCoupons();
-        List<CouponDto> couponDtos = coupons.stream().map(coupon -> CouponDto.toDto(coupon)).collect(Collectors.toList());
-        List<CouponResource> linkList = couponDtos.stream().map(couponDto -> new CouponResource(couponDto)).collect(Collectors.toList());
-        CollectionModel<CouponResource> collectionModel = CollectionModel.of(linkList);
-        return ResponseEntity.ok(collectionModel);
+    @PostMapping
+    public ResponseEntity issueCoupon(@RequestBody CouponAddDto couponDto) {
+        this.couponService.issueCoupon(couponDto);
+        return ResponseEntity.ok("쿠폰이 발급됐습니다.");
     }
+
+
+
 
 
 

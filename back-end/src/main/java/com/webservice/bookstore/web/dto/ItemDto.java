@@ -17,6 +17,8 @@ public class ItemDto {
 
     private Long category_id;
 
+//    private String category_name;
+
     private String name;
 
     private String description;
@@ -47,6 +49,7 @@ public class ItemDto {
                 .author(item.getAuthor())
                 .imageUrl(item.getImageUrl())
                 .category_id(item.getCategory().getId())
+//                .category_name(item.getCategory().getName())
                 .build();
     }
 

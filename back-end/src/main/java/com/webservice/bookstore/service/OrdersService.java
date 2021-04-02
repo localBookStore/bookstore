@@ -67,6 +67,7 @@ public class OrdersService {
         member.setAddress(memberDto.getAddress());
         List<Item> itemList = itemRepository.findByIdIn(getItemIdList(orderItemDtoList));
 
+        Coupon.validateCoupon(couponDto);
         Coupon coupon = null;
         if(couponDto != null) {
             coupon = couponRepository.findById(couponDto.getId()).get();
