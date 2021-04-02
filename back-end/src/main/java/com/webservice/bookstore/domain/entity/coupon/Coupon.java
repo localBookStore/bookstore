@@ -1,6 +1,5 @@
 package com.webservice.bookstore.domain.entity.coupon;
 
-
 import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
@@ -52,8 +51,8 @@ public class Coupon {
         this.member = member;
     }
 
-    public static void validateCoupon(CouponDto couponDto) {
-        if(LocalDate.now().isAfter(couponDto.getEndDate())){
+    public static void validateCoupon(Coupon coupon) {
+        if(LocalDate.now().isAfter(coupon.getEndDate())){
             throw new AfterDateException("날짜가 지난 쿠폰입니다.");
         }
     }

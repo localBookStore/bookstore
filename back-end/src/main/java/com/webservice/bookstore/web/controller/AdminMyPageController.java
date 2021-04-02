@@ -1,7 +1,12 @@
 package com.webservice.bookstore.web.controller;
 
 
+import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.item.Item;
+import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.exception.UnauthorizedException;
+import com.webservice.bookstore.service.MemberService;
+import com.webservice.bookstore.web.dto.MemberDto;
 import com.webservice.bookstore.web.resource.DefaultItemResource;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
 import com.webservice.bookstore.service.ItemService;
@@ -10,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -25,6 +31,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping(value = "/api/admin", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
 public class AdminMyPageController {
 
+    private final MemberService memberService;
     private final ItemService itemService;
 
     @GetMapping("/items")
@@ -80,7 +87,39 @@ public class AdminMyPageController {
 
     }
 
+    @GetMapping("/mypage")
+    public ResponseEntity searchMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
+        verifyAuthentication(customUserDetails);
+
+        Member member = customUserDetails.getMember();
+        MemberDto.MyInfoRequest myInfoRequest = MemberDto.MyInfoRequest.builder()
+                .email(member.getEmail())
+                .nickName(member.getNickName())
+                .address(member.getAddress())
+                .provider(String.valueOf(member.getProvider()))
+                .build();
+
+        return ResponseEntity.ok(myInfoRequest);
+    }
+
+    @GetMapping("/admin/members")
+    public ResponseEntity searchMembers(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        verifyAuthentication(customUserDetails);
+
+        List<MemberDto.Default> memberDtoList = memberService.findAllMembers();
+
+        return ResponseEntity.ok(memberDtoList);
+    }
+
+    private void verifyAuthentication(CustomUserDetails customUserDetails) {
+        if(customUserDetails == null) {
+            throw new UnauthorizedException("인증 오류가 발생했습니다.");
+        } else if(!customUserDetails.isEnabled()) {
+            throw new UnauthorizedException("계정이 잠겨있습니다. 관리자에게 문의해주시길 바랍니다.");
+        }
+    }
 
 
 }

@@ -19,7 +19,7 @@ public class ItemTest {
 
     @Test
     public void apiTest(){
-        List<ItemDto> list= itemService.getRandomList(2);
+        List<ItemDto.Default> list= itemService.getRandomList(2);
         System.out.println(list.size());
         for(int i=0;i<list.size();i++)
             System.out.println(list.get(i));

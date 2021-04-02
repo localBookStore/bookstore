@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
-    @Query("select c from Cart c join fetch c.item ci join fetch c.member cm")
+    @Query("select c from Cart c join fetch c.item ci join fetch c.member cm order by c.createdDate desc")
     List<Cart> findByMemberId(Long member_id);
 
     Optional<Cart> findByMemberIdAndItemId(Long member_id, Long item_id);

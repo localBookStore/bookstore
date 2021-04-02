@@ -3,51 +3,73 @@ package com.webservice.bookstore.web.dto;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.order.Orders;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
+import com.webservice.bookstore.web.resource.DefaultItemResource;
 import lombok.*;
 
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 public class OrderItemDto {
 
-    private Long id;
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Default {
 
-    private Long orders_id;
+        private Long id;
+        private Long orders_id;
+        private ItemDto.Default itemDto;
+        private Integer orderCount;
+        private Integer orderPrice;
 
-//    private Long item_id;
-    private ItemDto.Default itemDto;
+        // Entity -> DTO
+        public static Default of(OrderItem orderItem) {
+            return Default.builder()
+                    .id(orderItem.getId())
+                    .orders_id(orderItem.getOrders().getId())
+                    .itemDto(ItemDto.Default.of(orderItem.getItem()))
+                    .orderCount(orderItem.getOrderCount())
+                    .orderPrice(orderItem.getOrderPrice())
+                    .build();
+        }
 
-    private Integer orderCount;
+        // DTO -> Entity
+        public OrderItem toEntity() {
 
-    private Integer orderPrice;
+            Orders orders = Orders.builder().id(this.orders_id).build();
+            Item item = Item.builder().id(this.itemDto.getId()).build();
 
-    // Entity -> DTO
-    public static OrderItemDto of(OrderItem orderItem) {
-        return OrderItemDto.builder()
-                .id(orderItem.getId())
-                .orders_id(orderItem.getOrders().getId())
-//                .item_id(orderItem.getItem().getId())
-                .itemDto(ItemDto.Default.of(orderItem.getItem()))
-                .orderCount(orderItem.getOrderCount())
-                .orderPrice(orderItem.getOrderPrice())
-                .build();
+            return OrderItem.builder()
+                    .id(this.id)
+                    .orders(orders)
+                    .item(item)
+                    .orderCount(this.orderCount)
+                    .orderPrice(this.orderPrice)
+                    .build();
+        }
+
+        // Default -> Response
+        public Response toResponse() {
+            return Response.builder()
+                    .id(this.id)
+                    .orders_id(this.orders_id)
+                    .orderedItem(new DefaultItemResource(this.itemDto))
+                    .orderCount(this.orderCount)
+                    .orderPrice(this.orderPrice)
+                    .build();
+        }
+
     }
 
-    // DTO -> Entity
-    public OrderItem toEntity() {
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Response {
 
-        Orders orders = Orders.builder().id(this.orders_id).build();
-//        Item item = Item.builder().id(this.item_id).build();
-        Item item = Item.builder().id(this.itemDto.getId()).build();
-
-        return OrderItem.builder()
-                .id(this.id)
-                .orders(orders)
-                .item(item)
-                .orderCount(this.orderCount)
-                .orderPrice(this.orderPrice)
-                .build();
+        private Long id;
+        private Long orders_id;
+        private DefaultItemResource orderedItem;
+        private Integer orderCount;
+        private Integer orderPrice;
     }
 
 }

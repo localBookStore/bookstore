@@ -104,12 +104,12 @@ class AdminMyPageControllerTest {
                 .build();
         categoryRepository.save(category);
 
-        ItemDto item = ItemDto.builder()
-                .name("좋은 책")
-                .quantity(3)
-                .category_id(category.getId())
-                .description("하하하하")
-                .build();
+        ItemDto.Default item = ItemDto.Default.builder()
+                                              .name("좋은 책")
+                                              .quantity(3)
+                                              .category_id(category.getId())
+                                              .description("하하하하")
+                                              .build();
 
         //when
 
@@ -135,20 +135,20 @@ class AdminMyPageControllerTest {
         categoryRepository.save(category);
 
         Item item = Item.builder()
-                .name("좋은 책")
-                .quantity(3)
-                .category(category)
-                .description("하하하하")
-                .build();
+                        .name("좋은 책")
+                        .quantity(3)
+                        .category(category)
+                        .description("하하하하")
+                        .build();
         itemRepository.save(item);
 
-        ItemDto itemDto = ItemDto.builder()
-                .id(item.getId())
-                .name("굿꿋")
-                .category_id(category.getId())
-                .quantity(3)
-                .description("나이스 아주 좋아")
-                .build();
+        ItemDto.Default itemDto = ItemDto.Default.builder()
+                                                 .id(item.getId())
+                                                 .name("굿꿋")
+                                                 .category_id(category.getId())
+                                                 .quantity(3)
+                                                 .description("나이스 아주 좋아")
+                                                 .build();
 
 
         mockMvc.perform(put("/api/admin/items")
