@@ -11,6 +11,7 @@ import java.util.List;
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
 
     @Query("select distinct o from Orders o "
+            + "join fetch o.delivery od "
             + "join fetch o.orderItems ooi "
             + "join fetch ooi.item ooii "
             + "where o.member.id = :member_id order by o.createdDate desc")

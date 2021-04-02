@@ -22,7 +22,8 @@ public class OrdersDto {
     public static class Default {
         private Long id;
         private Long member_id;
-        private Long delivery_id;
+//        private Long delivery_id;
+        private DeliveryDto.Default deliveryDto;
         private List<OrderItemDto.Default> orderItemDtoList = new ArrayList<>();
         private Integer paymentAmount;
         private Integer deliveryCharge;
@@ -33,13 +34,19 @@ public class OrdersDto {
         // Entity -> DTO
         public static Default of(Orders orders) {
 
+            DeliveryDto.Default deliveryDto = DeliveryDto.Default.builder()
+                                                                 .id(orders.getDelivery().getId())
+                                                                 .address(orders.getDelivery().getAddress())
+                                                                 .status(orders.getDelivery().getStatus())
+                                                                 .modifiedDate(orders.getDelivery().getModifiedDate())
+                                                                 .build();
             List<OrderItemDto.Default> orderItemDtoList = new ArrayList<>();
             orders.getOrderItems().stream().forEach(orderItem -> orderItemDtoList.add(OrderItemDto.Default.of(orderItem)));
 
             return Default.builder()
                     .id(orders.getId())
                     .member_id(orders.getMember().getId())
-                    .delivery_id(orders.getDelivery().getId())
+                    .deliveryDto(deliveryDto)
                     .orderItemDtoList(orderItemDtoList)
                     .paymentAmount(orders.getPaymentAmount())
                     .deliveryCharge(orders.getDeliveryCharge())
@@ -52,14 +59,13 @@ public class OrdersDto {
         public Orders toEntity() {
 
             Member member = Member.builder().id(this.member_id).build();
-            Delivery delivery = Delivery.builder().id(this.delivery_id).build();
             List<OrderItem> orderItemList = new ArrayList<>();    // Orders : MultipleBagFetchException 발생 방지를 위해 List -> Set
             this.orderItemDtoList.stream().forEach(orderItemDto -> orderItemList.add(orderItemDto.toEntity()));
 
             return Orders.builder()
                     .id(this.id)
                     .member(member)
-                    .delivery(delivery)
+                    .delivery(this.deliveryDto.toEntity())
                     .orderItems(orderItemList)
                     .paymentAmount(this.paymentAmount)
                     .deliveryCharge(this.deliveryCharge)
@@ -77,7 +83,7 @@ public class OrdersDto {
             return Response.builder()
                     .id(this.id)
                     .member_id(this.member_id)
-                    .delivery_id(this.delivery_id)
+                    .delivery(this.deliveryDto.toResponse())
                     .orderItemList(responseList)
                     .paymentAmount(this.paymentAmount)
                     .deliveryCharge(this.deliveryCharge)
@@ -94,7 +100,7 @@ public class OrdersDto {
     public static class Response {
         private Long id;
         private Long member_id;
-        private Long delivery_id;
+        private DeliveryDto.Response delivery;
         private List<OrderItemDto.Response> orderItemList = new ArrayList<>();
         private Integer paymentAmount;
         private Integer deliveryCharge;
