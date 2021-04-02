@@ -57,7 +57,7 @@ public class OrdersController {
         List<OrderItemDto> orderItemDtoList = new ArrayList<>();
         for(Map<String, Object> objectMap : orderList) {
             cartDtoList.add(CartDto.builder().id(Long.parseLong(String.valueOf(objectMap.get("cart_id")))).build());
-            ItemDto itemDto = ItemDto.builder().id(Long.parseLong(String.valueOf(objectMap.get("item_id")))).build();
+            ItemDto.Default itemDto = ItemDto.Default.builder().id(Long.parseLong(String.valueOf(objectMap.get("item_id")))).build();
             orderItemDtoList.add(OrderItemDto.builder()
                                             .itemDto(itemDto)
                                             .orderCount(Integer.parseInt(String.valueOf(objectMap.get("orderCount"))))

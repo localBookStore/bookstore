@@ -75,7 +75,7 @@ public class CartController {
         verifyAuthentication(customUserDetails);
         cartDto.setMember_id(customUserDetails.getMember().getId());
 //        cartDto.setItem_id(item_id);
-        cartDto.setItemDto(ItemDto.builder().id(item_id).build());
+        cartDto.setItemDto(ItemDto.Default.builder().id(item_id).build());
 
         try {
             cartService.addCartEntity(cartDto);

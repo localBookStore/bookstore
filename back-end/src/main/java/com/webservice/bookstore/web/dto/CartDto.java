@@ -15,7 +15,7 @@ public class CartDto {
     private Long member_id;
 
 //    private Long item_id;
-    private ItemDto itemDto;
+    private ItemDto.Default itemDto;
 
     private Integer price;
 
@@ -27,7 +27,7 @@ public class CartDto {
                 .id(cart.getId())
                 .member_id(cart.getMember().getId())
 //                .item_id(cart.getItem().getId())
-                .itemDto(ItemDto.of(cart.getItem()))
+                .itemDto(ItemDto.Default.of(cart.getItem()))
                 .price(cart.getPrice())
                 .orderCount(cart.getOrderCount())
                 .build();

@@ -1,7 +1,7 @@
 package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.domain.entity.item.Item;
-import com.webservice.bookstore.domain.entity.item.ItemLinkResource;
+import com.webservice.bookstore.web.resource.DefaultItemResource;
 import com.webservice.bookstore.service.ItemService;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
@@ -28,20 +28,20 @@ public class IndexController {
     private final ItemService itemService;
 
     @GetMapping("/image/")
-    public ResponseEntity<List<ItemDto>> getPromotionalImage() {
+    public ResponseEntity<List<ItemDto.Default>> getPromotionalImage() {
 
         log.info("Index 홍보 이미지");
 
-        List<ItemDto> itemDtoList = itemService.getRandomList(3);
+        List<ItemDto.Default> itemDtoList = itemService.getRandomList(3);
 
         return new ResponseEntity<>(itemDtoList, HttpStatus.OK);
     }
 
     @GetMapping({"/thismonth/","/wepickitem/"})
-    public ResponseEntity<List<ItemDto>> getThisMonthList(){
+    public ResponseEntity<List<ItemDto.Default>> getThisMonthList(){
         log.info("이달의 도서 보내기");
 
-        List<ItemDto> list= itemService.getRandomList(12);
+        List<ItemDto.Default> list= itemService.getRandomList(12);
 
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
@@ -58,15 +58,15 @@ public class IndexController {
     @GetMapping(value = "/genre/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
     public ResponseEntity getRandomListByGenre() {
 
-        List<ItemDto> itemDtoList = itemService.getRandomListByGenre();
+        List<ItemDto.Default> itemDtoList = itemService.getRandomListByGenre();
 
-        List<ItemLinkResource> emList = itemDtoList.stream()
-                .map(itemDto -> new ItemLinkResource(itemDto,
+        List<DefaultItemResource> emList = itemDtoList.stream()
+                .map(itemDto -> new DefaultItemResource(itemDto,
                         linkTo(methodOn(ItemController.class).getItem(itemDto.getId())).withSelfRel()))
                 .collect(Collectors.toList());
 
         // 카테고리 번호별로 분류한 json 구조로 직렬화(selialize)
-        List<List<ItemLinkResource>> first = new ArrayList<>();
+        List<List<DefaultItemResource>> first = new ArrayList<>();
         for(int i = 0; i < emList.size(); i+=3) {
             first.add(new ArrayList<>(emList.subList(i, Math.min(i+3, emList.size()))));
         }
@@ -80,14 +80,14 @@ public class IndexController {
     @GetMapping(value = "/genre/{category_id}/", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
     public ResponseEntity<CollectionModel> getListByGenre(@PathVariable("category_id") Long category_id) {
 
-        List<ItemDto> itemList = itemService.getListByGenre(category_id);
+        List<ItemDto.Default> itemList = itemService.getListByGenre(category_id);
 
-        List<ItemLinkResource> emList = itemList.stream()
-                .map(itemDto -> new ItemLinkResource(itemDto,
+        List<DefaultItemResource> emList = itemList.stream()
+                .map(itemDto -> new DefaultItemResource(itemDto,
                         linkTo(methodOn(IndexController.class).getListByGenre(itemDto.getId())).withSelfRel()))
                 .collect(Collectors.toList());
 
-        CollectionModel<ItemLinkResource> collectionModel = CollectionModel.of(emList);
+        CollectionModel<DefaultItemResource> collectionModel = CollectionModel.of(emList);
 
         return new ResponseEntity(collectionModel, HttpStatus.OK);
     }
@@ -95,20 +95,20 @@ public class IndexController {
     @GetMapping("/newitems/")
     public ResponseEntity getNewItems() {
         List<Item> newItems = this.itemService.getNewItems();
-        List<ItemDto> itemDtos = newItems.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
-        List<ItemLinkResource> itemLinkResources = itemDtos.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel()))
-                .collect(Collectors.toList());
-        CollectionModel<ItemLinkResource> collectionModel = CollectionModel.of(itemLinkResources);
+        List<ItemDto.Default> itemDtos = newItems.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
+        List<DefaultItemResource> defaultItemResources = itemDtos.stream().map(itemDto -> new DefaultItemResource(itemDto))
+                                                                             .collect(Collectors.toList());
+        CollectionModel<DefaultItemResource> collectionModel = CollectionModel.of(defaultItemResources);
         return ResponseEntity.ok(collectionModel);
     }
 
     @GetMapping("/bestitems/")
     public ResponseEntity getBestItems() {
         List<Item> items = this.itemService.bestItems();
-        List<ItemDto> itemDtos = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
-        List<ItemLinkResource> itemLinkResources = itemDtos.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel()))
-                .collect(Collectors.toList());
-        CollectionModel<ItemLinkResource> collectionModel = CollectionModel.of(itemLinkResources);
+        List<ItemDto.Default> itemDtos = items.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
+        List<DefaultItemResource> defaultItemResources = itemDtos.stream().map(itemDto -> new DefaultItemResource(itemDto))
+                                                                            .collect(Collectors.toList());
+        CollectionModel<DefaultItemResource> collectionModel = CollectionModel.of(defaultItemResources);
         return ResponseEntity.ok(collectionModel);
     }
 }

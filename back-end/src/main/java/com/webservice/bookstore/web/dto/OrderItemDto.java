@@ -16,7 +16,7 @@ public class OrderItemDto {
     private Long orders_id;
 
 //    private Long item_id;
-    private ItemDto itemDto;
+    private ItemDto.Default itemDto;
 
     private Integer orderCount;
 
@@ -28,7 +28,7 @@ public class OrderItemDto {
                 .id(orderItem.getId())
                 .orders_id(orderItem.getOrders().getId())
 //                .item_id(orderItem.getItem().getId())
-                .itemDto(ItemDto.of(orderItem.getItem()))
+                .itemDto(ItemDto.Default.of(orderItem.getItem()))
                 .orderCount(orderItem.getOrderCount())
                 .orderPrice(orderItem.getOrderPrice())
                 .build();
