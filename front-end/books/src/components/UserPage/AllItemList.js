@@ -8,6 +8,7 @@ const AllItemList = ({ location }) => {
   const token = location.state.token;
   const [items, setItems] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [selected, setSelected] = useState(new Set());
 
   useEffect(() => {
     axios
@@ -20,10 +21,6 @@ const AllItemList = ({ location }) => {
       .catch((err) => console.log(err.response));
   }, []);
 
-  const pageChangeEvent = ({ selected }) => {
-    setCurrentPage(selected);
-  };
-
   const ShowCurrentData = () => {
     const startIdx = currentPage * 10;
     const currentData = items.slice(startIdx, startIdx + 10);
@@ -32,7 +29,8 @@ const AllItemList = ({ location }) => {
       <ItemContainer>
         {currentData.map((data, idx) => {
           return (
-            <EachItem>
+            <EachItem key={idx}>
+              {/* <CheckBoxInput type="checkbox" onChange={() => isChecked(data.id, )}/> */}
               <ItemImage src={data.imageUrl} alt={idx}></ItemImage>
               <ItemName>{data.name}</ItemName>
             </EachItem>
@@ -43,23 +41,25 @@ const AllItemList = ({ location }) => {
   };
 
   return (
-    <Container>
+    <>
       {items && (
-        <>
+        <Container>
           <ShowCurrentData />
-          <ReactPaginate
-            pageCount={Math.ceil(items.length / 10)}
-            pageRangeDisplayed={10}
-            marginPagesDisplayed={0}
-            previousLabel="prev"
-            nextLabel="next"
-            containerClassName={"pagination"}
-            activeClassName={"active"}
-            onPageChange={pageChangeEvent}
-          />
-        </>
+          <ReactPaginateStyled>
+            <ReactPaginate
+              pageCount={Math.ceil(items.length / 10)}
+              pageRangeDisplayed={9}
+              marginPagesDisplayed={0}
+              previousLabel="prev"
+              nextLabel="next"
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              onPageChange={({ selected }) => setCurrentPage(selected)}
+            />
+          </ReactPaginateStyled>
+        </Container>
       )}
-    </Container>
+    </>
   );
 };
 export default AllItemList;
@@ -78,3 +78,20 @@ const ItemImage = styled.img`
 `;
 const EachItem = styled.div``;
 const ItemName = styled.span``;
+const CheckBoxInput = styled.input``;
+
+const ReactPaginateStyled = styled.div`
+  margin: 0 20%;
+  .pagination {
+    justify-content: center;
+
+    & > li > a {
+      font-size: 20px;
+      margin: 10px;
+    }
+  }
+  .active {
+    background-color: #4caf50;
+    color: white;
+  }
+`;
