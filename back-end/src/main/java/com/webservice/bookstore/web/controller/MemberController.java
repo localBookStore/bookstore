@@ -97,6 +97,8 @@ public class MemberController {
 
     // 이메일 찾기 -> 어떤 기준으로 이메일을 찾을지 정해야함. 예를 들어 이름 + nickname + 생일 등
 
+
+
     // 비밀번호 찾기
     @PostMapping("/searchpwd")
     public ResponseEntity searchpwd(@RequestBody @Valid EmailDto.findPwdRequest findPwdRequest,
