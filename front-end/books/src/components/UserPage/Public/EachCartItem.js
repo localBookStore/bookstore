@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
@@ -7,16 +7,6 @@ const EachCartItem = ({ data, cartId, orderCount, checkEvent, setTotalPrice }) =
   const [itemCount, setItemCount] = useState(orderCount);
   const [isChecked, setIsCheck] = useState(true);
   const { imageUrl, name, price, quantity } = data;
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     if (!isChecked) {
-  //       setTotalPrice(totalPrice - (itemCount*price))
-  //     } else {
-  //       setTotalPrice(totalPrice + (itemCount*price))
-  //     }
-  //   })
-  // }, [itemCount, isChecked])
 
   const changeCheckEvent = (e) => {
     const { target: { checked } } = e;
