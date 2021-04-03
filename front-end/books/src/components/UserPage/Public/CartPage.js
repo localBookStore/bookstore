@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import EachCartItem from "./EachCartItem";
 
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
@@ -96,26 +97,7 @@ const CartPage = ({ location }) => {
         <>
           <div>
             {cartList.map((res, idx) => {
-              console.log(res);
-              const cartId = res.id;
-              const { id, name, imageUrl, price, orderCount } = res.item;
-              return (
-                <EachBookContainer key={idx}>
-                  <BookCheck
-                    type="checkbox"
-                    defaultChecked
-                    onClick={(e) => clickEvent(cartId, e.target.checked)}
-                  />
-                  <BookImage src={imageUrl} alt={id} />
-                  <BookText>{name}</BookText>
-                  <div>
-                    <Button onClick={() => minus(idx)}>-</Button>
-                    {res.quantity}
-                    <Button onClick={() => plus(idx, orderCount)}>+</Button>
-                  </div>
-                  <BookText>{price * res.quantity}</BookText>
-                </EachBookContainer>
-              );
+              <EachCartItem />;
             })}
             <Button variant="danger" onClick={deleteCartBook}>
               삭제
