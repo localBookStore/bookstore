@@ -60,7 +60,7 @@ public class OrderItem extends BaseTimeEntity {
     주문아이템 생성 메소드
     */
     public static List<OrderItem> createOrderItem(List<Item> itemList,
-                                                  List<OrderItemDto> orderItemDtoList) {
+                                                  List<OrderItemDto.Default> orderItemDtoList) {
 
         List<OrderItem> orderItemList = new ArrayList<>();
         for(int i = 0; i < itemList.size(); i++) {

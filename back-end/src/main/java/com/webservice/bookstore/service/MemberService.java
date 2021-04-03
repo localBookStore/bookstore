@@ -12,6 +12,7 @@ import com.webservice.bookstore.util.EmailUtil;
 import com.webservice.bookstore.util.RedisUtil;
 import com.webservice.bookstore.web.dto.EmailDto;
 import com.webservice.bookstore.web.dto.MemberDto;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -48,21 +49,21 @@ public class MemberService {
             log.info("회원탈퇴 날짜 : " + member.getModifiedDate());  // 회원탈퇴 시 수정 날짜 업데이트가 안됨...
             log.info("회원탈퇴 경과시간 : " + elapsedWithdrawalTime);
             if(elapsedWithdrawalTime < 31) {
-                throw new PreventRemembershipException("해당 계정에 대한 재 회원가입은 " + (31 - elapsedWithdrawalTime) + "일 후에 가능합니다",
-                                                        new SimpleFieldError("email", "재 회원가입 방지"));
+                throw new PreventRemembershipException("해당 계정은 " + (31 - elapsedWithdrawalTime) + "일 후에 재등록이 가능합니다",
+                                                        new SimpleFieldError("email", "회원가입 재등록 불가"));
             } else {
                 member.reMembership(encoder.encode(signUpRequest.getPassword()),
                                     signUpRequest.getNickName());
             }
         } else {
             Member member = Member.builder()
-                    .email(signUpRequest.getEmail())
-                    .password(encoder.encode(signUpRequest.getPassword()))
-                    .nickName(signUpRequest.getNickName())
-                    .role(MemberRole.USER)
-                    .provider(AuthProvider.DEFAULT)
-                    .enabled(Boolean.TRUE)
-                    .build();
+                                  .email(signUpRequest.getEmail())
+                                  .password(encoder.encode(signUpRequest.getPassword()))
+                                  .nickName(signUpRequest.getNickName())
+                                  .role(MemberRole.USER)
+                                  .provider(AuthProvider.DEFAULT)
+                                  .enabled(Boolean.TRUE)
+                                  .build();
             memberRepository.save(member);
         }
     }
@@ -84,7 +85,9 @@ public class MemberService {
         this.memberRepository.withdraw(email);
     }
 
-
+    /*
+    비밀번호 찾기
+    */
     public String searchPassword(EmailDto.findPwdRequest findPwdRequest) {
 
         log.info("find pwd memberDto : " + findPwdRequest);
@@ -106,5 +109,10 @@ public class MemberService {
         memberEntityList.stream().forEach(member -> memberDtoList.add(MemberDto.Default.of(member)));
 
         return memberDtoList;
+    }
+
+    public String findId(String birth, String nickName) {
+        Member member = this.memberRepository.findByBirthAndNickName(birth, nickName).orElseThrow(() -> new NullPointerException("조건에 부합하는 아이디는 존재하지 않습니다."));
+        return member.getEmail();
     }
 }

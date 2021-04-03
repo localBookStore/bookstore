@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.util.List;
 
 @Log4j2
@@ -96,8 +98,30 @@ public class MemberController {
     }
 
     // 이메일 찾기 -> 어떤 기준으로 이메일을 찾을지 정해야함. 예를 들어 이름 + nickname + 생일 등
+    @PostMapping("/searchid")
+    public ResponseEntity searchid(@RequestBody @Valid FindIdRequest findIdRequest, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException("아이디 찾기 실패", bindingResult.getFieldErrors());
+        }
+        String email = this.memberService.findId(findIdRequest.getBirth(), findIdRequest.getNickName());
+        return ResponseEntity.ok(email);
+    }
 
-    // 비밀번호 찾기
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class FindIdRequest {
+        @NotBlank(message = "닉네임을 입력해주세요")
+        private String nickName;
+        @NotBlank(message = "생년월일 입력해주세요 ( ex) 980723)")
+        private String birth;
+    }
+
+
+    /*
+    비밀번호 찾기
+    */
     @PostMapping("/searchpwd")
     public ResponseEntity searchpwd(@RequestBody @Valid EmailDto.findPwdRequest findPwdRequest,
                                     BindingResult bindingResult) {
@@ -114,38 +138,6 @@ public class MemberController {
         }
 
         return new ResponseEntity("임시 비밀번호 이메일 전송 완료", HttpStatus.OK);
-    }
-
-    @GetMapping("/mypage")
-    public ResponseEntity searchMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        verifyAuthentication(customUserDetails);
-
-        Member member = customUserDetails.getMember();
-        MemberDto.MyInfoRequest myInfoRequest = MemberDto.MyInfoRequest.builder()
-                                                         .email(member.getEmail())
-                                                         .nickName(member.getNickName())
-                                                         .address(member.getAddress())
-                                                         .provider(String.valueOf(member.getProvider()))
-                                                         .build();
-
-        return new ResponseEntity(myInfoRequest, HttpStatus.OK);
-    }
-
-    @GetMapping("/admin/members")
-    public ResponseEntity searchMembers(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        verifyAuthentication(customUserDetails);
-
-        List<MemberDto.Default> memberDtoList = memberService.findAllMembers();
-
-        return new ResponseEntity(memberDtoList, HttpStatus.OK);
-    }
-
-    private void verifyAuthentication(CustomUserDetails customUserDetails) {
-        if(customUserDetails == null || customUserDetails.equals("")) {
-            throw new UnauthorizedException("인증 오류가 발생했습니다.");
-        }
     }
 
 }

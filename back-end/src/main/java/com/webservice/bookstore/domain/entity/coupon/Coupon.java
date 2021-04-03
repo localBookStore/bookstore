@@ -1,6 +1,5 @@
 package com.webservice.bookstore.domain.entity.coupon;
 
-
 import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;

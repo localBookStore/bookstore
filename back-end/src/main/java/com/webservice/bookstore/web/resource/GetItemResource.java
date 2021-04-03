@@ -1,17 +1,15 @@
-package com.webservice.bookstore.domain.entity.item;
+package com.webservice.bookstore.web.resource;
 
 import com.webservice.bookstore.web.controller.ItemController;
-import com.webservice.bookstore.web.dto.GetItemDto;
+import com.webservice.bookstore.web.dto.ItemDto;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Links;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-public class ItemResource extends EntityModel<GetItemDto> {
+public class GetItemResource extends EntityModel<ItemDto.GetItemDto> {
 
-    public ItemResource(GetItemDto item, Link... links) {
+    public GetItemResource(ItemDto.GetItemDto item, Link... links) {
         super(item, links);
         add(linkTo(ItemController.class).slash(item.getId()).withSelfRel());
     }

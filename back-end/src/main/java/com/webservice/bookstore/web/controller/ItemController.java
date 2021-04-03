@@ -2,8 +2,9 @@ package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.domain.entity.item.*;
 import com.webservice.bookstore.service.ItemService;
-import com.webservice.bookstore.web.dto.GetItemDto;
 import com.webservice.bookstore.web.dto.ItemDto;
+import com.webservice.bookstore.web.resource.DefaultItemResource;
+import com.webservice.bookstore.web.resource.GetItemResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -42,9 +43,9 @@ public class ItemController {
         if(items == null || items.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<ItemDto> collect = items.stream().map(item -> ItemDto.of(item)).collect(Collectors.toList());
-        List<ItemLinkResource> itemLinkResources = collect.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
-        CollectionModel<ItemLinkResource> result = CollectionModel.of(itemLinkResources);
+        List<ItemDto.Default> collect = items.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
+        List<DefaultItemResource> defaultItemResources = collect.stream().map(itemDto -> new DefaultItemResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
+        CollectionModel<DefaultItemResource> result = CollectionModel.of(defaultItemResources);
         return ResponseEntity.ok(result);
     }
 
@@ -57,9 +58,9 @@ public class ItemController {
             return ResponseEntity.notFound().build();
         }
         Item newItem = savedItem.get();
-        GetItemDto itemDto = GetItemDto.toDto(newItem);
-        ItemResource itemResource = new ItemResource(itemDto);
+        ItemDto.GetItemDto itemDto = ItemDto.GetItemDto.toDto(newItem);
+        GetItemResource getItemResource = new GetItemResource(itemDto);
 //      itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
-        return ResponseEntity.ok(itemResource);
+        return ResponseEntity.ok(getItemResource);
     }
 }
