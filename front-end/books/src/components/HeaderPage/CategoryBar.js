@@ -13,8 +13,7 @@ const CategoryBar = () => {
     await axios
       .get(`http://localhost:8080/api/index/${url}`)
       .then((res) => {
-        console.log(res);
-        const items = res.data._embedded.itemDtoList;
+        const items = res.data._embedded.defaultList;
         history.push({
           pathname: "/booklist",
           state: { items },
