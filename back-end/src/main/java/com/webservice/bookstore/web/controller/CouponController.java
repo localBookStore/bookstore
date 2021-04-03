@@ -46,7 +46,7 @@ public class CouponController {
      */
 
     @PostMapping
-    public ResponseEntity issueCoupon(@RequestBody CouponAddDto couponDto) {
+    public ResponseEntity issueCoupons(@RequestBody CouponAddDto couponDto) {
         this.couponService.issueCoupon(couponDto);
         return ResponseEntity.ok("쿠폰이 발급됐습니다.");
     }

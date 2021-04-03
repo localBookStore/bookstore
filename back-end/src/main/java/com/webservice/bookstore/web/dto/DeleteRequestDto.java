@@ -14,5 +14,6 @@ import java.util.List;
 @Data
 public class DeleteRequestDto {
 
+    @Builder.Default
     List<Long> ids = new ArrayList<>();
 }

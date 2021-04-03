@@ -26,6 +26,7 @@ public class OrdersDto {
 
     private Long delivery_id;
 
+    @Builder.Default
     private List<OrderItemDto> orderItemDtoList = new ArrayList<>();
 
     private Integer paymentAmount;

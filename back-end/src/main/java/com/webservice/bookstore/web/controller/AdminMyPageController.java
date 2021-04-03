@@ -75,8 +75,8 @@ public class AdminMyPageController {
 
 
     @DeleteMapping("/items")
-    public ResponseEntity deleteItems(@RequestBody DeleteRequestDto deleteRequestDto) {
-        List<ItemDto> remainItems = itemService.deleteItem(deleteRequestDto.getIds());
+    public ResponseEntity deleteItems(List<Long> ids) {
+        List<ItemDto> remainItems = itemService.deleteItem(ids);
         List<ItemLinkResource> itemLinkResources = remainItems.stream().map(itemDto -> new ItemLinkResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
         return ResponseEntity.ok(itemLinkResources);
 
