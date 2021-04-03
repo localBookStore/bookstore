@@ -29,7 +29,7 @@ const DefaultPage = ({ state, dispatch }) => {
   }, [cookies.token]);
 
   const goHome = () => {
-    history.replace("/");
+    history.push("/");
   };
 
   const logoutEvent = () => {
