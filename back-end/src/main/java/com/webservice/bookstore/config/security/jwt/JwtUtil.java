@@ -25,7 +25,7 @@ public class JwtUtil {
                 .withSubject(email)
                 .withClaim("nickName", nickName)
                 .withClaim("role", role)
-                .withClaim("exp", Instant.now().getEpochSecond() + 60)
+                .withClaim("exp", Instant.now().getEpochSecond() + 60*10)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
     }
@@ -34,7 +34,7 @@ public class JwtUtil {
 
         return JWT.create()
                 .withSubject(email)
-                .withClaim("exp", Instant.now().getEpochSecond() + 60*20)
+                .withClaim("exp", Instant.now().getEpochSecond() + 60*60*24)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
     }

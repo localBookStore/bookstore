@@ -10,70 +10,103 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 public class OrdersDto {
 
-    private Long id;
 
-    private Long member_id;
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Default {
+        private Long id;
+        private Long member_id;
+//        private Long delivery_id;
+        private DeliveryDto.Default deliveryDto;
+        private List<OrderItemDto.Default> orderItemDtoList = new ArrayList<>();
+        private Integer paymentAmount;
+        private Integer deliveryCharge;
+        private OrdersEnum status;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime createDate;
 
-    private Long delivery_id;
+        // Entity -> DTO
+        public static Default of(Orders orders) {
 
-    @Builder.Default
-    private List<OrderItemDto> orderItemDtoList = new ArrayList<>();
+            DeliveryDto.Default deliveryDto = DeliveryDto.Default.builder()
+                                                                 .id(orders.getDelivery().getId())
+                                                                 .address(orders.getDelivery().getAddress())
+                                                                 .status(orders.getDelivery().getStatus())
+                                                                 .modifiedDate(orders.getDelivery().getModifiedDate())
+                                                                 .build();
+            List<OrderItemDto.Default> orderItemDtoList = new ArrayList<>();
+            orders.getOrderItems().stream().forEach(orderItem -> orderItemDtoList.add(OrderItemDto.Default.of(orderItem)));
 
-    private Integer paymentAmount;
+            return Default.builder()
+                    .id(orders.getId())
+                    .member_id(orders.getMember().getId())
+                    .deliveryDto(deliveryDto)
+                    .orderItemDtoList(orderItemDtoList)
+                    .paymentAmount(orders.getPaymentAmount())
+                    .deliveryCharge(orders.getDeliveryCharge())
+                    .status(orders.getStatus())
+                    .createDate(orders.getCreatedDate())
+                    .build();
+        }
 
-    private Integer deliveryCharge;
+        // DTO -> Entity
+        public Orders toEntity() {
 
-    private OrdersEnum status;
+            Member member = Member.builder().id(this.member_id).build();
+            List<OrderItem> orderItemList = new ArrayList<>();    // Orders : MultipleBagFetchException 발생 방지를 위해 List -> Set
+            this.orderItemDtoList.stream().forEach(orderItemDto -> orderItemList.add(orderItemDto.toEntity()));
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime createDate;
+            return Orders.builder()
+                    .id(this.id)
+                    .member(member)
+                    .delivery(this.deliveryDto.toEntity())
+                    .orderItems(orderItemList)
+                    .paymentAmount(this.paymentAmount)
+                    .deliveryCharge(this.deliveryCharge)
+                    .status(this.status)
+                    .build();
+        }
 
-    // Entity -> DTO
-    public static OrdersDto of(Orders orders) {
+        // Default -> Response
+        public Response toResponse() {
 
-        List<OrderItemDto> orderItemDtoList = new ArrayList<>();
-        orders.getOrderItems().stream().forEach(orderItem -> orderItemDtoList.add(OrderItemDto.of(orderItem)));
+            List<OrderItemDto.Response> responseList = this.orderItemDtoList.stream()
+                    .map(orderItemDto -> orderItemDto.toResponse())
+                    .collect(Collectors.toList());
 
-        return OrdersDto.builder()
-                .id(orders.getId())
-                .member_id(orders.getMember().getId())
-                .delivery_id(orders.getDelivery().getId())
-                .orderItemDtoList(orderItemDtoList)
-                .paymentAmount(orders.getPaymentAmount())
-                .deliveryCharge(orders.getDeliveryCharge())
-                .status(orders.getStatus())
-                .createDate(orders.getCreatedDate())
-                .build();
+            return Response.builder()
+                    .id(this.id)
+                    .member_id(this.member_id)
+                    .delivery(this.deliveryDto.toResponse())
+                    .orderItemList(responseList)
+                    .paymentAmount(this.paymentAmount)
+                    .deliveryCharge(this.deliveryCharge)
+                    .status(this.status)
+                    .createDate(this.createDate)
+                    .build();
+        }
     }
 
-    // DTO -> Entity
-    public Orders toEntity() {
-
-        Member member = Member.builder().id(this.member_id).build();
-        Delivery delivery = Delivery.builder().id(this.delivery_id).build();
-        List<OrderItem> orderItemList = new ArrayList<>();    // Orders : MultipleBagFetchException 발생 방지를 위해 List -> Set
-//        Set<OrderItem> orderItemList = new HashSet<>();
-        this.orderItemDtoList.stream().forEach(orderItemDto -> orderItemList.add(orderItemDto.toEntity()));
-
-        return Orders.builder()
-                .id(this.id)
-                .member(member)
-                .delivery(delivery)
-                .orderItems(orderItemList)
-                .paymentAmount(this.paymentAmount)
-                .deliveryCharge(this.deliveryCharge)
-                .status(this.status)
-                .build();
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Response {
+        private Long id;
+        private Long member_id;
+        private DeliveryDto.Response delivery;
+        private List<OrderItemDto.Response> orderItemList = new ArrayList<>();
+        private Integer paymentAmount;
+        private Integer deliveryCharge;
+        private OrdersEnum status;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime createDate;
     }
-
 }

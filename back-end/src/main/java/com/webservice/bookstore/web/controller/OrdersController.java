@@ -1,6 +1,7 @@
 package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
+import com.webservice.bookstore.domain.entity.cart.Cart;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.service.OrdersService;
@@ -13,9 +14,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -25,16 +26,16 @@ public class OrdersController {
     private final OrdersService orderService;
 
     private void verifyAuthentication(CustomUserDetails customUserDetails) {
-        if(customUserDetails == null || customUserDetails.equals("")) {
+        if(customUserDetails == null) {
             throw new UnauthorizedException("인증 오류가 발생했습니다.");
+        } else if(!customUserDetails.isEnabled()) {
+            throw new UnauthorizedException("계정이 잠겨있습니다. 관리자에게 문의해주시길 바랍니다.");
         }
     }
 
     /*
     주문 생성
     */
-//    @PostMapping(value = "/order")
-//    public ResponseEntity createOrder(@RequestBody List<OrderItemDto> orderItemDtoList,
     @PostMapping(value = "/order")
     public ResponseEntity createOrder(@RequestBody Map<String, Object> map,
                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -42,9 +43,9 @@ public class OrdersController {
         verifyAuthentication(customUserDetails);
 
         MemberDto.Default memberDto = MemberDto.Default.builder()
-                                               .id(customUserDetails.getMember().getId())
-                                               .address(String.valueOf(map.get("address")))
-                                               .build();
+                .id(customUserDetails.getMember().getId())
+                .address(String.valueOf(map.get("address")))
+                .build();
         CouponDto couponDto = null;
         if(!ObjectUtils.isEmpty(map.get("coupon_id"))){
             couponDto = CouponDto.builder()
@@ -53,16 +54,16 @@ public class OrdersController {
         }
         List<Map<String, Object>> orderList = (List<Map<String, Object>>) map.get("orderList");
 
-        List<CartDto> cartDtoList           = new ArrayList<>();
-        List<OrderItemDto> orderItemDtoList = new ArrayList<>();
+        List<CartDto.Default> cartDtoList           = new ArrayList<>();
+        List<OrderItemDto.Default> orderItemDtoList = new ArrayList<>();
         for(Map<String, Object> objectMap : orderList) {
-            cartDtoList.add(CartDto.builder().id(Long.parseLong(String.valueOf(objectMap.get("cart_id")))).build());
-            ItemDto itemDto = ItemDto.builder().id(Long.parseLong(String.valueOf(objectMap.get("item_id")))).build();
-            orderItemDtoList.add(OrderItemDto.builder()
-                                            .itemDto(itemDto)
-                                            .orderCount(Integer.parseInt(String.valueOf(objectMap.get("orderCount"))))
-                                            .build()
-                                );
+            cartDtoList.add(CartDto.Default.builder().id(Long.parseLong(String.valueOf(objectMap.get("cart_id")))).build());
+            ItemDto.Default itemDto = ItemDto.Default.builder().id(Long.parseLong(String.valueOf(objectMap.get("item_id")))).build();
+            orderItemDtoList.add(OrderItemDto.Default.builder()
+                    .itemDto(itemDto)
+                    .orderCount(Integer.parseInt(String.valueOf(objectMap.get("orderCount"))))
+                    .build()
+            );
         }
 
         orderService.addOrder(memberDto, couponDto, cartDtoList, orderItemDtoList);
@@ -71,51 +72,4 @@ public class OrdersController {
 
     }
 
-    /*
-    마이페이지 주문 내역 조회
-    */
-    @GetMapping("/mypage/order")
-    public ResponseEntity getMyOrderList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        verifyAuthentication(customUserDetails);
-
-        Member member = customUserDetails.getMember();
-        MemberDto.Default memberDto = MemberDto.Default.builder().id(member.getId()).build();
-
-        List<OrdersDto> orderDtoList = orderService.findOrders(memberDto);
-
-        return new ResponseEntity(orderDtoList, HttpStatus.OK);
-    }
-
-    /*
-    관리자 페이지 각 회원 주문 리스트 (구매 내역) 조회
-    */
-    @GetMapping("/admin/members/{member_id}/orders")
-    public ResponseEntity getOrderList(@PathVariable(value = "member_id") Long member_id,
-                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        verifyAuthentication(customUserDetails);
-
-        MemberDto.Default memberDto = MemberDto.Default.builder().id(member_id).build();
-
-        List<OrdersDto> orderDtoList = orderService.findOrders(memberDto);
-
-        return new ResponseEntity(orderDtoList, HttpStatus.OK);
-    }
-
-    /*
-    관리자 페이지 주문 취소
-    */
-    @PatchMapping("/admin/orders/cancel/{order_id}")
-    public ResponseEntity cancelOrder(@RequestBody @PathVariable(value = "order_id") Long orders_id,
-                                      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        MemberDto.Default memberDto = MemberDto.Default
-                                               .builder().id(customUserDetails.getMember().getId()).build();
-        OrdersDto ordersDto = OrdersDto.builder().id(orders_id).build();
-
-        orderService.cancelOrder(memberDto, ordersDto);
-
-        return new ResponseEntity("success", HttpStatus.OK);
-    }
 }

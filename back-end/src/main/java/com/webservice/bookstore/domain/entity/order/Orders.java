@@ -12,9 +12,7 @@ import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Log4j2
 @Entity
@@ -69,13 +67,13 @@ public class Orders extends BaseTimeEntity {
 
         // 배송 정보 생성
         Delivery delivery = Delivery.builder()
-                                    .address(member.getAddress())
-                                    .status(DeliveryEnum.START)
-                                    .build();
+                .address(member.getAddress())
+                .status(DeliveryEnum.START)
+                .build();
 
         double paymentAmount = orderItemList.stream()
-                                    .mapToDouble(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
-                                    .sum();
+                .mapToDouble(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
+                .sum();
 
         if(coupon != null) {
             paymentAmount = (paymentAmount * ((100 - coupon.getDiscountRate()) / (double) 100));

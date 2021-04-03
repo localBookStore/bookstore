@@ -1,51 +1,82 @@
 package com.webservice.bookstore.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservice.bookstore.domain.entity.cart.Cart;
-import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.web.resource.DefaultItemResource;
 import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+import java.time.LocalDateTime;
+
 public class CartDto {
-    private Long id;
 
-    private Long member_id;
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Default {
 
-//    private Long item_id;
-    private ItemDto itemDto;
+        private Long id;
+        private Long member_id;
+        private ItemDto.Default itemDto;
+        private Integer price;
+        private Integer orderCount;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime createDate;
 
-    private Integer price;
+        // Entity -> DTO
+        public static Default of(Cart cart) {
+            return Default.builder()
+                    .id(cart.getId())
+                    .member_id(cart.getMember().getId())
+                    .itemDto(ItemDto.Default.of(cart.getItem()))
+                    .price(cart.getPrice())
+                    .orderCount(cart.getOrderCount())
+                    .createDate(cart.getCreatedDate())
+                    .build();
+        }
 
-    private Integer orderCount;
+        // DTO -> Entity
+        public Cart toEntity() {
 
-    // Entity -> DTO
-    public static CartDto of(Cart cart) {
-        return CartDto.builder()
-                .id(cart.getId())
-                .member_id(cart.getMember().getId())
-//                .item_id(cart.getItem().getId())
-                .itemDto(ItemDto.of(cart.getItem()))
-                .price(cart.getPrice())
-                .orderCount(cart.getOrderCount())
-                .build();
+            Member member = Member.builder().id(this.member_id).build();
+
+            return Cart.builder()
+                    .id(this.id)
+                    .member(member)
+                    .item(this.itemDto.toEntity())
+                    .price(this.price)
+                    .orderCount(this.orderCount)
+                    .build();
+        }
+
+        // Default -> Response
+        public Response toResponse() {
+            return Response.builder()
+                    .id(this.id)
+                    .member_id(this.member_id)
+                    .item(new DefaultItemResource(this.itemDto))
+                    .price(this.price)
+                    .orderCount(this.orderCount)
+                    .createDate(this.createDate)
+                    .build();
+        }
     }
 
-    // DTO -> Entity
-    public Cart toEntity() {
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Response {
 
-        Member member = Member.builder().id(this.member_id).build();
-//        Item item = Item.builder().id(this.item_id).build();
-
-        return Cart.builder()
-                .id(this.id)
-                .member(member)
-//                .item(item)
-                .item(this.itemDto.toEntity())
-                .price(this.price)
-                .orderCount(this.orderCount)
-                .build();
+        private Long id;
+        private Long member_id;
+        private DefaultItemResource item;
+        private Integer price;
+        private Integer orderCount;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime createDate;
     }
+
+
 }
