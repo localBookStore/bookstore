@@ -1,13 +1,15 @@
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
 
-const EachItemList = ({ data, itemCheck }) => {
+const EachItemList = ({ data, itemCheck, token }) => {
   const { register, handleSubmit } = useForm();
   const {
     id,
     imageUrl,
+    category_id,
     name,
     description,
     author,
@@ -17,15 +19,40 @@ const EachItemList = ({ data, itemCheck }) => {
     isbn,
   } = data;
 
-  const updateEvent = (e, imageUrl) => {};
+  const updateEvent = (e, imageUrl, id) => {
+    setTimeout(() => {
+      axios
+        .put(
+          "http://localhost:8080/api/admin/items",
+          {
+            ...e,
+            imageUrl,
+            id,
+          },
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res) => alert("수정되었습니다."))
+        .catch((err) => console.log(err.response.config));
+    }, 200);
+  };
+
   return (
-    <form onSubmit={handleSubmit((e) => updateEvent(e, imageUrl))}>
+    <form onSubmit={handleSubmit((e) => updateEvent(e, imageUrl, id))}>
       <EachItem>
         <CheckBoxInput
           type="checkbox"
           onChange={(e) => itemCheck(id, e.target.checked)}
         />
         <ItemImage src={imageUrl} alt={id} />
+        <ItemContent
+          defaultValue={category_id}
+          ref={register}
+          name="category_id"
+        />
         <ContentContainer>
           제목: <ItemContent defaultValue={name} ref={register} name="name" />
           설명:{" "}

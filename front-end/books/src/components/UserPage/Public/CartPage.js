@@ -96,8 +96,9 @@ const CartPage = ({ location }) => {
         <>
           <div>
             {cartList.map((res, idx) => {
+              console.log(res);
               const cartId = res.id;
-              const { id, name, imageUrl, price, orderCount } = res.itemDto;
+              const { id, name, imageUrl, price, orderCount } = res.item;
               return (
                 <EachBookContainer key={idx}>
                   <BookCheck

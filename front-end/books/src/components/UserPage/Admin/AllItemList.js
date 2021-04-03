@@ -54,7 +54,14 @@ const AllItemList = ({ location }) => {
     return (
       <ItemContainer>
         {currentData.map((data, idx) => {
-          return <EachItemList data={data} itemCheck={itemCheck} key={idx} />;
+          return (
+            <EachItemList
+              data={data}
+              itemCheck={itemCheck}
+              token={token}
+              key={idx}
+            />
+          );
         })}
       </ItemContainer>
     );
