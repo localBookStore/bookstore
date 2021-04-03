@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ReactPaginate from "react-paginate";
 
 import styled from "styled-components";
@@ -56,20 +56,31 @@ const AllItemList = ({ location }) => {
     return (
       <ItemContainer>
         {currentData.map((data, idx) => {
+          const {
+            id,
+            name,
+            description,
+            author,
+            publisher,
+            price,
+            imageUrl,
+          } = data;
+
           return (
             <EachItem key={idx}>
               <CheckBoxInput
                 type="checkbox"
-                onChange={(e) => itemCheck(data.id, e.target.checked)}
+                onChange={(e) => itemCheck(id, e.target.checked)}
               />
-              <ItemImage src={data.imageUrl} alt={idx}></ItemImage>
+              <ItemImage src={imageUrl} alt={idx} />
               <ContentContainer>
-                <ItemContent>제목: {data.name}</ItemContent>
-                <ItemContent>설명: {data.description}</ItemContent>
-                <ItemContent>저자: {data.author}</ItemContent>
-                <ItemContent>출판사: {data.publisher}</ItemContent>
-                <ItemContent>가격: {data.price}</ItemContent>
+                제목: <ItemContent value={name} disabled={true} />
+                설명: <ItemTextArea value={description} />
+                저자: <ItemContent value={author} />
+                출판사: <ItemContent value={publisher} />
+                가격: <ItemContent value={price} />
               </ContentContainer>
+              <Button variant="success">수정하기</Button>
             </EachItem>
           );
         })}
@@ -107,19 +118,30 @@ export default AllItemList;
 const Container = styled.div`
   margin: 20px;
 `;
+const ContentContainer = styled.div`
+  height: auto;
+`;
 const ItemContainer = styled.div`
-  float: left;
+  display: block;
+
   margin: 10px;
 `;
+const ItemTextArea = styled.textarea`
+  display: block;
+  width: 500px;
+  height: 300px;
+`;
+
 const ItemImage = styled.img`
-  width: 200px;
   height: 350px;
   object-fit: cover;
   margin: 10px;
 `;
-const ContentContainer = styled.div``;
 
-const ItemContent = styled.div``;
+const ItemContent = styled.input`
+  display: block;
+  width: 500px;
+`;
 
 const EachItem = styled.div``;
 

@@ -47,7 +47,7 @@ const CartPage = ({ location }) => {
     setCartList(newCartList);
     setIsChange(true);
   };
-  const getCartBook = (props) => {
+  const getCartBook = () => {
     axios
       .get("http://localhost:8080/api/cart/", {
         headers: { Authorization: token },
@@ -61,6 +61,9 @@ const CartPage = ({ location }) => {
       })
       .catch((err) => console.log("토큰이 만료 되었습니다."));
   };
+
+  const getCoupon = () => {};
+
   const deleteCartBook = () => {
     axios
       .delete(`http://localhost:8080/api/cart/`, {
@@ -74,7 +77,6 @@ const CartPage = ({ location }) => {
       })
       .catch((err) => console.log(err.response));
   };
-
   const clickEvent = (cartId, isChecked) => {
     setIsChange(true);
     if (isChecked) {
@@ -85,9 +87,7 @@ const CartPage = ({ location }) => {
       setCheckList(checkList);
     }
   };
-  {
-    console.log(cartList);
-  }
+
   return (
     <Container>
       {cartList === null ? (
