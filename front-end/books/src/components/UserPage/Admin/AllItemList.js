@@ -1,6 +1,8 @@
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
+
+import EachItemList from "./EachItemList";
 
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
@@ -29,18 +31,14 @@ const AllItemList = ({ location }) => {
   };
 
   const deleteItem = () => {
+    console.log([...selected]);
     axios
-      .delete(
-        "http://localhost:8080/api/admin/items/",
-        {
-          data: [...selected],
+      .delete("http://localhost:8080/api/admin/items", {
+        headers: {
+          Authorization: token,
         },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+        data: [...selected],
+      })
       .then((res) => {
         console.log(res);
         setItems(res.data);
@@ -56,32 +54,13 @@ const AllItemList = ({ location }) => {
     return (
       <ItemContainer>
         {currentData.map((data, idx) => {
-          const {
-            id,
-            name,
-            description,
-            author,
-            publisher,
-            price,
-            imageUrl,
-          } = data;
-
           return (
-            <EachItem key={idx}>
-              <CheckBoxInput
-                type="checkbox"
-                onChange={(e) => itemCheck(id, e.target.checked)}
-              />
-              <ItemImage src={imageUrl} alt={idx} />
-              <ContentContainer>
-                제목: <ItemContent value={name} disabled={true} />
-                설명: <ItemTextArea value={description} />
-                저자: <ItemContent value={author} />
-                출판사: <ItemContent value={publisher} />
-                가격: <ItemContent value={price} />
-              </ContentContainer>
-              <Button variant="success">수정하기</Button>
-            </EachItem>
+            <EachItemList
+              data={data}
+              itemCheck={itemCheck}
+              token={token}
+              key={idx}
+            />
           );
         })}
       </ItemContainer>
@@ -118,34 +97,11 @@ export default AllItemList;
 const Container = styled.div`
   margin: 20px;
 `;
-const ContentContainer = styled.div`
-  height: auto;
-`;
 const ItemContainer = styled.div`
   display: block;
 
   margin: 10px;
 `;
-const ItemTextArea = styled.textarea`
-  display: block;
-  width: 500px;
-  height: 300px;
-`;
-
-const ItemImage = styled.img`
-  height: 350px;
-  object-fit: cover;
-  margin: 10px;
-`;
-
-const ItemContent = styled.input`
-  display: block;
-  width: 500px;
-`;
-
-const EachItem = styled.div``;
-
-const CheckBoxInput = styled.input``;
 
 const DeleteButton = styled(Button)``;
 
