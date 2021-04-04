@@ -19,14 +19,9 @@ public class CouponAddDto {
     private String description;
     private int discountRate;
     private LocalDate endDate;
-    private Long category_id;
-    private String category_name;
 
     public Coupon toEntity() {
-        Category category = Category.builder()
-                .id(category_id)
-                .name(category_name)
-                .build();
+
 
         return Coupon.builder()
                 .name(this.name)
