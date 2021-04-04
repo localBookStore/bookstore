@@ -55,18 +55,15 @@ public class OrdersController {
         List<Map<String, Object>> orderList = (List<Map<String, Object>>) map.get("orderList");
 
         List<CartDto.Default> cartDtoList           = new ArrayList<>();
-        List<OrderItemDto.Default> orderItemDtoList = new ArrayList<>();
         for(Map<String, Object> objectMap : orderList) {
-            cartDtoList.add(CartDto.Default.builder().id(Long.parseLong(String.valueOf(objectMap.get("cart_id")))).build());
-            ItemDto.Default itemDto = ItemDto.Default.builder().id(Long.parseLong(String.valueOf(objectMap.get("item_id")))).build();
-            orderItemDtoList.add(OrderItemDto.Default.builder()
-                    .itemDto(itemDto)
-                    .orderCount(Integer.parseInt(String.valueOf(objectMap.get("orderCount"))))
-                    .build()
-            );
+            cartDtoList.add(CartDto.Default.builder()
+                                           .id(Long.parseLong(String.valueOf(objectMap.get("id"))))
+                                           .orderCount(Integer.parseInt(String.valueOf(objectMap.get("orderCount"))))
+                                           .build()
+                            );
         }
 
-        orderService.addOrder(memberDto, couponDto, cartDtoList, orderItemDtoList);
+        orderService.addOrder(memberDto, couponDto, cartDtoList);
 
         return new ResponseEntity("success", HttpStatus.OK);
 

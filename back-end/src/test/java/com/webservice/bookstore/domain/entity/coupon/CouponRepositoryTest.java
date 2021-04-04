@@ -109,45 +109,46 @@ class CouponRepositoryTest {
     }
 
 
-//    @Test
-//    public void test2() throws Exception {
-//        //given
-//        Member member = Member.builder()
-//                .email("ddd@email.com")
-//                .password("1234")
-//                .build();
-//        this.memberRepository.save(member);
-//
-//        Category category = Category.builder()
-//                .id(1L)
-//                .name("역사")
-//                .build();
-//
-//        Category category2 = Category.builder()
-//                .id(2L)
-//                .name("과학")
-//                .build();
-//        categoryRepository.save(category);
-//        categoryRepository.save(category2);
-//
-//        Coupon coupon = Coupon.builder()
-//                .category(category)
-//                .name("역사 쿠폰")
-//                .description("좋은 쿠폰")
-//                .member(member)
-//                .discountRate(30)
-//                .build();
-//        couponRepository.save(coupon);
-//
-//        //when
-//
-//        //then
-//        memberService.addCoupon(member.getId(), coupon);
-//        List<Coupon> couponList = couponRepository.findCouponList(category.getId());
-//        for (Coupon newCoupon : couponList) {
-//            System.out.println("Coupon: " + newCoupon);
-//        }
-//    }
+    @Test
+    public void test2() throws Exception {
+        //given
+        Member member = Member.builder()
+                .email("ddd@email.com")
+                .password("1234")
+                .build();
+        this.memberRepository.save(member);
+
+        Category category = Category.builder()
+                .id(1L)
+                .name("역사")
+                .build();
+
+        Category category2 = Category.builder()
+                .id(2L)
+                .name("과학")
+                .build();
+        categoryRepository.save(category);
+        categoryRepository.save(category2);
+
+        Coupon coupon = Coupon.builder()
+                .category(category)
+                .name("역사 쿠폰")
+                .description("좋은 쿠폰")
+                .member(member)
+                .discountRate(30)
+                .build();
+        couponRepository.save(coupon);
+
+        //when
+
+        //the
+        member.addCoupon(coupon);
+        List<Coupon> couponList = couponRepository.findCouponList(member.getId());
+        for (Coupon newCoupon : couponList) {
+            System.out.println("Coupon: " + newCoupon);
+        }
+        System.out.println(member.getCoupons().get(0));
+    }
 
 
 }

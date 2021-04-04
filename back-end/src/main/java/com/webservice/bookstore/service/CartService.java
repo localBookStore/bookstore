@@ -65,7 +65,7 @@ public class CartService {
 
         Cart cartEntity = cartRepository.getOne(id);
 
-        cartEntity.updateQuantity(orderCount); // 장바구니 아이템 수량 업데이트 메소드 호출
+        cartEntity.updateOrderCount(orderCount); // 장바구니 아이템 수량 업데이트 메소드 호출
     }
 
     /*
