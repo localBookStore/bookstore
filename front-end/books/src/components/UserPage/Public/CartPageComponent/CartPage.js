@@ -89,7 +89,7 @@ const CartPage = ({ location }) => {
       orderList,
       address,
       coupon_id: selectedCoupon.id
-    })
+    },{ headers: {Authorization: token }})
     .then(res => console.log(res))
     .catch(err => console.log(err.response))
   };
