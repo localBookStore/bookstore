@@ -9,7 +9,7 @@ import styled from "styled-components";
 import { Button } from "react-bootstrap";
 import logo from "./icons/bookshop.svg";
 
-const DefaultPage = ({ state, dispatch }) => {
+const DefaultPage = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const [user, setUser] = useState({
     name: "",

@@ -9,9 +9,9 @@ import Footer from "./components/FooterPage/Footer";
 import LoginPage from "./components/UserPage/LoginPage";
 import SignupPage from "./components/UserPage/SignupPage";
 import DefaultPage from "./DefaultPage";
-import CartPage from "components/UserPage/CartPage";
-import MyPage from "./components/UserPage/MyPage";
-import AdminPage from "./components/UserPage/AdminPage";
+import CartPage from "components/UserPage/Public/CartPageComponent/CartPage";
+import MyPage from "./components/UserPage/Public/MyPage";
+import AdminPage from "./components/UserPage/Admin/AdminPage";
 
 import { Route, Switch } from "react-router-dom";
 import ScrollToTop from "./ScrollToTop";
