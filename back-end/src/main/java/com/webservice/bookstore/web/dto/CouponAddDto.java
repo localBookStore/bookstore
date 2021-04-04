@@ -31,7 +31,6 @@ public class CouponAddDto {
         return Coupon.builder()
                 .name(this.name)
                 .description(this.description)
-                .category(category)
                 .discountRate(this.discountRate)
                 .endDate(this.endDate)
                 .build();
