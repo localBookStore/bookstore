@@ -15,12 +15,21 @@ const UserList = ({ location }) => {
           Authorization: token,
         },
       })
-      .then((res) => console.log(res))
+      .then(res => setUserList(res.data))
       .catch((err) => console.log(err.response));
   }, []);
 
-  return <Container>회원 리스트입니다.</Container>;
+  return <Container>
+    <ContainerTitle>회원 리스트입니다.</ContainerTitle>
+    {userList && userList.map(user => {
+      return <button>{user.nickName}<br />{user.email}</button>
+    })}
+
+  </Container>;
 };
 export default UserList;
 
 const Container = styled.div``;
+const ContainerTitle = styled.h2`
+  margin: 30px 0;
+`

@@ -1,5 +1,5 @@
 import UserInfo from "./UserInfo";
-import OrderList from "./OrderList";
+import OrderList from "./OrderComponent/OrderList";
 import MyPost from "./MyPost";
 import axios from "axios";
 import { useState } from "react";
@@ -39,11 +39,9 @@ const MyPage = ({ match }) => {
     <Container>
       <div>회원을 관리하는 공간입니다.</div>
       <SideBar>
-        <MenuButton to={{ pathname: `${path}/userinfo`, state: { token } }}>
-          회원 정보
-        </MenuButton>
-        <MenuButton to={`${path}/orderlist`}>구매 내역</MenuButton>
-        <MenuButton to={`${path}/mypost`}>쓴 글보기</MenuButton>
+        <MenuButton to={{ pathname: `${path}/userinfo`, state: { token } }}>회원 정보</MenuButton>
+        <MenuButton to={{ pathname: `${path}/orderlist`, state:{ token }}}>구매 내역</MenuButton>
+        <MenuButton to={{ pathname: `${path}/mypost`, state: { token }}}>쓴 글보기</MenuButton>
         <Button onClick={modalOpen}>회원탈퇴</Button>
       </SideBar>
       <Switch>
