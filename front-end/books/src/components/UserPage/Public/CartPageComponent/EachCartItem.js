@@ -1,45 +1,41 @@
-import { useState } from "react";
-
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
 
-const EachCartItem = ({ data, cartId, orderCount, checkEvent, setTotalPrice }) => {
-  const [itemCount, setItemCount] = useState(orderCount);
-  const [isChecked, setIsCheck] = useState(true);
-  const { imageUrl, name, price, quantity } = data;
-
+const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
+  const { orderCount, id } = data
+  const {item: {imageUrl, name, price, quantity }} = data
+  
   const changeCheckEvent = (e) => {
     const { target: { checked } } = e;
-
-    setIsCheck(!isChecked);
-    checkEvent(cartId, checked, price*itemCount);
+    checkEvent(data.id, checked)
   };
 
   const minus = () => {
-    if (itemCount) {
-      setTotalPrice(prev => prev - price)
-      setItemCount((prev) => prev - 1)
-    };
-    }
+    setCartList(cartList.map(cart => cart.id === id ? {
+      ...cart,
+      orderCount: orderCount ? orderCount-1 : orderCount
+    } : cart))
+  }
+
   const plus = () => {
-    if (itemCount < quantity) {
-      setTotalPrice(prev => prev + price)
-      setItemCount(prev => prev + 1);
-    }
+    setCartList(cartList.map(cart => cart.id === id ? {
+      ...cart,
+      orderCount: orderCount <  quantity ? orderCount+1 : orderCount
+    } : cart))
   }
 
   return (
     <Container>
-      <CheckBox type="checkbox" defaultChecked={isChecked} onChange={changeCheckEvent} />
+      <CheckBox type="checkbox" defaultChecked onChange={changeCheckEvent} />
       <PosterImage src={imageUrl} />
       <ItemDiv fontSize="28px" width="300px">{name}</ItemDiv>
       <ItemDiv fontSize="28px">{price}</ItemDiv>
       <div>
         <CountButton onClick={minus}>-</CountButton>
-        <ItemCount>{itemCount}</ItemCount>
+        <ItemCount>{orderCount}</ItemCount>
         <CountButton onClick={plus}>+</CountButton>
       </div>
-      <ItemDiv>{price * itemCount}</ItemDiv>
+      <ItemDiv>{price * orderCount}</ItemDiv>
     </Container>
   );
 };
