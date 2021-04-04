@@ -37,20 +37,19 @@ public class CouponService {
     @Transactional
     public void issueCoupon(CouponAddDto couponDto) {
         List<Member> members = this.memberRepository.findAll();
-        Category category = Category.builder().id(couponDto.getCategory_id()).name(couponDto.getCategory_name()).build();
+//        Category category = Category.builder().id(couponDto.getCategory_id()).name(couponDto.getCategory_name()).build();
 
         members.stream().forEach(member -> {
-            Coupon savedCoupon = savedNewCoupon(couponDto, category);
+            Coupon savedCoupon = savedNewCoupon(couponDto);
             member.addCoupon(savedCoupon);
         });
     }
 
-    private Coupon savedNewCoupon(CouponAddDto couponDto, Category category) {
+    private Coupon savedNewCoupon(CouponAddDto couponDto) {
         Coupon coupon = Coupon.builder()
                 .name(couponDto.getName())
                 .endDate(couponDto.getEndDate())
                 .discountRate(couponDto.getDiscountRate())
-                .category(category)
                 .description(couponDto.getDescription())
                 .build();
 

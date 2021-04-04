@@ -23,9 +23,9 @@ public class CouponDto {
     private String name;
     private String description;
     private int discountRate;
-    private Long category_id;
-    private String category_name;
     private Long member_id;
+//    private Long category_id;
+//    private String category_name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate endDate;
@@ -37,8 +37,6 @@ public class CouponDto {
                 .description(coupon.getDescription())
                 .discountRate(coupon.getDiscountRate())
                 .endDate(coupon.getEndDate())
-                .category_id(coupon.getCategory().getId())
-                .category_name(coupon.getCategory().getName())
                 .member_id(coupon.getMember().getId())
                 .build()
                 ;
@@ -52,7 +50,6 @@ public class CouponDto {
                 .member(Member.builder().id(this.member_id).build())
                 .endDate(this.endDate)
                 .discountRate(this.discountRate)
-                .category(Category.builder().id(this.category_id).name(this.category_name).build())
                 .build();
 
     }

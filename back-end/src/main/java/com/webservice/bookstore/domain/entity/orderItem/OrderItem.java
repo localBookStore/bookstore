@@ -52,10 +52,6 @@ public class OrderItem extends BaseTimeEntity {
         return sum;
     }
 
-    public void validateCoupon(Coupon coupon) {
-
-    }
-
     /*
     주문아이템 생성 메소드
     */
