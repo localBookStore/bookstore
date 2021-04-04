@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
-    @Query("select c from Coupon c where c.member.id = :id")
+    @Query("select c from Coupon c join fetch c.category cc where c.member.id = :id")
     List<Coupon> findCouponList(@Param("id") Long id);
 
 
