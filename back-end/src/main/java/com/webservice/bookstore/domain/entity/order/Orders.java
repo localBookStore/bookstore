@@ -97,18 +97,33 @@ public class Orders extends BaseTimeEntity {
     }
 
     /*
+    주문 수락
+    */
+    public void accept() {
+
+        checkDeliveryStatus();
+
+        this.delivery.shipping();
+    }
+
+    /*
     주문 취소
     */
     public void cancel() {
-        // 배속(delivery) 상태가 이미 완료(complete)된 상태일 경우, 예외상태 반환
-        if(delivery.getStatus() == DeliveryEnum.SHIPPING) {
-            throw new IllegalStateException("이미 배송 중인 상태이므로 취소가 불가능합니다.");
-        } else if(delivery.getStatus() == DeliveryEnum.COMPLETED) {
-            throw new IllegalStateException("배송이 완료된 상태입니다.");
-        }
+
+        checkDeliveryStatus();
 
         this.delivery.cancel();
         orderItems.forEach(OrderItem::cancel);
+    }
+
+    private void checkDeliveryStatus() {
+        // 배송(delivery) 상태가 이미 완료(COMPLETED) 또는 배송 중(SHIPPING)인 경우, 예외 발생
+        if(delivery.getStatus().equals(DeliveryEnum.SHIPPING)) {
+            throw new IllegalStateException("이미 배송 중인 상태이므로 취소가 불가능합니다.");
+        } else if(delivery.getStatus().equals(DeliveryEnum.COMPLETED)) {
+            throw new IllegalStateException("이미 배송이 완료된 상태입니다.");
+        }
     }
 
 }

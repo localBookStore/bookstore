@@ -104,6 +104,17 @@ public class OrdersService {
     }
 
     @Transactional
+    public List<OrdersDto.Default> acceptOrder(OrdersDto.Default ordersDto) {
+
+        Orders order = orderRepository.getOne(ordersDto.getId());
+        order.accept();
+
+        MemberDto.Default memberDto = MemberDto.Default.builder().id(order.getMember().getId()).build();
+        List<OrdersDto.Default> ordersList = this.findOrders(memberDto);
+        return ordersList;
+    }
+
+    @Transactional
     public List<OrdersDto.Default> cancelOrder(OrdersDto.Default ordersDto) {
 
         Orders order = orderRepository.getOne(ordersDto.getId());
@@ -111,7 +122,7 @@ public class OrdersService {
         coupon.isUsed(false);
         order.cancel();
 
-        MemberDto.Default memberDto = MemberDto.Default.builder().id(ordersDto.getMember_id()).build();
+        MemberDto.Default memberDto = MemberDto.Default.builder().id(order.getMember().getId()).build();
         List<OrdersDto.Default> ordersList = this.findOrders(memberDto);
         return ordersList;
     }
