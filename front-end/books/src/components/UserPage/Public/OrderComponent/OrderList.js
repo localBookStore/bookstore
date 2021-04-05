@@ -1,13 +1,15 @@
 import OrderPage from "./OrderPage";
 import { useState, useEffect } from "react";
+import { useCookies } from "react-cookie"
 import axios from "axios";
 
-import { Button } from "react-bootstrap";
 import styled from "styled-components";
 
-const OrderList = ({ location }) => {
+const OrderList = () => {
 	const [orders, setOrders] = useState(null);
-	const token = location.state.token;
+  const [cookies] = useCookies(["token"])
+  const token = cookies.token
+
 	useEffect(() => {
 		axios
 			.get("http://localhost:8080/api/mypage/order", { headers: { Authorization: token } })

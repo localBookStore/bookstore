@@ -9,7 +9,7 @@ const PostCoupon = ({location}) => {
   const token = location.state.token;
 	const submitEvent = data => {
     axios.post("http://localhost:8080/api/coupon",{ ...data },{ headers:{ Authorization: token }})
-      .then(res => console.log(res))
+      .then(res => alert("모든 사용자에게 쿠폰이 발급되었습니다."))
       .catch(err => console.log(err.response))
   };
 
