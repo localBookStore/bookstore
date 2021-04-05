@@ -45,8 +45,6 @@ public class Orders extends BaseTimeEntity {
 
     private Integer deliveryCharge;
 
-    @Enumerated(EnumType.STRING)
-    private OrdersEnum status;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id")
@@ -55,10 +53,6 @@ public class Orders extends BaseTimeEntity {
     public void setCoupon(Coupon coupon) {
         this.coupon = coupon;
         coupon.setOrder(this);
-    }
-
-    private void updateOrderStatus(OrdersEnum status) {
-        this.status = status;
     }
 
     // 연관관계 편의 메소드
@@ -75,13 +69,13 @@ public class Orders extends BaseTimeEntity {
 
         // 배송 정보 생성
         Delivery delivery = Delivery.builder()
-                .address(member.getAddress())
-                .status(DeliveryEnum.START)
-                .build();
+                                    .address(member.getAddress())
+                                    .status(DeliveryEnum.READY)
+                                    .build();
 
         double paymentAmount = orderItemList.stream()
-                .mapToDouble(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
-                .sum();
+                                            .mapToDouble(orderItem -> (orderItem.getOrderPrice() * orderItem.getOrderCount()))
+                                            .sum();
 
         if(coupon != null) {
             paymentAmount = (paymentAmount * ((100 - coupon.getDiscountRate()) / (double) 100));
@@ -92,7 +86,7 @@ public class Orders extends BaseTimeEntity {
                              .member(member) // 결제자 정보 등록
                              .paymentAmount((int) paymentAmount)
                              .deliveryCharge(2500) // 배송비 초기화
-                             .status(OrdersEnum.ORDER) // 주문 상태 초기화
+                             .coupon(coupon)
                              .build();
 
         // Orders, Delivery 엔티티 간 연관 데이터 주입
@@ -107,12 +101,13 @@ public class Orders extends BaseTimeEntity {
     */
     public void cancel() {
         // 배속(delivery) 상태가 이미 완료(complete)된 상태일 경우, 예외상태 반환
-        if(delivery.getStatus() != DeliveryEnum.START) {
-            throw new IllegalStateException("이미 배송된 상태이므로, 취소가 불가능 합니다.");
+        if(delivery.getStatus() == DeliveryEnum.SHIPPING) {
+            throw new IllegalStateException("이미 배송 중인 상태이므로 취소가 불가능합니다.");
+        } else if(delivery.getStatus() == DeliveryEnum.COMPLETED) {
+            throw new IllegalStateException("배송이 완료된 상태입니다.");
         }
 
         this.delivery.cancel();
-        this.updateOrderStatus(OrdersEnum.CANCEL);
         orderItems.forEach(OrderItem::cancel);
     }
 

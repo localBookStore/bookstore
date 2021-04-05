@@ -1,17 +1,113 @@
+import { useState } from "react"
+import axios from "axios"
 
+import { Button, Modal } from "react-bootstrap"
 import styled from "styled-components"
 
-const OrderPage = ({order}) => {
-  const {createDate, deliveryCharge, delivery, orderItemList} = order
-  console.log(order)
+const DeliveryBar = ({status, percent}) => {
+  switch (status){
+    case "READY":
+      return <div>
+        준비중
+      </div>
+    case "CANCEL":
+      return <div>
+        취소됨
+      </div>
+    case "SHIPPING":
+      return <div>
+        배송중
+      </div>
+    default:
+      return <div>
+        도착
+      </div>
+  }
+}
+
+const ModalPage = ({show, showOff, items, status}) => {
+  return (
+    <Modal
+      onHide={showOff}
+      show={show}
+      size="lg"
+      centered
+      scrollable
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>주문 상세내용</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+          {console.log(items)}
+          <DeliveryBar status={status} />
+          {items.map((item, idx) => {
+            const { orderedItem } = item
+        
+            return <ModalContainer key={idx}>
+              <ModalImage src={orderedItem.imageUrl} />
+              <ModalContent>{orderedItem.name}</ModalContent>
+              <ModalContent>{orderedItem.price}원</ModalContent>
+              <ModalContent>{}</ModalContent>
+            </ModalContainer>
+          })}
+
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={showOff}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+
+const OrderPage = ({order, setOrders, token}) => {
+  
+  const [modalShow, setModalShow] = useState(false);
+  const showOn = () => setModalShow(true);
+  const showOff = () => setModalShow(false);
+
+  const {deliveryCharge, delivery, orderItemList, id} = order
+  const {address, modifiedDate, status } = delivery
+
+  const cancelOrder = () => {
+    axios.patch(`http://localhost:8080/api/mypage/order/${id}`,null ,{ headers:{ Authorization: token }})
+      .then(res => setOrders(res.data))
+      .catch(err => console.log(err.response))
+  }
+
+  // console.log(order)
   return <Container>
-    <div>{createDate}</div>
-    <div>{delivery.address}</div>
+    <OrderContent>{modifiedDate}</OrderContent>
+    <OrderContent>{address}</OrderContent>
+    <OrderContent>{status}</OrderContent>
+    <OrderContent>{deliveryCharge}</OrderContent>
+    <Button onClick={showOn}>상세보기</Button>
+    <Button variant="danger" disabled={delivery.status === "CANCEL"} onClick={cancelOrder}>주문취소</Button>
+
+    <ModalPage show={modalShow} showOff={showOff} items={orderItemList} status={delivery.status} />
   </Container>
 }
 export default OrderPage;
 
 const Container = styled.div`
   display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+`
+const OrderContent = styled.div`
+  width: 20%;
+`
+
+const ModalContainer = styled.div`
+  display: flex;
   justify-content: space-evenly;
+  align-items: center;
+`
+const ModalContent = styled.div`
+
+`
+const ModalImage = styled.img`
+  width: 200px;
+  height: 350px;
+  object-fit: cover;
 `

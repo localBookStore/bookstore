@@ -15,6 +15,7 @@ import com.webservice.bookstore.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class OrdersService {
     public void addOrder(MemberDto.Default memberDto,
                          CouponDto couponDto,
                          List<CartDto.Default> cartDtoList,
-                         Errors errors) {
+                         BindingResult bindingResult) {
         // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
 //        orderItemDtoList = orderItemDtoList.stream()
 //                                           .sorted(Comparator.comparing(orderItemDto -> orderItemDto.getItemDto().getId()))
@@ -78,9 +79,7 @@ public class OrdersService {
         Coupon coupon = null;
         if(couponDto != null) {
             coupon = couponRepository.findById(couponDto.getId()).get();
-            coupon.validateCoupon(errors);
-//            CouponDto.validateCoupon(CouponDto.of(coupon));
-//            Coupon.validateCoupon(CouponDto.of(coupon));
+            coupon.validateCoupon(bindingResult.getFieldErrors());
             coupon.isUsed(true);
         }
 
@@ -111,6 +110,8 @@ public class OrdersService {
     public List<OrdersDto.Default> cancelOrder(OrdersDto.Default ordersDto) {
 
         Orders order = orderRepository.getOne(ordersDto.getId());
+        Coupon coupon = order.getCoupon();
+        coupon.isUsed(false);
         order.cancel();
 
         MemberDto.Default memberDto = MemberDto.Default.builder().id(ordersDto.getMember_id()).build();

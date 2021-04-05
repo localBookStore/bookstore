@@ -8,10 +8,13 @@ import com.webservice.bookstore.exception.AfterDateException;
 import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.web.dto.CouponDto;
 import lombok.*;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Builder
@@ -53,11 +56,11 @@ public class Coupon {
         this.member = member;
     }
 
-    public void validateCoupon(Errors errors) {
+    public void validateCoupon(List<FieldError> errors) {
         if(LocalDate.now().isAfter(this.getEndDate())) {
-            throw new ValidationException("날짜가 지난 쿠폰입니다.", errors.getFieldErrors());
+            throw new ValidationException("날짜가 지난 쿠폰입니다.", errors);
         } else if (this.isUsed) {
-            throw new ValidationException("이미 사용한 쿠폰입니다.", errors.getFieldErrors());
+            throw new ValidationException("이미 사용한 쿠폰입니다.", errors);
         }
     }
 

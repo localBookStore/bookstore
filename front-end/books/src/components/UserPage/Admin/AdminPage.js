@@ -1,6 +1,6 @@
 import UserList from "./UserList";
 import AllItemList from "./AllItemList";
-import AllOrderList from "./AllOrderList";
+import AllOrderList from "./AllOrderListComponent/AllOrderList";
 import PostCoupon from "./PostCoupon";
 import { useCookies } from "react-cookie";
 import { Route, Switch, NavLink } from "react-router-dom";
@@ -12,6 +12,7 @@ const AdminPage = ({ match }) => {
 	const token = cookies.token;
 
 	const URL = match.url;
+	
 	return (
 		<>
 			<Container>
