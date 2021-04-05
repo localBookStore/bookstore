@@ -48,6 +48,14 @@ public class Orders extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private OrdersEnum status;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
+
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
+        coupon.setOrder(this);
+    }
 
     private void updateOrderStatus(OrdersEnum status) {
         this.status = status;
@@ -89,7 +97,7 @@ public class Orders extends BaseTimeEntity {
 
         // Orders, Delivery 엔티티 간 연관 데이터 주입
         order.addDelivery(delivery);
-        orderItemList.stream().forEach(orderItem -> order.addOrderItem(orderItem));
+        orderItemList.forEach(order::addOrderItem);
 
         return order;
     }

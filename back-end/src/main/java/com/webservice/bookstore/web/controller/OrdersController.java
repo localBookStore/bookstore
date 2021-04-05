@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -38,7 +39,8 @@ public class OrdersController {
     */
     @PostMapping(value = "/order")
     public ResponseEntity createOrder(@RequestBody Map<String, Object> map,
-                                      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                                      @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      Errors errors) {
 
         verifyAuthentication(customUserDetails);
 
@@ -63,7 +65,7 @@ public class OrdersController {
                             );
         }
 
-        orderService.addOrder(memberDto, couponDto, cartDtoList);
+        orderService.addOrder(memberDto, couponDto, cartDtoList, errors);
 
         return new ResponseEntity("success", HttpStatus.OK);
 
