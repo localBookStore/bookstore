@@ -51,7 +51,7 @@ public class DeliveryDto {
 
             long progress = 0;  // 배송 진행률 계산
             if(!this.status.equals(DeliveryEnum.CANCEL) && !this.status.equals(DeliveryEnum.READY)) {
-                if(this.status == DeliveryEnum.COMPLETED) {
+                if(this.status.equals(DeliveryEnum.COMPLETED)) {
                     progress = 100;
                 } else {
                     long duration = Duration.between(this.modifiedDate, LocalDateTime.now()).getSeconds();
