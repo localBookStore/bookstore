@@ -48,6 +48,14 @@ public class Orders extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private OrdersEnum status;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
+
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
+        coupon.setOrder(this);
+    }
 
     private void updateOrderStatus(OrdersEnum status) {
         this.status = status;

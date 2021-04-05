@@ -2,6 +2,7 @@ package com.webservice.bookstore.domain.entity.coupon;
 
 import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.domain.entity.order.Orders;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import com.webservice.bookstore.exception.AfterDateException;
 import com.webservice.bookstore.web.dto.CouponDto;
@@ -34,6 +35,13 @@ public class Coupon {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToOne(mappedBy = "coupon", fetch = FetchType.LAZY)
+    private Orders order;
+
+    public void setOrder(Orders order) {
+        this.order = order;
+    }
 
     public void isUsed(Boolean isUsed) {
         this.isUsed = isUsed;
