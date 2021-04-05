@@ -1,5 +1,6 @@
 package com.webservice.bookstore.service;
 
+import com.webservice.bookstore.domain.entity.cart.Cart;
 import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.coupon.CouponRepository;
 import com.webservice.bookstore.domain.entity.cart.CartRepository;
@@ -52,19 +53,18 @@ public class OrdersService {
     }
 
     @Transactional
-    public void addOrder(MemberDto.Default memberDto,
-                         CouponDto couponDto,
-                         List<CartDto.Default> cartDtoList,
-                         List<OrderItemDto.Default> orderItemDtoList) {
-        // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
-        orderItemDtoList = orderItemDtoList.stream()
-                                           .sorted(Comparator.comparing(orderItemDto -> orderItemDto.getItemDto().getId()))
-                                           .collect(Collectors.toList());
+    public void addOrder(MemberDto.Default memberDto, CouponDto couponDto, List<CartDto.Default> cartDtoList) {
 
-        // Member, Item 엔티티 조회 (자동으로 id 기준으로 오름차순을 조회함)
         Member member       = memberRepository.findById(memberDto.getId()).get();
         member.setAddress(memberDto.getAddress());
-        List<Item> itemList = itemRepository.findByIdIn(getItemIdList(orderItemDtoList));
+
+        List<Cart> cartList = cartRepository.findByIdInQuery(getCartIdList(cartDtoList));
+        for(int i = 0 ; i < cartList.size() ; i++) {
+            cartList.get(i).updateOrderCount(cartDtoList.get(i).getOrderCount());
+        }
+
+        List<Item> itemList = new ArrayList<>();
+        cartList.stream().forEach(cart -> itemList.add(cart.getItem()));
 
         Coupon coupon = null;
         if(couponDto != null) {
@@ -74,7 +74,7 @@ public class OrdersService {
         }
 
         // 주문상품 생성
-        List<OrderItem> orderItemList = OrderItem.createOrderItem(itemList, orderItemDtoList);
+        List<OrderItem> orderItemList = OrderItem.createOrderItem(itemList, cartList);
 
         // 주문 생성
         Orders orders = Orders.createOrder(member, coupon, orderItemList);
@@ -83,7 +83,7 @@ public class OrdersService {
         orderRepository.save(orders);
 
         // 장바구니 아이템 삭제
-        cartRepository.deleteAllByIdInQuery(getCartIdList(cartDtoList));
+        cartRepository.deleteAll(cartList);
 
     }
 

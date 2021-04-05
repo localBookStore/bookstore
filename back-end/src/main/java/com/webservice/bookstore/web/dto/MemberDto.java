@@ -27,7 +27,7 @@ public class MemberDto {
             return MemberDto.Default.builder()
                     .id(member.getId())
                     .email(member.getEmail())
-                    .nickName(member.getEmail())
+                    .nickName(member.getNickName())
                     .password(member.getPassword())
                     .address(member.getAddress())
                     .role(String.valueOf(member.getRole()))
