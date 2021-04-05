@@ -117,7 +117,7 @@ public class AdminPageController {
     }
 
     /*
-    관리자 페이지 주문 취소 요청
+    관리자 페이지 주문(배송) 취소 요청
     */
     @PatchMapping("/orders/cancel/{order_id}")
     public ResponseEntity cancelOrder(@RequestBody @PathVariable(value = "order_id") Long orders_id,
