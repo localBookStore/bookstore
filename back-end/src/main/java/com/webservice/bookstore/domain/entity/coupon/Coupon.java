@@ -15,7 +15,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"category", "member"})
+@ToString(exclude = {"member"})
+@EqualsAndHashCode(of = "id")
 public class Coupon {
 
     @Id

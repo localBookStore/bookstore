@@ -106,7 +106,7 @@ public class ItemDto {
 
         //Category_name 필드 추가
 
-        public static GetItemDto toDto(Item item) {
+        public static GetItemDto of(Item item) {
             return GetItemDto.builder()
                     .id(item.getId())
                     .name(item.getName())

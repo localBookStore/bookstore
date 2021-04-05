@@ -48,14 +48,10 @@ public class AdminMyPageController {
     public ResponseEntity getAdminSearchItems(@RequestParam(value = "tag") String tag, @RequestParam(value = "input") String input) {
         ItemSearch itemSearch = ItemSearch.builder()
                 .build();
-        if(tag.equals("name")) {
-            itemSearch.setName(input);
-        } else if(tag.equals("author")){
-            itemSearch.setAuthor(input);
-        }
+        itemSearch.getItemSearch(tag,input);
 
         List<Item> items = this.itemService.searchBooks(itemSearch);
-        if(items == null || items.isEmpty()) {
+        if(items.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         List<ItemDto.Default> collect = items.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
@@ -70,7 +66,7 @@ public class AdminMyPageController {
         DefaultItemResource defaultItemResource = new DefaultItemResource(savedItemDto);
         URI uri = linkTo(ItemController.class).slash(savedItemDto.getId()).toUri();
         defaultItemResource.add(linkTo(methodOn(AdminMyPageController.class).modifyItem(savedItemDto)).withRel("modify-item"));
-        defaultItemResource.add(linkTo(methodOn(AdminMyPageController.class).deleteItems(null)).withRel("delete-item"));
+        defaultItemResource.add(linkTo(methodOn(AdminMyPageController.class).deleteItems(null)).withRel("delete-items"));
         return ResponseEntity.created(uri).body(defaultItemResource);
     }
 

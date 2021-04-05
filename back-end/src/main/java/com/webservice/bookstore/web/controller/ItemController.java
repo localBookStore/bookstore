@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -31,36 +32,33 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity getSearchItems(@RequestParam(value = "tag") String tag, @RequestParam(value = "input") String input) {
-        ItemSearch itemSearch = ItemSearch.builder()
-                .build();
-        if(tag.equals("name")) {
-            itemSearch.setName(input);
-        } else if(tag.equals("author")){
-            itemSearch.setAuthor(input);
-        }
+        ItemSearch itemSearch = ItemSearch.builder().build();
+        itemSearch.getItemSearch(tag, input);
 
         List<Item> items = this.itemService.searchBooks(itemSearch);
-        if(items == null || items.isEmpty()) {
+        if(items.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<ItemDto.Default> collect = items.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
+        List<ItemDto.Default> collect = items.stream().map(ItemDto.Default::of).collect(Collectors.toList());
         List<DefaultItemResource> defaultItemResources = collect.stream().map(itemDto -> new DefaultItemResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
         CollectionModel<DefaultItemResource> result = CollectionModel.of(defaultItemResources);
         return ResponseEntity.ok(result);
     }
 
 
+
+
     @GetMapping("{id}")
     public ResponseEntity getItem(@PathVariable Long id) {
         this.itemService.improveViewCount(id);
         Optional<Item> savedItem = itemService.findById(id);
-        if(savedItem == null || savedItem.isEmpty()) {
+        if(savedItem.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Item newItem = savedItem.get();
-        ItemDto.GetItemDto itemDto = ItemDto.GetItemDto.toDto(newItem);
+        ItemDto.GetItemDto itemDto = ItemDto.GetItemDto.of(newItem);
         GetItemResource getItemResource = new GetItemResource(itemDto);
-//      itemResource.add(linkTo(ItemController.class).slash(savedItem.getId()).withRel("purchase-item"));
+        getItemResource.add(linkTo(methodOn(OrdersController.class).createOrder(null,null)).withRel("purchase-item"));
         return ResponseEntity.ok(getItemResource);
     }
 }
