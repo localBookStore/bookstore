@@ -6,10 +6,10 @@ import com.webservice.bookstore.config.security.jwt.JwtProperties;
 import com.webservice.bookstore.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,8 +32,7 @@ public class CustomLogoutSuccessfulHandler implements LogoutSuccessHandler {
 
         String token = request.getHeader(JwtProperties.HEADER_STRING);
 
-
-        if ((token != null) || !token.isEmpty()) {
+        if (StringUtils.isNotBlank(token)) {
             token = token.substring(JwtProperties.TOKEN_PREFIX.length());
             String email = JWT.decode(token).getSubject();
 

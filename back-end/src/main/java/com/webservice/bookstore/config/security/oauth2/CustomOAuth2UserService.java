@@ -13,6 +13,7 @@ import com.webservice.bookstore.domain.entity.member.MemberRole;
 import com.webservice.bookstore.exception.OAuth2AuthenticationProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -73,7 +74,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException(provider + "(으)로 로그인 할 수 없습니다.");
         }
 
-        if(oAuth2UserInfo.getEmail() == null || oAuth2UserInfo.getEmail().isEmpty()) {
+        if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException(provider + " 인증 서버에서 email을 찾을 수 없습니다.");
         }
 
