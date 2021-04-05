@@ -5,8 +5,10 @@ import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.order.Orders;
 import com.webservice.bookstore.domain.entity.orderItem.OrderItem;
 import com.webservice.bookstore.exception.AfterDateException;
+import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.web.dto.CouponDto;
 import lombok.*;
+import org.springframework.validation.Errors;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -51,9 +53,11 @@ public class Coupon {
         this.member = member;
     }
 
-    public static void validateCoupon(CouponDto couponDto) {
-        if(LocalDate.now().isAfter(couponDto.getEndDate())){
-            throw new AfterDateException("날짜가 지난 쿠폰입니다.");
+    public void validateCoupon(Errors errors) {
+        if(LocalDate.now().isAfter(this.getEndDate())) {
+            throw new ValidationException("날짜가 지난 쿠폰입니다.", errors.getFieldErrors());
+        } else if (this.isUsed) {
+            throw new ValidationException("이미 사용한 쿠폰입니다.", errors.getFieldErrors());
         }
     }
 

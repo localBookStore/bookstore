@@ -97,7 +97,7 @@ public class Orders extends BaseTimeEntity {
 
         // Orders, Delivery 엔티티 간 연관 데이터 주입
         order.addDelivery(delivery);
-        orderItemList.stream().forEach(orderItem -> order.addOrderItem(orderItem));
+        orderItemList.forEach(order::addOrderItem);
 
         return order;
     }
