@@ -1,9 +1,11 @@
 package com.webservice.bookstore.domain.entity.item;
 
+import com.webservice.bookstore.service.ItemService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,6 +21,9 @@ class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    ItemService itemService;
 
     @BeforeEach
     void setUp() {
@@ -48,7 +53,7 @@ class ItemRepositoryTest {
 
 
         //when
-        itemRepository.improveViewCount(savedItem.getId());
+        this.itemService.improveViewCount(savedItem.getId());
         Item item = itemRepository.findById(savedItem.getId()).get();
 
 
@@ -85,5 +90,18 @@ class ItemRepositoryTest {
                 .build();
         this.itemRepository.save(item);
     }
+
+    @Test
+    public void test3() throws Exception {
+        //given
+
+        //when
+
+        //then
+        System.out.println("==================");
+        System.out.println(StringUtils.isNotBlank("Bearer "));
+        System.out.println("".length());
+    }
+
 
 }

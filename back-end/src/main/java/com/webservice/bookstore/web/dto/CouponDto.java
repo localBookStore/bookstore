@@ -24,8 +24,6 @@ public class CouponDto {
     private String description;
     private int discountRate;
     private Long member_id;
-//    private Long category_id;
-//    private String category_name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate endDate;

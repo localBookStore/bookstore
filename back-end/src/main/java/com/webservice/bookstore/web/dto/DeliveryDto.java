@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class DeliveryDto {
@@ -21,34 +22,50 @@ public class DeliveryDto {
         private String address;
         private DeliveryEnum status;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime createdDate;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime modifiedDate;
 
         // Entity -> DTO
         public static Default of(Delivery delivery) {
             return Default.builder()
-                    .id(delivery.getId())
-                    .address(delivery.getAddress())
-                    .status(delivery.getStatus())
-                    .modifiedDate(delivery.getModifiedDate())
-                    .build();
+                          .id(delivery.getId())
+                          .address(delivery.getAddress())
+                          .status(delivery.getStatus())
+                          .createdDate(delivery.getCreatedDate())
+                          .modifiedDate(delivery.getModifiedDate())
+                          .build();
         }
 
         // DTO -> Entity
         public Delivery toEntity() {
             return Delivery.builder()
-                    .id(this.id)
-                    .address(this.address)
-                    .status(this.status)
-                    .build();
+                           .id(this.id)
+                           .address(this.address)
+                           .status(this.status)
+                           .build();
         }
 
         // Default -> Response
         public Response toResponse() {
+
+            long progress = 0;  // 배송 진행률 계산
+            if(!this.status.equals(DeliveryEnum.CANCEL) && !this.status.equals(DeliveryEnum.READY)) {
+                if(this.status == DeliveryEnum.COMPLETED) {
+                    progress = 100;
+                } else {
+                    long duration = Duration.between(this.modifiedDate, LocalDateTime.now()).getSeconds();
+                    progress = (long) (duration / (double)(60*60*24*3)) * 100;
+                }
+            }
+
             return Response.builder()
-                    .address(this.address)
-                    .status(this.status)
-                    .modifiedDate(this.modifiedDate)
-                    .build();
+                           .address(this.address)
+                           .status(this.status)
+                           .createdDate(this.createdDate)
+                           .modifiedDate(this.modifiedDate)
+                           .progress(progress)
+                           .build();
         }
 
     }
@@ -61,7 +78,10 @@ public class DeliveryDto {
         private String address;
         private DeliveryEnum status;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime createdDate;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime modifiedDate;
+        private Long progress;
     }
 
 }

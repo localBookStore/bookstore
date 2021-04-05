@@ -7,6 +7,7 @@ import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.config.security.auth.CustomUserDetailsService;
 import com.webservice.bookstore.util.RedisUtil;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,7 +64,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String authorizationValue = request.getHeader(JwtProperties.HEADER_STRING);  // jwt 토큰 값
 
         // JWT 토큰 값이 없거나 'Bearer ' 문자열로 시작하지 않는다면 다음 필터로 넘겨줌
-        if (authorizationValue == null || !authorizationValue.startsWith(JwtProperties.TOKEN_PREFIX)) {
+        if (StringUtils.isEmpty(authorizationValue) || !authorizationValue.startsWith(JwtProperties.TOKEN_PREFIX)) {
             log.info("No JWT, JWT structure issue :");
             filterChain.doFilter(request, response);
             return;

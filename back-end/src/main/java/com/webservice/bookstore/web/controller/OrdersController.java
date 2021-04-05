@@ -1,22 +1,19 @@
 package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
-import com.webservice.bookstore.domain.entity.cart.Cart;
-import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.exception.UnauthorizedException;
+import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.service.OrdersService;
 import com.webservice.bookstore.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -37,33 +34,30 @@ public class OrdersController {
     주문 생성
     */
     @PostMapping(value = "/order")
-    public ResponseEntity createOrder(@RequestBody Map<String, Object> map,
+    public ResponseEntity createOrder(@RequestBody @Valid OrdersDto.OrderRequest orderRequest, BindingResult bindingResult,
                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         verifyAuthentication(customUserDetails);
 
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException("주문 유효성 실패", bindingResult.getFieldErrors());
+        }
+
         MemberDto.Default memberDto = MemberDto.Default.builder()
-                .id(customUserDetails.getMember().getId())
-                .address(String.valueOf(map.get("address")))
-                .build();
+                                               .id(customUserDetails.getMember().getId())
+                                               .address(orderRequest.getAddress())
+                                               .build();
+
+        List<CartDto.Default> orderList = orderRequest.getOrderList();
+
         CouponDto couponDto = null;
-        if(!ObjectUtils.isEmpty(map.get("coupon_id"))){
+        if(orderRequest.getCoupon_id() != null) {
             couponDto = CouponDto.builder()
-                    .id(Long.parseLong(String.valueOf(map.get("coupon_id"))))
-                    .build();
-        }
-        List<Map<String, Object>> orderList = (List<Map<String, Object>>) map.get("orderList");
-
-        List<CartDto.Default> cartDtoList           = new ArrayList<>();
-        for(Map<String, Object> objectMap : orderList) {
-            cartDtoList.add(CartDto.Default.builder()
-                                           .id(Long.parseLong(String.valueOf(objectMap.get("id"))))
-                                           .orderCount(Integer.parseInt(String.valueOf(objectMap.get("orderCount"))))
-                                           .build()
-                            );
+                                 .id(orderRequest.getCoupon_id())
+                                 .build();
         }
 
-        orderService.addOrder(memberDto, couponDto, cartDtoList);
+        orderService.addOrder(memberDto, couponDto, orderList);
 
         return new ResponseEntity("success", HttpStatus.OK);
 
