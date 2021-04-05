@@ -49,13 +49,13 @@ public class DeliveryDto {
         // Default -> Response
         public Response toResponse() {
 
-            long progress = 0;  // 배송 진행률 계산
+            double progress = 0;  // 배송 진행률 계산
             if(!this.status.equals(DeliveryEnum.CANCEL) && !this.status.equals(DeliveryEnum.READY)) {
                 if(this.status.equals(DeliveryEnum.COMPLETED)) {
                     progress = 100;
                 } else {
                     long duration = Duration.between(this.modifiedDate, LocalDateTime.now()).getSeconds();
-                    progress = (long) (duration / (double)(60*60*24*3)) * 100;
+                    progress = (duration / (double)(259200)) * 100; // 259200 : 60*60*24*3 -> 3days
                 }
             }
 
@@ -64,7 +64,7 @@ public class DeliveryDto {
                            .status(this.status)
                            .createdDate(this.createdDate)
                            .modifiedDate(this.modifiedDate)
-                           .progress(progress)
+                           .progress((long) progress)
                            .build();
         }
 
