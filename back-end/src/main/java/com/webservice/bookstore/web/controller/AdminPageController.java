@@ -117,6 +117,25 @@ public class AdminPageController {
     }
 
     /*
+    관리자 페이지 주문(배송) 수락 요청
+    */
+    @PatchMapping("/orders/shipping/{order_id}")
+    public ResponseEntity acceptOrder(@RequestBody @PathVariable(value = "order_id") Long orders_id,
+                                      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        verifyAuthentication(customUserDetails);
+
+        OrdersDto.Default ordersDto = OrdersDto.Default.builder().id(orders_id).build();
+
+        List<OrdersDto.Default> orderDtoList = orderService.acceptOrder(ordersDto);
+
+        List<OrdersDto.Response> orderList = new ArrayList<>();
+        orderDtoList.forEach(orderDto -> orderList.add(orderDto.toResponse()));
+
+        return ResponseEntity.ok(orderList);
+    }
+
+    /*
     관리자 페이지 주문(배송) 취소 요청
     */
     @PatchMapping("/orders/cancel/{order_id}")
@@ -125,10 +144,7 @@ public class AdminPageController {
 
         verifyAuthentication(customUserDetails);
 
-        OrdersDto.Default ordersDto = OrdersDto.Default.builder()
-                                                       .id(orders_id)
-                                                       .member_id(customUserDetails.getMember().getId())
-                                                       .build();
+        OrdersDto.Default ordersDto = OrdersDto.Default.builder().id(orders_id).build();
 
         List<OrdersDto.Default> orderDtoList = orderService.cancelOrder(ordersDto);
 

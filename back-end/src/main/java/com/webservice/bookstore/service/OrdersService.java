@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -94,6 +92,17 @@ public class OrdersService {
         orderEntityList.stream().forEach(orders -> ordersDtoList.add(OrdersDto.Default.of(orders)));
 
         return ordersDtoList;
+    }
+
+    @Transactional
+    public List<OrdersDto.Default> acceptOrder(OrdersDto.Default ordersDto) {
+
+        Orders order = orderRepository.getOne(ordersDto.getId());
+        order.accept();
+
+        MemberDto.Default memberDto = MemberDto.Default.builder().id(order.getMember().getId()).build();
+        List<OrdersDto.Default> ordersList = this.findOrders(memberDto);
+        return ordersList;
     }
 
     @Transactional
