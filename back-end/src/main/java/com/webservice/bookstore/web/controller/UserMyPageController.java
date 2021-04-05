@@ -54,7 +54,7 @@ public class UserMyPageController {
         List<OrdersDto.Default> orderDtoList = orderService.findOrders(memberDto);
 
         List<OrdersDto.Response> orderList = new ArrayList<>();
-        orderDtoList.stream().forEach(orderDto -> orderList.add(orderDto.toResponse()));
+        orderDtoList.forEach(orderDto -> orderList.add(orderDto.toResponse()));
 
         return ResponseEntity.ok(orderList);
     }
