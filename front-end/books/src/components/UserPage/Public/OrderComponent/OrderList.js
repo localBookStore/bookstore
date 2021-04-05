@@ -7,7 +7,6 @@ import styled from "styled-components";
 
 const OrderList = ({ location }) => {
 	const [orders, setOrders] = useState(null);
-
 	const token = location.state.token;
 	useEffect(() => {
 		axios
@@ -16,7 +15,7 @@ const OrderList = ({ location }) => {
 			.catch((err) => console.log(err.response));
 	}, []);
 
-	return (
+  return (
 		<Container>
 			<h3>주문 목록들 입니다.</h3>
       <ItemTag>
@@ -24,9 +23,11 @@ const OrderList = ({ location }) => {
         <div>도착지</div>
         <div>배송상태</div>
         <div>배송비</div>
+        <div></div>
+        <div></div>
       </ItemTag>
 			{orders && orders.map((order, idx) => {
-					return <OrderPage order={order} key={idx} />;
+					return <OrderPage order={order} setOrders={setOrders} key={idx} token={token} />;
 				})}
 		</Container>
 	);
@@ -38,6 +39,6 @@ const Container = styled.div`
 `;
 const ItemTag = styled.h4`
 	display: flex;
-  justify-content: space-evenly;
-  margin: 10px 0;
+  justify-content: space-between;
+  margin: 20px 0;
 `;
