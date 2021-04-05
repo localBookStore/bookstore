@@ -37,7 +37,7 @@ public class OrdersDto {
                                                                  .id(orders.getDelivery().getId())
                                                                  .address(orders.getDelivery().getAddress())
                                                                  .status(orders.getDelivery().getStatus())
-                                                                 .createdDate(orders.getDelivery().getModifiedDate())
+                                                                 .createdDate(orders.getDelivery().getCreatedDate())
                                                                  .modifiedDate(orders.getDelivery().getModifiedDate())
                                                                  .build();
             List<OrderItemDto.Default> orderItemDtoList = new ArrayList<>();
