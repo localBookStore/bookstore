@@ -13,13 +13,21 @@ const UserOrder = ({location}) => {
       .catch(err => console.log(err.response))
   }, [])
 
-  console.log(orders)
   return <Container>
-    <div>{user.nickName}</div>
+    <div><h3>{user.nickName}</h3>님의 주문 목록입니다.</div>
+    {orders && orders.map((order, idx) => {
+      return <OrderContainer key={idx}>
+        {console.log(order)}
+      </OrderContainer>
+    })}
   </Container>
 }
 export default UserOrder;
 
 const Container = styled.div`
 
+`
+const OrderContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
 `
