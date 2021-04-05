@@ -1,9 +1,9 @@
 package com.webservice.bookstore.service;
 
 import com.webservice.bookstore.domain.entity.cart.Cart;
+import com.webservice.bookstore.domain.entity.cart.CartRepository;
 import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.coupon.CouponRepository;
-import com.webservice.bookstore.domain.entity.cart.CartRepository;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.member.Member;
@@ -16,12 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -65,7 +62,7 @@ public class OrdersService {
 //                                           .collect(Collectors.toList());
 
         // Member, Item 엔티티 조회 (자동으로 id 기준으로 오름차순을 조회함)
-        Member member       = memberRepository.findById(memberDto.getId()).get();
+        Member member = memberRepository.getOne(memberDto.getId());
         member.setAddress(memberDto.getAddress());
 
         List<Cart> cartList = cartRepository.findByIdInQuery(getCartIdList(cartDtoList));
@@ -78,7 +75,7 @@ public class OrdersService {
 
         Coupon coupon = null;
         if(couponDto != null) {
-            coupon = couponRepository.findById(couponDto.getId()).get();
+            coupon = couponRepository.getOne(couponDto.getId());
             coupon.validateCoupon(bindingResult.getFieldErrors());
             coupon.isUsed(true);
         }

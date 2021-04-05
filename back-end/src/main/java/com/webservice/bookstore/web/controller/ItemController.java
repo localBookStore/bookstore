@@ -28,15 +28,13 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    private final ModelMapper modelMapper;
-
     @GetMapping
     public ResponseEntity getSearchItems(@RequestParam(value = "tag") String tag, @RequestParam(value = "input") String input) {
         ItemSearch itemSearch = ItemSearch.builder().build();
         itemSearch.getItemSearch(tag, input);
 
         List<Item> items = this.itemService.searchBooks(itemSearch);
-        if(items == null || items.isEmpty()) {
+        if(items.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         List<ItemDto.Default> collect = items.stream().map(ItemDto.Default::of).collect(Collectors.toList());
