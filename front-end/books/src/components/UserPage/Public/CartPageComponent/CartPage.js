@@ -2,12 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import EachCartItem from "./EachCartItem";
 import CouponItem from "./CouponItem";
-import { useHistroy } from "react-router-dom";
 
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
 
-const CartPage = ({ location }) => {
+const CartPage = ({ location, history }) => {
   const {
     state: { token },
   } = location;
@@ -36,7 +35,7 @@ const CartPage = ({ location }) => {
     if (cartList) {
       let total = 0;
       setTimeout(() => {
-        cartList.map(({ price, orderCount }) => (total += price * orderCount));
+        cartList.map(({ price, orderCount }) =>  (total += price * orderCount));
         setTotalPrice(total);
       }, 200);
     }
@@ -90,7 +89,7 @@ const CartPage = ({ location }) => {
       address,
       coupon_id: selectedCoupon.id
     },{ headers: {Authorization: token }})
-    .then(res => console.log(res))
+    .then(res => history.replace('/'))
     .catch(err => console.log(err.response))
   };
 
@@ -102,7 +101,7 @@ const CartPage = ({ location }) => {
             return <EachCartItem data={res} cartList={cartList} setCartList={setCartList} checkEvent={checkEvent} key={idx} />;
           })}
           <AddressTitle>수령지</AddressTitle>
-          <AddressInput placeholder="주소를 입력하세요" onChange={e => setAddress(e.target.value)}/ >
+          <AddressInput placeholder="주소를 입력하세요" required onChange={e => setAddress(e.target.value)}/ >
           <ItemDeleteButton variant="danger" onClick={deleteCartBook}>삭제</ItemDeleteButton>
         </>
       )}
