@@ -50,7 +50,7 @@ public class AdminPageController {
         itemSearch.getItemSearch(tag,input);
 
         List<Item> items = this.itemService.searchBooks(itemSearch);
-        if(items.isEmpty()) {
+        if(items == null || items.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         List<ItemDto.Default> collect = items.stream().map(ItemDto.Default::of).collect(Collectors.toList());
