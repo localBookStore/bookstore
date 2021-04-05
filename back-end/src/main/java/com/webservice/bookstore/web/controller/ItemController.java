@@ -58,7 +58,7 @@ public class ItemController {
         Item newItem = savedItem.get();
         ItemDto.GetItemDto itemDto = ItemDto.GetItemDto.of(newItem);
         GetItemResource getItemResource = new GetItemResource(itemDto);
-        getItemResource.add(linkTo(methodOn(OrdersController.class).createOrder(null,null)).withRel("purchase-item"));
+        getItemResource.add(linkTo(methodOn(OrdersController.class).createOrder(null,null, null)).withRel("purchase-item"));
         return ResponseEntity.ok(getItemResource);
     }
 }
