@@ -11,8 +11,8 @@ const OrderList = ({ location }) => {
 	useEffect(() => {
 		axios
 			.get("http://localhost:8080/api/mypage/order", { headers: { Authorization: token } })
-			.then((res) => setOrders(res.data))
-			.catch((err) => console.log(err.response));
+        .then((res) => setOrders(res.data))
+        .catch((err) => console.log(err.response));
 	}, []);
 
   return (
