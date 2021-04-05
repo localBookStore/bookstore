@@ -1,14 +1,14 @@
 import { useState } from "react"
 import axios from "axios"
 
-import { Button, Modal } from "react-bootstrap"
+import { Button, Modal, ProgressBar } from "react-bootstrap"
 import styled from "styled-components"
 
 const DeliveryBar = ({status, percent}) => {
   switch (status){
     case "READY":
       return <div>
-        준비중
+        상품 준비중
       </div>
     case "CANCEL":
       return <div>
@@ -16,11 +16,11 @@ const DeliveryBar = ({status, percent}) => {
       </div>
     case "SHIPPING":
       return <div>
-        배송중
+        <ProgressBar animated variant="info" now={percent} label={`${percent}%`} />
       </div>
     default:
       return <div>
-        도착
+        <ProgressBar animated now={100} label="100%" />
       </div>
   }
 }
