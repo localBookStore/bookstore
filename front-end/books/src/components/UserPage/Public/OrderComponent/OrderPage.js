@@ -91,8 +91,8 @@ export default OrderPage;
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
+  justify-content: space-evenly;
+  margin: 20px 0;
 `
 const OrderContent = styled.div`
   width: 20%;

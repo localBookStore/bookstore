@@ -89,8 +89,8 @@ const CartPage = ({ location, history }) => {
       address,
       coupon_id: selectedCoupon.id
     },{ headers: {Authorization: token }})
-    .then(res => history.replace('/'))
-    .catch(err => console.log(err.response))
+    .then(res => history.replace('/mypage/orderlist'))
+    .catch(err => alert("상품은 하나라도 선택되어야 합니다. 혹은 주소를 입력하세요."))
   };
 
   return (
