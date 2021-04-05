@@ -34,7 +34,7 @@ const EachUserOrder = ({order, setOrders, token}) => {
   const acceptOrder = () => {};
 	const cancelOrder = () => {
     axios.patch(`http://localhost:8080/api/admin/orders/cancel/${order.id}`, null, {headers: {Authorization: token}})
-      .then(res => console.log(res))
+      .then(res => setOrders(res.data))
       .catch(err => console.log(err.response))
   };
 

@@ -35,11 +35,11 @@ const CartPage = ({ location, history }) => {
     if (cartList) {
       let total = 0;
       setTimeout(() => {
-        cartList.map(({ price, orderCount }) =>  (total += price * orderCount));
+        cartList.map(({ price, orderCount, id }) => checkList.includes(id) && (total += price * orderCount));
         setTotalPrice(total);
       }, 200);
     }
-  }, [cartList]);
+  }, [cartList, checkList]);
 
   const getCartBook = () => {
     axios
