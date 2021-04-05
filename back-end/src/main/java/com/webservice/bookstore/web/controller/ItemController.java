@@ -40,7 +40,7 @@ public class ItemController {
             return ResponseEntity.notFound().build();
         }
         List<ItemDto.Default> collect = items.stream().map(ItemDto.Default::of).collect(Collectors.toList());
-        List<DefaultItemResource> defaultItemResources = collect.stream().map(itemDto -> new DefaultItemResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
+        List<DefaultItemResource> defaultItemResources = collect.stream().map(DefaultItemResource::new).collect(Collectors.toList());
         CollectionModel<DefaultItemResource> result = CollectionModel.of(defaultItemResources);
         return ResponseEntity.ok(result);
     }
