@@ -25,4 +25,10 @@ public interface BoardRepository extends JpaRepository<Board,Long>, QuerydslPred
                      @Param("category") String category,
                      @Param("title") String title,
                      @Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("delete from Board where id=:id")
+    void deleteBoard(@Param("id") Long id);
+
 }

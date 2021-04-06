@@ -68,4 +68,14 @@ public class BoardController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
+    @DeleteMapping("/api/delete/board")
+    public ResponseEntity<String> removeBoard(
+            @RequestBody BoardDTO boardDTO,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        String email = customUserDetails.getMember().getEmail();
+        if(!boardService.deleteBoard(boardDTO,email))
+            return new ResponseEntity<>("잘못된 접근방법입니다. ",HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
 }
