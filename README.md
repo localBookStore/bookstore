@@ -2,6 +2,7 @@
 
 ## 목차
 
+- [How to run Application](https://github.com/wizard0987/bookstore/tree/develop/back-end)
 - [개요](#개요)
 - [필요성](#필요성)
 - [원리](#원리)
@@ -12,15 +13,15 @@
 ---
 
 
-## 1. 개요
+## 개요
 <br/><br/>
 
 
-## 2. 필요성
+## 필요성
 <br/><br/>
 
 
-## 3. 원리
+## 원리
 <br/><br/>
 
 
