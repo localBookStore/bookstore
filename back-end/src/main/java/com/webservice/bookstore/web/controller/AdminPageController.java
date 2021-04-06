@@ -2,9 +2,13 @@ package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.item.Item;
+import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import com.webservice.bookstore.exception.UnauthorizedException;
+import com.webservice.bookstore.service.BoardService;
 import com.webservice.bookstore.service.MemberService;
 import com.webservice.bookstore.service.OrdersService;
+import com.webservice.bookstore.web.dto.BoardDTO;
 import com.webservice.bookstore.web.dto.MemberDto;
 import com.webservice.bookstore.web.dto.OrdersDto;
 import com.webservice.bookstore.web.resource.DefaultItemResource;
@@ -13,7 +17,9 @@ import com.webservice.bookstore.service.ItemService;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -35,6 +42,12 @@ public class AdminPageController {
     private final MemberService memberService;
     private final ItemService itemService;
     private final OrdersService orderService;
+
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private BoardService boardService;
+
 
     @GetMapping("/items")
     public ResponseEntity getAdminItems() {
@@ -162,5 +175,14 @@ public class AdminPageController {
         }
     }
 
+    @GetMapping("/member/board/{member_id}")
+    public ResponseEntity<List<BoardDTO>> getMemberBoardList(
+            @PathVariable("member_id")Long memberId) {
 
+        Optional<Member> op = memberRepository.findById(memberId);
+        if(!op.isPresent())
+            throw new UnauthorizedException("아이디 정보가 없습니다..");
+        Member member = op.get();
+        return new ResponseEntity<>(boardService.getMemberBoardList(member.getId()), HttpStatus.OK);
+    }
 }

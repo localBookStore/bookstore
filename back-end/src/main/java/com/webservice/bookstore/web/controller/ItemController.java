@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,7 +57,7 @@ public class ItemController {
         Item newItem = savedItem.get();
         ItemDto.GetItemDto itemDto = ItemDto.GetItemDto.of(newItem);
         GetItemResource getItemResource = new GetItemResource(itemDto);
-        getItemResource.add(linkTo(methodOn(OrdersController.class).createOrder(null,null, null)).withRel("purchase-item"));
+        getItemResource.add(linkTo(CartController.class).slash(id).withRel("purchase-item"));
         return ResponseEntity.ok(getItemResource);
     }
 }

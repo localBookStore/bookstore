@@ -38,6 +38,8 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
         errorAttributes.put("path", request.getRequestURI());
 
         response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
+//        response.getWriter().write(objectMapper.writeValueAsString(errorAttributes)); // response 바디에 json 으로 담기
+
 
         // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
         // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,

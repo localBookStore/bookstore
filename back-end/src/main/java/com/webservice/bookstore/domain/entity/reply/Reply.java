@@ -21,7 +21,7 @@ public class Reply extends BaseTimeEntity {
 
     private Long memberId; //작성자 키값
 
-    private String memberUserid; //작성자 아이디
+    private String memberEmail; //작성자 아이디
 
     @Column(nullable = false,columnDefinition = "int(11) default 0")
     private int depth; //깊이
