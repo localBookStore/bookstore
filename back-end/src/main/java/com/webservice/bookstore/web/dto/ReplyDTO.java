@@ -19,7 +19,7 @@ public class ReplyDTO {
 
     private Long memberId; //작성자 키값
 
-    private String memberUserid; //작성자 아이디
+    private String memberEmail; //작성자 아이디
 
     private int depth; //깊이
 
@@ -34,7 +34,7 @@ public class ReplyDTO {
                 .content(replyDTO.getContent())
                 .depth(replyDTO.getDepth())
                 .groupOrder(replyDTO.getGroupOrder())
-                .memberUserid(replyDTO.getMemberUserid())
+                .memberEmail(replyDTO.getMemberEmail())
                 .memberId(replyDTO.getMemberId())
                 .board(board)
                 .parent(replyDTO.getParent())
@@ -46,7 +46,7 @@ public class ReplyDTO {
                 .content(reply.getContent())
                 .depth(reply.getDepth())
                 .groupOrder(reply.getGroupOrder())
-                .memberUserid(reply.getMemberUserid())
+                .memberEmail(reply.getMemberEmail())
                 .memberId(reply.getMemberId())
                 .boardId(reply.getBoard().getId())
                 .parent(reply.getParent())
