@@ -39,7 +39,6 @@ public class BoardController {
     @Autowired
     private MemberRepository memberRepository;
 
-
     @GetMapping({"/board/","/board"})
     public ResponseEntity<PageResultDTO<BoardDTO, Board>> showPageBoardList(PageRequestDTO pageRequestDTO) {
         PageResultDTO<BoardDTO, Board> pageResultDTO = boardService.pageCommunityList(pageRequestDTO);
@@ -112,6 +111,4 @@ public class BoardController {
 
         return new ResponseEntity<>(boardService.getMemberBoardList(member.getId()), HttpStatus.OK);
     }
-
-
 }

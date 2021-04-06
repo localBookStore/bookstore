@@ -58,4 +58,15 @@ public class ReplyService {
         return true;
     }
 
+    @Transactional
+    @Modifying
+    public boolean deleteReply(ReplyDTO replyDTO,String loginEmail) {
+        Reply reply = replyRepository.getOne(replyDTO.getId());
+        if (loginEmail == null || loginEmail.length() == 0)
+            return false;
+        if (!reply.getMemberEmail().equals(loginEmail))
+            return false;
+        replyRepository.deleteById(replyDTO.getId());
+        return true;
+    }
 }

@@ -28,4 +28,5 @@ public interface ReplyRepository extends JpaRepository<Reply,Long>, QuerydslPred
     @Query(value = "delete from Reply where board_id = :board_id",nativeQuery = true)
     void deleteReplyByBoard(@Param("board_id") Long boardId);
 
+
 }
