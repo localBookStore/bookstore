@@ -74,7 +74,7 @@ public class BoardController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/delete/board")
+    @DeleteMapping("/board/delete")
     public ResponseEntity<String> removeBoard(
             @RequestBody BoardDTO boardDTO,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
