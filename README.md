@@ -2,12 +2,11 @@
 
 
 ## 개요
----
 <br/><br/>
 
 
 ## Skill & Tools
-- - - -
+
 
 **BackEnd**
 - Java 11
@@ -20,12 +19,10 @@
 
 
 ## 필요성
----
 <br/><br/>
 
 
 ## 구현 기능 & Docs
----
 
 - [프로젝트 생성 및 DB 연결 설정](https://github.com/wizard0987/bookstore/blob/develop/docs/1_Init.md)
 - [Security](https://github.com/wizard0987/bookstore/blob/develop/docs/2_Security.md)
@@ -33,12 +30,13 @@
 
 
 
-## 5. API 설계도
+## API 설계도
 ![API_structure](https://user-images.githubusercontent.com/59079426/110195985-b2792a00-7e84-11eb-8140-3c96399a8fd6.jpg)
 
 <br/>
 
-## 6. 프로토타입
+
+## 프로토타입
 <br/>
 
 > **카카오 오븐 사용 <br/>
