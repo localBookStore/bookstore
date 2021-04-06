@@ -32,6 +32,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
 
+
+    /*
+        OAuth2 공급자로부터 액세스 토큰을 얻은 후에 호출됩니다. Oauth2 공급자로부터 사용자의 세부정보를 가져옴.
+        동일한 이메일을 사용하는 사용자가 이미 데이터베이스에 있으면 세부 정보를 업데이트하고 그렇지 않으면 새 사용자를 등록합니다.
+     */
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -83,7 +88,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         Member memberEntity = null;
 
-        if(!optionalMember.isPresent()) {
+        if(optionalMember.isEmpty()) {
             log.info("DB에 존재하지 않으므로 바로 회원가입");
             memberEntity = registerNewMember(oAuth2UserInfo);
         } else {

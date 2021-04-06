@@ -60,6 +60,7 @@ dependencies {
     // HttpClient의 Multipart 설정을 위한 라이브러리 설정
     implementation 'org.apache.httpcomponents:httpmime'
 
+//    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4")
     compile("com.querydsl:querydsl-core") // querydsl
     compile("com.querydsl:querydsl-jpa") // querydsl
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa" // querydsl JPAAnnotationProcessor 사용 지정

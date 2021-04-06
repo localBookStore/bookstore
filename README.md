@@ -1,39 +1,42 @@
 # 도서 판매 Plat-form
 
-## 목차
 
-- [개요](#개요)
-- [필요성](#필요성)
-- [원리](#원리)
-- [구조](#구조)
-- [프로토타입](#프로토타입)
-
-
----
-
-
-## 1. 개요
+## 개요
 <br/><br/>
 
 
-## 2. 필요성
+## Skill & Tools
+
+
+**BackEnd**
+- Java 11
+- Spring boot
+
+
+**Front-end**
+- React
+
+
+
+## 필요성
 <br/><br/>
 
 
-## 3. 원리
-<br/><br/>
+## 구현 기능 & Docs
+
+- [프로젝트 생성 및 DB 연결 설정](https://github.com/wizard0987/bookstore/blob/develop/docs/1_Init.md)
+- [Security](https://github.com/wizard0987/bookstore/blob/develop/docs/2_Security.md)
+- ....
 
 
-## 4. 구조
-<br/><br/>
 
-
-## 5. API 설계도
+## API 설계도
 ![API_structure](https://user-images.githubusercontent.com/59079426/110195985-b2792a00-7e84-11eb-8140-3c96399a8fd6.jpg)
 
 <br/>
 
-## 6. 프로토타입
+
+## 프로토타입
 <br/>
 
 > **카카오 오븐 사용 <br/>
