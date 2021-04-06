@@ -51,6 +51,6 @@ public class BoardController {
     @PostMapping("/board/")
     public ResponseEntity<String> boardRegister(@RequestBody BoardDTO boardDTO){
         boardService.boardRegister(boardDTO);
-        return new ResponseEntity<>("string",HttpStatus.OK);
+        return new ResponseEntity<>("success",HttpStatus.OK);
     }
 }
