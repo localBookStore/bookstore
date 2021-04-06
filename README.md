@@ -2,8 +2,8 @@
 
 ## 목차
 
-- [How to run Application](https://github.com/wizard0987/bookstore/tree/develop/back-end)
-- [개요](#개요)
+- [프로젝트 생성 및 DB 연결 설정](https://github.com/wizard0987/bookstore/blob/develop/docs/1_Init.md)
+- [Security](https://github.com/wizard0987/bookstore/blob/develop/docs/2_Security.md)
 - [필요성](#필요성)
 - [원리](#원리)
 - [구조](#구조)
