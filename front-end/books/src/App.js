@@ -2,9 +2,9 @@ import Header from "./components/HeaderPage/Header";
 import Home from "./components/MainPage/HomePage/Home";
 import ItemDetail from "./components/MainPage/DetailPage/ItemDetail";
 import BookList from "./components/MainPage/BookListPage/BookList";
-import Community from "./components/MainPage/ComunityPage/Community";
-import CommunityRegister from "./components/MainPage/ComunityPage/CommunityRegister";
-import CommunityDetail from "./components/MainPage/ComunityPage/CommunityDetail";
+import Community from "./components/MainPage/CommunityPage/Community";
+import CommunityRegister from "./components/MainPage/CommunityPage/CommunityRegister";
+import CommunityDetail from "./components/MainPage/CommunityPage/CommunityDetail";
 import Footer from "./components/FooterPage/Footer";
 import LoginPage from "./components/UserPage/LoginPage";
 import SignupPage from "./components/UserPage/SignupPage";
@@ -26,7 +26,7 @@ const App = () => {
       <Header />
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/detail" component={ItemDetail} />
+        <Route path="/detail/:id" component={ItemDetail} />
         <Route path="/booklist" component={BookList} />
         <Route exact path="/community" component={Community} />
         <Route path="/community/detail/:id" component={CommunityDetail} />
@@ -45,5 +45,4 @@ export default App;
 
 const AppContainer = styled.div`
   margin: 20px 8%;
-  height: 100vh;
 `;

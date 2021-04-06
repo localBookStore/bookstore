@@ -1,47 +1,74 @@
+import { useState, useEffect } from "react"
+import { NavLink } from "react-router-dom"
+import axios from "axios";
+
+import { Image } from "react-bootstrap";
 import styled from "styled-components";
 
-const BookList = ({ history }) => {
-  const { input, tag, items } = history.location.state;
-  console.log(items);
-  const clickEvent = (book) => {
-    history.push({
-      pathname: "/detail",
-      search: `?id=${book.id}`,
-      state: book,
-    });
-  };
+const genreMap = {
+  0: '총류',
+  1: '철학',
+  2: '종료',
+  3: '사회과학',
+  4: '자연과학',
+  5: '기술과학',
+  6: '예술',
+  7: '언어',
+  8: '문학',
+  9: '역사'
+}
 
-  return (
-    <>
-      {input && tag && <div>태그명 : {tag} </div>}
-      {input && tag && <div>검색어 : {input}</div>}
-      {items ? (
-        items.map((book, idx) => {
-          return (
-            <div key={idx}>
-              <ImageButton onClick={() => clickEvent(book)}>
-                <BookPosterImage src={book.imageUrl} alt="idx" />
-              </ImageButton>
-              <h2>{book.name}</h2>
-              <p>{book.description}</p>
-            </div>
-          );
-        })
-      ) : (
-        <h2>{input}에 대한 검색 결과가 없습니다.</h2>
-      )}
-    </>
-  );
+const BookList = ({ location }) => {
+  const address = location.state.address
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/index/${address}/`)
+      .then(({data: { _embedded: { defaultList }}}) => setBooks(defaultList))
+      .catch(err => console.log(err))
+  }, [])
+  console.log(books)
+  return <Container>
+    {books.length && books.map((book, idx) => {
+      return <ItemContainer key={idx}>
+        <ItemContent>
+          <NavButton to={{pathname:`/detail/${book.id}`, state:{book}}}>
+            <ItemImage src={book.imageUrl} rounded fluid/>
+          </NavButton>
+        </ItemContent>
+        <ItemContent>
+          제목: {book.name} <br />
+          장르: {genreMap[book.category_id]} <br />
+          가격: {book.price}
+        </ItemContent>
+        
+      </ItemContainer> 
+    })}
+  </Container>
 };
 export default BookList;
 
-const ImageButton = styled.button`
-  border: 0 none;
-  background-color: transparent;
-`;
-
-const BookPosterImage = styled.img`
+const Container = styled.div`
+`
+const ItemContainer = styled.div`
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const ItemImage = styled(Image)`
   width: 240px;
-  height: 320px;
+  height: 330px;
   object-fit: cover;
-`;
+`
+const NavButton = styled(NavLink)`
+  margin: 0 10% 0 0;
+  float: right;
+`
+
+const ItemContent = styled.div`
+  margin: 0 4%;
+  font-size: 22px;
+  font-weight: 600;
+  flex-grow: 1;
+`
