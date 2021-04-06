@@ -1,6 +1,5 @@
 package com.webservice.bookstore.service;
 
-import com.querydsl.core.BooleanBuilder;
 import com.webservice.bookstore.domain.entity.board.Board;
 import com.webservice.bookstore.domain.entity.board.BoardRepository;
 import com.webservice.bookstore.domain.entity.member.Member;
@@ -12,15 +11,14 @@ import com.webservice.bookstore.web.dto.PageResultDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
-import java.util.stream.IntStream;
 
 @Service
 @Log4j2
@@ -39,6 +37,16 @@ public class BoardService {
         return new PageResultDTO<>(result,fn);
 
     }
+    public List<BoardDTO> getMemberBoardList(Long memberId){
+        List<Object[]> list = boardRepository.getMemberBoardList(memberId);
+        List<BoardDTO> result = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            Board board =(Board)list.get(i)[0];
+            BoardDTO dto = BoardDTO.entityToDTO(board);
+            result.add(dto);
+        }
+        return result;
+    }
 
 
     //게시판 등록
@@ -51,8 +59,6 @@ public class BoardService {
     public BoardDTO showBoardDetailPage(Long id){
         Board board = boardRepository.getOne(id);
         BoardDTO dto = BoardDTO.entityToDTO(board);
-
-
         return dto;
     }
 
@@ -80,4 +86,6 @@ public class BoardService {
         boardRepository.deleteBoard(boardDTO.getId());
         return true;
     }
+
+
 }

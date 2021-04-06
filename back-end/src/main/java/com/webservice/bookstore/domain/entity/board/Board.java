@@ -30,4 +30,5 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+
 }

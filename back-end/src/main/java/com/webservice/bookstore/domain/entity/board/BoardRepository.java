@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.board;
 
+import com.webservice.bookstore.web.dto.BoardDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,5 +31,9 @@ public interface BoardRepository extends JpaRepository<Board,Long>, QuerydslPred
     @Transactional
     @Query("delete from Board where id=:id")
     void deleteBoard(@Param("id") Long id);
+
+    @Query(value = "select b,m from Board b join Member m on b.member.id=m.id where m.id=:id")
+    List<Object[]> getMemberBoardList(@Param("id")Long memberId);
+
 
 }
