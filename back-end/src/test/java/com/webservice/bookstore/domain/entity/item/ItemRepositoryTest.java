@@ -101,6 +101,11 @@ class ItemRepositoryTest {
         System.out.println("==================");
         System.out.println(StringUtils.isNotBlank("Bearer "));
         System.out.println("".length());
+
+        String token = "Bearer fadsfsafdsf.fdasdasfa";
+        String prefix = "Bearer ";
+
+        System.out.println(token.substring(prefix.length()));
     }
 
 

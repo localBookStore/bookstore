@@ -104,6 +104,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             resultAttributes.put("path", request.getRequestURI());
 
             response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
+//            response.getWriter().write(objectMapper.writeValueAsString(resultAttributes)); response 바디에 json 으로 담기.
 
             SecurityContextHolder.getContext().setAuthentication(null);
         }
@@ -127,6 +128,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         errorAttributes.put("path", request.getRequestURI());
 
         response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
+//        response.getWriter().write(objectMapper.writeValueAsString(errorAttributes)); // write response body
 
     }
 
