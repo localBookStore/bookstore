@@ -51,4 +51,12 @@ public class BoardService {
 
         return dto;
     }
+
+    public void modifyBoard(BoardDTO boardDTO){
+        boardRepository.modifyBoard(boardDTO.getContent(),
+                boardDTO.getCategory(),
+                boardDTO.getTitle(),
+                boardDTO.getId()
+        );
+    }
 }
