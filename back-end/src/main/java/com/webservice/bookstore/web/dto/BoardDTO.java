@@ -62,6 +62,8 @@ public class BoardDTO {
                 .title(board.getTitle())
                 .createdDate(board.getCreatedDate())
                 .modifiedDate(board.getModifiedDate())
+                .memberEmail(board.getMember().getEmail())
+                .memberId(board.getMember().getId())
                 .build();
     }
 
