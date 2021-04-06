@@ -22,10 +22,6 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
 
     List<Item> findByCategoryId(Long id);
 
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query("update Item i set i.viewCount = i.viewCount + 1 where i.id = :id")
-    int improveViewCount(@Param("id") Long id);
 
     @Query(value = "select * from Item i order by i.view_count desc limit 30", nativeQuery = true)
     List<Item> getBestItems();
@@ -33,7 +29,7 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     @Query("select i from Item i join fetch i.category ic where i.id = :id")
     Optional<Item> findById(@Param("id") Long id);
 
-    List<Item> findByIdIn(List<Long> itemIdList);
+//    List<Item> findByIdIn(List<Long> itemIdList);
 
     @Query(value = "select * from Item i order by i.publication_date desc limit 30", nativeQuery = true)
     List<Item> getNewItems();
@@ -42,4 +38,11 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     @Modifying(clearAutomatically = true)
     @Query("delete from Item i where i.id in :ids")
     void deleteIn(@Param("ids") List<Long> ids);
+
+
+
+
+//    @Modifying(clearAutomatically = true)
+//    @Query("update Item i set i.viewCount = i.viewCount + 1 where i.id = :id")
+//    int improveViewCount(@Param("id") Long id);
 }

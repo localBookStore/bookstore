@@ -10,7 +10,6 @@ import com.webservice.bookstore.web.dto.OrdersDto;
 import com.webservice.bookstore.web.resource.DefaultItemResource;
 import com.webservice.bookstore.domain.entity.item.ItemSearch;
 import com.webservice.bookstore.service.ItemService;
-import com.webservice.bookstore.web.dto.DeleteRequestDto;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,7 +30,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/admin", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
-public class AdminMyPageController {
+public class AdminPageController {
 
     private final MemberService memberService;
     private final ItemService itemService;
@@ -40,7 +39,7 @@ public class AdminMyPageController {
     @GetMapping("/items")
     public ResponseEntity getAdminItems() {
         List<ItemDto.Default> itemDtos = this.itemService.findItems();
-        List<DefaultItemResource> defaultItemResources = itemDtos.stream().map(itemDto -> new DefaultItemResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
+        List<DefaultItemResource> defaultItemResources = itemDtos.stream().map(DefaultItemResource::new).collect(Collectors.toList());
         return ResponseEntity.ok(defaultItemResources);
     }
 
@@ -48,18 +47,14 @@ public class AdminMyPageController {
     public ResponseEntity getAdminSearchItems(@RequestParam(value = "tag") String tag, @RequestParam(value = "input") String input) {
         ItemSearch itemSearch = ItemSearch.builder()
                 .build();
-        if(tag.equals("name")) {
-            itemSearch.setName(input);
-        } else if(tag.equals("author")){
-            itemSearch.setAuthor(input);
-        }
+        itemSearch.getItemSearch(tag,input);
 
         List<Item> items = this.itemService.searchBooks(itemSearch);
         if(items == null || items.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<ItemDto.Default> collect = items.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
-        List<DefaultItemResource> defaultItemResources = collect.stream().map(itemDto -> new DefaultItemResource(itemDto, linkTo(ItemController.class).slash(itemDto.getId()).withSelfRel())).collect(Collectors.toList());
+        List<ItemDto.Default> collect = items.stream().map(ItemDto.Default::of).collect(Collectors.toList());
+        List<DefaultItemResource> defaultItemResources = collect.stream().map(DefaultItemResource::new).collect(Collectors.toList());
         return ResponseEntity.ok(defaultItemResources);
     }
 
@@ -69,8 +64,8 @@ public class AdminMyPageController {
         ItemDto.Default savedItemDto = this.itemService.addItem(itemDto);
         DefaultItemResource defaultItemResource = new DefaultItemResource(savedItemDto);
         URI uri = linkTo(ItemController.class).slash(savedItemDto.getId()).toUri();
-        defaultItemResource.add(linkTo(methodOn(AdminMyPageController.class).modifyItem(savedItemDto)).withRel("modify-item"));
-        defaultItemResource.add(linkTo(methodOn(AdminMyPageController.class).deleteItems(null)).withRel("delete-item"));
+        defaultItemResource.add(linkTo(methodOn(AdminPageController.class).modifyItem(savedItemDto)).withRel("modify-item"));
+        defaultItemResource.add(linkTo(methodOn(AdminPageController.class).deleteItems(null)).withRel("delete-items"));
         return ResponseEntity.created(uri).body(defaultItemResource);
     }
 
@@ -85,7 +80,7 @@ public class AdminMyPageController {
     @DeleteMapping("/items")
     public ResponseEntity deleteItems(@RequestBody List<Long> ids) {
         List<ItemDto.Default> remainItems = itemService.deleteItem(ids);
-        List<DefaultItemResource> itemLinkResources = remainItems.stream().map(itemDto -> new DefaultItemResource(itemDto)).collect(Collectors.toList());
+        List<DefaultItemResource> itemLinkResources = remainItems.stream().map(DefaultItemResource::new).collect(Collectors.toList());
         return ResponseEntity.ok(itemLinkResources);
     }
 
@@ -116,13 +111,32 @@ public class AdminMyPageController {
         List<OrdersDto.Default> orderDtoList = orderService.findOrders(memberDto);
 
         List<OrdersDto.Response> orderList = new ArrayList<>();
-        orderDtoList.stream().forEach(orderDto -> orderList.add(orderDto.toResponse()));
+        orderDtoList.forEach(orderDto -> orderList.add(orderDto.toResponse()));
 
         return ResponseEntity.ok(orderList);
     }
 
     /*
-    관리자 페이지 주문 취소 요청
+    관리자 페이지 주문(배송) 수락 요청
+    */
+    @PatchMapping("/orders/shipping/{order_id}")
+    public ResponseEntity acceptOrder(@RequestBody @PathVariable(value = "order_id") Long orders_id,
+                                      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        verifyAuthentication(customUserDetails);
+
+        OrdersDto.Default ordersDto = OrdersDto.Default.builder().id(orders_id).build();
+
+        List<OrdersDto.Default> orderDtoList = orderService.acceptOrder(ordersDto);
+
+        List<OrdersDto.Response> orderList = new ArrayList<>();
+        orderDtoList.forEach(orderDto -> orderList.add(orderDto.toResponse()));
+
+        return ResponseEntity.ok(orderList);
+    }
+
+    /*
+    관리자 페이지 주문(배송) 취소 요청
     */
     @PatchMapping("/orders/cancel/{order_id}")
     public ResponseEntity cancelOrder(@RequestBody @PathVariable(value = "order_id") Long orders_id,
@@ -130,15 +144,12 @@ public class AdminMyPageController {
 
         verifyAuthentication(customUserDetails);
 
-        OrdersDto.Default ordersDto = OrdersDto.Default.builder()
-                                                       .id(orders_id)
-                                                       .member_id(customUserDetails.getMember().getId())
-                                                       .build();
+        OrdersDto.Default ordersDto = OrdersDto.Default.builder().id(orders_id).build();
 
         List<OrdersDto.Default> orderDtoList = orderService.cancelOrder(ordersDto);
 
         List<OrdersDto.Response> orderList = new ArrayList<>();
-        orderDtoList.stream().forEach(orderDto -> orderList.add(orderDto.toResponse()));
+        orderDtoList.forEach(orderDto -> orderList.add(orderDto.toResponse()));
 
         return ResponseEntity.ok(orderList);
     }

@@ -69,11 +69,6 @@ class CouponControllerTest {
     public void 쿠폰_발급_테스트() throws Exception {
         //given
 
-        Category category = Category.builder()
-                .id(10L)
-                .name("총류")
-                .build();
-        categoryRepository.save(category);
 
         IntStream.rangeClosed(1,3).forEach(i -> {
             Member member = Member.builder()
@@ -86,8 +81,6 @@ class CouponControllerTest {
         });
 
         CouponAddDto couponAddDto = CouponAddDto.builder()
-                .category_id(category.getId())
-                .category_name(category.getName())
                 .description("신상 쿠폰 입니다.")
                 .endDate(null)
                 .name("신상스")

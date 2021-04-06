@@ -24,22 +24,22 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final MemberRepository memberRepository;
 
-    public List<Coupon> findCoupons(Long memberId) {
+    public List<CouponDto> findCoupons(Long memberId) {
         List<Coupon> coupons = couponRepository.findCouponList(memberId);
-        return coupons;
+        List<CouponDto> couponDtos = coupons.stream().map(CouponDto::of).collect(Collectors.toList());
+        return couponDtos;
     }
 
-    public Optional<Coupon> findById(Long id) {
-        Optional<Coupon> coupon = couponRepository.findById(id);
-        return coupon;
-    }
+//    public Optional<Coupon> findById(Long id) {
+//        Optional<Coupon> coupon = couponRepository.findById(id);
+//        return coupon;
+//    }
 
     @Transactional
-    public void issueCoupon(CouponAddDto couponDto) {
+    public void issueCoupons(CouponAddDto couponDto) {
         List<Member> members = this.memberRepository.findAll();
-//        Category category = Category.builder().id(couponDto.getCategory_id()).name(couponDto.getCategory_name()).build();
 
-        members.stream().forEach(member -> {
+        members.forEach(member -> {
             Coupon savedCoupon = savedNewCoupon(couponDto);
             member.addCoupon(savedCoupon);
         });

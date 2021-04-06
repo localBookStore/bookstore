@@ -45,20 +45,14 @@ class CouponRepositoryTest {
     @Test
     public void 카테고리별_쿠폰조회() throws Exception {
         //given
-        Category category = Category.builder()
-                .id(1L)
-                .name("역사")
+        Member member = Member.builder()
+                .name("dfsafs@fdsafs")
+                .password("1234")
                 .build();
+        this.memberRepository.save(member);
 
-        Category category2 = Category.builder()
-                .id(2L)
-                .name("과학")
-                .build();
-        categoryRepository.save(category);
-        categoryRepository.save(category2);
 
         Coupon coupon = Coupon.builder()
-                .category(category)
                 .name("역사 쿠폰")
                 .description("좋은 쿠폰")
                 .discountRate(30)
@@ -69,11 +63,11 @@ class CouponRepositoryTest {
 
         //then
         List<Coupon> couponList =
-                this.couponRepository.findCouponList(category.getId());
+                this.couponRepository.findCouponList(member.getId());
         for (Coupon coupon1 : couponList) {
             System.out.println("Coupon : " + coupon1);
         }
-        assertThat(couponList.get(0).getCategory()).isEqualTo(category);
+//        assertThat(couponList.get(0).getCategory()).isEqualTo(category);
     }
 
     @Test
@@ -85,16 +79,10 @@ class CouponRepositoryTest {
                 .build();
         this.memberRepository.save(member);
 
-        Category category = Category.builder()
-                .id(1L)
-                .name("역사")
-                .build();
-        this.categoryRepository.save(category);
 
         Coupon coupon = Coupon.builder()
                 .name("만기")
                 .description("dkddd")
-                .category(category)
                 .member(member)
                 .endDate(LocalDate.of(2020, 12, 1))
                 .build();
@@ -103,9 +91,9 @@ class CouponRepositoryTest {
 
         //then
         CouponDto couponDto = CouponDto.of(coupon);
-        assertThrows(AfterDateException.class, () -> {
-            Coupon.validateCoupon(couponDto);
-        });
+//        assertThrows(AfterDateException.class, () -> {
+//            coupon.validateCoupon();
+//        });
     }
 
 
@@ -118,20 +106,9 @@ class CouponRepositoryTest {
                 .build();
         this.memberRepository.save(member);
 
-        Category category = Category.builder()
-                .id(1L)
-                .name("역사")
-                .build();
 
-        Category category2 = Category.builder()
-                .id(2L)
-                .name("과학")
-                .build();
-        categoryRepository.save(category);
-        categoryRepository.save(category2);
 
         Coupon coupon = Coupon.builder()
-                .category(category)
                 .name("역사 쿠폰")
                 .description("좋은 쿠폰")
                 .member(member)

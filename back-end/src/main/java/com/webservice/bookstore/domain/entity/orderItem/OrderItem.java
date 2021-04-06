@@ -1,5 +1,6 @@
 package com.webservice.bookstore.domain.entity.orderItem;
 
+import com.webservice.bookstore.domain.entity.cart.Cart;
 import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.BaseTimeEntity;
 import com.webservice.bookstore.domain.entity.item.Item;
@@ -55,20 +56,19 @@ public class OrderItem extends BaseTimeEntity {
     /*
     주문아이템 생성 메소드
     */
-    public static List<OrderItem> createOrderItem(List<Item> itemList,
-                                                  List<OrderItemDto.Default> orderItemDtoList) {
+    public static List<OrderItem> createOrderItem(List<Item> itemList, List<Cart> cartList) {
 
         List<OrderItem> orderItemList = new ArrayList<>();
         for(int i = 0; i < itemList.size(); i++) {
             OrderItem orderItem = OrderItem.builder()
                                            .item(itemList.get(i))
                                            .orderPrice(itemList.get(i).getPrice())
-                                           .orderCount(orderItemDtoList.get(i).getOrderCount())
+                                           .orderCount(cartList.get(i).getOrderCount())
                                            .build();
             orderItemList.add(orderItem);
 
             // (주문 생성 시) 재고량(stock) 감소
-            itemList.get(i).removeStockQuantity(orderItemDtoList.get(i).getOrderCount());
+            itemList.get(i).removeStockQuantity(cartList.get(i).getOrderCount());
         }
         return orderItemList;
     }

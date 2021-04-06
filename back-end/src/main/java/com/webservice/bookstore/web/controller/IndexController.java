@@ -61,8 +61,7 @@ public class IndexController {
         List<ItemDto.Default> itemDtoList = itemService.getRandomListByGenre();
 
         List<DefaultItemResource> emList = itemDtoList.stream()
-                .map(itemDto -> new DefaultItemResource(itemDto,
-                        linkTo(methodOn(ItemController.class).getItem(itemDto.getId())).withSelfRel()))
+                .map(DefaultItemResource::new)
                 .collect(Collectors.toList());
 
         // 카테고리 번호별로 분류한 json 구조로 직렬화(selialize)
@@ -83,8 +82,7 @@ public class IndexController {
         List<ItemDto.Default> itemList = itemService.getListByGenre(category_id);
 
         List<DefaultItemResource> emList = itemList.stream()
-                .map(itemDto -> new DefaultItemResource(itemDto,
-                        linkTo(methodOn(IndexController.class).getListByGenre(itemDto.getId())).withSelfRel()))
+                .map(DefaultItemResource::new)
                 .collect(Collectors.toList());
 
         CollectionModel<DefaultItemResource> collectionModel = CollectionModel.of(emList);
@@ -96,7 +94,7 @@ public class IndexController {
     public ResponseEntity getNewItems() {
         List<Item> newItems = this.itemService.getNewItems();
         List<ItemDto.Default> itemDtos = newItems.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
-        List<DefaultItemResource> defaultItemResources = itemDtos.stream().map(itemDto -> new DefaultItemResource(itemDto))
+        List<DefaultItemResource> defaultItemResources = itemDtos.stream().map(DefaultItemResource::new)
                                                                              .collect(Collectors.toList());
         CollectionModel<DefaultItemResource> collectionModel = CollectionModel.of(defaultItemResources);
         return ResponseEntity.ok(collectionModel);
@@ -106,7 +104,7 @@ public class IndexController {
     public ResponseEntity getBestItems() {
         List<Item> items = this.itemService.bestItems();
         List<ItemDto.Default> itemDtos = items.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
-        List<DefaultItemResource> defaultItemResources = itemDtos.stream().map(itemDto -> new DefaultItemResource(itemDto))
+        List<DefaultItemResource> defaultItemResources = itemDtos.stream().map(DefaultItemResource::new)
                                                                             .collect(Collectors.toList());
         CollectionModel<DefaultItemResource> collectionModel = CollectionModel.of(defaultItemResources);
         return ResponseEntity.ok(collectionModel);

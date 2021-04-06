@@ -36,7 +36,10 @@ public class ItemService {
 
     @Transactional
     public void improveViewCount(Long id) {
-        this.itemRepository.improveViewCount(id);
+        Item item = this.itemRepository.findById(id).orElseThrow(NullPointerException::new);
+        item.addViewCount(item.getViewCount());
+
+//        this.itemRepository.improveViewCount(id);
     }
 
     public List<Item> bestItems() {
@@ -84,7 +87,7 @@ public class ItemService {
 
     public List<ItemDto.Default> findItems() {
         List<Item> items = itemRepository.findAll();
-        List<ItemDto.Default> collect = items.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
+        List<ItemDto.Default> collect = items.stream().map(ItemDto.Default::of).collect(Collectors.toList());
         return collect;
     }
 
@@ -105,7 +108,7 @@ public class ItemService {
     public List<ItemDto.Default> deleteItem(List<Long> ids) {
         itemRepository.deleteIn(ids);
         List<Item> remainItems = itemRepository.findAll();
-        List<ItemDto.Default> remainItemDtoList = remainItems.stream().map(item -> ItemDto.Default.of(item)).collect(Collectors.toList());
-        return remainItemDtoList;
+        List<ItemDto.Default> reaminItemDtos = remainItems.stream().map(ItemDto.Default::of).collect(Collectors.toList());
+        return reaminItemDtos;
     }
 }

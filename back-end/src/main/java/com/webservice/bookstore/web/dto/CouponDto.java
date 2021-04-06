@@ -6,6 +6,7 @@ import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRole;
+import com.webservice.bookstore.exception.AfterDateException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +25,6 @@ public class CouponDto {
     private String description;
     private int discountRate;
     private Long member_id;
-//    private Long category_id;
-//    private String category_name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate endDate;
@@ -53,6 +52,7 @@ public class CouponDto {
                 .build();
 
     }
+
 
 
 

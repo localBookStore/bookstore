@@ -52,6 +52,7 @@ public class BoardService {
         Board board = boardRepository.getOne(id);
         BoardDTO dto = BoardDTO.entityToDTO(board);
 
+
         return dto;
     }
 

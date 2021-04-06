@@ -62,4 +62,8 @@ public class Item {
         this.quantity += quantity;
     }
 
+    public void addViewCount(int viewCount) {
+        this.viewCount  += 1;
+    }
+
 }

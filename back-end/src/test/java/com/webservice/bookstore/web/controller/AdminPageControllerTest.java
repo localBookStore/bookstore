@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @SpringBootTest
-class AdminMyPageControllerTest {
+class AdminPageControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -163,7 +163,7 @@ class AdminMyPageControllerTest {
 
         System.out.println("==========================================");
 
-        Item savedItem = this.itemRepository.findById(item.getId()).get();
+        Item savedItem = this.itemRepository.getOne(item.getId());
         assertThat(savedItem.getName()).isEqualTo("굿꿋");
         System.out.println(savedItem);
 
