@@ -112,21 +112,6 @@ public class BoardController {
 
         return new ResponseEntity<>(boardService.getMemberBoardList(member.getId()), HttpStatus.OK);
     }
-    @GetMapping("/admin/member/{member_id}/board")
-    public ResponseEntity<List<BoardDTO>> getMemberBoardList(
-            @PathVariable("member_id")Long memberId,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        //유효성검사
-        if(customUserDetails == null) {
-            throw new UnauthorizedException("인증 오류가 발생했습니다.");
-        } else if(!customUserDetails.isEnabled()) {
-            throw new UnauthorizedException("계정이 잠겨있습니다. 관리자에게 문의해주시길 바랍니다.");
-        }
 
-        Optional<Member> op = memberRepository.findById(memberId);
-        if(!op.isPresent())
-            throw new UnauthorizedException("아이디 정보가 없습니다..");
-        Member member = op.get();
-        return new ResponseEntity<>(boardService.getMemberBoardList(member.getId()), HttpStatus.OK);
-    }
+
 }
