@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -52,11 +53,16 @@ public class BoardService {
         return dto;
     }
 
-    public void modifyBoard(BoardDTO boardDTO){
+    public boolean modifyBoard(BoardDTO boardDTO,String email){
+        if(email==null||email.length()==0)
+            return false;
+        if(boardDTO.getMemberEmail()!=email)
+            return false;
         boardRepository.modifyBoard(boardDTO.getContent(),
                 boardDTO.getCategory(),
                 boardDTO.getTitle(),
                 boardDTO.getId()
         );
+        return true;
     }
 }
