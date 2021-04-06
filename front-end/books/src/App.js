@@ -33,8 +33,8 @@ const App = () => {
         <Route path="/Newbooklist" component={NewBookList} />
         <Route exact path="/community" component={Community} />
         <Route path="/community/detail/:id" component={CommunityDetail} />
-        <Route path="/community/register" component={CommunityRegister} />
-        <Route path="/community/update" component={CommunityUpdate} />
+        <Route exact path="/community/register" component={CommunityRegister} />
+        <Route exact path="/community/update" component={CommunityUpdate} />
         <Route path="/login" component={LoginPage} />
         <Route path="/signup" component={SignupPage} />
         <Route path="/cart" component={CartPage} />
