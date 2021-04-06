@@ -1,10 +1,8 @@
 import CategoryHoverDetail from "./CategoryHoverDetail";
 import { useState, useEffect } from "react";
-import { NavLink, Route, Switch } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 
-import BookList from "../MainPage/BookListPage/BookList";
-import Community from "../MainPage/CommunityPage/Community";
 
 import styled from "styled-components";
 
@@ -30,8 +28,8 @@ const CategoryBar = () => {
 					{isHover && <CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} />}
 				</GenreContainer>
 			}
-			<NavButton to={{ pathname:"/booklist", state:{ address:"bestitems"}}}>베스트</NavButton>
-			<NavButton to={{ pathname:"/booklist",state:{ address:"newitems"}}}>최신작</NavButton>
+			<NavButton to="/bestbooklist">베스트</NavButton>
+			<NavButton to="/newbooklist">최신작</NavButton>
 			<NavButton to="/community">커뮤니티</NavButton>
 
 		</AllContainer>

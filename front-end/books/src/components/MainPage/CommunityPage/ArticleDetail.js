@@ -1,22 +1,31 @@
 import axios from "axios";
-import { useState, useEffect } from "react"
+import { useState } from "react";
+import { useCookies } from "react-cookie";
+import { useHistory } from "react-router-dom"
+import { jwtDecode } from "feature/JwtDecode"
 
 import { Button, Modal } from "react-bootstrap"
 import styled from "styled-components";
 
-const ArticleDetail = ({ props }) => {
-  const [isDelete, setIsDelete] = useState(false);
+const ArticleDetail = ({ props, token }) => {
+
   const [isShow, setIsShow] = useState(false);
   const { category, content, createdDate, title, id } = props
-
-  useEffect(() => {
-    if (isDelete) {
-      axios.delete(`http://localhost:8080/api/board/${id}/`)
-        .then(res => console.log("삭제되었습니다."))
-        .catch(err => console.log(err.response))
-    }
-    return setIsDelete(false)
-  }, [isDelete])
+  
+  const onClickEvent = () => {
+    const { sub } = jwtDecode(token)  
+    console.log(token)
+    axios.delete("http://localhost:8080/api/board/delete", {
+      data: {
+        id,
+        memberEmail:sub,
+      }, headers: {
+        Authorization:token
+      }
+    })
+      .then(res => console.log("삭제됨"))
+      .catch(err => console.log(err.response))
+  }
 
   const DeleteCheckModal = () => {
     return <Modal show={isShow} onHide={() => setIsShow(false)}>
@@ -27,15 +36,11 @@ const ArticleDetail = ({ props }) => {
       <Modal.Footer>
         <Button variant="secondary" onClick={() => setIsShow(false)}>
           취소</Button>
-        <Button variant="danger" onClick={() => {
-          setIsShow(false)
-          setIsDelete(true)
-        }}>
+        <Button variant="danger" onClick={onClickEvent}>
           삭제</Button>
       </Modal.Footer>
     </Modal>
   }
-
 
   return <ArticleContainer>
     <ArticleTag>{category}</ArticleTag>

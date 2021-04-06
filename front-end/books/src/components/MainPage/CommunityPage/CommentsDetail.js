@@ -1,14 +1,10 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
+
+import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
-const CommentsDetail = ({ articleId }) => {
-  const [comments, setComments] = useState([]);
-  useEffect(() => {
-    axios.get(`http://localhost:8080/api/board/${articleId}/comment/`)
-      .then(res => console.log(res))
-      .catch(err => console.log(err.response))
-  }, [])
+const CommentsDetail = ({ comments }) => {
 
   return <CommentContainer>
     {comments.length ?
@@ -18,9 +14,9 @@ const CommentsDetail = ({ articleId }) => {
           <NestedCommentInput />
         </EachComment>
       })
-      :
-      <div>아직 댓글이 없습니다.</div>}
-    <CommentInput /><CommentButton>제출</CommentButton>
+      : <div>아직 댓글이 없습니다.</div>}
+    <CommentInput />
+    <CommentButton>제출</CommentButton>
   </CommentContainer>
 }
 export default CommentsDetail;
@@ -38,8 +34,8 @@ const NestedCommentInput = styled.input`
   display:block;
 `
 const CommentInput = styled.input`
-  margin: 10px;
+  margin: 20px 0;
 `
-const CommentButton = styled.button`
-  border: 0 none;
+const CommentButton = styled(Button)`
+
 `

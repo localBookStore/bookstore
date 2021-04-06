@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 const ItemDetail = ({ location }) => {
   const { book } = location.state
-  console.log(book)
+  
   return <DetailComponent>
     <TopDetail props={book}/>
     <Divider />

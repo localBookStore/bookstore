@@ -18,15 +18,15 @@ const genreMap = {
   9: '역사'
 }
 
-const BookList = ({ location }) => {
-  const address = location.state.address
+const BestBookList = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/index/${address}/`)
+    axios.get(`http://localhost:8080/api/index/bestitems/`)
       .then(({data: { _embedded: { defaultList }}}) => setBooks(defaultList))
       .catch(err => console.log(err))
   }, [])
+  
   console.log(books)
   return <Container>
     {books.length && books.map((book, idx) => {
@@ -46,7 +46,7 @@ const BookList = ({ location }) => {
     })}
   </Container>
 };
-export default BookList;
+export default BestBookList;
 
 const Container = styled.div`
 `

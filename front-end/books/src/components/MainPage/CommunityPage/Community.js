@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react"
+import { NavLink } from "react-router-dom"
 import axios from "axios"
 
-import { Table } from "react-bootstrap"
+import { Table, Button } from "react-bootstrap"
 import styled from "styled-components"
 
 const Community = ({ history }) => {
-  const [articles, setArticles] = useState(null);
-  const section = ["글 번호", "분류", "제목", "조회수", "작성시간"]
+  const [articles, setArticles] = useState([]);
+  const section = ["글 번호", "분류", "제목", "작성시간"]
 
   useEffect(() => {
     const getBoardData = async () => {
@@ -17,40 +18,33 @@ const Community = ({ history }) => {
     getBoardData()
   }, [])
 
-  const summitArticle = () => {
-    history.push("/community/register")
-  }
-
   const articleDetailEvent = (id) => {
     history.push(`/community/detail/${id}`)
   }
 
   return <div>
-    {articles && articles.length ?
-      <Table hover bordered >
+    {articles.length ? <Table hover bordered >
         <thead>
-          <tr>
-          {section.map((res, idx) => {
+          <tr>{section.map((res, idx) => {
             return <td key={idx}>{res}</td>
-          })}
-          </tr>
+          })}</tr>
         </thead>
+
         <tbody>
           {articles.map((res, idx) => {
             const { id, title, category, createdDate } = res
             const [day, time] = createdDate.split("T")
-            return <tr key={idx} onClick={() => articleDetailEvent(id)}>
+            return <tr key={idx} onClick={() => articleDetailEvent(id)}>  
               <td>{id}</td>
               <td>{category}</td>
               <td>{title}</td>
-              <td>0</td>
-              <td>{day}  {time}</td>
+              <td>{day} {time}</td>
             </tr>
           })}
-        </tbody>
+          </tbody>
       </Table>
       : <div>게시글이 없습니다.</div>}
-    <button onClick={() => summitArticle()}>게시글 등록</button>
+    <NavLink to="/community/register"><Button variant="info">게시글 등록</Button></NavLink>
   </div >
 }
 export default Community;

@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
+import { useCookies } from "react-cookie"
 import ArticleDetail from "./ArticleDetail"
 import CommentsDetail from "./CommentsDetail"
 
@@ -7,35 +8,27 @@ import styled from "styled-components"
 
 const CommunityDetail = ({ match }) => {
   const articleId = match.params.id;
-  const [isloading, setIsloading] = useState(true);
+  const [ cookies ] = useCookies();
+  const { token } = cookies;
   const [article, setArticle] = useState(null);
   const [comments, setComments] = useState(null);
 
   useEffect(() => {
-    const getArticle = async () => {
-      await axios.get(`http://localhost:8080/api/board/${articleId}/`)
-        .then(res => {
-          const { data } = res
-          setArticle(data[0]);
-          setComments(data[1]);
-          setIsloading(false);
-        })
-        .catch(err => console.log(err.response))
-    }
-    getArticle();
+    axios.get(`http://localhost:8080/api/board/${articleId}/`)
+      .then(res => {
+        console.log(res.data)
+        setArticle(res.data[0]);
+        setComments(res.data[1]);
+      })
+      .catch(err => console.log(err.response))    
   }, [])
 
   return <>
-    {isloading ?
-      <BoardContainer>
-        로딩중
-      </BoardContainer>
-      :
-      <BoardContainer>
-        <ArticleDetail props={article} />
-        <hr />
-        <CommentsDetail articleId={articleId}/>
-      </BoardContainer>
+    {article && comments && <BoardContainer>
+      <ArticleDetail props={article} token={token}/>
+      <hr />
+      <CommentsDetail comments={comments} token={token}/>
+    </BoardContainer>
     }
   </>
 }

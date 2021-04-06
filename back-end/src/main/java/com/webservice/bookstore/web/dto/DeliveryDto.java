@@ -64,7 +64,7 @@ public class DeliveryDto {
                            .status(this.status)
                            .createdDate(this.createdDate)
                            .modifiedDate(this.modifiedDate)
-                           .progress((long) progress)
+                           .progress((int) progress)
                            .build();
         }
 
@@ -81,7 +81,7 @@ public class DeliveryDto {
         private LocalDateTime createdDate;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime modifiedDate;
-        private Long progress;
+        private Integer progress;
     }
 
 }
