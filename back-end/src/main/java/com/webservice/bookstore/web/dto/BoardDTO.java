@@ -28,8 +28,6 @@ public class BoardDTO {
 
     private String content;
 
-    private String memberUserid;//작성자 아이디
-
     private String replyCount; //댓글수
 
     private String category;
@@ -41,6 +39,8 @@ public class BoardDTO {
     private Long memberId;
 
     private String memberEmail;
+
+    private String nickName;
 
     @Builder.Default
     private List<ImageDTO> imageList = new ArrayList<>();
@@ -64,6 +64,7 @@ public class BoardDTO {
                 .modifiedDate(board.getModifiedDate())
                 .memberEmail(board.getMember().getEmail())
                 .memberId(board.getMember().getId())
+                .nickName(board.getMember().getNickName())
                 .build();
     }
 
