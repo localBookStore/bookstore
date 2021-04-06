@@ -19,6 +19,8 @@ public class ImageDTO {
 
 	private String path;
 
+	private Long boardId;
+
 	public String getImageURL(){
 		try{
 			return URLEncoder.encode(path+"/"+uuid+"_"+ fileName,"UTF-8");
