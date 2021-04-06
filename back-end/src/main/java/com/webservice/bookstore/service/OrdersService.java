@@ -1,9 +1,9 @@
 package com.webservice.bookstore.service;
 
 import com.webservice.bookstore.domain.entity.cart.Cart;
+import com.webservice.bookstore.domain.entity.cart.CartRepository;
 import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.coupon.CouponRepository;
-import com.webservice.bookstore.domain.entity.cart.CartRepository;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.member.Member;
@@ -15,6 +15,7 @@ import com.webservice.bookstore.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +52,17 @@ public class OrdersService {
     }
 
     @Transactional
-    public void addOrder(MemberDto.Default memberDto, CouponDto couponDto, List<CartDto.Default> cartDtoList) {
+    public void addOrder(MemberDto.Default memberDto,
+                         CouponDto couponDto,
+                         List<CartDto.Default> cartDtoList,
+                         BindingResult bindingResult) {
+        // 먼저 item_id 필드 기준으로 리스트 정렬 (오름차순)
+//        orderItemDtoList = orderItemDtoList.stream()
+//                                           .sorted(Comparator.comparing(orderItemDto -> orderItemDto.getItemDto().getId()))
+//                                           .collect(Collectors.toList());
 
-        Member member       = memberRepository.findById(memberDto.getId()).get();
+        // Member, Item 엔티티 조회 (자동으로 id 기준으로 오름차순을 조회함)
+        Member member = memberRepository.getOne(memberDto.getId());
         member.setAddress(memberDto.getAddress());
 
         List<Cart> cartList = cartRepository.findByIdInQuery(getCartIdList(cartDtoList));
@@ -66,8 +75,8 @@ public class OrdersService {
 
         Coupon coupon = null;
         if(couponDto != null) {
-            coupon = couponRepository.findById(couponDto.getId()).get();
-            Coupon.validateCoupon(CouponDto.of(coupon));
+            coupon = couponRepository.getOne(couponDto.getId());
+            coupon.validateCoupon(bindingResult.getFieldErrors());
             coupon.isUsed(true);
         }
 
@@ -109,6 +118,8 @@ public class OrdersService {
     public List<OrdersDto.Default> cancelOrder(OrdersDto.Default ordersDto) {
 
         Orders order = orderRepository.getOne(ordersDto.getId());
+        Coupon coupon = order.getCoupon();
+        coupon.isUsed(false);
         order.cancel();
 
         MemberDto.Default memberDto = MemberDto.Default.builder().id(order.getMember().getId()).build();

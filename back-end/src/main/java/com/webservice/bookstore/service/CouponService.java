@@ -30,10 +30,10 @@ public class CouponService {
         return couponDtos;
     }
 
-    public Optional<Coupon> findById(Long id) {
-        Optional<Coupon> coupon = couponRepository.findById(id);
-        return coupon;
-    }
+//    public Optional<Coupon> findById(Long id) {
+//        Optional<Coupon> coupon = couponRepository.findById(id);
+//        return coupon;
+//    }
 
     @Transactional
     public void issueCoupons(CouponAddDto couponDto) {

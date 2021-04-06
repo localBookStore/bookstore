@@ -46,6 +46,15 @@ public class Orders extends BaseTimeEntity {
     private Integer deliveryCharge;
 
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
+
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
+        coupon.setOrder(this);
+    }
+
     // 연관관계 편의 메소드
     public void addDelivery(Delivery delivery) {
         this.delivery = delivery;
@@ -77,11 +86,12 @@ public class Orders extends BaseTimeEntity {
                              .member(member) // 결제자 정보 등록
                              .paymentAmount((int) paymentAmount)
                              .deliveryCharge(2500) // 배송비 초기화
+                             .coupon(coupon)
                              .build();
 
         // Orders, Delivery 엔티티 간 연관 데이터 주입
         order.addDelivery(delivery);
-        orderItemList.stream().forEach(orderItem -> order.addOrderItem(orderItem));
+        orderItemList.forEach(order::addOrderItem);
 
         return order;
     }
@@ -109,9 +119,9 @@ public class Orders extends BaseTimeEntity {
 
     private void checkDeliveryStatus() {
         // 배송(delivery) 상태가 이미 완료(COMPLETED) 또는 배송 중(SHIPPING)인 경우, 예외 발생
-        if(delivery.getStatus().equals(DeliveryEnum.SHIPPING)) {
+        if(this.delivery.getStatus().equals(DeliveryEnum.SHIPPING)) {
             throw new IllegalStateException("이미 배송 중인 상태이므로 취소가 불가능합니다.");
-        } else if(delivery.getStatus().equals(DeliveryEnum.COMPLETED)) {
+        } else if(this.delivery.getStatus().equals(DeliveryEnum.COMPLETED)) {
             throw new IllegalStateException("이미 배송이 완료된 상태입니다.");
         }
     }
