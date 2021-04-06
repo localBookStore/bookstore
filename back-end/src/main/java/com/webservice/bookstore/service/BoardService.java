@@ -5,6 +5,7 @@ import com.webservice.bookstore.domain.entity.board.Board;
 import com.webservice.bookstore.domain.entity.board.BoardRepository;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
+import com.webservice.bookstore.domain.entity.reply.ReplyRepository;
 import com.webservice.bookstore.web.dto.BoardDTO;
 import com.webservice.bookstore.web.dto.PageRequestDTO;
 import com.webservice.bookstore.web.dto.PageResultDTO;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -25,7 +28,7 @@ import java.util.stream.IntStream;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
-
+    private final ReplyRepository replyRepository;
     //게시판 보여주기
     public PageResultDTO<BoardDTO,Board> pageCommunityList(PageRequestDTO pageRequestDTO){
         Pageable pageable = pageRequestDTO.getPageable(Sort.by("id").descending());
@@ -51,5 +54,30 @@ public class BoardService {
 
 
         return dto;
+    }
+
+    public boolean modifyBoard(BoardDTO boardDTO,String email){
+        if(email==null||email.length()==0)
+            return false;
+        if(boardDTO.getMemberEmail()!=email)
+            return false;
+        boardRepository.modifyBoard(boardDTO.getContent(),
+                boardDTO.getCategory(),
+                boardDTO.getTitle(),
+                boardDTO.getId()
+        );
+        return true;
+    }
+
+    @Transactional
+    public boolean deleteBoard(BoardDTO boardDTO, String email){
+
+        if(email==null||email.length()==0)//접속중이지 않거나
+            return false;
+        if(boardDTO.getMemberEmail()!=email) //작성자와 로그인한사람이 다르면면
+           return false;
+        replyRepository.deleteReplyByBoard(boardDTO.getId());
+        boardRepository.deleteBoard(boardDTO.getId());
+        return true;
     }
 }
