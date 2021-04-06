@@ -10,7 +10,12 @@
 
 **BackEnd**
 - Java 11
-- Spring boot
+- Spring boot 2.4.3
+- Spring Security
+- Redis
+- JPA
+- jjwt
+- MySQL
 
 
 **Front-end**

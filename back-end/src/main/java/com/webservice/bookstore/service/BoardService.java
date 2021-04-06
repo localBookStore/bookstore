@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -51,9 +52,12 @@ public class BoardService {
 
     //게시판 등록
     public void boardRegister(BoardDTO boardDTO){
-        Member member  = memberRepository.getOne(boardDTO.getMemberId());
-        Board board = BoardDTO.toEntity(boardDTO,member);
-        boardRepository.save(board);
+        Optional<Member> op = memberRepository.findByEmail(boardDTO.getMemberEmail());
+        if(op.isPresent()) {
+            Member member=op.get();
+            Board board = BoardDTO.toEntity(boardDTO, member);
+            boardRepository.save(board);
+        }
     }
     //상세페이지 댓글은 아직 미완성
     public BoardDTO showBoardDetailPage(Long id){
