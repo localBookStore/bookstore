@@ -56,6 +56,7 @@ public class ReplyController {
         } else if(!customUserDetails.isEnabled()) {
             throw new UnauthorizedException("계정이 잠겨있습니다. 관리자에게 문의해주시길 바랍니다.");
         }
+
         String email = customUserDetails.getMember().getEmail();
         if(!replyService.deleteReply(replyDTO,email))
             return new ResponseEntity<>("접근할수 없는 방법입니다.",HttpStatus.FORBIDDEN);
