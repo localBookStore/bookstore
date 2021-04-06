@@ -10,12 +10,9 @@ const Community = ({ history }) => {
   const section = ["글 번호", "분류", "제목", "작성시간"]
 
   useEffect(() => {
-    const getBoardData = async () => {
-      await axios.get("http://localhost:8080/api/board/")
-        .then(res => setArticles(res.data.dtoList))
-        .catch(err => console.log(err.response))
-    }
-    getBoardData()
+    axios.get("http://localhost:8080/api/board/")
+      .then(res => setArticles(res.data.dtoList))
+      .catch(err => console.log(err.response))
   }, [])
 
   const articleDetailEvent = (id) => {
@@ -23,6 +20,7 @@ const Community = ({ history }) => {
   }
 
   return <div>
+    {console.log(articles)}
     {articles.length ? <Table hover bordered >
         <thead>
           <tr>{section.map((res, idx) => {
@@ -44,7 +42,9 @@ const Community = ({ history }) => {
           </tbody>
       </Table>
       : <div>게시글이 없습니다.</div>}
-    <NavLink to="/community/register"><Button variant="info">게시글 등록</Button></NavLink>
+    <NavLink to="/community/register">
+      <Button variant="info">게시글 등록</Button>
+    </NavLink>
   </div >
 }
 export default Community;

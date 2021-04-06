@@ -5,6 +5,7 @@ import BestBookList from "./components/MainPage/BookListPage/BestBookList";
 import NewBookList from "./components/MainPage/BookListPage/NewBookList";
 import Community from "./components/MainPage/CommunityPage/Community";
 import CommunityRegister from "./components/MainPage/CommunityPage/CommunityRegister";
+import CommunityUpdate from "./components/MainPage/CommunityPage/CommunityUpdate";
 import CommunityDetail from "./components/MainPage/CommunityPage/CommunityDetail";
 import Footer from "./components/FooterPage/Footer";
 import LoginPage from "./components/UserPage/LoginPage";
@@ -33,6 +34,7 @@ const App = () => {
         <Route exact path="/community" component={Community} />
         <Route path="/community/detail/:id" component={CommunityDetail} />
         <Route path="/community/register" component={CommunityRegister} />
+        <Route path="/community/update" component={CommunityUpdate} />
         <Route path="/login" component={LoginPage} />
         <Route path="/signup" component={SignupPage} />
         <Route path="/cart" component={CartPage} />

@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useCookies } from "react-cookie";
-import { useHistory } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import { jwtDecode } from "feature/JwtDecode"
 
 import { Button, Modal } from "react-bootstrap"
@@ -49,7 +48,7 @@ const ArticleDetail = ({ props, token }) => {
     <ArticleContent>{content}</ArticleContent>
     <ArticleDate>{createdDate}</ArticleDate>
     <ButtonFeature>
-      <EditButton variant="primary">수정</EditButton>
+      <NavLink to={{pathname:"/community/update", state:{category, content, title}}} variant="primary">수정</NavLink>
       <EditButton variant="danger" onClick={() => setIsShow(true)}>삭제</EditButton>
     </ButtonFeature>
     {isShow && <DeleteCheckModal />}

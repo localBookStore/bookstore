@@ -5,12 +5,10 @@ import { useCookies } from "react-cookie";
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
 
-const CommunityRegister = ({ history }) => {
+const CommunityRegister = ({ history, location:{ state } }) => {
 	const [cookies] = useCookies(["token"]);
 	const [inputData, setInputData] = useState({
-    category: "사고팝니다",
-    title: "",
-    content: "",
+    ...state
   });
 
 	const onChangeEvent = (e) => {
@@ -20,24 +18,29 @@ const CommunityRegister = ({ history }) => {
 			[name]: value,
 		});
 	};
+
 	const summitEvent = () => {
-		axios.post("http://localhost:8080/api/board/", {
+		axios.put("http://localhost:8080/api/board/modify", {
+      data: {
 				...inputData,
 				memberEmail: cookies.token.sub,
-			})
+      }, 
+      headers: {
+        Authorization: cookies.token
+      }})
 			.then(res => console.log(res))
 			.catch((err) => console.log(err.response));
 	};
 
 	return (
 		<Container>
-			<CategoryInput name="category" onChange={onChangeEvent}>
+			<CategoryInput defaultValue={inputData.category} name="category" onChange={onChangeEvent}>
 				<option value="사고팝니다">사고팝니다</option>
 				<option value="자유게시판">자유게시판</option>
 			</CategoryInput>
 
-			<TitleInput type="text" placeholder="제목을 입력하세요" name="title" onChange={onChangeEvent} />
-			<ContentInput placeholder="내용을 입력하세요" name="content" onChange={onChangeEvent} />
+			<TitleInput type="text" defaultValue={inputData.title} placeholder="제목을 입력하세요" name="title" onChange={onChangeEvent} />
+			<ContentInput defaultValue={inputData.content} placeholder="내용을 입력하세요" name="content" onChange={onChangeEvent} />
 			<SummitButton onClick={summitEvent}>제출</SummitButton>
 		</Container>
 	);
