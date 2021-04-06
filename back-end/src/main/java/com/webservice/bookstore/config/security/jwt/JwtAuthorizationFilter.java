@@ -70,7 +70,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        String jwtToken = authorizationValue.replace(JwtProperties.TOKEN_PREFIX, "");
+        String jwtToken = authorizationValue.substring(JwtProperties.TOKEN_PREFIX.length());
 
         log.info("Verify the input Access Token :");
         VerifyResult verifyResult = jwtUtil.verify(jwtToken);
