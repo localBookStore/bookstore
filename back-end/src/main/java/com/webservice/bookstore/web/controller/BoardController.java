@@ -40,14 +40,14 @@ public class BoardController {
     private MemberRepository memberRepository;
 
 
-    @GetMapping("/board/")
+    @GetMapping({"/board/","/board"})
     public ResponseEntity<PageResultDTO<BoardDTO, Board>> showPageBoardList(PageRequestDTO pageRequestDTO) {
         PageResultDTO<BoardDTO, Board> pageResultDTO = boardService.pageCommunityList(pageRequestDTO);
 
         return new ResponseEntity<>(pageResultDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/board/{board_id}/")
+    @GetMapping({"/board/{board_id}/","/board/{board_id}"})
     public ResponseEntity<Object> showDetatilBoard(@PathVariable("board_id") long id) {
         BoardDTO boardDTO = boardService.showBoardDetailPage(id);
         List<ReplyDTO> replylist = replyService.getBoardReplylist(boardDTO);
@@ -58,7 +58,7 @@ public class BoardController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @PostMapping("/board/")
+    @PostMapping({"/board/","/board"})
     public ResponseEntity<String> boardRegister(@RequestBody BoardDTO boardDTO) {
         boardService.boardRegister(boardDTO);
         return new ResponseEntity<>("success", HttpStatus.OK);
