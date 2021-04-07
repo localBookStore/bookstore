@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Log4j2
 @RequiredArgsConstructor
 @RestController
@@ -29,14 +31,14 @@ public class ReplyController {
     private final BoardService boardService;
 
     @PostMapping({"/board/reply/comment/","/board/reply/comment"})
-    public ResponseEntity<String> replyRegister(@RequestBody ReplyDTO replyDTO){
+    public ResponseEntity<List<ReplyDTO>> replyRegister(@RequestBody ReplyDTO replyDTO){
 
         log.info("replyDto : 댓글 등록", replyDTO);
         replyService.registerReply(replyDTO);
-        return new ResponseEntity<>("success",HttpStatus.OK);
+        return new ResponseEntity<>(replyService.getBoardReplyList(replyDTO.getBoardId()),HttpStatus.OK);
     }
     @PutMapping("/board/reply/modify")
-    public ResponseEntity<String> replyModify(@RequestBody ReplyDTO replyDTO,
+    public ResponseEntity<List<ReplyDTO>> replyModify(@RequestBody ReplyDTO replyDTO,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if(customUserDetails == null) {
             throw new UnauthorizedException("인증 오류가 발생했습니다.");
@@ -45,11 +47,11 @@ public class ReplyController {
         }
         String email = customUserDetails.getMember().getEmail();
         if(!replyService.changeReply(replyDTO,email))
-            return new ResponseEntity<>("접근할수 없는 방법입니다.",HttpStatus.FORBIDDEN);
-        return new ResponseEntity<>("success",HttpStatus.OK);
+            throw new UnauthorizedException("접근할수없습니다.");
+        return new ResponseEntity<>(replyService.getBoardReplyList(replyDTO.getBoardId()),HttpStatus.OK);
     }
     @DeleteMapping("/board/reply/delete")
-    public ResponseEntity<String> replyDelete(@RequestBody ReplyDTO replyDTO,
+    public ResponseEntity<List<ReplyDTO>> replyDelete(@RequestBody ReplyDTO replyDTO,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if(customUserDetails == null) {
             throw new UnauthorizedException("인증 오류가 발생했습니다.");
@@ -59,9 +61,8 @@ public class ReplyController {
 
         String email = customUserDetails.getMember().getEmail();
         if(!replyService.deleteReply(replyDTO,email))
-            return new ResponseEntity<>("접근할수 없는 방법입니다.",HttpStatus.FORBIDDEN);
-        return new ResponseEntity<>("success",HttpStatus.OK);
+            throw new UnauthorizedException("접근할수없습니다.");
+        return new ResponseEntity<>(replyService.getBoardReplyList(replyDTO.getBoardId()),HttpStatus.OK);
     }
-
 }
 
