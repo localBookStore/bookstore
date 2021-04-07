@@ -10,7 +10,7 @@ const Community = ({ history }) => {
   const section = ["글 번호", "분류", "제목", "작성시간"]
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/board/")
+    axios.get("http://localhost:8080/api/board")
       .then(res => setArticles(res.data.dtoList))
       .catch(err => console.log(err.response))
   }, [])
@@ -19,6 +19,7 @@ const Community = ({ history }) => {
     history.push(`/community/detail/${id}`)
   }
 
+  console.log(articles)
   return <div>
     {console.log(articles)}
     {articles.length ? <Table hover bordered >

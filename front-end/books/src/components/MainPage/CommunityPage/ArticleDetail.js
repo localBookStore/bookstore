@@ -7,13 +7,11 @@ import { Button, Modal } from "react-bootstrap"
 import styled from "styled-components";
 
 const ArticleDetail = ({ props, token }) => {
-
   const [isShow, setIsShow] = useState(false);
-  const { category, content, createdDate, title, id } = props
+  const { category, content, createdDate, title, id, memberEmail } = props
+  const { sub } = jwtDecode(token)
   
   const onClickEvent = () => {
-    const { sub } = jwtDecode(token)  
-    console.log(token)
     axios.delete("http://localhost:8080/api/board/delete", {
       data: {
         id,
@@ -47,7 +45,7 @@ const ArticleDetail = ({ props, token }) => {
     <hr />
     <ArticleContent>{content}</ArticleContent>
     <ArticleDate>{createdDate}</ArticleDate>
-    <ButtonFeature>
+    <ButtonFeature disable={memberEmail===sub}>
       <NavLink to={{pathname:"/community/update", state:{category, content, title}}} variant="primary">수정</NavLink>
       <EditButton variant="danger" onClick={() => setIsShow(true)}>삭제</EditButton>
     </ButtonFeature>
@@ -79,7 +77,7 @@ const ArticleTag = styled.div`
   color: gray;
 `
 const ButtonFeature = styled.div`
-  display: flex;
+  display: ${props => !props.disable || "flex"};
   justify-content: flex-end;
 
   margin-top: 30px;
