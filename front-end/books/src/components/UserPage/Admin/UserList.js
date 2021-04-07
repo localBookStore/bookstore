@@ -9,20 +9,19 @@ const UserList = ({ location }) => {
   const [userList, setUserList] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/admin/members/", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then(res => setUserList(res.data))
-      .catch((err) => console.log(err.response));
+    axios.get("http://localhost:8080/api/admin/members/", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then(res => setUserList(res.data))
+    .catch((err) => console.log(err.response));
   }, []);
 
   return <Container>
     <ContainerTitle>회원 리스트입니다.</ContainerTitle>
-    {userList && userList.map(user => {
-      return <button>{user.nickName}<br />{user.email}</button>
+    {userList && userList.map((user, idx) => {
+      return <button key={idx} >{user.nickName}<br />{user.email}</button>
     })}
 
   </Container>;

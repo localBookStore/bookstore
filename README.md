@@ -14,12 +14,19 @@
 - Spring Security
 - Redis
 - JPA
+- QueryDSL
 - jjwt
 - MySQL
 
 
 **Front-end**
 - React
+- axios
+- styled-component
+- font Awesome
+- react hook
+- router
+- react strap
 
 
 

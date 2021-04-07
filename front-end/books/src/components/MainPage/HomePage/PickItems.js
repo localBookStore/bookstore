@@ -1,16 +1,16 @@
+import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
+import Slider from "react-slick";
+import axios from 'axios'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointDown } from '@fortawesome/free-solid-svg-icons'
 import NextArrow from "./CustomArrow/NextArrow"
 import PrevArrow from "./CustomArrow/PrevArrow"
-import { useState, useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import Slider from "react-slick";
-import axios from 'axios'
 import styled from "styled-components"
 
 const PickItems = () => {
   const [images, setImages] = useState(false);
-  const history = useHistory();
 
   useEffect(() => {
     const getImage = async () => {
@@ -20,14 +20,6 @@ const PickItems = () => {
     }
     getImage()
   }, [])
-
-  const clickEvent = (book) => {
-    history.push({
-      pathname:'/detail',
-      search:`?id=${book.id}`,
-      state:book
-    })
-  }
 
   const settings = {
     arrows: true,
@@ -46,10 +38,12 @@ const PickItems = () => {
     <FontAwesomeIcon icon={faHandPointDown} style={{ fontSize: "60px", color: "#CC87B1" }} />
 
     <Slider {...settings}>
-      {images && images.map((res, idx) => {
+      {images && images.map((book, idx) => {
         return <EachBook key={idx}>
-          <BookButton onClick={() => clickEvent(res)}>
-            <img src={res.imageUrl} alt={idx} />
+          <BookButton>
+            <Link to={{pathname:`/detail/${book.id}`, state:{book}}}>
+              <img src={book.imageUrl} alt={idx} />
+            </Link>
           </BookButton>
         </EachBook>
       })}
