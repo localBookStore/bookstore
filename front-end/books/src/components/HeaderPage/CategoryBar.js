@@ -1,83 +1,71 @@
 import CategoryHoverDetail from "./CategoryHoverDetail";
-import { useState } from "react";
-import { useHistory, NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
+
 
 import styled from "styled-components";
 
 const CategoryBar = () => {
-  const [isHover, setIsHover] = useState(false);
-  const history = useHistory();
+	const [isHover, setIsHover] = useState(false);
+	const [genreData, setGenreData] = useState([]);
 
-  const getBooks = async (url) => {
-    await axios
-      .get(`http://localhost:8080/api/index/${url}`)
-      .then((res) => {
-        const items = res.data._embedded.defaultList;
-        history.push({
-          pathname: "/booklist",
-          state: { items },
-        });
-      })
-      .catch((err) => console.log(err.response));
-  };
+	const hoverOn = () => setIsHover(true);
+	const hoverOff = () => setIsHover(false);
 
-  const getArticle = (url) => {
-    history.push("/community");
-  };
+	useEffect(() => {
+		getGenreBooks();
+	}, []);
 
-  return (
-    <AllContainer onMouseLeave={() => setIsHover(false)}>
-      <ItemButton onMouseEnter={() => setIsHover(true)}>장르별</ItemButton>
-      <ItemButton onClick={() => getBooks("bestitems/")}>베스트</ItemButton>
-      <ItemButton onClick={() => getBooks("newitems/")}>최신작</ItemButton>
-      <ItemButton onClick={() => getArticle("board/")}>커뮤니티</ItemButton>
-      <IsShow show={isHover}>
-        <CategoryHoverDetail />
-      </IsShow>
-    </AllContainer>
-  );
+	const getGenreBooks = async () => {
+		const { data } = await axios.get("http://localhost:8080/api/index/genre/");
+		setGenreData(data);
+	};
+
+	return <AllContainer>
+      {genreData.length && <GenreContainer onMouseLeave={hoverOff}>
+					<ItemButton onMouseEnter={hoverOn}>장르별</ItemButton>
+					{isHover && <CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} />}
+				</GenreContainer>
+			}
+			<NavButton to="/bestbooklist">베스트</NavButton>
+			<NavButton to="/newbooklist">최신작</NavButton>
+			<NavButton to="/community">커뮤니티</NavButton>
+
+		</AllContainer>
 };
 export default CategoryBar;
 
-const IsShow = styled.div`
-  display: ${(props) => (props.show ? "block" : "none")};
-  width: 0px;
-`;
-
 const AllContainer = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
+	position: relative;
+	display: flex;
+	justify-content: space-evenly;
+	text-align: center;
 
-  margin: 30px 0 60px 0;
-  padding: 0;
+	margin: 30px 0 30px 0;
+	padding: 0;
 
-  width: 100%;
-  height: auto;
-  z-index: 1;
+	width: 100%;
+	height: auto;
+	z-index: 1;
 `;
+const GenreContainer = styled.div`
+
+`
 const ItemButton = styled.button`
-  position: relative;
-  padding: 0 2em;
+	background: #50a3c7;
+	border: 0 none;
+	border-radius: 5px 5px 5px 5px;
 
-  background: #50a3c7;
-  border: 0 none;
-  border-radius: 5px 5px 5px 5px;
-  outline: none;
-  width: 260px;
-  height: 50px;
-  margin: 0 auto;
+	color: #fff;
+	font-size: 1.3em;
+	font-weight: bolder;
 
-  color: #fff;
-  font-size: 1.3em;
-  font-weight: bolder;
+	transition: all 600ms;
 
-  transition: all 600ms;
-
-  &:hover {
-    background: #ab4386;
-    color: #fff;
-  }
+	&:hover {
+		background: #ab4386;
+		color: #fff;
+	}
 `;
+const NavButton = styled(NavLink)``;

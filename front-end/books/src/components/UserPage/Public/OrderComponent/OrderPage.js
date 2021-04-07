@@ -1,31 +1,31 @@
 import { useState } from "react"
 import axios from "axios"
 
-import { Button, Modal } from "react-bootstrap"
+import { Button, Modal, ProgressBar } from "react-bootstrap"
 import styled from "styled-components"
 
 const DeliveryBar = ({status, percent}) => {
-  switch (status){
+  switch (status) {
     case "READY":
-      return <div>
-        준비중
-      </div>
+      return <Section>
+        상품 준비중
+      </Section>
     case "CANCEL":
-      return <div>
+      return <Section>
         취소됨
-      </div>
+      </Section>
     case "SHIPPING":
-      return <div>
-        배송중
-      </div>
+      return <Section>
+        <ProgressBar animated variant="info" now={percent} label={`${percent}%`} />
+      </Section>
     default:
-      return <div>
-        도착
-      </div>
+      return <Section>
+        <ProgressBar animated now={100} label="100%" />
+      </Section>
   }
 }
 
-const ModalPage = ({show, showOff, items, status}) => {
+const ModalPage = ({show, showOff, items, status, progress}) => {
   return (
     <Modal
       onHide={showOff}
@@ -38,8 +38,7 @@ const ModalPage = ({show, showOff, items, status}) => {
         <Modal.Title>주문 상세내용</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-          {console.log(items)}
-          <DeliveryBar status={status} />
+          <DeliveryBar status={status} percent={progress} />
           {items.map((item, idx) => {
             const { orderedItem } = item
         
@@ -66,25 +65,25 @@ const OrderPage = ({order, setOrders, token}) => {
   const showOn = () => setModalShow(true);
   const showOff = () => setModalShow(false);
 
-  const {deliveryCharge, delivery, orderItemList, id} = order
-  const {address, modifiedDate, status } = delivery
-
+  
   const cancelOrder = () => {
     axios.patch(`http://localhost:8080/api/mypage/order/${id}`,null ,{ headers:{ Authorization: token }})
-      .then(res => setOrders(res.data))
-      .catch(err => console.log(err.response))
+    .then(res => setOrders(res.data))
+    .catch(err => console.log(err.response))
   }
 
-  // console.log(order)
+  const {deliveryCharge, delivery, orderItemList, id} = order
+  const {address, modifiedDate, status, progress } = delivery
+  
   return <Container>
     <OrderContent>{modifiedDate}</OrderContent>
     <OrderContent>{address}</OrderContent>
     <OrderContent>{status}</OrderContent>
     <OrderContent>{deliveryCharge}</OrderContent>
     <Button onClick={showOn}>상세보기</Button>
-    <Button variant="danger" disabled={delivery.status === "CANCEL"} onClick={cancelOrder}>주문취소</Button>
+    <Button variant="danger" disabled={status === "CANCEL"} onClick={cancelOrder}>주문취소</Button>
 
-    <ModalPage show={modalShow} showOff={showOff} items={orderItemList} status={delivery.status} />
+    <ModalPage show={modalShow} showOff={showOff} items={orderItemList} status={status} progress={progress} />
   </Container>
 }
 export default OrderPage;
@@ -110,4 +109,7 @@ const ModalImage = styled.img`
   width: 200px;
   height: 350px;
   object-fit: cover;
+`
+const Section = styled.div`
+  margin: 20px;
 `

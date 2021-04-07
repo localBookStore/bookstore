@@ -1,58 +1,37 @@
+import { useState } from "react"
+import { NavLink } from "react-router-dom"
+
+import { Button } from "react-bootstrap"
 import styled, { keyframes } from "styled-components"
-import { useState, useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import axios from "axios"
 
 const tagMap = ["총류", "철학", "종교", "사회과학", "자연과학", "기술과학", "예술", "언어", "문학", "역사"]
 
-const CategoryHoverDetail = () => {
-  const [genreData, setGenreData] = useState(null);
+const CategoryHoverDetail = ({genreData}) => {
   const [choiceGenre, setChoiceGenre] = useState(null);
-  const history = useHistory();
-
-  useEffect(() => {
-    const getGenreBooks = async () => {
-      await axios.get("http://localhost:8080/api/index/genre/")
-        .then(res => setGenreData(res.data))
-        .catch(err => console.log(err.response))
-    }
-    getGenreBooks()
-  }, [])
 
   const onHoverEvent = (idx) => {
     setChoiceGenre(genreData[idx])
   }
 
-  const toDetailEvent = book => {
-    history.push({
-      pathname:"/detail",
-      search:`?id=${book.id}`,
-      state:book
-    })
-  }
-
   return <HoverComponent>
     <GenreTag>
       {genreData && tagMap.map((tagName, idx) => {
-        return <GenreButton
-          bakgroundColor="blue"
-          key={idx}
-          onMouseEnter={() => onHoverEvent(idx)}
-        >
+        return <GenreButton variant="outline-primary" onMouseEnter={() => onHoverEvent(idx)} key={idx}>
           {tagName}
         </GenreButton>
       })}
     </GenreTag>
-    <Items>
-      {choiceGenre && choiceGenre.map((res, idx) => {
+
+    <ItemsContainer>
+      {choiceGenre && choiceGenre.map((item, idx) => {
         return <div key={idx}>
-          <EachItemButton onClick={() => toDetailEvent(res)}>
-            <ItemImage src={res.imageUrl} alt={idx} />
-          </EachItemButton>
-          <ItemTitle>{res.name}</ItemTitle>
-        </div>
+          <ItemNavButton to={`/detail/${item.id}`}>
+            <ItemImage src={item.imageUrl} alt={idx} />
+          </ItemNavButton>
+          <ItemTitle>{item.name}</ItemTitle>
+        </div> 
       })}
-    </Items>
+      </ItemsContainer>
   </HoverComponent>
 }
 export default CategoryHoverDetail;
@@ -72,10 +51,10 @@ const slideUp = keyframes`
 
 const HoverComponent = styled.div`
   position: absolute;
-  display: flex;
-  top: 60px;
+  
+  top: 30px;
 
-  left: 2%;
+  left: 100px;
   margin: 0;
 
   background-color: rgba(235, 235, 235, 0.95);
@@ -98,8 +77,7 @@ const GenreTag = styled.div`
   padding: 0;
 `
 
-
-const GenreButton = styled.button`
+const GenreButton = styled(Button)`
   border:0 none;
   background-color: transparent;
   height:10%;
@@ -107,33 +85,24 @@ const GenreButton = styled.button`
   font-weight: bolder;
 
   &:hover {
-    background-color: ${props => props.bakgroundColor && "#B3DFFF"}
+    background-color:"#B3DFFF"
   }
 `
-
-const Items = styled.div`
-  width:90%;
-  float: right;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-
-  margin: 50px;
-  
+const ItemsContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
 `
 
-const EachItemButton = styled.button`
-  border: 0 none;
-  width: auto;
-  height: 200px;
-  overflow: hidden;
+const ItemNavButton = styled(NavLink)`
 
 `
 const ItemImage = styled.img`
-  max-height: 100%;
-  height: auto;
-  display: block;
-`
+  margin: 20px;
+  width:200px;
+  height: 310px;
+  object-fit: cover;
 
+`
 const ItemTitle = styled.div`
 
 `
