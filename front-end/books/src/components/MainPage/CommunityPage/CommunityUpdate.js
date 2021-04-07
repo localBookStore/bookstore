@@ -26,9 +26,8 @@ const CommunityRegister = ({ history, location:{ state } }) => {
     axios.put("http://localhost:8080/api/board/modify", {
       ...inputData,
       memberEmail,
-
     }, { headers: { Authorization: cookies.token }})
-    .then((res) => console.log(res))
+    .then((res) => history.replace('/community'))
     .catch((err) => console.log(err.response));
 	};
 

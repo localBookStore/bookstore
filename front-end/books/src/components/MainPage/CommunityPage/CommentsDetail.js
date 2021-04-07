@@ -4,7 +4,11 @@ import { useState, useEffect } from "react"
 import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
-const CommentsDetail = ({ comments }) => {
+const CommentsDetail = ({ comments, setComments }) => {
+
+  const summitEvent = () => {
+
+  }
 
   return <CommentContainer>
     {comments.length ?
@@ -16,7 +20,7 @@ const CommentsDetail = ({ comments }) => {
       })
       : <div>아직 댓글이 없습니다.</div>}
     <CommentInput />
-    <CommentButton>제출</CommentButton>
+    <CommentButton onClick={summitEvent}>제출</CommentButton>
   </CommentContainer>
 }
 export default CommentsDetail;

@@ -27,7 +27,7 @@ const CommunityDetail = ({ match }) => {
     {article && comments && <BoardContainer>
       <ArticleDetail props={article} token={token}/>
       <hr />
-      <CommentsDetail comments={comments} token={token}/>
+      <CommentsDetail comments={comments} setComments={setComments} token={token}/>
     </BoardContainer>
     }
   </>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { NavLink } from "react-router-dom"
+import { NavLink, useHistory } from "react-router-dom"
 import { jwtDecode } from "feature/JwtDecode"
 
 import { Button, Modal } from "react-bootstrap"
@@ -8,6 +8,7 @@ import styled from "styled-components";
 
 const ArticleDetail = ({ props, token }) => {
   const [isShow, setIsShow] = useState(false);
+  const history = useHistory();
   const { category, content, createdDate, title, id, memberEmail } = props
   const { sub } = jwtDecode(token)
   
@@ -20,7 +21,7 @@ const ArticleDetail = ({ props, token }) => {
         Authorization:token
       }
     })
-      .then(res => console.log("삭제됨"))
+      .then(res => history.replace('/community'))
       .catch(err => console.log(err.response))
   }
 
@@ -46,7 +47,7 @@ const ArticleDetail = ({ props, token }) => {
     <ArticleContent>{content}</ArticleContent>
     <ArticleDate>{createdDate}</ArticleDate>
     <ButtonFeature disable={memberEmail===sub}>
-      <NavLink to={{pathname:"/community/update", state:{category, content, title}}} variant="primary">수정</NavLink>
+      <NavLink to={{pathname:"/community/update", state:{id, category, content, title}}} variant="primary">수정</NavLink>
       <EditButton variant="danger" onClick={() => setIsShow(true)}>삭제</EditButton>
     </ButtonFeature>
     {isShow && <DeleteCheckModal />}
