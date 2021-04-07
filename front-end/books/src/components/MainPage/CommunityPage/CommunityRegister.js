@@ -20,8 +20,9 @@ const CommunityRegister = ({ history }) => {
 			[name]: value,
 		});
 	};
+
 	const summitEvent = () => {
-		axios.post("http://localhost:8080/api/board/", {
+		axios.post("http://localhost:8080/api/board", {
 				...inputData,
 				memberEmail: cookies.token.sub,
 			})
