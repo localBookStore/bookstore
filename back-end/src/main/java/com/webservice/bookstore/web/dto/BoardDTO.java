@@ -1,6 +1,7 @@
 package com.webservice.bookstore.web.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservice.bookstore.domain.entity.board.Board;
 import com.webservice.bookstore.domain.entity.cart.Cart;
 import com.webservice.bookstore.domain.entity.image.Image;
@@ -32,8 +33,10 @@ public class BoardDTO {
 
     private String category;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime modifiedDate;
 
     private Long memberId;

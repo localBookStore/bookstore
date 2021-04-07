@@ -21,7 +21,7 @@ public interface BoardRepository extends JpaRepository<Board,Long>, QuerydslPred
     @Transactional
     @Modifying
     @Query("update Board set content =:content, " +
-            "category=:category, title=:title where id=:id")
+            "category=:category, title=:title,modifiedDate = now() where id=:id")
     void modifyBoard(@Param("content") String content,
                      @Param("category") String category,
                      @Param("title") String title,

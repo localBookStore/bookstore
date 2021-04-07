@@ -37,7 +37,6 @@ public class ReviewDTO {
     private LocalDateTime modifiedDate;
 
     public static ReviewDTO entityToDTO(Review review) {
-
         return ReviewDTO.builder()
                 .id(review.getId())
                 .content(review.getContent())
@@ -53,7 +52,6 @@ public class ReviewDTO {
     }
 
     public static Review toEntity(ReviewDTO dto) {
-
         return Review.builder().id(dto.getId())
                 .content(dto.getContent())
                 .score(dto.getScore())
