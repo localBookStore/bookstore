@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -28,6 +30,8 @@ public class ReplyDTO {
     private long boardId;
 
     private long parent; //부모
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 
     public static Reply toEntity(ReplyDTO replyDTO, Board board){
         return Reply.builder()
@@ -50,6 +54,8 @@ public class ReplyDTO {
                 .memberId(reply.getMemberId())
                 .boardId(reply.getBoard().getId())
                 .parent(reply.getParent())
+                .createdDate(reply.getCreatedDate())
+                .modifiedDate(reply.getModifiedDate())
                 .build();
     }
 }
