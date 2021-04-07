@@ -69,7 +69,7 @@ public class BoardService {
     public boolean modifyBoard(BoardDTO boardDTO,String email){
         if(email==null||email.length()==0)
             return false;
-        if(boardDTO.getMemberEmail()!=email)
+        if(!boardDTO.getMemberEmail().equals(email))
             return false;
         boardRepository.modifyBoard(boardDTO.getContent(),
                 boardDTO.getCategory(),
@@ -84,7 +84,7 @@ public class BoardService {
 
         if(email==null||email.length()==0)//접속중이지 않거나
             return false;
-        if(boardDTO.getMemberEmail()!=email) //작성자와 로그인한사람이 다르면면
+        if(!boardDTO.getMemberEmail().equals(email)) //작성자와 로그인한사람이 다르면면
            return false;
         replyRepository.deleteReplyByBoard(boardDTO.getId());
         boardRepository.deleteBoard(boardDTO.getId());
