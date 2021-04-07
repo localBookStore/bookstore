@@ -71,9 +71,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = null;
         if(provider.equals("GOOGLE")) {
             oAuth2UserInfo = new GoogleOAuth2UserInfo(oAuth2User.getAttributes());
-        } else if (provider.equals("NAVER")) {
+        } else if(provider.equals("NAVER")) {
             oAuth2UserInfo = new NaverOAuth2UserInfo(oAuth2User.getAttributes());
-        } else if (provider.equals("KAKAO")) {
+        } else if(provider.equals("KAKAO")) {
             oAuth2UserInfo = new KakaoOAuth2UserInfo(oAuth2User.getAttributes());
         } else {
             throw new OAuth2AuthenticationProcessingException(provider + "(으)로 로그인 할 수 없습니다.");
@@ -92,11 +92,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             log.info("DB에 존재하지 않으므로 바로 회원가입");
             memberEntity = registerNewMember(oAuth2UserInfo);
         } else {
-            memberEntity = optionalMember.get();
 
+            memberEntity = optionalMember.get();
             // DB에서 조회한 계정이 일반 계정인지 판단
-            if(!memberEntity.getProvider().equals(AuthProvider.valueOf(provider))) {
-                throw new OAuth2AuthenticationProcessingException("\'"+ email +"\'계정은 이미 사용하려면 일반 로그인으로 수행해야합니다.");
+            if(AuthProvider.DEFAULT.equals(memberEntity.getProvider())) {
+                throw new OAuth2AuthenticationProcessingException("해당 이메일 계정 \'"+ email +"\'을 사용하시려면 일반 로그인으로 진행하셔야합니다.");
             }
             log.info("DB에 존재할 경우, 변경된 정보만 업데이트");
             log.info("ID 확인 : " + memberEntity.getEmail());
