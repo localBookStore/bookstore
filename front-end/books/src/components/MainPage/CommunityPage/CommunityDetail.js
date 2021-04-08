@@ -16,7 +16,6 @@ const CommunityDetail = ({ match }) => {
   useEffect(() => {
     axios.get(`http://localhost:8080/api/board/${articleId}/`)
       .then(res => {
-        console.log(res.data)
         setArticle(res.data[0]);
         setComments(res.data[1]);
       })
@@ -27,7 +26,11 @@ const CommunityDetail = ({ match }) => {
     {article && comments && <BoardContainer>
       <ArticleDetail props={article} token={token}/>
       <hr />
-      <CommentsDetail comments={comments} setComments={setComments} token={token}/>
+      <CommentsDetail 
+        comments={comments} 
+        setComments={setComments} 
+        boardId={articleId} 
+        token={token}/>
     </BoardContainer>
     }
   </>

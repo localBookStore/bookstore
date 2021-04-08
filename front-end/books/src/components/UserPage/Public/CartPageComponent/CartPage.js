@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import EachCartItem from "./EachCartItem";
 import CouponItem from "./CouponItem";
+import { useCookies } from "react-cookie"
 
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
 
 const CartPage = ({ location, history }) => {
-  const {
-    state: { token },
-  } = location;
+  const [cookies] = useCookies(["token"]);
+  const {token} = cookies;
   const [cartList, setCartList] = useState(null);
   const [checkList, setCheckList] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -58,7 +58,7 @@ const CartPage = ({ location, history }) => {
       .get("http://localhost:8080/api/coupon", {
         headers: { Authorization: token },
       })
-      .then((res) => setCoupons([...coupons, ...res.data]))
+      .then((res) => console.log(res))//setCoupons([...coupons, ...res.data]))
       .catch((err) => console.log("에러", err.response));
   };
 
@@ -106,7 +106,7 @@ const CartPage = ({ location, history }) => {
         </>
       )}
       <CouponContainer>
-        {coupons.map((res, idx) => {
+        {coupons.length && coupons.map((res, idx) => {
           return <CouponItem data={res} selectedCoupon={selectedCoupon} setSelectedCoupon={setSelectedCoupon} key={idx} />;
         })}
       </CouponContainer>

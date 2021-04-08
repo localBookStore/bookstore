@@ -1,22 +1,11 @@
 import { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import axios from "axios";
+import { genreMap } from 'feature/GenreMap'
 
 import { Image } from "react-bootstrap";
 import styled from "styled-components";
 
-const genreMap = {
-  0: '총류',
-  1: '철학',
-  2: '종료',
-  3: '사회과학',
-  4: '자연과학',
-  5: '기술과학',
-  6: '예술',
-  7: '언어',
-  8: '문학',
-  9: '역사'
-}
 
 const BestBookList = () => {
   const [books, setBooks] = useState([]);
@@ -27,7 +16,6 @@ const BestBookList = () => {
       .catch(err => console.log(err))
   }, [])
   
-  console.log(books)
   return <Container>
     {books.length && books.map((book, idx) => {
       return <ItemContainer key={idx}>

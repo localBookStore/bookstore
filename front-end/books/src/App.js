@@ -1,6 +1,7 @@
 import Header from "./components/HeaderPage/Header";
 import Home from "./components/MainPage/HomePage/Home";
 import ItemDetail from "./components/MainPage/DetailPage/ItemDetail";
+import BookList from "./components/MainPage/BookListPage/SearchBookList"
 import BestBookList from "./components/MainPage/BookListPage/BestBookList";
 import NewBookList from "./components/MainPage/BookListPage/NewBookList";
 import Community from "./components/MainPage/CommunityPage/Community";
@@ -29,6 +30,7 @@ const App = () => {
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/detail/:id" component={ItemDetail} />
+        <Route path="/booklist" component={BookList} />
         <Route path="/bestbooklist" component={BestBookList} />
         <Route path="/Newbooklist" component={NewBookList} />
         <Route exact path="/community" component={Community} />
