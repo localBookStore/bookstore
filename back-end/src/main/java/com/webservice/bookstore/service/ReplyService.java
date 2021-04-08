@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.awt.font.OpenType;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -40,15 +39,54 @@ public class ReplyService {
     //댓글 정보들 보여주기
     public List<ReplyDTO> getBoardReplylist(BoardDTO boardDTO){
         List<Reply> list=replyRepository.getBoardReplyList(boardDTO.getId());
-        List<ReplyDTO> dtoList=list.stream().map(reply -> ReplyDTO.entityToDTO(reply)).collect(Collectors.toList());
+        List<Reply> result=new ArrayList<>();
+        replyOrder(result,list);
+        List<ReplyDTO> dtoList=result.stream().map(reply -> ReplyDTO.entityToDTO(reply)).collect(Collectors.toList());
         return dtoList;
     }
 
     //댓글 정보들 보여주기
     public List<ReplyDTO> getBoardReplyList(Long boardId){
         List<Reply> list=replyRepository.getBoardReplyList(boardId);
-        List<ReplyDTO> dtoList=list.stream().map(reply -> ReplyDTO.entityToDTO(reply)).collect(Collectors.toList());
+        List<Reply> result=new ArrayList<>();
+        replyOrder(result,list);
+        List<ReplyDTO> dtoList=result.stream().map(reply -> ReplyDTO.entityToDTO(reply)).collect(Collectors.toList());
         return dtoList;
+    }
+
+    private void replyOrder(List<Reply> result,List<Reply> list){
+
+        HashMap<Long,List<Reply>> hash = new HashMap<>();
+        List<Reply> orderList = new ArrayList<>();
+
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getParent()==0){
+                orderList.add(list.get(i));
+            }
+            else
+            {
+                List<Reply> list2 = hash.get(list.get(i).getParent());
+                if(list2==null){
+                    list2 = new ArrayList<Reply>();
+                }
+                list2.add(list.get(i));
+                hash.put(list.get(i).getParent(),list2);
+            }
+        }
+
+        for(int i=0;i<orderList.size();i++){
+            backtrack(hash,orderList.get(i),result);
+        }
+
+    }
+    private void backtrack(HashMap<Long,List<Reply>> hash,Reply cur,List<Reply> result){
+        List<Reply> list = hash.get(cur.getId());
+        result.add(cur);
+        if(list==null)
+            return;
+        for(int i=0;i<list.size();i++){
+            backtrack(hash,list.get(i),result);
+        }
     }
 
 
