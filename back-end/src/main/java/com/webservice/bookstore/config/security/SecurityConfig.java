@@ -4,15 +4,15 @@ import com.webservice.bookstore.config.security.auth.CustomUserDetailsService;
 import com.webservice.bookstore.config.security.jwt.*;
 import com.webservice.bookstore.config.security.logout.handler.CustomLogoutSuccessfulHandler;
 import com.webservice.bookstore.config.security.oauth2.CustomOAuth2UserService;
+import com.webservice.bookstore.config.security.oauth2.handler.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
-import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import com.webservice.bookstore.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final RedisUtil redisUtil;
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
@@ -48,6 +49,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
+//    @Bean
+//    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+//        return new HttpCookieOAuth2AuthorizationRequestRepository();
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -64,14 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin().disable()
             .httpBasic().disable()
             .authorizeRequests()
-                .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/api/mypage/**").access("hasRole('ROLE_USER')")
-//                .antMatchers("/api/board/").permitAll()
-//                .antMatchers("/api/board/**").access("hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')")
-//                .antMatchers("/api/board/modify").access("hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')")
-//                .antMatchers("/api/board/delete").access("hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')")
-//                .antMatchers("/api/board/image/**").access("hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')")
-//                .antMatchers("/api/board/reply/comment/**").access("hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')")
+                .antMatchers("/api/admin/**", "/api/coupon/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/api/mypage/**", "/api/cart/**", "/api/order/**").access("hasRole('ROLE_USER')")
+                .antMatchers(HttpMethod.GET, "/api/board/**").permitAll()
+                .antMatchers("/api/board/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
                 .antMatchers("/logout").authenticated()
                 .anyRequest().permitAll()
                 .and()
@@ -97,6 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .oauth2Login()
                 .authorizationEndpoint()
                     .baseUri("/oauth2/authorization")
+                    .authorizationRequestRepository(cookieAuthorizationRequestRepository)
                     .and()
                 .redirectionEndpoint()
                     .baseUri("/login/oauth2/code/*")

@@ -1,10 +1,12 @@
 package com.webservice.bookstore.config.security.auth;
 
 import com.webservice.bookstore.config.security.jwt.JwtUtil;
+import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +20,6 @@ import java.util.Optional;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -27,8 +28,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
+        Member memberEntity = null;
         if(!optionalMember.isPresent()) {
             throw new UsernameNotFoundException(email);
+        }
+
+        memberEntity = optionalMember.get();
+        if(!AuthProvider.DEFAULT.equals(memberEntity.getProvider())) {
+            String msg = "해당 이메일 계정은 "+ memberEntity.getProvider() + " 간편 로그인으로 진행하셔야합니다.";
+            throw new AuthenticationException(msg) {};
         }
 
         CustomUserDetails customUserDetails = CustomUserDetails.builder().member(optionalMember.get()).build();

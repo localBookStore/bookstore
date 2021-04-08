@@ -1,5 +1,6 @@
 package com.webservice.bookstore.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservice.bookstore.domain.entity.board.Board;
 import com.webservice.bookstore.domain.entity.reply.Reply;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,9 @@ public class ReplyDTO {
     private long boardId;
 
     private long parent; //부모
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime modifiedDate;
 
     public static Reply toEntity(ReplyDTO replyDTO, Board board){

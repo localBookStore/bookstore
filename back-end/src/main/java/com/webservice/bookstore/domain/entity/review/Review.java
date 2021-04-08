@@ -27,6 +27,14 @@ public class Review extends BaseTimeEntity {
 
     private String content;
 
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

@@ -44,6 +44,14 @@ public class ReplyService {
         return dtoList;
     }
 
+    //댓글 정보들 보여주기
+    public List<ReplyDTO> getBoardReplyList(Long boardId){
+        List<Reply> list=replyRepository.getBoardReplyList(boardId);
+        List<ReplyDTO> dtoList=list.stream().map(reply -> ReplyDTO.entityToDTO(reply)).collect(Collectors.toList());
+        return dtoList;
+    }
+
+
     @Modifying
     @Transactional
     public boolean changeReply(ReplyDTO replyDTO,String loginEmail){
