@@ -1,5 +1,6 @@
 package com.webservice.bookstore.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class CouponAddDto {
     private String name;
     private String description;
     private int discountRate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDate endDate;
 
     public Coupon toEntity() {
