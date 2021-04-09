@@ -69,6 +69,10 @@ dependencies {
 
     //썸네일 이미지 원하는 사이즈 조정가는
     compile group: 'net.coobird', name : 'thumbnailator', version: '0.4.12'
+
+    // GitHub : 설정파일(application.properties) 암호화
+    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '2.1.0'
+
 }
 
 def generated='src/main/generated'
