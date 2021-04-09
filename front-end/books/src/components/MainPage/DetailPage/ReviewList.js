@@ -6,10 +6,12 @@ import Review from "./Review"
 import { Button } from "react-bootstrap"
 import styled from "styled-components";
 import jwtDecode from "jwt-decode";
+import React from "react"
 
 const BottomDetail = ({book, token}) => {
   const [reviews, setReviews] = useState([])
   const [content, setContent] = useState("")
+  const [score, setScore] = useState(0)
   const { sub } = jwtDecode(token)
 
   useEffect(() => {
@@ -26,11 +28,18 @@ const BottomDetail = ({book, token}) => {
       itemId:book.id,
       memberEmail: sub,
       content,
-      score: 5,
+      score,
     }, { 
       headers: { Authorization: token }})
-    .then(res => setReviews(res.data))
+    .then(res => setContent(res.data))
     .catch(err => console.log(err.response))
+  }
+
+  const config = {
+    size: 30,
+    char: "",
+    activeColor: "#58A677",
+    onChange: newValue => setScore(newValue)
   }
 
   return <Container>
@@ -38,8 +47,11 @@ const BottomDetail = ({book, token}) => {
       return <Review review={review} itemId={book.id} token={token} setReviews={setReviews} key={idx} />
     }) : <div>리뷰가 없습니다.</div>
     }
-    <ReviewInput onChange={e => setContent(e.target.value)}/>
-    <SubmitButton onClick={submitEvent}>댓글쓰기</SubmitButton>
+    <Wrap>
+      <ReactStars {...config} />
+      <ReviewInput onChange={e => setContent(e.target.value)}/>
+      <SubmitButton onClick={submitEvent}>댓글쓰기</SubmitButton>
+    </Wrap>
   </Container>
 }
 export default BottomDetail;
@@ -50,7 +62,14 @@ const Container = styled.div`
 const ReviewInput = styled.input`
   height: 8vh;
   width: 30%;
+
+  margin: 0 20px;
 `
 const SubmitButton = styled(Button)`
-  margin: 0 20px;
+ 
+`
+const Wrap = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
 `

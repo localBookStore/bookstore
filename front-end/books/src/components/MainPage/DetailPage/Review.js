@@ -1,5 +1,9 @@
 import axios from "axios";
 
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+// import { faStar } from "@fortawesome/free-regular-svg-icons";
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
 
@@ -19,8 +23,20 @@ const Review = ({ review, itemId, token, setReviews }) => {
 			.catch((err) => console.log(err.response));
 	};
 
+  const Score = ({score}) => {
+    var result = ""
+    for (var i=0; i < score; i++){
+      result += "⭐️";
+    }
+    for (var j=0; j < 5-score; j++){
+      result += '☆'
+    }
+    return <div>{result}</div>
+  }
+
 	return (
 		<Container>
+      <Content><Score score={review.score}/></Content>
 			<Content>{review.content}</Content>
 			<div>
         <ContentInfo>{review.modifiedDate}</ContentInfo>
