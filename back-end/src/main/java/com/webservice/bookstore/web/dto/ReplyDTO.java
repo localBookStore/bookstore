@@ -30,6 +30,8 @@ public class ReplyDTO {
 
     private long boardId;
 
+    private String nickName;
+
     private long parent; //부모
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdDate;
@@ -43,6 +45,7 @@ public class ReplyDTO {
                 .groupOrder(replyDTO.getGroupOrder())
                 .memberEmail(replyDTO.getMemberEmail())
                 .memberId(replyDTO.getMemberId())
+                .memberNickName(replyDTO.getNickName())
                 .board(board)
                 .parent(replyDTO.getParent())
                 .build();
@@ -57,6 +60,7 @@ public class ReplyDTO {
                 .memberId(reply.getMemberId())
                 .boardId(reply.getBoard().getId())
                 .parent(reply.getParent())
+                .nickName(reply.getMemberNickName())
                 .createdDate(reply.getCreatedDate())
                 .modifiedDate(reply.getModifiedDate())
                 .build();

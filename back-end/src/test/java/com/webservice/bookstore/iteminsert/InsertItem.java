@@ -1,6 +1,7 @@
 package com.webservice.bookstore.iteminsert;
 
 import com.webservice.bookstore.domain.entity.category.Category;
+import com.webservice.bookstore.domain.entity.category.CategoryRepository;
 import com.webservice.bookstore.domain.entity.item.Item;
 import com.webservice.bookstore.json.JsonData;
 import com.webservice.bookstore.domain.entity.item.ItemRepository;
@@ -9,7 +10,9 @@ import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,9 +22,30 @@ public class InsertItem {
     @Autowired
     private ItemRepository itemRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Test
+    public void insertCategories(){
+        String categoryNames[]={"층류","철학","종교","사회과확","자연과학","기술과학","예술","언어","문학","역사"};
+
+        for(Long i=new Long(0);i<categoryNames.length;i++){
+            Category category = Category.builder().id(i).name(categoryNames[i.intValue()]).build();
+            categoryRepository.save(category);
+        }
+
+    }
+    @Test
+    @Commit
+    @Transactional
     void JsonInsert() throws Exception{
-        JsonData data = new JsonData("/Users/user/Desktop/JaeHo/bookstore/final2.json");
+        String categoryNames[]={"층류","철학","종교","사회과확","자연과학","기술과학","예술","언어","문학","역사"};
+
+        for(Long i=new Long(0);i<categoryNames.length;i++){
+            Category category = Category.builder().id(i).name(categoryNames[i.intValue()]).build();
+            categoryRepository.save(category);
+        }
+        JsonData data = new JsonData("c:/final.json");
         JSONArray jsonArray = data.getJsonArray();
 
         for(int i=0;i<jsonArray.size();i++){
