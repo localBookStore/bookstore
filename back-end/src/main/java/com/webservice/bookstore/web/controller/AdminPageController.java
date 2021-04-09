@@ -177,7 +177,14 @@ public class AdminPageController {
 
     @PostMapping("/member/board")
     public ResponseEntity<List<BoardDTO>> getMemberBoardList(
-            @RequestBody BoardDTO dto) {
+            @RequestBody BoardDTO dto,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        Optional<Member> ad = memberRepository.findByEmail(customUserDetails.getMember().getEmail());
+        if(!ad.isPresent())
+            throw new UnauthorizedException("관리자 아이디 정보가 없습니다..");
+        Member admin = ad.get();
+        if(!admin.getRole().getRoleName().equals("ROLE_ADMIN"))
+            throw new UnauthorizedException("당신은 관리자가 아닙니다.");
 
         Optional<Member> op = memberRepository.findByEmail(dto.getMemberEmail());
         if(!op.isPresent())
