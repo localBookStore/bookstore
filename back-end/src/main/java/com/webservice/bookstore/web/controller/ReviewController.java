@@ -68,6 +68,6 @@ public class ReviewController {
     public ResponseEntity<List<ReviewDTO>> getItemReviews(@PathVariable("itemId")Long itemId){
         return new ResponseEntity<>(reviewService.getItemReviewList(itemId),HttpStatus.OK);
     }
-    
+
     
 }

@@ -28,5 +28,4 @@ public class ReviewReply extends BaseTimeEntity {
     @JoinColumn(name = "review_id")
     private Review review;
 
-
 }
