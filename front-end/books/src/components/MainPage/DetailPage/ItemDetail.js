@@ -1,18 +1,22 @@
 import TopDetail from "./TopDetail";
 import MidDetail from "./MidDetail";
-import BottomDetail from "./BottomDetail";
+import ReviewList from "./ReviewList";
+import { useCookies } from "react-cookie"
 
 import styled from "styled-components";
 
 const ItemDetail = ({ location }) => {
   const { book } = location.state
+  const [ cookies ] = useCookies(["token"])
+  const { token } = cookies;
+  
   console.log(book)
   return <DetailComponent>
     <TopDetail props={book}/>
     <Divider />
     <MidDetail props={book}/>
     <Divider margin-top="20px"/>
-    <BottomDetail itemId={book.id} />
+    <ReviewList book={book} token={token} />
   </DetailComponent>
 }
 export default ItemDetail;
