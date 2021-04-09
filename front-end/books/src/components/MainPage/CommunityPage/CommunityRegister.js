@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { jwtDecode } from "feature/JwtDecode"
 import { useCookies } from "react-cookie";
 
 import { Button } from "react-bootstrap";
@@ -22,11 +23,13 @@ const CommunityRegister = ({ history }) => {
 	};
 
 	const summitEvent = () => {
+    const memberEmail = jwtDecode(cookies.token).sub
+
 		axios.post("http://localhost:8080/api/board", {
 				...inputData,
-				memberEmail: cookies.token.sub,
+				memberEmail,
 			})
-			.then(res => console.log(res))
+			.then(res => history.push('/community'))
 			.catch((err) => console.log(err.response));
 	};
 

@@ -11,23 +11,16 @@ const SearchBar = () => {
   const [tag, setTag] = useState("name");
   const history = useHistory();
 
-  const routing = (items) => {
-    history.push({
-      pathname: "/booklist",
-      state: { items },
-    });
-  };
-
-  const getBooklist = async () => {
-    await axios
-      .get("http://localhost:8080/api/items/", { params: { input, tag } })
-      .then((res) => {
-        const books = res.data._embedded.defaultList;
-        routing(books);
+  const getBookList = () => {
+    axios.get("http://localhost:8080/api/items/", {params:{ input, tag }})
+      .then(res => {
+        const books = res.data._embedded.defaultList
+        history.push({
+          pathname: "/booklist",
+          state: { books },
+        });
       })
-      .catch(() => {
-        routing(null);
-      });
+      .catch(err => alert("검색 결과가 없습니다."));
     setInput("");
   };
 
@@ -38,22 +31,20 @@ const SearchBar = () => {
   };
   const clickEvent = () => {
     if (input) {
-      getBooklist();
+      getBookList();
     }
   };
 
   return (
     <EntireBar>
-      <SelectTag value={tag} onChange={(event) => setTag(event.target.value)}>
+      <SelectTag value={tag} onChange={e => setTag(e.target.value)}>
         <option value="name">제목</option>
         <option value="author">저자</option>
       </SelectTag>
       <SearchInput
         value={input}
         placeholder="Search..."
-        onChange={(event) => {
-          setInput(event.target.value);
-        }}
+        onChange={e => setInput(e.target.value)}
         onKeyPress={enterEvent}
       />
       <SearchButton onClick={clickEvent}>

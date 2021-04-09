@@ -36,6 +36,7 @@ npm start
 'jwt-decode'    # Do jwt decode library (using find user info)
 'react-google-login'    # for social login of google
 'react-paginate'    # apply paginate of items
+'react-rating-starts-component' # apply rating star for react
 ```
 
 ### File Structure (In Progress...)
