@@ -30,7 +30,7 @@ public class ReviewService {
         //memberEmail , content , score ,itemid 가필요
         Optional<Member> op = memberRepository.findByEmail(dto.getMemberEmail());
         Optional<Item> op2 = itemRepository.findById(dto.getItemId());
-        if (!op.isPresent()||op2.isPresent())
+        if (!op.isPresent()||!op2.isPresent())
             return -1;
         Member member = op.get();
         Item item = op2.get();
@@ -76,6 +76,21 @@ public class ReviewService {
     public List<ReviewDTO> getItemReviewList(Long itemId){
         List<Review> reviews = reviewRepository.getItemReviewList(itemId);
         List<ReviewDTO> dtoList = reviews.stream().map(entity-> ReviewDTO.entityToDTO(entity)).collect(Collectors.toList());
+        return dtoList;
+    }
+
+    @Transactional
+    public List<ReviewDTO> getinsertItemReviewList(ReviewDTO dto){
+        List<Review> reviews = reviewRepository.getItemReviewList(dto.getItemId());
+        List<ReviewDTO> dtoList = reviews.stream().map(entity-> ReviewDTO.entityToDTO(entity)).collect(Collectors.toList());
+
+        ReviewDTO dto2 = dtoList.get(dtoList.size()-1);
+        dtoList.remove(dtoList.size()-1);
+
+        dto.setId(dto2.getId());
+        dto.setCreatedDate(dto2.getCreatedDate());
+        dto.setModifiedDate(dto2.getModifiedDate());
+        dtoList.add(dto);
         return dtoList;
     }
 }
