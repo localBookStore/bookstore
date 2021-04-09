@@ -32,7 +32,7 @@ public class ReviewController {
             throw new IllegalStateException("잘못된 요청");
         if(num ==0)
             throw new IllegalStateException("주문한 내역이없습니다.");
-        return new ResponseEntity<>(reviewService.getItemReviewList(dto.getItemId()),HttpStatus.OK);
+        return new ResponseEntity<>(reviewService.getinsertItemReviewList(dto),HttpStatus.OK);
     }
     @ExceptionHandler(Exception.class)
     @PutMapping("/items/modify/review")
