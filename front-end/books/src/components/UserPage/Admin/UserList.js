@@ -1,18 +1,20 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import UserArticle from "./UserArticle"
 
+import { Button } from "react-bootstrap"
 import styled from "styled-components";
 
 const UserList = ({ location }) => {
-  const token = location.state.token;
-  console.log(token);
-  const [userList, setUserList] = useState(null);
+  const { token } = location.state;
+  const [userList, setUserList] = useState([]);
+  const [selectIdx, setSelectIdx] = useState(-1);
 
   useEffect(() => {
     axios.get("http://localhost:8080/api/admin/members/", {
       headers: {
         Authorization: token,
-      },
+      }
     })
     .then(res => setUserList(res.data))
     .catch((err) => console.log(err.response));
@@ -20,9 +22,15 @@ const UserList = ({ location }) => {
 
   return <Container>
     <ContainerTitle>회원 리스트입니다.</ContainerTitle>
-    {userList && userList.map((user, idx) => {
-      return <button key={idx} >{user.nickName}<br />{user.email}</button>
+    {userList.length && userList.map((user, idx) => {
+      return <Button 
+        onClick={() => setSelectIdx(idx)}
+        variant="info" 
+        key={idx} 
+        >{user.nickName}<br />{user.email}</Button>
     })}
+    {userList.length && selectIdx > -1 && 
+      <UserArticle userInfo={userList[selectIdx]} />}
 
   </Container>;
 };
