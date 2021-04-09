@@ -64,9 +64,10 @@ public class ReviewController {
         return new ResponseEntity<>(reviewService.getItemReviewList(dto.getItemId()),HttpStatus.OK);
     }
 
-    @GetMapping("/items/reviews")
-    public ResponseEntity<List<ReviewDTO>> getItemReviews(@RequestBody ReviewDTO dto){
-        return new ResponseEntity<>(reviewService.getItemReviewList(dto.getItemId()),HttpStatus.OK);
+    @GetMapping("/items/reviews/{itemId}")
+    public ResponseEntity<List<ReviewDTO>> getItemReviews(@PathVariable("itemId")Long itemId){
+        return new ResponseEntity<>(reviewService.getItemReviewList(itemId),HttpStatus.OK);
     }
+
     
 }

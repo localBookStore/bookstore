@@ -3,6 +3,7 @@ package com.webservice.bookstore.service;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import com.webservice.bookstore.domain.entity.reply.Reply;
+import com.webservice.bookstore.domain.entity.reply.ReviewReply;
 import com.webservice.bookstore.domain.entity.reply.ReviewReplyRepository;
 import com.webservice.bookstore.domain.entity.review.Review;
 import com.webservice.bookstore.domain.entity.review.ReviewRepository;
@@ -26,19 +27,38 @@ public class ReviewReplyService {
 
     @Transactional
     public boolean registerReply(ReviewReplyDTO dto,String loginEmail){
-
         Optional<Member> op = memberRepository.findByEmail(loginEmail);
         if(!op.isPresent())
             return false;
         Member member = op.get();
         Review review = reviewRepository.getOne(dto.getReviewId());
-
         if(review.getMember().getRole().getRoleName().equals("ROLE_USER")){//사용자가 유저라면
             if(!review.getMember().equals(loginEmail))//리뷰 작성자와 다르면
                 return false;
         }
-
+        dto.setMemberId(member.getId());//admin인경우도 있으니 바꿔줘야함
+        ReviewReply reviewReply = ReviewReplyDTO.toEntity(dto);
+        reviewReplyRepository.save(reviewReply);
         return true;
     }
+
+    @Transactional
+    public boolean modifyReply(ReviewReplyDTO dto,String loginEmail){
+        Optional<Member> op = memberRepository.findByEmail(loginEmail);
+        if(!op.isPresent())
+            return false;
+        Member member = op.get();
+        Review review = reviewRepository.getOne(dto.getReviewId());
+        if(!review.getMember().equals(loginEmail))//리뷰 작성자와 다르면
+            return false;
+        ReviewReply reviewReply = ReviewReplyDTO.toEntity(dto);
+        return true;
+    }
+
+    @Transactional
+    public boolean removeReply(ReviewReplyDTO dto,String loginEmail){
+        return true;
+    }
+
 
 }

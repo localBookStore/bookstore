@@ -23,6 +23,8 @@ public class Reply extends BaseTimeEntity {
 
     private String memberEmail; //작성자 아이디
 
+    private String memberNickName;
+
     @Column(nullable = false,columnDefinition = "int(11) default 0")
     private int depth; //깊이
 
