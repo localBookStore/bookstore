@@ -1,5 +1,7 @@
 package com.webservice.bookstore.service;
 
+import com.webservice.bookstore.domain.entity.item.Item;
+import com.webservice.bookstore.domain.entity.item.ItemRepository;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import com.webservice.bookstore.domain.entity.reply.Reply;
@@ -21,20 +23,24 @@ import java.util.stream.Collectors;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
-
+    private final ItemRepository itemRepository;
     //-1잘못된접근 0,주문한적 없음, 1 성공
     public int registerReview(ReviewDTO dto) {
 
         //memberEmail , content , score ,itemid 가필요
         Optional<Member> op = memberRepository.findByEmail(dto.getMemberEmail());
-        if (!op.isPresent())
+        Optional<Item> op2 = itemRepository.findById(dto.getItemId());
+        if (!op.isPresent()||op2.isPresent())
             return -1;
         Member member = op.get();
-
+        Item item = op2.get();
         Long numhas = reviewRepository.hasOrder(member.getId(), dto.getItemId());
         if (numhas == 0 || numhas == null)//주문한적없음
             return 0;
         dto.setMemberId(member.getId());
+        dto.setMemberEmail(member.getEmail());
+        dto.setMemberNickName(member.getNickName());
+        dto.setItemName(item.getName());
         Review review = ReviewDTO.toEntity(dto);
         reviewRepository.save(review);
         return 1;
@@ -66,6 +72,7 @@ public class ReviewService {
         return true;
     }
 
+    @Transactional
     public List<ReviewDTO> getItemReviewList(Long itemId){
         List<Review> reviews = reviewRepository.getItemReviewList(itemId);
         List<ReviewDTO> dtoList = reviews.stream().map(entity-> ReviewDTO.entityToDTO(entity)).collect(Collectors.toList());
