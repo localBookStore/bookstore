@@ -31,13 +31,13 @@ const BottomDetail = ({book, token}) => {
       score,
     }, { 
       headers: { Authorization: token }})
-    .then(res => setContent(res.data))
+    .then(res => setReviews(res.data))
     .catch(err => console.log(err.response))
   }
 
   const config = {
     size: 30,
-    char: "",
+    // char: "",
     activeColor: "#58A677",
     onChange: newValue => setScore(newValue)
   }

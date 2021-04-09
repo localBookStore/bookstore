@@ -7,18 +7,23 @@ import { Button } from "react-bootstrap";
 import styled from "styled-components";
 
 const EachComments = ({ comment, setComments, submitEvent, boardId, token, memberEmail }) => {
-	const [isModify, setIsModify] = useState(false);
-	const [modifyValue, setModifyValue] = useState(comment.content);
+	const [isUpdate, setIsUpdate] = useState(false);
 	const [showInput, setShowInput] = useState(false);
+	const [newContent, setNewContent] = useState(comment.content)
 	const [content, setContent] = useState("");
 
-	
-	console.log(comment);
 	const modifyEvent = () => {
-		if (!isModify) {
-			setIsModify(true);
-		} else {
-		}
+		axios.put("http://localhost:8080/api/board/reply/modify", {
+			memberEmail,
+			content: newContent,
+			id: comment.id,
+			boardId,
+		}, { headers : { Authorization: token }})
+		.then(res => {
+			setComments(res.data)
+			setIsUpdate(false)
+		})
+		.catch(err => console.log(err.response))
 	};
 
 	const deleteEvent = (id) => {
@@ -33,35 +38,40 @@ const EachComments = ({ comment, setComments, submitEvent, boardId, token, membe
 
 	return (
 		<Container>
-			{/* {isModify ? <CommentInput value={modifyValue} onChange={(e) => setModifyValue(e.target.value)} /> : <CommentInfo>{comment.content}</CommentInfo>} */}
-			
-			<CommentInfo marginLeft={comment.depth}>
-			<FontAwesomeIcon icon={faReply} rotation={180} style={{margin: "0 20px"}} />
-				{comment.content}</CommentInfo>
-			{showInput ? 
 			<div>
-					<CommentInput onChange={e => setContent(e.target.value)} />
-					<Button onClick={() => {
-						submitEvent(comment.depth+1, comment.id, content)
-						setShowInput(false)
-					}}>
-						답글달기</Button>
-			</div> :
+				<FontAwesomeIcon icon={faReply} rotation={180} style={{margin: "0 20px"}} />
+					{ isUpdate ? <>
+						<CommentInput defaultValue={newContent} onChange={e => setNewContent(e.target.value)}/>
+						<CommentButton onClick={modifyEvent}>저장</CommentButton>
+						<CommentButton onClick={() => setIsUpdate(false)}>취소</CommentButton>
+					</>
+					:
+						<CommentInfo marginLeft={comment.depth}>
+						{comment.content}</CommentInfo>
+					}
+			</div>
+			<div>
+				{showInput && <div>
+						<div>
+							<CommentInput onChange={e => setContent(e.target.value)} />
+							<Button onClick={() => {
+								submitEvent(comment.depth+1, comment.id, content)
+								setShowInput(false)
+							}}>답글달기</Button>
+							<Button variant="secondary" onClick={() => setShowInput(false)}>취소</Button>
+						</div>
+				</div>}
+			</div>
 			<div>
 				<CommentInfo color="gray">{comment.modifiedDate}</CommentInfo>
 				<CommentInfo color="gray">{comment.memberEmail}</CommentInfo>
-				<CommentButton onClick={() => setShowInput(!showInput)}>답글</CommentButton>
-				<CommentButton onClick={modifyEvent} variant="info">
-					수정
-				</CommentButton>
-				<CommentButton onClick={() => {
-					deleteEvent(comment.id)
-					setShowInput(false)
-				}} variant="danger">
-					삭제
-				</CommentButton>
+				{!isUpdate && !showInput && <>
+					<CommentButton onClick={() => setShowInput(true)}>답글</CommentButton>
+					<CommentButton onClick={() => setIsUpdate(true)} variant="info">수정</CommentButton>
+					<CommentButton onClick={() => deleteEvent(comment.id)} variant="danger">삭제</CommentButton>				
+				</>
+				}
 			</div> 
-			}
 		</Container>
 	);
 };
