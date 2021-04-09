@@ -30,7 +30,7 @@ public class ReviewService {
         //memberEmail , content , score ,itemid 가필요
         Optional<Member> op = memberRepository.findByEmail(dto.getMemberEmail());
         Optional<Item> op2 = itemRepository.findById(dto.getItemId());
-        if (!op.isPresent()||op2.isPresent())
+        if (!op.isPresent()||!op2.isPresent())
             return -1;
         Member member = op.get();
         Item item = op2.get();
