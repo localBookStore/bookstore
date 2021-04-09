@@ -175,11 +175,11 @@ public class AdminPageController {
         }
     }
 
-    @GetMapping("/member/board/{member_id}")
+    @PostMapping("/member/board")
     public ResponseEntity<List<BoardDTO>> getMemberBoardList(
-            @PathVariable("member_id")Long memberId) {
+            @RequestBody BoardDTO dto) {
 
-        Optional<Member> op = memberRepository.findById(memberId);
+        Optional<Member> op = memberRepository.findByEmail(dto.getMemberEmail());
         if(!op.isPresent())
             throw new UnauthorizedException("아이디 정보가 없습니다..");
         Member member = op.get();
