@@ -78,4 +78,19 @@ public class ReviewService {
         List<ReviewDTO> dtoList = reviews.stream().map(entity-> ReviewDTO.entityToDTO(entity)).collect(Collectors.toList());
         return dtoList;
     }
+
+    @Transactional
+    public List<ReviewDTO> getinsertItemReviewList(ReviewDTO dto){
+        List<Review> reviews = reviewRepository.getItemReviewList(dto.getItemId());
+        List<ReviewDTO> dtoList = reviews.stream().map(entity-> ReviewDTO.entityToDTO(entity)).collect(Collectors.toList());
+
+        ReviewDTO dto2 = dtoList.get(dtoList.size()-1);
+        dtoList.remove(dtoList.size()-1);
+
+        dto.setId(dto2.getId());
+        dto.setCreatedDate(dto2.getCreatedDate());
+        dto.setModifiedDate(dto2.getModifiedDate());
+        dtoList.add(dto);
+        return dtoList;
+    }
 }
