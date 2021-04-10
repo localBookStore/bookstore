@@ -73,7 +73,6 @@ dependencies {
     // GitHub : 설정파일(application.properties) 암호화
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.0'
 
-
 }
 
 def generated='src/main/generated'
