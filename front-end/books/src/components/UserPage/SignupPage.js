@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { useCookies } from "react-cookie"
 import axios from "axios"
 
-import {Avatar, Button, Input, CssBaseline, TextField, Link, Grid, Box, Typography, Container} from '@material-ui/core';
+import {Avatar, Button, Input, CssBaseline, TextField, CircularProgress, Typography, Container} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import styled from "styled-components"
@@ -13,6 +13,7 @@ import styled from "styled-components"
 
 const SignupPage = ({ history }) => {
   const [cookies, setCookie] = useCookies(['token']);
+  const [isLoading, setIsLoading] = useState(false)
   const { register, handleSubmit, errors, watch } = useForm();
   const [isCheck, setIsCheck] = useState({
     overLab: false,
@@ -48,10 +49,14 @@ const SignupPage = ({ history }) => {
   }
 
   const sendEmailCode = () => {
+    setIsLoading(true)
     axios.post("http://localhost:8080/api/signup/request-certificated", {
       email: EMAIL.current
     })
-      .then(res => console.log("이메일을 보냈습니다."))
+      .then(() => {
+        setIsLoading(false)
+        alert("이메일에 인증코드를 전송하였습니다.")
+      })
       .catch(err => console.log(err.response))
   }
 
@@ -63,7 +68,7 @@ const SignupPage = ({ history }) => {
         ...isCheck,
         checkCode: true
         }))
-      .catch(err => alert("인증 코드가 다릅니다."))
+      .catch(() => alert("인증 코드가 다릅니다."))
   }
 
   const checkOverLab = () => {
@@ -77,11 +82,13 @@ const SignupPage = ({ history }) => {
       .catch(err => alert(err.response.data.message))
   }
 
-  return <Container maxWidth="xs">
+  if (isLoading) { return <CircularProgress color="secondary"/> }
+
+  return <FormContainer maxWidth="md">
   <CssBaseline />
   <IconDiv>
-    <Avatar><LockOutlinedIcon /></Avatar>
-    <Typography component="h1" variant="h5">Sign Up</Typography>
+    <Avatar><LockOutlinedIcon/></Avatar>
+    <Typography component="h2" variant="h3">Sign Up</Typography>
     <form onSubmit={handleSubmit(doSignup)}>
       <TextField
         variant="outlined"
@@ -101,10 +108,11 @@ const SignupPage = ({ history }) => {
             message: '올바른 형식의 이메일을 입력하세요!',
           },
         })}
-      />
+        />
+      {console.log(isCheck.overLab)}
       {isCheck.overLab ? <span>사용가능</span> : <Button color="primary" onClick={checkOverLab}>중복확인</Button>}
+      {isCheck.overLab ? <Button color="primary" onClick={sendEmailCode}>인증 코드 보내기</Button> : <Typography display="inline" variant="body2">인증확인필요</Typography> }
       <span>{errors.email && errors.email.message}</span>
-      {isCheck.checkCode ? <span>인증확인</span> : <Button color="primary" onClick={sendEmailCode}>인증 코드 보내기</Button> }:
       <div>
         <Input style={{marginLeft:"10px"}} placeholder={isCheck.overLab ? "인증코드 입력" : "중복확인을 하세요"} disabled={!isCheck.overLab}/>
         {isCheck.checkCode ? <span>인증확인</span> : <Button color="secondary" onClick={checkEmailCode}>인증 확인하기</Button>}
@@ -168,25 +176,18 @@ const SignupPage = ({ history }) => {
         placeholder="ex) 930820"
       />
 
-      <Button
+      <SubmitButton
         type="submit"
         fullWidth
         variant="contained"
         color="primary"
-      >Sign In</Button>
-      {/* <Grid container>
-        <Grid item xs>
-          <Link href="#" variant="body2">
-            Forgot password?
-          </Link>
-        </Grid>
-      </Grid> */}
+      >Sign In</SubmitButton>
 
 
     </form>
   </IconDiv>
 
-</Container>
+</FormContainer>
 }
 export default SignupPage;
 
@@ -194,4 +195,14 @@ const IconDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`
+
+const FormContainer = styled(Container)`
+  margin: 5%;
+`
+const SubmitButton = styled(Button)`
+height: 40px;
+  &&{
+    margin-top: 5%;
+  }
 `
