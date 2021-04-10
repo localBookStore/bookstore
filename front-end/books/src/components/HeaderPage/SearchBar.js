@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearchPlus } from "@fortawesome/free-solid-svg-icons";
+import { BiSearchAlt } from "react-icons/bi"
 import styled from "styled-components";
 
 const SearchBar = () => {
@@ -36,25 +35,17 @@ const SearchBar = () => {
   };
 
   return (
-    <EntireBar>
-      <SelectTag value={tag} onChange={e => setTag(e.target.value)}>
-        <option value="name">제목</option>
-        <option value="author">저자</option>
-      </SelectTag>
-      <SearchInput
-        value={input}
-        placeholder="Search..."
-        onChange={e => setInput(e.target.value)}
-        onKeyPress={enterEvent}
-      />
-      <SearchButton onClick={clickEvent}>
-        <FontAwesomeIcon
-          icon={faSearchPlus}
-          style={{ fontSize: "33px", color: "#000" }}
-        />
-      </SearchButton>
-    </EntireBar>
-  );
+		<EntireBar>
+			<SelectTag value={tag} onChange={(e) => setTag(e.target.value)}>
+				<option value="name">제목</option>
+				<option value="author">저자</option>
+			</SelectTag>
+			<SearchInput value={input} placeholder="Search..." onChange={(e) => setInput(e.target.value)} onKeyPress={enterEvent} />
+			<SearchButton onClick={clickEvent}>
+				<SearchIcon/>
+			</SearchButton>
+		</EntireBar>
+	);
 };
 export default SearchBar;
 
@@ -65,14 +56,13 @@ const EntireBar = styled.div`
 `;
 const SearchInput = styled.input`
   position: relative;
-  left: 125px;
-  margin: 0px;
+  left: 12%;
 
   border: 1.5px solid;
   background-color: whitesmoke;
   border-radius: 5px 5px 5px 5px;
-  width: 70%;
-  height: 60px;
+  width: 60%;
+  height: 7vh;
 
   font-weight: 500;
 
@@ -80,26 +70,25 @@ const SearchInput = styled.input`
 `;
 const SearchButton = styled.button`
   position: relative;
-  top: 5px;
-  margin: 0 10px;
+  left: 5%;
 
   border-radius: 15px 15px 15px 15px;
   background-color: #e8d6a5;
-  width: 110px;
-  height: 50px;
+  width: 6%;
+  height: 5vh;
 
-  font-size: 18px;
-  font-weight: 700;
 `;
 const SelectTag = styled.select`
   position: relative;
-  left: 100px;
+  left: 10%;
   margin: 40px 0;
 
-  width: 110px;
-  height: 50px;
+  width: 8%;
+  height: 5vh;
 
   font-size: 18px;
   font-weight: 700;
-  z-index: 1;
 `;
+const SearchIcon = styled(BiSearchAlt)`
+  font-size: 120%;
+`
