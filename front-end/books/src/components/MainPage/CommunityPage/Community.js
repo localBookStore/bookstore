@@ -19,7 +19,6 @@ const Community = ({ history }) => {
     history.push(`/community/detail/${id}`)
   }
 
-  console.log(articles)
   return <div>
     {articles.length ? <Container hover responsive >
         <thead>
