@@ -3,7 +3,6 @@ import { useState } from "react";
 import { NavLink, useHistory } from "react-router-dom"
 import { jwtDecode } from "feature/JwtDecode"
 
-
 import { Button, Modal } from "react-bootstrap"
 import styled from "styled-components";
 
@@ -12,7 +11,6 @@ const ArticleDetail = ({ article, token }) => {
   const history = useHistory();
   const { category, content, createdDate, title, id, memberEmail } = article
  
-  
   const onClickEvent = () => {
     axios.delete("http://localhost:8080/api/board/delete", {
       data: {

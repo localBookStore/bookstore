@@ -40,7 +40,7 @@ const EachComments = ({ comment, setComments, submitEvent, boardId }) => {
 			.then((res) => setComments(res.data))
 			.catch((err) => console.log(err.response));
 	};
-
+	console.log(comment)
 	return (
 		<Container>
 			<div>
@@ -70,7 +70,7 @@ const EachComments = ({ comment, setComments, submitEvent, boardId }) => {
 			</div>
 			<div>
 				<CommentInfo color="gray">{comment.modifiedDate}</CommentInfo>
-				<CommentInfo color="gray">{comment.memberEmail}</CommentInfo>
+				<CommentInfo color="gray">{comment.memberNickName}</CommentInfo>
 				{token !== undefined && jwtDecode(token).sub === comment.memberEmail && !isUpdate && !showInput && 
 				<>
 					<CommentButton onClick={() => setShowInput(true)}>답글</CommentButton>

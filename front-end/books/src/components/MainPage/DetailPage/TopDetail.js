@@ -1,86 +1,97 @@
 import { useCookies } from "react-cookie"
 import { useHistory } from "react-router-dom"
-// import CountBox from "./CountBox"
 import axios from "axios"
 
+import { Image, Button, OverlayTrigger, Tooltip } from "react-bootstrap"
 import styled from "styled-components"
+import BookList from "../BookListPage/SearchBookList"
+import { genreMap } from "feature/GenreMap"
 
 const TopDetail = ({ props }) => {
-  const { name, author, imageUrl, price, publisher, quantity, id } = props
+  const { name, author, imageUrl, price, publisher, quantity, id, category_id } = props
   const history = useHistory();
   const [cookies] = useCookies(['token']);
 
   const addCart = e => {
     const feature = e.target.name;
+
     axios.post(`http://localhost:8080/api/cart/${id}/`, {
       orderCount: 1
-    }, {
-      headers: {
-        Authorization: cookies.token
-      }
-    })
-      .then(res => {
-        console.log(feature)
+    }, { headers: { Authorization: cookies.token}})
+      .then(() => {
         if (feature === "directBuy") history.push({
           pathname: "/cart",
-          state: {
-            token: cookies.token
-          }
+          state: { token: cookies.token}
         })
       })
       .catch(err => console.log(err.response))
-  }
+    }
 
-  return <TopComponent>
-    <Image src={imageUrl} alt={id} />
-    <Title>책제목: {name}</Title>
-    <Content top="80px">저자: {author} / 출판사: {publisher}</Content>
-    <Content top="120px">가격: {price}</Content>
-    <Content top="160px">택배비: 3000</Content>
-    <Content top="200px">남은 수량: {quantity}</Content>
-    {/* <CountBox rest={quantity} bookCount={bookCount} setBookCount={setBookCount} /> */}
-    <Button left="600px" onClick={addCart} name="containItem">장바구니</Button>
-    <Button onClick={addCart} left="760px" name="directBuy">바로구매</Button>
-  </TopComponent>
+  return <Container>
+    <HorizonDiv>
+      <PosterImage src={imageUrl} alt={id} rounded fluid />
+      <TagNames>
+        {["이름", "저자", "출판사", "장르", "가격", "남은 수량"].map((tag, idx) => (
+          <div key={idx}>{tag}</div>
+        ))}
+        <OverlayTrigger
+          placement="bottom"
+          delay={{ show: 250, hide: 400 }}
+          overlay={props => <Tooltip {...props}>장바구니에 담기기만 합니다.</Tooltip>}>
+        <CartButton variant="outline-success" left="600px" onClick={addCart} name="containItem">장바구니</CartButton>
+        </OverlayTrigger>
+      </TagNames>
+      <Contents>
+        <Content>{name}</Content>
+        <Content>{author}</Content>
+        <Content>{publisher}</Content>
+        <Content>{genreMap[category_id]}</Content>
+        <Content>{price}</Content>
+        <Content>{quantity}</Content>
+        <OverlayTrigger
+          placement="bottom"
+          delay={{ show: 250, hide: 400 }}
+          overlay={props => <Tooltip {...props}>장바구니에 담고 이동합니다.</Tooltip>}>
+        <CartButton variant="outline-success" onClick={addCart} left="760px" name="directBuy">바로구매</CartButton>
+        </OverlayTrigger>
+      </Contents>
+        </HorizonDiv>
+
+  </Container>
 }
 export default TopDetail;
 
-const TopComponent = styled.div`
-  position:relative;
-  width: 100%;
+const Container = styled.div`
+`
+const HorizonDiv = styled.div`
+  display:flex;
+  justify-content: center;
+`
+const TagNames = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-between;
+  margin: 0 5%;
+`
+const Contents = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`
+const PosterImage = styled(Image)`
+  width: 300px;
   height: auto;
+  object-fit: cover;
 `
-const Image = styled.img`
-  border:1px solid black;
-  background-color: transparent;
-  margin: 0;
 
-  position:relative;
-  top:10px;
-  left:270px;
-
-  width:220px;
-  height:280px;
-`
-const Title = styled.h3`
-  position: absolute;
-  top: 20px;
-  left: 600px;
-
-  font-weight: 700;
-`
-const Content = styled.h5`
-  position: absolute;
-  left: ${props => props.left || "620px"};
-  top: ${props => props.top};
-
-  font-weight: bold;
-`
-const Button = styled.button`
-  position: absolute;
-  top:250px;
-  left : ${props => props.left};
-
+const CartButton = styled(Button)`
   width: 100px;
   height: 45px;
+`
+const Content = styled.div`
+  font-size: 20px;
+
+  font-weight: bold;
 `
