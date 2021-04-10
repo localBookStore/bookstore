@@ -247,43 +247,27 @@ JwtAuthenticationFilter 에서는 request 에 접근 토큰(access token) 쿠키
 
 public class RedisUtil {
 
-
-
     private final StringRedisTemplate stringRedisTemplate;
-
     private final RedisTemplate<String, String> redisTemplate;
 
-
-
     public String getData(String key){
-
         return redisTemplate.opsForValue().get(key);
-
     }
 
     public void setData(String key, String value, Long time){
-
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(value.getClass()));
-
         redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
-
     }
 
     public void deleteData(String key){
-
         redisTemplate.delete(key);
-
     }
 
     public void setData(String key, String value){
-
         ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
-
         valueOperations.set(key,value);
-
     }
 }
-
 ```
 
 **setData()**
@@ -434,17 +418,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
-
                                   JwtUtil jwtUtil, RedisUtil redisUtil,
-
                                   CustomUserDetailsService customUserDetailsService) {
 
         super(authenticationManager);
-
         this.jwtUtil    = jwtUtil;
-
         this.redisUtil      = redisUtil;
-
         this.customUserDetailsService = customUserDetailsService;
 
     }
@@ -456,13 +435,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         log.info("Query Member By JWT Subject(email) :");
 
         CustomUserDetails customUserDetails
-
                 = (CustomUserDetails) customUserDetailsService.loadUserByUsername(verifyResult.getEmail());
 
-        Authentication auth
-
+	Authentication auth
                 = new UsernamePasswordAuthenticationToken(customUserDetails ,null, customUserDetails.getAuthorities());
-
 
 
         log.info("Save Authentication in SecuritySession :");
@@ -476,49 +452,29 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
 
     protected void doFilterInternal(HttpServletRequest request,
-
                                     HttpServletResponse response,
-
                                     FilterChain filterChain) throws IOException, ServletException {
-
-
-
         log.info("JwtAuthorizationFilter.doFilterInternal :");
 
-
-
         String authorizationValue = request.getHeader(JwtProperties.HEADER_STRING);  // jwt 토큰 값
-
-
 
         // JWT 토큰 값이 없거나 'Bearer ' 문자열로 시작하지 않는다면 다음 필터로 넘겨줌
 
         if (StringUtils.isEmpty(authorizationValue) || !authorizationValue.startsWith(JwtProperties.TOKEN_PREFIX)) {
-
             log.info("No JWT, JWT structure issue :");
-
             filterChain.doFilter(request, response);
-
             return;
 
         }
 
-
-
         String jwtToken = authorizationValue.substring(JwtProperties.TOKEN_PREFIX.length());
 
-
-
         log.info("Verify the input Access Token :");
-
         VerifyResult verifyResult = jwtUtil.verify(jwtToken);
-
         if(verifyResult.isResult()) {
 
             log.info("The input Access Token is valid! :");
-
             saveAuthSecuritySession(verifyResult);
-
 
 
         } else {
@@ -526,55 +482,32 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             log.info("The input Access Token is invalid... :");
 
             String email = verifyResult.getEmail();
-
             String nickName = verifyResult.getNickName();
-
             String role = verifyResult.getRole();
 
-
-
             String refreshToken = redisUtil.getData(email);
-
             log.info("Saved Refresh Token in Redis : {}", refreshToken);
-
-
 
             log.info("Verify the Refresh Token :");
 
             VerifyResult refreshVerify = jwtUtil.verify(refreshToken);
-
             if(refreshVerify.isResult()) {
 
                 log.info("The Refresh Token is valid! Create new Access Token :");
-
-                String newAccessToken
-
-                        = jwtUtil.createAccessToken(refreshVerify.getEmail(), nickName, role);
-
+                String newAccessToken = jwtUtil.createAccessToken(refreshVerify.getEmail(), nickName, role);
+		
                 response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
-
-
-
                 saveAuthSecuritySession(verifyResult);
-
-
 
             } else {
 
                 log.info("The Refresh Token is invalid... :");
-
                 redisUtil.deleteData(email);
-
                 RuntimeException e = new TokenExpiredException("The Refresh Token is invalid");
-
                 this.onUnsuccessfulAuthentication(
-
                             request, response, new AuthenticationException(e.getMessage(), e.getCause()) {}
-
                         );
-
                 return;
-
             }
         }
 
@@ -587,39 +520,22 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
 
     protected void onUnsuccessfulAuthentication(HttpServletRequest request,
-
                                                 HttpServletResponse response,
-
                                                 AuthenticationException failed) throws IOException {
-
-
-
         SecurityContextHolder.getContext().setAuthentication(null);
-
-
 
         // 401(Unauthorized) 상태 발생
 
         log.info("JwtAuthorizationFilter.onUnsuccessfulAuthentication : 'Expired'");
 
-
-
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
         response.setContentType("application/json;charset=utf-8");
 
-
-
         Map<String, Object> errorAttributes = new HashMap<>();
-
         errorAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-
         errorAttributes.put("status", HttpStatus.UNAUTHORIZED);
-
         errorAttributes.put("exception", failed.getMessage());
-
         errorAttributes.put("path", request.getRequestURI());
-
         response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
 
     }
@@ -627,4 +543,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 }
 ```
 
+**doFilterInternal** 
+JWT 토큰을 받고, 내어보내는 endpoint 이다. JWT 토큰은 HTTP 구조 중 헤더에 있기 때문에 헤더에서 JWT 토큰을 받아 검증하고, 인증이 되면 SecurityContext에 보관하여 보안을 통과하게 된다. 검증에서 실패하게 된다면, 즉 유효 시간이 자나게 되면,  Access Token에 담겨진 email로 Refresh token을 얻어서 그 Refresh token을 다시 검증하는 로직이다. 그리고 검증하고 인증이 되면, 새로운 Access Token을 만들어서 응답 요청 헤더에 실어주도록 한다.  Refresh token에서 검증 실패한 경우는,  redis에서 해당 Refresh token 삭제 후, 인증 실패시 진입하게 되는  `onUnsuccessfulAuthentication`  메소드로 넘겨주게 된다.
 
+**onUnsuccessfulAuthentication**
+에러를 받아서, `HttpStatus.UNAUTHORIZED`  을 응답으로 보내도록 한다.
