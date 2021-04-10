@@ -4,15 +4,13 @@
 #### React app 사용
 
 # react 앱 생성 (최초에만)
-
 npx install create-react-app {app 이름}
 
 # react dependency & library 설치
-
 npm install
+( or npm install -g)  # global
 
 # react server 실행 (3000 포트)
-
 npm start
 ```
 
@@ -38,12 +36,12 @@ npm start
 'react-paginate'    # apply paginate of items
 'react-rating-starts-component' # apply rating star for react
 'react-icons'   # for react web icon
-'react-material-ui'
+'react-material-ui'	# using for various Form
 ```
 
 ### File Structure (In Progress...)
 
-```markdown
+```bash
 books
 ├── README.md
 ├── node_modules
@@ -51,19 +49,76 @@ books
 ├── package.json
 ├── .gitignore
 ├── public
-│ ├── favicon.ico
-│ └── index.html
+│ 	├── favicon.ico
+│ 	└── index.html
 └── src
-├── App.css
 ├── App.js
 ├── icons
-│ ├── books.jpg
-│ └── open-book.jpg
+│ 	├── books.jpg
+│ 	└── open-book.jpg
 ├── index.css
 ├── index.js
 ├── components
 │ ├── HeaderPage
+|		├── CategoryBar.js
+|		├── CategoryHoverDetail.js
+|		├── Header.js
+|		└── SearchBar.js
 │ ├── MainPage
-│ └── FooterPage
+│		├── BookListPage
+│		│		├── BestBookList.js
+│		│		├── NewBookList.js
+│		│		└── SearchBookList.js
+│		├── CommunityPage
+│		│		├── Community.js
+│		│		├── CommunityDetail.js
+│		│		├──	ArticleDetail.js
+│		│		├──	CommentDetail.js
+│		│		├──	EachComment.js
+│		│		├── CommunityRegister.js
+│		│		└── CommunityUpdate.js
+│		├── DetailPage
+│		│		├── ItemDetail.js
+│		│		├── TopDetail.js
+│		│		├── MidDetial.js
+│		│		├── ReviewList.js
+│		│		└── Reivew.js
+│		├── HomePage
+│		│		├── Home.js
+│		│		├── SlideItem.js
+│		│		├── PickItem.js
+│		│		├── MonthBooks.js
+│		│		└── CustomArrow
+│		│				├── NextArrow.css		
+│		│				├── NextArrow.js
+│		│				├── PrevArrow.css
+│		│				└── prevArrow.js
+│ 	├── UserPage
+│		│		├── Admin
+│		│		│		├── AllOrderListComponent
+│		│		│		│		├── AllOrderList.js
+│		│		│		│		├── EachUserOrder.js
+│		│		│		│		└── UserOrder.js
+│		│		│		├── AdminPage.js
+│		│		│		├── AllItemList.js
+│		│		│		├── EachItemList.js
+│		│		│		├── PostCoupon.js
+│		│		│		├── UserArticle.js
+│		│		│		└── UserList.js
+│		│		├──	Public
+│		│		│		├── CartPageComponent
+│		│		│		│		├── CartPage.js
+│		│		│		│		├── CouponItem.js
+│		│		│		│		└── EachCartItem.js
+│		│		│		├── OrderComponent
+│		│		│		│		├── OrderPage.js
+│		│		│		│		└── OrderList.js
+│		│		│		├── MyPage.js
+│		│		│		├── MyPost.js
+│		│		│		└── UserInfo.js
+│		│		├── LoginPage
+│		│		└── SignupPage
+│ 	└── FooterPage
+│				└── Footer.js
 └── router
 ```
