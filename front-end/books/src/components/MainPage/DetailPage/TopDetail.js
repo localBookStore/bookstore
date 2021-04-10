@@ -70,7 +70,7 @@ const TagNames = styled.div`
   flex-direction: column;
 
   justify-content: space-between;
-  margin: 0 5%;
+  margin-left: 5%;
 `
 const Contents = styled.div`
   display: flex;

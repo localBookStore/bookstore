@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointDown } from '@fortawesome/free-solid-svg-icons'
 import NextArrow from "./CustomArrow/NextArrow"
 import PrevArrow from "./CustomArrow/PrevArrow"
+import { Image } from "react-bootstrap"
 import styled from "styled-components"
 
 const PickItems = () => {
@@ -42,7 +43,7 @@ const PickItems = () => {
         return <EachBook key={idx}>
           <BookButton>
             <Link to={{pathname:`/detail/${book.id}`, state:{book}}}>
-              <img src={book.imageUrl} alt={idx} />
+              <ImageCard rounded src={book.imageUrl} alt={idx} />
             </Link>
           </BookButton>
         </EachBook>
@@ -75,4 +76,9 @@ const EachBook = styled.div`
 const BookButton = styled.button`
   border: 0 none;
   background-color: transparent;
+`
+const ImageCard = styled(Image)`
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
 `

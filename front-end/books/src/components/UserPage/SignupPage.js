@@ -1,8 +1,5 @@
-import { doLogin } from "./LoginPage"
-
 import { useState, useRef } from "react"
 import { useForm } from "react-hook-form"
-import { useCookies } from "react-cookie"
 import axios from "axios"
 
 import {Avatar, Button, Input, CssBaseline, TextField, CircularProgress, Typography, Container} from '@material-ui/core';
@@ -12,12 +9,11 @@ import styled from "styled-components"
 
 
 const SignupPage = ({ history }) => {
-  const [cookies, setCookie] = useCookies(['token']);
   const [isLoading, setIsLoading] = useState(false)
   const { register, handleSubmit, errors, watch } = useForm();
   const [isCheck, setIsCheck] = useState({
-    overLab: false,
-    checkCode: false,
+    overLab: "",
+    checkCode: "",
   })
 
   const EMAIL = useRef(null);
@@ -54,10 +50,14 @@ const SignupPage = ({ history }) => {
       email: EMAIL.current
     })
       .then(() => {
+        setIsCheck({
+          ...isCheck,
+          checkCode: true
+        })
         setIsLoading(false)
         alert("이메일에 인증코드를 전송하였습니다.")
       })
-      .catch(err => console.log(err.response))
+      .catch(err => setIsLoading(false))
   }
 
   const checkEmailCode = () => {
@@ -73,17 +73,17 @@ const SignupPage = ({ history }) => {
 
   const checkOverLab = () => {
     axios.post("http://localhost:8080/api/signup/duplicated", {
-      "email": EMAIL.current
+      email: EMAIL.current
     })
       .then(() => setIsCheck({
           ...isCheck,
-          overLab: true
+          overLab: EMAIL.current
         }))
       .catch(err => alert(err.response.data.message))
   }
 
-  if (isLoading) { return <CircularProgress color="secondary"/> }
-
+  if (isLoading) { return <Typography variant="h2" align="center"><CircularProgress color="secondary"/></Typography> }
+  
   return <FormContainer maxWidth="md">
   <CssBaseline />
   <IconDiv>
@@ -91,13 +91,13 @@ const SignupPage = ({ history }) => {
     <Typography component="h2" variant="h3">Sign Up</Typography>
     <form onSubmit={handleSubmit(doSignup)}>
       <TextField
+        defaultValue={isCheck.overLab}
         variant="outlined"
         margin="normal"
         required
         fullWidth
         label="Email Address"
         name="email"
-        autoComplete="email"
         autoFocus
         type="text"
         readOnly={isCheck.overLab}
@@ -109,13 +109,18 @@ const SignupPage = ({ history }) => {
           },
         })}
         />
-      {console.log(isCheck.overLab)}
-      {isCheck.overLab ? <span>사용가능</span> : <Button color="primary" onClick={checkOverLab}>중복확인</Button>}
-      {isCheck.overLab ? <Button color="primary" onClick={sendEmailCode}>인증 코드 보내기</Button> : <Typography display="inline" variant="body2">인증확인필요</Typography> }
+      {isCheck.overLab ? 
+        <span>사용가능</span> : 
+        <Button color="primary" onClick={checkOverLab}>중복확인</Button>
+      }
       <span>{errors.email && errors.email.message}</span>
+      {isCheck.overLab ? 
+        <Button color="primary" onClick={sendEmailCode}>인증 코드 보내기</Button> : 
+        <Typography display="inline" variant="body2">인증확인필요</Typography> 
+      }
       <div>
         <Input style={{marginLeft:"10px"}} placeholder={isCheck.overLab ? "인증코드 입력" : "중복확인을 하세요"} disabled={!isCheck.overLab}/>
-        {isCheck.checkCode ? <span>인증확인</span> : <Button color="secondary" onClick={checkEmailCode}>인증 확인하기</Button>}
+        {isCheck.checkCode ? <Button color="secondary" onClick={checkEmailCode}>인증 확인하기</Button> : <span>인증확인</span>}
       </div>
 
       <TextField

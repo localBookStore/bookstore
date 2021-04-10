@@ -1,55 +1,35 @@
-import { useState } from "react"
 import { useCookies } from "react-cookie"
+import { Link } from "react-router-dom"
+import { useForm } from "react-hook-form"
 import axios from "axios"
-import GoogleButton from "./GoogleButton.js"
 
-import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Link, Grid, Box, Typography, Container} from '@material-ui/core';
+import {Avatar, Button, CssBaseline, TextField, Grid, Typography, Container} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-// import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
 
-export const doLogin = (history, userInfo, dispatch) => {
-  axios.post("http://localhost:8080/login", userInfo)
-    .then(res => {
-      const token = res.headers.authorization
-      dispatch("token", token)
-      history.replace("/")
-    })
-    .catch(() => alert("아이디 혹은 비밀번호가 틀렸습니다."))
-  }
-
 const LoginPage = ({ history }) => {
+  const { register, handleSubmit } = useForm();
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-  const [userInfo, setUserInfo] = useState({
-    email: "",
-    password: ""
-  });
+  
 
-  const clickEvent = () => {
-    doLogin(history, userInfo, setCookie)
-  }
-
-  const changeEvent = event => {
-    const { name, value } = event.target
-    setUserInfo({
-      ...userInfo,
-      [name]: value
-    })
-  }
-  const pressEvent = e => {
-    if (e.key === "Enter") {
-      clickEvent()
+  const submitEvent = (data) => {
+    console.log(data)
+    axios.post("http://localhost:8080/login", data)
+      .then(res => {
+        const token = res.headers.authorization
+        setCookie("token", token)
+        history.replace("/")
+      })
+      .catch(() => alert("아이디 혹은 비밀번호가 틀렸습니다."))
     }
-  }
-  return <Container component="main" maxWidth="xs">
+
+  return <FormContainer component="main" maxWidth="xs">
       <CssBaseline />
       <IconDiv>
         <Avatar><LockOutlinedIcon /></Avatar>
-        <Typography component="h1" variant="h5">
-          Log In
-        </Typography>
-        <form >
+        <Typography component="h1" variant="h3">Log In</Typography>
+        <form onSubmit={handleSubmit(submitEvent)}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -58,8 +38,8 @@ const LoginPage = ({ history }) => {
             id="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
             autoFocus
+            inputRef={register}
           />
           <TextField
             variant="outlined"
@@ -70,42 +50,20 @@ const LoginPage = ({ history }) => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
+            inputRef={register}
           />
-          <Button
+          <SubmitButton
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
           >
             Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+          </SubmitButton>
+          <Typography variant="body2" align="center"><Link to="/signup" variant="body1">Sign Up</Link></Typography>
         </form>
       </IconDiv>
-    </Container>
-  {/* // return <LoginContainer>
-  //   <LoginTitle>로그인</LoginTitle>
-  //   <LoginDiv>아이디<LoginInput type="text" name="email" onChange={e => changeEvent(e)} /></LoginDiv>
-  //   <LoginDiv>비밀번호<LoginInput type="password" name="password"
-  //     onChange={e => changeEvent(e)}
-  //     onKeyPress={pressEvent}
-  //   /></LoginDiv>
-  //   <LoginButton varirant="primary"
-  //     onClick={clickEvent}
-  //   >로그인</LoginButton>
-  //   </LoginContainer> */}
+    </FormContainer>
 }
 export default LoginPage;
 
@@ -113,4 +71,13 @@ const IconDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`
+const FormContainer = styled(Container)`
+  margin: 5%;
+`
+const SubmitButton = styled(Button)`
+height: 40px;
+  &&{
+    margin: 5% 0;
+  }
 `

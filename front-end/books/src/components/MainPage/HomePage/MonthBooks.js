@@ -5,6 +5,7 @@ import Slider from "react-slick";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointDown } from '@fortawesome/free-solid-svg-icons'
+import { Image } from "react-bootstrap"
 import styled from "styled-components"
 import NextArrow from "./CustomArrow/NextArrow"
 import PrevArrow from "./CustomArrow/PrevArrow"
@@ -43,7 +44,7 @@ const MonthBooks = () => {
           return <EachBook key={idx}>
             <BookButton>
               <Link to={{pathname: `/detail/${book.id}`, state:{book}}}>
-                <img src={book.imageUrl} alt={idx} />
+                <ImageCard src={book.imageUrl} alt={idx} />
               </Link>
             </BookButton>
           </EachBook>
@@ -83,6 +84,10 @@ const BookButton = styled.button`
   background-color: transparent;
 
   width:220px;
-  height:280px;
-  
+  height:280px; 
+`
+const ImageCard = styled(Image)`
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
 `
