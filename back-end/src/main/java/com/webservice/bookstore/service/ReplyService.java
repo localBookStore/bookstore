@@ -32,9 +32,17 @@ public class ReplyService {
         if(replyDTO.getDepth()==0)
             replyDTO.setGroupOrder(replyRepository.getReplyOrder(replyDTO.getBoardId())+1);
         Board board = boardRepository.getOne(replyDTO.getBoardId());
+        Optional<Member> op = memberRepository.findByEmail(replyDTO.getMemberEmail());
+
+        if(!op.isPresent()) {
+            throw new IllegalStateException("없는 이메일 완전에러");
+        }
+        Member member = op.get();
+        replyDTO.setNickName(member.getNickName());
         Reply reply =  ReplyDTO.toEntity(replyDTO,board);
         replyRepository.save(reply);
     }
+
 
     //댓글 정보들 보여주기
     public List<ReplyDTO> getBoardReplylist(BoardDTO boardDTO){

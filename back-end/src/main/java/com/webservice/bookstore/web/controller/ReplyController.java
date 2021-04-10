@@ -64,5 +64,7 @@ public class ReplyController {
             throw new UnauthorizedException("접근할수없습니다.");
         return new ResponseEntity<>(replyService.getBoardReplyList(replyDTO.getBoardId()),HttpStatus.OK);
     }
+
+
 }
 

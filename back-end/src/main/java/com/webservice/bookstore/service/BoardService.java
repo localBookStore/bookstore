@@ -32,8 +32,8 @@ public class BoardService {
     public PageResultDTO<BoardDTO,Board> pageCommunityList(PageRequestDTO pageRequestDTO){
         Pageable pageable = pageRequestDTO.getPageable(Sort.by("id").descending());
         Page<Board> result = boardRepository.findAll(pageable);
-
         Function<Board,BoardDTO> fn = (entity->BoardDTO.entityToDTO(entity));
+
 
         return new PageResultDTO<>(result,fn);
 
