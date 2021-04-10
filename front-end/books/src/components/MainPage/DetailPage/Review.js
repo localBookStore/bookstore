@@ -10,7 +10,7 @@ const Review = ({ review, itemId, token, setReviews }) => {
 	const [isUpdate, setIsUpdate] = useState(false);
   const [newContent, setNewContent] = useState(review.content)
   const [newScore, setNewScore] = useState(review.score)
-	const { sub } = jwtDecode(token);
+	
 
 	const deleteEvent = () => {
 		axios.delete("http://localhost:8080/api/items/delete/review", {
@@ -34,7 +34,6 @@ const Review = ({ review, itemId, token, setReviews }) => {
 			{ headers: { Authorization: token } }
 		)
     .then(res => {
-      console.log(res)
       setReviews(res.data)
       setIsUpdate(false)
     })
@@ -44,7 +43,6 @@ const Review = ({ review, itemId, token, setReviews }) => {
 	const Score = ({ score }) => {
 		var result = "";
 		for (var i = 0; i < score; i++) result += "⭐️";
-		
 		return <span>{result}</span>;
 	};
 
@@ -71,7 +69,7 @@ const Review = ({ review, itemId, token, setReviews }) => {
 			<div>
 				<ContentInfo>{review.modifiedDate}</ContentInfo>
 				<ContentInfo>{review.memberNickName}</ContentInfo>
-				{review.memberEmail === sub && !isUpdate && <>
+				{token !== undefined && review.memberEmail === jwtDecode(token).sub && !isUpdate && <>
 						<SubmitButton variant="info" onClick={() => setIsUpdate(true)}>수정</SubmitButton>
 						<SubmitButton variant="danger" onClick={deleteEvent}>삭제</SubmitButton>
 					</>}
@@ -85,9 +83,11 @@ const Container = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+
+	margin: 20px 0;
 `;
 const SubmitButton = styled(Button)`
-	margin: 10px;
+	margin: 0 10px;
 `;
 const Content = styled.span`
 	font-size: 20px;

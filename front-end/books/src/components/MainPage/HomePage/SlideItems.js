@@ -4,6 +4,8 @@ import axios from "axios"
 import Slider from "react-slick"
 import PrevArrow from "./CustomArrow/PrevArrow"
 import NextArrow from "./CustomArrow/NextArrow"
+
+import { Image } from "react-bootstrap"
 import styled from "styled-components"
 
 const SlideItems = () => {
@@ -27,31 +29,31 @@ const SlideItems = () => {
     prevArrow: <PrevArrow />
   };
 
-  return <WholeContrainer>
+  return <WholeContainer>
     <Slider {...settings}>
       {promoteImage && promoteImage.map((book, idx) => {
         return <Link to={{pathname:`/detail/${book.id}`, state:{book}}} key={idx}>
-          <SliderImage className="w-100" src={book.imageUrl} alt={idx}/>
+          <ImageCard rounded className="w-100" src={book.imageUrl} alt={idx}/>
         </Link>
       })}
     </Slider>
-  </WholeContrainer>
+  </WholeContainer>
 }
 export default SlideItems;
 
-const WholeContrainer = styled.div`
+const WholeContainer = styled.div`
   margin: 0 auto;
   width:80%;
   height: auto;
 `
 
-const SliderButton = styled.button`
-  width:700px;
-  border: 0 none;
-  background-color: transparent;
-`
-
 const SliderImage = styled.img`
+  width: auto;
   height: 480px;
+  object-fit: cover;
+`
+const ImageCard = styled(Image)`
+  width: auto;
+  height: 500px;
   object-fit: cover;
 `

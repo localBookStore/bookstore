@@ -1,45 +1,52 @@
-import { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import { genreMap } from "feature/GenreMap"
 
-import { Image } from "react-bootstrap";
+import { Image, Table } from "react-bootstrap";
 import styled from "styled-components"
 
 const BookList = ({location}) => {
-  
   const { books } = location.state
 
-  return <Container>
-  { books.map((book, idx) => {
-    return <ItemContainer key={idx}>
-      <ItemContent>
-        <NavButton to={{pathname:`/detail/${book.id}`, state:{book}}}>
-          <ItemImage src={book.imageUrl} rounded fluid/>
-        </NavButton>
-      </ItemContent>
-      <ItemContent>
-        제목: {book.name} <br />
-        장르: {genreMap[book.category_id]} <br />
-        가격: {book.price}
-      </ItemContent>
-      
-    </ItemContainer> 
-  })}
-</Container>
-}
+  return <>
+    {books.length && <Container responsive="sm">
+    <thead>
+      <tr>
+      {["포스터이미지", "제목", "장르", "출판사", "가격"].map((tag, idx) => (
+        <th key={idx}><ItemContent>{tag}</ItemContent></th>
+      ))}
+      </tr>
+      </thead>
+      <tbody>
+        {books.map((book, idx) => (
+          <tr key={idx}>
+            <td><NavButton to={{pathname:`/detail/${book.id}`, state:{book}}}>
+              <ItemImage src={book.imageUrl}/>
+            </NavButton></td>
+            <td><ItemContent>{book.name}</ItemContent></td>
+            <td><ItemContent>{genreMap[book.category_id]}</ItemContent></td>
+            <td><ItemContent>{book.publisher}</ItemContent></td>
+            <td><ItemContent>{book.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ItemContent></td>
+          </tr>
+        ))}
+      </tbody>
+    </Container>
+    }</>
+};
 export default BookList;
 
-const Container = styled.div`
+const Container = styled(Table)`
+  margin: 0 auto;
+  width: 80%;
+
+  td {
+    vertical-align: middle; 
+    font-weight: 600;
+  } 
 `
-const ItemContainer = styled.div`
-  margin: 20px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+
 const ItemImage = styled(Image)`
-  width: 240px;
-  height: 330px;
+  width: 180px;
+  height: 220px;
   object-fit: cover;
 `
 const NavButton = styled(NavLink)`
@@ -48,8 +55,8 @@ const NavButton = styled(NavLink)`
 `
 
 const ItemContent = styled.div`
-  margin: 0 4%;
-  font-size: 22px;
-  font-weight: 600;
-  flex-grow: 1;
+  font-size: 20px;
+  text-align: center;
+
+  margin: auto 0;
 `

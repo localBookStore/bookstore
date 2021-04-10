@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 
-
 import styled from "styled-components";
 
 const CategoryBar = () => {
@@ -28,9 +27,9 @@ const CategoryBar = () => {
 					{isHover && <CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} />}
 				</GenreContainer>
 			}
-			<NavButton to="/bestbooklist">베스트</NavButton>
-			<NavButton to="/newbooklist">최신작</NavButton>
-			<NavButton to="/community">커뮤니티</NavButton>
+			<NavButton activeClassName={"selected"} to="/bestbooklist">베스트</NavButton>
+			<NavButton activeClassName={"selected"} to="/newbooklist">최신작</NavButton>
+			<NavButton activeClassName={"selected"} to="/community">커뮤니티</NavButton>
 
 		</AllContainer>
 };
@@ -53,19 +52,25 @@ const GenreContainer = styled.div`
 
 `
 const ItemButton = styled.button`
-	background: #50a3c7;
+	background-color: transparent;
 	border: 0 none;
 	border-radius: 5px 5px 5px 5px;
 
-	color: #fff;
 	font-size: 1.3em;
 	font-weight: bolder;
 
-	transition: all 600ms;
+	transition: all 300ms;
 
 	&:hover {
 		background: #ab4386;
 		color: #fff;
 	}
 `;
-const NavButton = styled(NavLink)``;
+const NavButton = styled(NavLink)`
+	color: black;
+
+	&.selected {
+		color: #2F6D91;
+		font-weight: 700;
+	}
+`;

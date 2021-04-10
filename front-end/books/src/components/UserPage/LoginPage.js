@@ -1,88 +1,83 @@
-import { useState } from "react"
 import { useCookies } from "react-cookie"
+import { Link } from "react-router-dom"
+import { useForm } from "react-hook-form"
 import axios from "axios"
-import GoogleButton from "./GoogleButton.js"
 
-import { Button } from "react-bootstrap"
+import {Avatar, Button, CssBaseline, TextField, Grid, Typography, Container} from '@material-ui/core';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import styled from "styled-components"
 
 
-export const doLogin = (history, userInfo, dispatch) => {
-  axios.post("http://localhost:8080/login", userInfo)
-    .then(res => {
-      const token = res.headers.authorization
-      dispatch("token", token)
-      history.replace("/")
-    })
-    .catch(() => alert("아이디 혹은 비밀번호가 틀렸습니다."))
-  }
-
-export const socialLogin = (provider) => {
-  // console.log(window.location.href)
-  window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`
-  return null;
-  // history.push(`/oauth2/authorization/${provider}`)
-}
-
 const LoginPage = ({ history }) => {
+  const { register, handleSubmit } = useForm();
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-  const [userInfo, setUserInfo] = useState({
-    email: "",
-    password: ""
-  });
+  
 
-  const clickEvent = () => {
-    doLogin(history, userInfo, setCookie)
-  }
-
-  const changeEvent = event => {
-    const { name, value } = event.target
-    setUserInfo({
-      ...userInfo,
-      [name]: value
-    })
-  }
-  const pressEvent = e => {
-    if (e.key === "Enter") {
-      clickEvent()
+  const submitEvent = (data) => {
+    console.log(data)
+    axios.post("http://localhost:8080/login", data)
+      .then(res => {
+        const token = res.headers.authorization
+        setCookie("token", token)
+        history.replace("/")
+      })
+      .catch(() => alert("아이디 혹은 비밀번호가 틀렸습니다."))
     }
-  }
-  return <LoginContainer>
-    <LoginTitle>로그인</LoginTitle>
-    <LoginDiv>아이디<LoginInput type="text" name="email" onChange={e => changeEvent(e)} /></LoginDiv>
-    <LoginDiv>비밀번호<LoginInput type="password" name="password"
-      onChange={e => changeEvent(e)}
-      onKeyPress={pressEvent}
-    /></LoginDiv>
-    <LoginButton varirant="primary"
-      onClick={clickEvent}
-    >로그인</LoginButton>
-    {/* <GoogleButton>구글 로그인</GoogleButton> */}
-    {/* <Button variant="light" onClick={() => doGoogleLogin("google")}>구글 로그인</Button> */}
-    <Button variant="light" onClick={() => socialLogin("naver")}>네이버 로그인</Button>
-    <Button variant="light" onClick={() => socialLogin("kakao")}>카카오 로그인</Button>
-  </LoginContainer>
+
+  return <FormContainer component="main" maxWidth="xs">
+      <CssBaseline />
+      <IconDiv>
+        <Avatar><LockOutlinedIcon /></Avatar>
+        <Typography component="h1" variant="h3">Log In</Typography>
+        <form onSubmit={handleSubmit(submitEvent)}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoFocus
+            inputRef={register}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            inputRef={register}
+          />
+          <SubmitButton
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Sign In
+          </SubmitButton>
+          <Typography variant="body2" align="center"><Link to="/signup" variant="body1">Sign Up</Link></Typography>
+        </form>
+      </IconDiv>
+    </FormContainer>
 }
 export default LoginPage;
 
-const LoginContainer = styled.div`
-  margin: 30px;
+const IconDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
-const LoginTitle = styled.h2`
-  display: block;
-  margin: 15px 0;
-  text-align: center;
-
-  font-size: 40px;
-  font-weight: 800;
+const FormContainer = styled(Container)`
+  margin: 5%;
 `
-const LoginInput = styled.input`
-  display: block;
-`
-const LoginDiv = styled.div`
-  margin: 20px 0;
-`
-const LoginButton = styled(Button)`
-  font-weight: 800;
-  font-size: 14px;
+const SubmitButton = styled(Button)`
+height: 40px;
+  &&{
+    margin: 5% 0;
+  }
 `

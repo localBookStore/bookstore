@@ -50,11 +50,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-//    @Bean
-//    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
-//        return new HttpCookieOAuth2AuthorizationRequestRepository();
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 

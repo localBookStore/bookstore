@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearchPlus } from "@fortawesome/free-solid-svg-icons";
+import { Select, Input , MenuItem , Button} from '@material-ui/core';
 import styled from "styled-components";
 
 const SearchBar = () => {
@@ -20,7 +19,7 @@ const SearchBar = () => {
           state: { books },
         });
       })
-      .catch(err => alert("검색 결과가 없습니다."));
+      .catch(() => alert("검색 결과가 없습니다."));
     setInput("");
   };
 
@@ -36,70 +35,55 @@ const SearchBar = () => {
   };
 
   return (
-    <EntireBar>
-      <SelectTag value={tag} onChange={e => setTag(e.target.value)}>
-        <option value="name">제목</option>
-        <option value="author">저자</option>
-      </SelectTag>
-      <SearchInput
-        value={input}
-        placeholder="Search..."
-        onChange={e => setInput(e.target.value)}
-        onKeyPress={enterEvent}
+		<EntireBar>
+			<SelectTag value={tag} onChange={(e) => setTag(e.target.value)}>
+				<MenuItem value="name">제목</MenuItem>
+				<MenuItem value="author">저자</MenuItem>
+			</SelectTag>
+			<SearchInput 
+      style={{ fontSize: "23px"}}
+      placeholder="Search..." 
+      
+      onKeyPress={enterEvent}
+      onChange={(e) => setInput(e.target.value)} 
       />
-      <SearchButton onClick={clickEvent}>
-        <FontAwesomeIcon
-          icon={faSearchPlus}
-          style={{ fontSize: "33px", color: "#000" }}
-        />
-      </SearchButton>
-    </EntireBar>
-  );
+			<SearchButton variant="outlined" color="primary" onClick={clickEvent}>🔍</SearchButton>
+		</EntireBar>
+	);
 };
 export default SearchBar;
 
 const EntireBar = styled.div`
   position: relative;
+  left: 4%;
   width: 100%;
   height: auto;
-`;
-const SearchInput = styled.input`
+`
+const SearchInput = styled(Input)`
   position: relative;
-  left: 125px;
-  margin: 0px;
+  left: 12%;
 
-  border: 1.5px solid;
-  background-color: whitesmoke;
-  border-radius: 5px 5px 5px 5px;
-  width: 70%;
+  width: 60%;
   height: 60px;
-
-  font-weight: 500;
-
-  padding-left: 20px;
-`;
-const SearchButton = styled.button`
-  position: relative;
-  top: 5px;
-  margin: 0 10px;
-
-  border-radius: 15px 15px 15px 15px;
-  background-color: #e8d6a5;
-  width: 110px;
-  height: 50px;
-
-  font-size: 18px;
-  font-weight: 700;
-`;
-const SelectTag = styled.select`
-  position: relative;
-  left: 100px;
+  
+  padding: 0 20px;
   margin: 40px 0;
+`
+const SearchButton = styled(Button)`
+  position: relative;
+  left: 5%;
 
-  width: 110px;
-  height: 50px;
+  border-radius: 20px 20px 20px 20px;
+  width: 6%;
 
-  font-size: 18px;
+  font-size: 20px;
+  text-align: center;
+`;
+const SelectTag = styled(Select)`
+  position: relative;
+  left: 10%;
+
+  width: 8%;
+
   font-weight: 700;
-  z-index: 1;
 `;

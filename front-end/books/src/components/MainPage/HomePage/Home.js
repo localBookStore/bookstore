@@ -11,7 +11,6 @@ const Main = () => {
     <PickItems />
     <HrLine />
     <MonthBooks />
-    <HrLine />
   </MainContainer>
 }
 export default Main

@@ -8,8 +8,9 @@ import styled from "styled-components"
 
 const CommunityDetail = ({ match }) => {
   const articleId = match.params.id;
-  const [ cookies ] = useCookies();
-  const { token } = cookies;
+  const [cookies] = useCookies(["token"])
+  const token = cookies.token
+
   const [article, setArticle] = useState(null);
   const [comments, setComments] = useState(null);
 
@@ -24,13 +25,14 @@ const CommunityDetail = ({ match }) => {
 
   return <>
     {article && comments && <BoardContainer>
-      <ArticleDetail props={article} token={token}/>
-      <hr />
+      <ArticleDetail article={article} token={token}/>
+      
       <CommentsDetail 
         comments={comments} 
         setComments={setComments} 
         boardId={articleId} 
-        token={token}/>
+        token={token}
+        />
     </BoardContainer>
     }
   </>

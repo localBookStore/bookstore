@@ -37,6 +37,8 @@ npm start
 'react-google-login'    # for social login of google
 'react-paginate'    # apply paginate of items
 'react-rating-starts-component' # apply rating star for react
+'react-icons'   # for react web icon
+'react-material-ui'
 ```
 
 ### File Structure (In Progress...)

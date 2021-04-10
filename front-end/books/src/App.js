@@ -24,7 +24,7 @@ import styled from "styled-components";
 const App = () => {
   return (
     <AppContainer>
-      <ScrollToTop />
+      {/* <ScrollToTop /> */}
       <DefaultPage />
       <Header />
       <Switch>
