@@ -190,7 +190,6 @@ const SignupPage = ({ history }) => {
 }
 export default SignupPage;
 
-
 const IconDiv = styled.div`
   display: flex;
   flex-direction: column;

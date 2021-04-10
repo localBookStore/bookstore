@@ -3,7 +3,9 @@ import { useCookies } from "react-cookie"
 import axios from "axios"
 import GoogleButton from "./GoogleButton.js"
 
-import { Button } from "react-bootstrap"
+import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Link, Grid, Box, Typography, Container} from '@material-ui/core';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+// import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
 
@@ -16,13 +18,6 @@ export const doLogin = (history, userInfo, dispatch) => {
     })
     .catch(() => alert("아이디 혹은 비밀번호가 틀렸습니다."))
   }
-
-export const socialLogin = (provider) => {
-  // console.log(window.location.href)
-  window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`
-  return null;
-  // history.push(`/oauth2/authorization/${provider}`)
-}
 
 const LoginPage = ({ history }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
@@ -47,42 +42,75 @@ const LoginPage = ({ history }) => {
       clickEvent()
     }
   }
-  return <LoginContainer>
-    <LoginTitle>로그인</LoginTitle>
-    <LoginDiv>아이디<LoginInput type="text" name="email" onChange={e => changeEvent(e)} /></LoginDiv>
-    <LoginDiv>비밀번호<LoginInput type="password" name="password"
-      onChange={e => changeEvent(e)}
-      onKeyPress={pressEvent}
-    /></LoginDiv>
-    <LoginButton varirant="primary"
-      onClick={clickEvent}
-    >로그인</LoginButton>
-    {/* <GoogleButton>구글 로그인</GoogleButton> */}
-    {/* <Button variant="light" onClick={() => doGoogleLogin("google")}>구글 로그인</Button> */}
-    <Button variant="light" onClick={() => socialLogin("naver")}>네이버 로그인</Button>
-    <Button variant="light" onClick={() => socialLogin("kakao")}>카카오 로그인</Button>
-  </LoginContainer>
+  return <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <IconDiv>
+        <Avatar><LockOutlinedIcon /></Avatar>
+        <Typography component="h1" variant="h5">
+          Log In
+        </Typography>
+        <form >
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Sign In
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="#" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </IconDiv>
+    </Container>
+  {/* // return <LoginContainer>
+  //   <LoginTitle>로그인</LoginTitle>
+  //   <LoginDiv>아이디<LoginInput type="text" name="email" onChange={e => changeEvent(e)} /></LoginDiv>
+  //   <LoginDiv>비밀번호<LoginInput type="password" name="password"
+  //     onChange={e => changeEvent(e)}
+  //     onKeyPress={pressEvent}
+  //   /></LoginDiv>
+  //   <LoginButton varirant="primary"
+  //     onClick={clickEvent}
+  //   >로그인</LoginButton>
+  //   </LoginContainer> */}
 }
 export default LoginPage;
 
-const LoginContainer = styled.div`
-  margin: 30px;
-`
-const LoginTitle = styled.h2`
-  display: block;
-  margin: 15px 0;
-  text-align: center;
-
-  font-size: 40px;
-  font-weight: 800;
-`
-const LoginInput = styled.input`
-  display: block;
-`
-const LoginDiv = styled.div`
-  margin: 20px 0;
-`
-const LoginButton = styled(Button)`
-  font-weight: 800;
-  font-size: 14px;
+const IconDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
