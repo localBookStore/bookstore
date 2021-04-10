@@ -70,7 +70,7 @@ dependencies {
     // 썸네일 이미지 원하는 사이즈 조정 가능
     compile group: 'net.coobird', name : 'thumbnailator', version: '0.4.12'
 
-    // 설정 파일(.properties) 암호화
+    // 설정파일(.properties) 암호화
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.0'
 
 }
