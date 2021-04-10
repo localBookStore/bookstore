@@ -35,14 +35,17 @@ const Community = ({ history }) => {
               <td>{article.category}</td>
               <td>{article.title}</td>
               <td>{article.modifiedDate}</td>
+              <td>{article.replyCount}</td>
             </tr>
           })}
           </tbody>
       </Container>
-      : <div>게시글이 없습니다.</div>}
-    <NavLink to="/community/register">
-      <Button variant="info">게시글 등록</Button>
-    </NavLink>
+      : <div>게시글이 없습니다.</div>
+      }
+
+    <PostButton>
+      <NavButton to="/community/register">게시물 등록</NavButton>
+    </PostButton>
   </div >
 }
 export default Community;
@@ -60,19 +63,13 @@ const Container = styled(Table)`
   } 
 `
 
-const ItemImage = styled(Image)`
-  width: 180px;
-  height: 220px;
-  object-fit: cover;
-`
 const NavButton = styled(NavLink)`
-  margin: 0 10% 0 0;
-  float: right;
+  margin: 20px 10%;
+  font-size: 18px;
+  
 `
-
-const ItemContent = styled.div`
-  font-size: 20px;
-  text-align: center;
-
-  margin: auto 0;
+const PostButton = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  
 `
