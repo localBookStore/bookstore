@@ -71,7 +71,7 @@ dependencies {
     compile group: 'net.coobird', name : 'thumbnailator', version: '0.4.12'
 
     // GitHub : 설정파일(application.properties) 암호화
-    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '2.1.0'
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.0'
 
 }
 
