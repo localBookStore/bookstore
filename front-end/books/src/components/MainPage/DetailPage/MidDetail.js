@@ -1,24 +1,22 @@
 import styled from "styled-components";
 
-const MidDetail = ({props}) => {
-  const {description, category_id} = props
+const MidDetail = ({description}) => {
 
   return <MidComponent>
-    <div>{category_id}</div>
-    <Descript>{description}</Descript>
+    <h3>내용</h3>
+    <Description>{description}</Description>
   </MidComponent>
 }
 export default MidDetail;
 
 const MidComponent = styled.div`
-  height: 300px;
-  justify-content: left;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  height: 300px;
 `
 
-const Descript = styled.div`
-  position: relative;
-  left: 300px;
-  width: 45vw;
+const Description = styled.div`
+  width: 40vw;
 `

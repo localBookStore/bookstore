@@ -8,9 +8,9 @@ const ItemDetail = ({ location }) => {
   const { book } = location.state
   
   return <DetailComponent>
-    <TopDetail props={book}/>
+    <TopDetail book={book}/>
     <Divider />
-    <MidDetail props={book}/>
+    <MidDetail description={book.description}/>
     <Divider marginTop="20px"/>
     <ReviewList book={book} />
   </DetailComponent>

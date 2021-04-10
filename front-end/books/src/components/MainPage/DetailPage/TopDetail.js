@@ -4,11 +4,10 @@ import axios from "axios"
 
 import { Image, Button, OverlayTrigger, Tooltip } from "react-bootstrap"
 import styled from "styled-components"
-import BookList from "../BookListPage/SearchBookList"
 import { genreMap } from "feature/GenreMap"
 
-const TopDetail = ({ props }) => {
-  const { name, author, imageUrl, price, publisher, quantity, id, category_id } = props
+const TopDetail = ({ book }) => {
+  const { name, author, imageUrl, price, publisher, quantity, id, category_id } = book
   const history = useHistory();
   const [cookies] = useCookies(['token']);
 
@@ -55,8 +54,7 @@ const TopDetail = ({ props }) => {
         <CartButton variant="outline-success" onClick={addCart} left="760px" name="directBuy">바로구매</CartButton>
         </OverlayTrigger>
       </Contents>
-        </HorizonDiv>
-
+    </HorizonDiv>
   </Container>
 }
 export default TopDetail;

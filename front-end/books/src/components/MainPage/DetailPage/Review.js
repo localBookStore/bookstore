@@ -83,9 +83,11 @@ const Container = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+
+	margin: 20px 0;
 `;
 const SubmitButton = styled(Button)`
-	margin: 10px;
+	margin: 0 10px;
 `;
 const Content = styled.span`
 	font-size: 20px;
