@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-import { BiSearchAlt } from "react-icons/bi"
+import { Select, Input , MenuItem , Button} from '@material-ui/core';
 import styled from "styled-components";
 
 const SearchBar = () => {
@@ -19,7 +19,7 @@ const SearchBar = () => {
           state: { books },
         });
       })
-      .catch(err => alert("검색 결과가 없습니다."));
+      .catch(() => alert("검색 결과가 없습니다."));
     setInput("");
   };
 
@@ -37,13 +37,17 @@ const SearchBar = () => {
   return (
 		<EntireBar>
 			<SelectTag value={tag} onChange={(e) => setTag(e.target.value)}>
-				<option value="name">제목</option>
-				<option value="author">저자</option>
+				<MenuItem value="name">제목</MenuItem>
+				<MenuItem value="author">저자</MenuItem>
 			</SelectTag>
-			<SearchInput value={input} placeholder="Search..." onChange={(e) => setInput(e.target.value)} onKeyPress={enterEvent} />
-			<SearchButton onClick={clickEvent}>
-				<SearchIcon/>
-			</SearchButton>
+			<SearchInput 
+      style={{ fontSize: "23px"}}
+      placeholder="Search..." 
+      
+      onKeyPress={enterEvent}
+      onChange={(e) => setInput(e.target.value)} 
+      />
+			<SearchButton variant="outlined" color="primary" onClick={clickEvent}>🔍</SearchButton>
 		</EntireBar>
 	);
 };
@@ -51,44 +55,35 @@ export default SearchBar;
 
 const EntireBar = styled.div`
   position: relative;
+  left: 4%;
   width: 100%;
   height: auto;
-`;
-const SearchInput = styled.input`
+`
+const SearchInput = styled(Input)`
   position: relative;
   left: 12%;
 
-  border: 1.5px solid;
-  background-color: whitesmoke;
-  border-radius: 5px 5px 5px 5px;
   width: 60%;
-  height: 7vh;
-
-  font-weight: 500;
-
-  padding-left: 20px;
-`;
-const SearchButton = styled.button`
+  height: 60px;
+  
+  padding: 0 20px;
+  margin: 40px 0;
+`
+const SearchButton = styled(Button)`
   position: relative;
   left: 5%;
 
-  border-radius: 15px 15px 15px 15px;
-  background-color: #e8d6a5;
+  border-radius: 20px 20px 20px 20px;
   width: 6%;
-  height: 5vh;
 
+  font-size: 20px;
+  text-align: center;
 `;
-const SelectTag = styled.select`
+const SelectTag = styled(Select)`
   position: relative;
   left: 10%;
-  margin: 40px 0;
 
   width: 8%;
-  height: 5vh;
 
-  font-size: 18px;
   font-weight: 700;
 `;
-const SearchIcon = styled(BiSearchAlt)`
-  font-size: 120%;
-`

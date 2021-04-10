@@ -7,12 +7,12 @@ import { Button } from "react-bootstrap"
 import styled from "styled-components"
 
 const CommentsDetail = ({ comments, setComments, boardId, token }) => {
-  const memberEmail = jwtDecode(token).sub
+  // const memberEmail = jwtDecode(token).sub
   const [content, setContent] = useState("");
 
   const submitEvent = (depth, parent, content) => {
     axios.post("http://localhost:8080/api/board/reply/comment", {
-      memberEmail,
+      // memberEmail,
       boardId,
       depth,
       parent,
@@ -29,7 +29,7 @@ const CommentsDetail = ({ comments, setComments, boardId, token }) => {
   return <CommentContainer>
     {comments.length ? comments.map((comment, idx) => {
       return <EachComment
-        memberEmail={memberEmail}
+        // memberEmail={memberEmail}
         comment={comment} 
         setComments={setComments}
         submitEvent={submitEvent}

@@ -57,7 +57,7 @@ export default MonthBooks;
 
 const Container = styled.div`
   position: relative;
-  margin: 0 auto;
+  margin: 40px auto;
   width: 90%;
 `
 
@@ -76,7 +76,6 @@ const EachBook = styled.div`
   overflow: hidden;
   object-fit: cover;
   border-radius: 5px;
-  
 `
 
 const BookButton = styled.button`

@@ -25,7 +25,7 @@ const CategoryHoverDetail = ({genreData}) => {
     <ItemsContainer>
       {choiceGenre && choiceGenre.map((item, idx) => {
         return <div key={idx}>
-          <ItemNavButton to={`/detail/${item.id}`}>
+          <ItemNavButton to={{pathname:`/detail/${item.id}`, state:{book:item}}}>
             <ItemImage src={item.imageUrl} alt={idx} />
           </ItemNavButton>
           <ItemTitle>{item.name}</ItemTitle>

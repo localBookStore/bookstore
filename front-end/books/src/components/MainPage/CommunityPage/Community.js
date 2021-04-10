@@ -7,7 +7,7 @@ import styled from "styled-components"
 
 const Community = ({ history }) => {
   const [articles, setArticles] = useState([]);
-  const section = ["글 번호", "분류", "제목", "작성시간"]
+  const section = ["글 번호", "분류", "제목", "작성시간", "댓글 수"]
 
   useEffect(() => {
     axios.get("http://localhost:8080/api/board")
@@ -21,8 +21,7 @@ const Community = ({ history }) => {
 
   console.log(articles)
   return <div>
-    {console.log(articles)}
-    {articles.length ? <Table hover bordered >
+    {articles.length ? <Container hover responsive >
         <thead>
           <tr>{section.map((res, idx) => {
             return <td key={idx}>{res}</td>
@@ -30,18 +29,16 @@ const Community = ({ history }) => {
         </thead>
 
         <tbody>
-          {articles.map((res, idx) => {
-            const { id, title, category, createdDate } = res
-            const [day, time] = createdDate.split("T")
-            return <tr key={idx} onClick={() => articleDetailEvent(id)}>  
-              <td>{id}</td>
-              <td>{category}</td>
-              <td>{title}</td>
-              <td>{day} {time}</td>
+          {articles.map((article, idx) => {
+            return <tr key={idx} onClick={() => articleDetailEvent(article.id)}>  
+              <td>{article.id}</td>
+              <td>{article.category}</td>
+              <td>{article.title}</td>
+              <td>{article.modifiedDate}</td>
             </tr>
           })}
           </tbody>
-      </Table>
+      </Container>
       : <div>게시글이 없습니다.</div>}
     <NavLink to="/community/register">
       <Button variant="info">게시글 등록</Button>
@@ -49,3 +46,33 @@ const Community = ({ history }) => {
   </div >
 }
 export default Community;
+
+
+const Container = styled(Table)`
+  margin: 0 auto;
+  width: 80%;
+
+  td {
+    text-align: center;
+    vertical-align: middle; 
+    font-weight: 600;
+    height: 100px;
+  } 
+`
+
+const ItemImage = styled(Image)`
+  width: 180px;
+  height: 220px;
+  object-fit: cover;
+`
+const NavButton = styled(NavLink)`
+  margin: 0 10% 0 0;
+  float: right;
+`
+
+const ItemContent = styled.div`
+  font-size: 20px;
+  text-align: center;
+
+  margin: auto 0;
+`
