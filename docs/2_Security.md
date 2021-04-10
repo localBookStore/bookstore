@@ -222,6 +222,24 @@ public class JwtUtil {
 
 - - - -
 
+**VerfiyResult**
+
+검증 결과를 담는 클래스 result 변수를 Boolean 값으로 주어 성공여부를 판단한다.
+
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class VerifyResult {
+
+    private String email;
+    private String nickName;
+    private String role;
+    private boolean result;
+
+}
+```
 
 **JwtAuthenticationFilter**
 
