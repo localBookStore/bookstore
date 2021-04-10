@@ -29,6 +29,8 @@ public class EmailDto {
 
         private String address;
         private String phone;
+        @Pattern(regexp = "[0-9]{6}")
+        private String birth;
         private String certificated;
     }
 

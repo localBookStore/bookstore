@@ -60,6 +60,7 @@ public class MemberService {
                                   .email(signUpRequest.getEmail())
                                   .password(encoder.encode(signUpRequest.getPassword()))
                                   .nickName(signUpRequest.getNickName())
+                                  .birth(signUpRequest.getBirth())
                                   .role(MemberRole.USER)
                                   .provider(AuthProvider.DEFAULT)
                                   .enabled(Boolean.TRUE)
