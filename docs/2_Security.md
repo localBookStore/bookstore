@@ -223,10 +223,75 @@ public class JwtUtil {
 - - - -
 
 
-
 **JwtAuthenticationFilter**
 
-JwtAuthenticationFilter 에서는 request 에 접근 토큰(access token) 쿠키가 포함되어 있는지 체크한 후 토큰에 포함된 회원 정보를 이용해 새로운 Authentication 인스턴스를 생성합니다.
+JwtAuthenticationFilter 에서는 request 에 접근 토큰(access token) 쿠키가 포함되어 있는지 체크한 후 토큰에 포함된 회원 정보를 이용해 새로운 Authentication 인스턴스를 생성합니다. 
+
+일반적으로 Access Token + Refresh Token 인증과정의 Flow는  
+1. 로그인 한 사용자는 access token과 refresh token을 가지고 있다.
+2. Access Token이 유효하면 AccessToken내 payload를 읽어 사용자와 관련있는 UserDetail을 생성
+3. Access Token이 유효하지 않으면 Refresh Token값을 읽어드림.
+4. Refresh Token을 읽어 Access Token을 사용자에게 재생성하고, 요청을 허가시킴.
+
+여기서 보안적인 문제가 드러나게 되는데, 발행된 Access Token 탈취의 위험성을 고려하여 짧은 유효시간 두어, 혹시나 탈취 당하더라도 사용할 수 없도록 한다.
+그러나 Refresh Token은 문제가 다르다.  Refresh Token은 유효기간이 길기 때문에 탈취 당한다면 크나큰 보안 약점이 있을뿐더러, 유효기간 안에서 무조건인 요청이 허가된다. 그래서 이 약점을 보완하기 위해
+
+> 우리의 프로젝트는 사용자는 Refresh Token의 요청을 배제시키도록 한다. Access Token으로만 요청을 보내도록 한다. 그리고 Refresh Token을 Redis에 저장시켜두고, Access Token이 만료되더라도, Redis에 있는 Refresh Token과의 검증을 통해서 다시 Access Token을 발급하도록 구성하였다.  
+
+**RedisUtil**
+
+```java
+@Component
+
+@RequiredArgsConstructor
+
+public class RedisUtil {
+
+
+
+    private final StringRedisTemplate stringRedisTemplate;
+
+    private final RedisTemplate<String, String> redisTemplate;
+
+
+
+    public String getData(String key){
+
+        return redisTemplate.opsForValue().get(key);
+
+    }
+
+    public void setData(String key, String value, Long time){
+
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(value.getClass()));
+
+        redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+
+    }
+
+    public void deleteData(String key){
+
+        redisTemplate.delete(key);
+
+    }
+
+    public void setData(String key, String value){
+
+        ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
+
+        valueOperations.set(key,value);
+
+    }
+}
+
+```
+
+**setData()**
+우리의 프로젝트의 ID는 EMAIL이기 때문에 , redis에 이메일을 key,  refresh token을 value값으로 주어 저장을 하도록 한다. 그리고 뒤에 시간은 redis 저장소에서 refresh token의 유효시간이다.
+
+
+
+**JwtAuthenticationFilter**
 
 ```java
 @Log4j2
@@ -311,8 +376,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             resultAttributes.put("message", "This Email is locked (Default)");
             resultAttributes.put("path", request.getRequestURI());
 
-            response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
-//            response.getWriter().write(objectMapper.writeValueAsString(resultAttributes)); response 바디에 json 으로 담기.
+           response.getWriter().write(objectMapper.writeValueAsString(resultAttributes)); response 바디에 json 으로 담기.
 
             SecurityContextHolder.getContext().setAuthentication(null);
         }
@@ -335,8 +399,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         errorAttributes.put("exception", failed.getMessage());
         errorAttributes.put("path", request.getRequestURI());
 
-        response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
-//        response.getWriter().write(objectMapper.writeValueAsString(errorAttributes)); // write response body
+        
+  response.getWriter().write(objectMapper.writeValueAsString(errorAttributes)); // write response body
 
     }
 
@@ -349,11 +413,218 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
 **successfulAuthentication()**
+성공적으로 인증을 하게 되면, 해당 메소드로 진입하게 된다. 그래서  `authentication` 객체로부터,  해당 유저 정보를 읽어들여서  `isEnabled()`를 통한 계정 활성화를 체크한다.  맞다면 해당 사용자에게 refresh token과 access token을 발급하게 된다. 그리고 refresh token은 보내지 않고 **Redis** 저장소에 저장하게 되고 , access token을 발급하도록 하였다.  맞지 않다면 , 계정이 잠겨있음을 응답으로 보내도록 하였다.
+
+**unsuccessfulAuthentication()**
+인증 실패 , 진입하게 되는 메소드. `HttpStatus.UNAUTHORIZED` 을 응답으로 보내도록 한다.
 
 
 
 
+**JwtAuthorizationFilter**
+
+```java
+
+@Log4j2
+
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+    private JwtUtil jwtUtil;
+    private RedisUtil redisUtil;
+    private CustomUserDetailsService customUserDetailsService;
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+
+                                  JwtUtil jwtUtil, RedisUtil redisUtil,
+
+                                  CustomUserDetailsService customUserDetailsService) {
+
+        super(authenticationManager);
+
+        this.jwtUtil    = jwtUtil;
+
+        this.redisUtil      = redisUtil;
+
+        this.customUserDetailsService = customUserDetailsService;
+
+    }
 
 
 
-#project
+    private void saveAuthSecuritySession(VerifyResult verifyResult) {
+
+        log.info("Query Member By JWT Subject(email) :");
+
+        CustomUserDetails customUserDetails
+
+                = (CustomUserDetails) customUserDetailsService.loadUserByUsername(verifyResult.getEmail());
+
+        Authentication auth
+
+                = new UsernamePasswordAuthenticationToken(customUserDetails ,null, customUserDetails.getAuthorities());
+
+
+
+        log.info("Save Authentication in SecuritySession :");
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+    }
+
+
+
+    @Override
+
+    protected void doFilterInternal(HttpServletRequest request,
+
+                                    HttpServletResponse response,
+
+                                    FilterChain filterChain) throws IOException, ServletException {
+
+
+
+        log.info("JwtAuthorizationFilter.doFilterInternal :");
+
+
+
+        String authorizationValue = request.getHeader(JwtProperties.HEADER_STRING);  // jwt 토큰 값
+
+
+
+        // JWT 토큰 값이 없거나 'Bearer ' 문자열로 시작하지 않는다면 다음 필터로 넘겨줌
+
+        if (StringUtils.isEmpty(authorizationValue) || !authorizationValue.startsWith(JwtProperties.TOKEN_PREFIX)) {
+
+            log.info("No JWT, JWT structure issue :");
+
+            filterChain.doFilter(request, response);
+
+            return;
+
+        }
+
+
+
+        String jwtToken = authorizationValue.substring(JwtProperties.TOKEN_PREFIX.length());
+
+
+
+        log.info("Verify the input Access Token :");
+
+        VerifyResult verifyResult = jwtUtil.verify(jwtToken);
+
+        if(verifyResult.isResult()) {
+
+            log.info("The input Access Token is valid! :");
+
+            saveAuthSecuritySession(verifyResult);
+
+
+
+        } else {
+
+            log.info("The input Access Token is invalid... :");
+
+            String email = verifyResult.getEmail();
+
+            String nickName = verifyResult.getNickName();
+
+            String role = verifyResult.getRole();
+
+
+
+            String refreshToken = redisUtil.getData(email);
+
+            log.info("Saved Refresh Token in Redis : {}", refreshToken);
+
+
+
+            log.info("Verify the Refresh Token :");
+
+            VerifyResult refreshVerify = jwtUtil.verify(refreshToken);
+
+            if(refreshVerify.isResult()) {
+
+                log.info("The Refresh Token is valid! Create new Access Token :");
+
+                String newAccessToken
+
+                        = jwtUtil.createAccessToken(refreshVerify.getEmail(), nickName, role);
+
+                response.setHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + newAccessToken);
+
+
+
+                saveAuthSecuritySession(verifyResult);
+
+
+
+            } else {
+
+                log.info("The Refresh Token is invalid... :");
+
+                redisUtil.deleteData(email);
+
+                RuntimeException e = new TokenExpiredException("The Refresh Token is invalid");
+
+                this.onUnsuccessfulAuthentication(
+
+                            request, response, new AuthenticationException(e.getMessage(), e.getCause()) {}
+
+                        );
+
+                return;
+
+            }
+        }
+
+        filterChain.doFilter(request,response);
+
+    }
+
+
+
+    @Override
+
+    protected void onUnsuccessfulAuthentication(HttpServletRequest request,
+
+                                                HttpServletResponse response,
+
+                                                AuthenticationException failed) throws IOException {
+
+
+
+        SecurityContextHolder.getContext().setAuthentication(null);
+
+
+
+        // 401(Unauthorized) 상태 발생
+
+        log.info("JwtAuthorizationFilter.onUnsuccessfulAuthentication : 'Expired'");
+
+
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+        response.setContentType("application/json;charset=utf-8");
+
+
+
+        Map<String, Object> errorAttributes = new HashMap<>();
+
+        errorAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+
+        errorAttributes.put("status", HttpStatus.UNAUTHORIZED);
+
+        errorAttributes.put("exception", failed.getMessage());
+
+        errorAttributes.put("path", request.getRequestURI());
+
+        response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
+
+    }
+
+}
+```
+
+
