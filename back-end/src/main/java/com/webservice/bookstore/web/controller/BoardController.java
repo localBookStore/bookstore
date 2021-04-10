@@ -5,6 +5,7 @@ import com.webservice.bookstore.domain.entity.board.Board;
 import com.webservice.bookstore.domain.entity.board.BoardRepository;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
+import com.webservice.bookstore.domain.entity.reply.ReplyRepository;
 import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.service.BoardService;
 import com.webservice.bookstore.service.ReplyService;
@@ -39,10 +40,18 @@ public class BoardController {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @GetMapping({"/board/","/board"})
     public ResponseEntity<PageResultDTO<BoardDTO, Board>> showPageBoardList(PageRequestDTO pageRequestDTO) {
         PageResultDTO<BoardDTO, Board> pageResultDTO = boardService.pageCommunityList(pageRequestDTO);
 
+        List<BoardDTO> list =  pageResultDTO.getDtoList();
+        for(int i=0;i<list.size();i++){
+            list.get(i).setReplyCount(replyRepository.getReplyCount(list.get(i).getId()));
+        }
+        pageResultDTO.setDtoList(list);
         return new ResponseEntity<>(pageResultDTO, HttpStatus.OK);
     }
 

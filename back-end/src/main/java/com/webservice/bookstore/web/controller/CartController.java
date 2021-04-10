@@ -63,7 +63,6 @@ public class CartController {
 
         verifyAuthentication(customUserDetails);
         cartDto.setMember_id(customUserDetails.getMember().getId());
-//        cartDto.setItem_id(item_id);
         cartDto.setItemDto(ItemDto.Default.builder().id(item_id).build());
 
         try {
@@ -95,7 +94,6 @@ public class CartController {
     장바구니 아이템 삭제 요청 핸들러
     */
     @DeleteMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
-//    public ResponseEntity deleteCartItem(@RequestBody List<CartDto> cartDtoList,
     public ResponseEntity deleteCartItem(@RequestBody List<Long> cartIdList,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 

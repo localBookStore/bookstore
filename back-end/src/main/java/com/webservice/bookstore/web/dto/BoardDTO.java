@@ -29,7 +29,7 @@ public class BoardDTO {
 
     private String content;
 
-    private String replyCount; //댓글수
+    private int replyCount; //댓글수
 
     private String category;
 
