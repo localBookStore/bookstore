@@ -28,7 +28,7 @@ npm start
     '@fortawesome/react-fontawesome'
 'styled-components' # apply for CSS in js
 'poished'   # interactive utill funcion
-'qs'    # using query string
+'qs'    # using query string (사용x)
 'react-cookie'  # Using Cookie in Browser
 'react-hook-form'   # for Using user input form
 'jwt-decode'    # Do jwt decode library (using find user info)
@@ -60,46 +60,46 @@ books
 ├── index.js
 ├── components
 │ ├── HeaderPage
-|		├── CategoryBar.js
-|		├── CategoryHoverDetail.js
-|		├── Header.js
-|		└── SearchBar.js
+|		├── CategoryBar.js		# 장르 / 베스트 / 신간 / 커뮤니티 별로 Link되는 컴포넌트
+|		├── CategoryHoverDetail.js		# 장르 버튼에 Mouse Over시 display되는 컴포넌트
+|		├── Header.js		# Header Container
+|		└── SearchBar.js		# 제목별 검색기능
 │ ├── MainPage
 │		├── BookListPage
-│		│		├── BestBookList.js
-│		│		├── NewBookList.js
-│		│		└── SearchBookList.js
+│		│		├── BestBookList.js		# 베스트 아이템 리스트
+│		│		├── NewBookList.js		# 신간 아이템 리스트
+│		│		└── SearchBookList.js		# 검색 결과 아이템 리스트
 │		├── CommunityPage
-│		│		├── Community.js
-│		│		├── CommunityDetail.js
-│		│		├──	ArticleDetail.js
-│		│		├──	CommentDetail.js
-│		│		├──	EachComment.js
-│		│		├── CommunityRegister.js
-│		│		└── CommunityUpdate.js
+│		│		├── Community.js		# 전체 커뮤니티 컴포넌트
+│		│		├── CommunityDetail.js		# 상세 커뮤니티 게시글 + 댓글 
+│		│		├──	ArticleDetail.js		# 상세 커뮤니티 게시글
+│		│		├──	CommentDetail.js		# 상세 커뮤니티 댓글
+│		│		├──	EachComment.js		# 각 댓글 컴포넌트
+│		│		├── CommunityRegister.js		# 게시글 등록
+│		│		└── CommunityUpdate.js		# 게시글 수정(업데이트)
 │		├── DetailPage
-│		│		├── ItemDetail.js
-│		│		├── TopDetail.js
-│		│		├── MidDetial.js
-│		│		├── ReviewList.js
-│		│		└── Reivew.js
+│		│		├── ItemDetail.js		# 상세 도서 컴포넌트
+│		│		├── TopDetail.js		# 책의 이미지 / 제목 / 저자 / 출판사 / 가격 / 재고 + 장바구니 / 바로구매
+│		│		├── MidDetial.js		# 책의 설명
+│		│		├── ReviewList.js		# 책을 구매한 유저의 댓글 및 평점 리스트
+│		│		└── Reivew.js		# 각 댓글 컴포넌트
 │		├── HomePage
-│		│		├── Home.js
-│		│		├── SlideItem.js
-│		│		├── PickItem.js
-│		│		├── MonthBooks.js
+│		│		├── Home.js		# 메인 화면
+│		│		├── SlideItem.js		# 하나의 도서에 대한 슬라이드
+│		│		├── PickItem.js		# 랜덤 4개의 도서에 대한 멀티 슬라이드
+│		│		├── MonthBooks.js		# 랜덤 4개의 도서에 대한 멀티 슬라이드
 │		│		└── CustomArrow
-│		│				├── NextArrow.css		
-│		│				├── NextArrow.js
-│		│				├── PrevArrow.css
-│		│				└── prevArrow.js
+│		│				├── NextArrow.css		# 다음 슬라이드 제어 버튼 CSS		
+│		│				├── NextArrow.js		# 다음 슬라이드 제어 버튼
+│		│				├── PrevArrow.css		# 이전 슬라이드 제어 버튼 CSS
+│		│				└── prevArrow.js		# 이전 슬라이드 제어 버튼
 │ 	├── UserPage
 │		│		├── Admin
 │		│		│		├── AllOrderListComponent
-│		│		│		│		├── AllOrderList.js
-│		│		│		│		├── EachUserOrder.js
-│		│		│		│		└── UserOrder.js
-│		│		│		├── AdminPage.js
+│		│		│		│		├── AllOrderList.js		# 모든 유저 목록
+│		│		│		│		├── EachUserOrder.js		# 각 유저의 주문 내용
+│		│		│		│		└── UserOrder.js		# 각 유저의 상세 주문 내용
+│		│		│		├── AdminPage.js		# 관리자 컴포넌트
 │		│		│		├── AllItemList.js
 │		│		│		├── EachItemList.js
 │		│		│		├── PostCoupon.js
