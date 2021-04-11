@@ -46,7 +46,7 @@ public class Orders extends BaseTimeEntity {
     private Integer deliveryCharge;
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
