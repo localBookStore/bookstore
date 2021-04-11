@@ -416,7 +416,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
 **successfulAuthentication()**
-성공적으로 인증을 하게 되면, 해당 메소드로 진입하게 된다. 그래서  `authentication` 객체로부터,  해당 유저 정보를 읽어들여서  `isEnabled()`를 통한 계정 활성화를 체크한다.  맞다면 해당 사용자에게 refresh token과 access token을 발급하게 된다. 그리고 refresh token은 보내지 않고 **Redis** 저장소에 저장하게 되고 , access token을 발급하도록 하였다.  맞지 않다면 , 계정이 잠겨있음을 응답으로 보내도록 하였다.
+성공적으로 인증을 하게 되면, 해당 메소드로 진입하게 된다. 그래서  `authentication` 객체로부터,  해당 유저 정보를 읽어들여서  `isEnabled()`를 통한 계정 활성화를 체크한다.  맞다면 해당 사용자에게 refresh token과 access token을 발급하게 된다. 그리고 refresh token은 보내지 않고 **Redis** 저장소에 저장하게 되고 , access token을 발급하도록 하였다.  맞지 않다면 , 계정이 잠겨있음을 응답으로 보내도록 하였다.
 
 **unsuccessfulAuthentication()**
 인증 실패 , 진입하게 되는 메소드. `HttpStatus.UNAUTHORIZED` 을 응답으로 보내도록 한다.
