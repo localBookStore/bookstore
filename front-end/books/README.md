@@ -100,15 +100,15 @@ books
 │		│		│		│		├── EachUserOrder.js		# 각 유저의 주문 내용
 │		│		│		│		└── UserOrder.js		# 각 유저의 상세 주문 내용
 │		│		│		├── AdminPage.js		# 관리자 컴포넌트
-│		│		│		├── AllItemList.js
-│		│		│		├── EachItemList.js
-│		│		│		├── PostCoupon.js
-│		│		│		├── UserArticle.js
-│		│		│		└── UserList.js
+│		│		│		├── AllItemList.js		# 등록된 전체 상품 리스트
+│		│		│		├── EachItemList.js		# 각 상품 제어 컴포넌트
+│		│		│		├── PostCoupon.js		# 쿠폰 등록 페이지
+│		│		│		├── UserList.js		# 모든 유저 리스트	
+│		│		│		└── UserArticle.js		# 유저의 게시글 리스트
 │		│		├──	Public
 │		│		│		├── CartPageComponent
-│		│		│		│		├── CartPage.js
-│		│		│		│		├── CouponItem.js
+│		│		│		│		├── CartPage.js		# 장바구니 페이지
+│		│		│		│		├── CouponItem.js		# 아이템 쿠폰 
 │		│		│		│		└── EachCartItem.js
 │		│		│		├── OrderComponent
 │		│		│		│		├── OrderPage.js
