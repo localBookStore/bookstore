@@ -23,13 +23,10 @@
 
 
 **Front-end**
-- React
-- axios
+- React & Hook
+- Axios
+- React-Router
 - styled-component
-- font Awesome
-- react hook
-- router
-- react strap
 
 
 
@@ -80,11 +77,9 @@
 ![프로토타입](https://user-images.githubusercontent.com/59079426/114315830-a8111680-9b3b-11eb-9c07-b9540eef3979.gif)
 
 
-
 <br></br>
 
 <br></br>
-
 
 
 ## 프로젝트 v0.1
