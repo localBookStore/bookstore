@@ -1,8 +1,8 @@
-# 📚BookStore
+# 📚 BookStore
 
-## 📖프로젝트명 : 책팔자
+## 📖 프로젝트명 : 책팔자
 
-## 팀 소개
+## 👨‍👨‍👦‍👦 팀 소개
 - Front End
    - 편재호
 - Back End
