@@ -64,7 +64,7 @@
 
 ### [Board](https://github.com/wizard0987/bookstore/blob/develop/docs/Board.md)
 - 게시글 조회/등록/수정/삭제/추가
-- 댓글 등록/수정/삭
+- 댓글 등록/수정/삭제
 
 ## - Frontend
 

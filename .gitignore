@@ -19,6 +19,4 @@ sketch
 --------------------------------------------------------------------
 .idea/
 .gradle/
-gradle/
-gradlew
-gradlew.bat
+build/
