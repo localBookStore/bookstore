@@ -25,7 +25,7 @@ const PostCoupon = ({location}) => {
         <Input type="text" placeholder="할인율" name="discountRate" ref={register({required:true, pattern:/^[0-9]*$/})}/>
         <div>{errors.discountRate && "할인율은 필수이며 숫자만 입력하세요"}</div>
         <div>종료일자를 입력하세요(년월일기준 "-" 기재). (ex. 2020-02-02) </div>
-        <Input type="text" placeholder="쿠폰 종료일자" name="endDate" ref={register({required:true, pattern:/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/})}/>
+        <Input type="text" placeholder="쿠폰 종료일자" name="endDate" ref={register()}/>
         <div>{errors.endDate && "쿠폰종료 일자는 필수이며 연-월-일로 입력하세요"}</div>
         <SubmitButton type="submit">등록(모든 사용자에게 일괄제공)</SubmitButton>
         
