@@ -52,7 +52,7 @@
 - JWT 토큰을 이용한 Authentication & Authorization (access token, refresh token 생성)
 - Refresh token 저장을 위한 Redis 저장소 구현
 
-### [관리자]()
+### [관리자](https://github.com/wizard0987/bookstore/blob/develop/docs/Admin.md)
 - 회원 리스트 조회/회원 게시글 조회
 - 상품 리스트 조회/검색/등록/수정/삭제
 - 회원 주문 리스트 조회/주문 취소/주문 
@@ -62,6 +62,9 @@
 - 리뷰 리스트/등록/수정/삭제
 - 배송/ 장바구니 수량 변경/장바구니 삭제/장바구니 상품리스트/쿠폰 조회
 
+### [Board](https://github.com/wizard0987/bookstore/blob/develop/docs/Board.md)
+- 게시글 조회/등록/수정/삭제/추가
+- 댓글 등록/수정/삭
 
 ## - Frontend
 
