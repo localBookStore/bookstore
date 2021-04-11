@@ -11,6 +11,7 @@
    - 이재섭 : 게시판, 리뷰
 <br/>
 
+## Skill & Tools
 
 **BackEnd**
 - Java 11
@@ -21,7 +22,6 @@
 - Redis
 - JPA
 - MySQL
-
 
 **Front-end**
 - React
@@ -34,7 +34,9 @@
 
 
 ## API 설계도
-![API_structure](https://user-images.githubusercontent.com/59079426/110195985-b2792a00-7e84-11eb-8140-3c96399a8fd6.jpg)
+![2021-04-12_02-26-35](https://user-images.githubusercontent.com/56857925/114314684-98db9a00-9b36-11eb-96cf-ed48bdb52037.jpg)
+![2021-04-12_02-27-35](https://user-images.githubusercontent.com/56857925/114314695-ac870080-9b36-11eb-81b2-fe52b2ceaafd.jpg)
+
 
 <br/>
 
