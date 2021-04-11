@@ -10,7 +10,7 @@ https://start.spring.io 에서 아래 4가지 라이브러리를 추가한 후 �
 - Lombok
   - 이클립스 및 Intellij 설치방법 : https://www.baeldung.com/lombok-ide
 
-### Step 4. Build and Run
+## Build and Run
 위에서 소개한 IDE에 해당 프로젝트를 git clone한 후 Build/Run하거나, 아래에 소개할 terminal에 직접 명령어를 작성하여 이용하면 됩니다.
 
 ##### Build : 
