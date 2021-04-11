@@ -1,13 +1,7 @@
 # BackEnd
 
 ## 프로젝트 생성
-
-https://start.spring.io 에서 아래 4가지 라이브러리를 추가한 후 프로젝트를 생성합니다.
-
-- Web 
-- Security
-- Spring Data Jpa
-- Lombok
+https://start.spring.io 에서 프로젝트를 생성합니다.
   - 이클립스 및 Intellij 설치방법 : https://www.baeldung.com/lombok-ide
 
 ## Build and Run
@@ -31,13 +25,19 @@ $ java -jar build/libs/*.jar
 ### Dependencies
 
 ```bash
-'spring-boot-starter-web'           #
-'spring-boot-starter-test'          # Apply Domain Routing
-'spring-boot-devtools'              # Asynchronous Request
-'spring-boot-starter-data-jpa'      # Apply Carousel & modal
-'spring-boot-starter-validation'    # For a apply Multi Carousel
-'mysql-connector-java'              # react-slcik CSS
-'org.projectlombok:lombok'          # for react UI font
+'spring-boot-starter-web'           
+'spring-boot-starter-test'          
+'spring-boot-devtools'              
+'spring-boot-starter-data-jpa'      
+'spring-boot-starter-validation'    
+'mysql-connector-java'              
+'org.projectlombok:lombok'
+'org.springframework.boot:spring-boot-starter-hateoas'
+'org.springframework.boot:spring-boot-starter-security'
+'org.springframework.boot:spring-boot-starter-oauth2-client'
+ group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+ group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
+'org.springframework.boot:spring-boot-starter-data-redis'
 ```
 
 
@@ -76,25 +76,38 @@ back-end
 
 ## 구현된 기능
 
+### Spring Security + Oauth2.0 + JWT
+- Oauth 소셜을 통한 로그인 및 회원가입/로그 아웃/회원 탈퇴
+- JWT 토큰을 이용한 Authentication & Authorization (access token, refresh token 생성)
+- Refresh token 저장을 위한 Redis 저장소 구현 
+
 ### 회원
 - 가입/탈퇴/로그인/로그아웃/아이디 찾기/비밀번호 찾기
 - 회원가입시 미기입 정보 체크 & 이메일 인증 번호 전송 및 확인 & 이메일 중복 확인
 
-### Security + Oauth
-- Oauth 소셜을 통한 로그인 및 회원가입/로그 아웃/회원 탈퇴
-- JWT 토큰을 이용한 Authentication & Authorization (access token, refresh token 생성)
-- Refresh token 저장을 위한 Redis 저장소 구현
-
 ### 관리자
 - 회원 리스트 조회/회원 게시글 조회
 - 상품 리스트 조회/검색/등록/수정/삭제
-- 회원 주문 리스트 조회/주문 취소/주문 
+- 회원 주문 리스트 조회/주문 취소/주문
 
-### Item
-- 동적 쿼리를 통한 책 검색/ 상세 상품 조회/ 장바구니 담기/ 바로 구매
+### Item 
+- 동적 쿼리를 통한 책 검색/상세 상품 조회/장바구니 담기/바로 구매
 - 리뷰 리스트/등록/수정/삭제
-- 배송/장바구니 수량 변경/장바구니 삭제/장바구니 상품리스트/쿠폰 조회
 
-### Board
+### Order
+- 주문 생성(상품,쿠폰, 배송 정보 포함)
+
+### Cart
+- 장바구니 수량 변경/장바구니 삭제/
+- 장바구니 상품리스트/쿠폰 조회
+
+### Coupon
+- 쿠폰 조회
+- 쿠폰 발급
+
+### Community
 - 게시글 조회/등록/수정/삭제/추가
 - 댓글 등록/수정/삭제
+
+
+## 회고
