@@ -1,12 +1,16 @@
-# 도서 판매 Plat-form
+# 📚 BookStore
 
+## 📖 프로젝트명 : 책팔자
 
-## 개요
-<br/><br/>
+## 👨‍👨‍👦‍👦 팀 소개
+- **Front End**
+   - 편재호
+- **Back End**
+   - 조항진 : Security, 검색, 아이템, 쿠폰
+   - 이지원 : Security(+Oauth), 장바구니, 쿠폰
+   - 이재섭 : 게시판, 리뷰
 
-
-## Technical Specification
-
+## Skill & Tools
 
 **BackEnd**
 - Java 11
@@ -15,12 +19,8 @@
 - Spring Security 2.4.3
 - Spring Hateoas
 - Redis
-- Lombok
 - JPA
-- QueryDSL
-- jjwt
 - MySQL
-
 
 **Front-end**
 - React
@@ -32,6 +32,7 @@
 - react strap
 
 
+<<<<<<< HEAD
 
 ## 필요성
 <br/><br/>
@@ -69,9 +70,10 @@
 ## - Frontend
 
 
-
 ## API 설계도
-![API_structure](https://user-images.githubusercontent.com/59079426/110195985-b2792a00-7e84-11eb-8140-3c96399a8fd6.jpg)
+![2021-04-12_02-26-35](https://user-images.githubusercontent.com/56857925/114314684-98db9a00-9b36-11eb-96cf-ed48bdb52037.jpg)
+![2021-04-12_02-27-35](https://user-images.githubusercontent.com/56857925/114314695-ac870080-9b36-11eb-81b2-fe52b2ceaafd.jpg)
+
 
 <br/>
 
