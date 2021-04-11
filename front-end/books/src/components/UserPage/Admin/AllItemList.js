@@ -13,6 +13,15 @@ const AllItemList = ({ location }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selected, setSelected] = useState(new Set());
 
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/admin/items", {
+      headers: {
+        Authorization: token
+      }
+    }).then(res => setItems(res.data))
+    .catch(err => console.log(err.response))
+  }, [])
+
 
   const itemCheck = (itemId, isCheck) => {
     if (isCheck) selected.add(itemId);
@@ -40,7 +49,7 @@ const AllItemList = ({ location }) => {
   const ShowCurrentData = () => {
     const startIdx = currentPage * 10;
     const currentData = items.slice(startIdx, startIdx + 10);
-    console.log(currentData);
+    
     return (
       <ItemContainer>
         {currentData.map((data, idx) => {
