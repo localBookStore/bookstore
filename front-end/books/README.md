@@ -108,17 +108,17 @@ books
 │		│		├──	Public
 │		│		│		├── CartPageComponent
 │		│		│		│		├── CartPage.js		# 장바구니 페이지
-│		│		│		│		├── CouponItem.js		# 아이템 쿠폰 
-│		│		│		│		└── EachCartItem.js
+│		│		│		│		├── CouponItem.js		# 쿠폰 선택 컴포넌트 (적용 및 미적용 금액 보여주기) 
+│		│		│		│		└── EachCartItem.js		# 장바구니에 담긴 아이템 조작(수량, 체크박스) 컴포넌트
 │		│		│		├── OrderComponent
-│		│		│		│		├── OrderPage.js
-│		│		│		│		└── OrderList.js
-│		│		│		├── MyPage.js
-│		│		│		├── MyPost.js
-│		│		│		└── UserInfo.js
-│		│		├── LoginPage
-│		│		└── SignupPage
+│		│		│		│		├── OrderList.js		# 주문한 목록의 항목 리스트
+│		│		│		│		└── OrderPage.js		# 주문한 각 아이템 정보 컴포넌트
+│		│		│		├── MyPage.js		# 개인정보 전체 컴포넌트
+│		│		│		├── MyPost.js		# 개인이 등록한 게시글을 보는 컴포넌트
+│		│		│		└── UserInfo.js		# # 개인 정보 컴포넌트
+│		│		├── LoginPage		# 로그인 페이지
+│		│		└── SignupPage		# 회원가입 페이지
 │ 	└── FooterPage
-│				└── Footer.js
+│				└── Footer.js		# Footer
 └── router
 ```
