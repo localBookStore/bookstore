@@ -75,15 +75,18 @@
 
 <br/>
 
-
 ## 프로토타입
 
-![프로토타입](https://user-images.githubusercontent.com/59079426/114315122-6763ce00-9b38-11eb-9b7e-ea0084453d92.gif)
+![프로토타입](https://user-images.githubusercontent.com/59079426/114315830-a8111680-9b3b-11eb-9c07-b9540eef3979.gif)
+
 
 
 <br></br>
 
+<br></br>
+
+
 
 ## 프로젝트 v0.1
 
-![프로젝트v0.1](https://user-images.githubusercontent.com/59079426/114315153-85c9c980-9b38-11eb-82a7-e607fbf53855.gif)
+![프로젝트v0 1](https://user-images.githubusercontent.com/59079426/114315849-d1ca3d80-9b3b-11eb-90b5-aa5b01b795ce.gif)
