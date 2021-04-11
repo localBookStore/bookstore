@@ -25,19 +25,19 @@ $ java -jar build/libs/*.jar
 ### Dependencies
 
 ```bash
-'spring-boot-starter-web'           
+'spring-boot-starter-web'                                       
 'spring-boot-starter-test'          
 'spring-boot-devtools'              
-'spring-boot-starter-data-jpa'      
-'spring-boot-starter-validation'    
+'spring-boot-starter-data-jpa'                                      // spring data jpa 사용을 위한 라이브러리
+'spring-boot-starter-validation'                                    // validation 체크를 위한 라이브러리
 'mysql-connector-java'              
-'org.projectlombok:lombok'
-'org.springframework.boot:spring-boot-starter-hateoas'
-'org.springframework.boot:spring-boot-starter-security'
-'org.springframework.boot:spring-boot-starter-oauth2-client'
- group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
- group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
-'org.springframework.boot:spring-boot-starter-data-redis'
+'org.projectlombok:lombok'                                          // 롬복
+'org.springframework.boot:spring-boot-starter-hateoas'              // HATEOAS 추가 : RESTFul API 개발을 위한 라이브러리
+'org.springframework.boot:spring-boot-starter-security'             // 스프링 시큐리티
+'org.springframework.boot:spring-boot-starter-oauth2-client'        // OAuth2.0 사용 라이브러리
+ group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'           // jwt 러이브러리 
+ group: 'com.auth0', name: 'java-jwt', version: '3.10.3'            // jwt 러이브러리   
+'org.springframework.boot:spring-boot-starter-data-redis            // Redis 추가 : Refresh 토큰 관리를 DB 대신 캐시 메모리에서 관리하기 위함
 ```
 
 
@@ -74,6 +74,8 @@ back-end
 ```
 
 
+<br/>
+
 ## 구현된 기능
 
 ### Spring Security + Oauth2.0 + JWT
@@ -82,7 +84,7 @@ back-end
 - Refresh token 저장을 위한 Redis 저장소 구현 
 
 ### 회원
-- 가입/탈퇴/로그인/로그아웃/아이디 찾기/비밀번호 찾기
+- 가입/탈퇴/로그인/로그아웃/아이디 찾기/비밀번호 찾기(임시 비밀번호 발급)
 - 회원가입시 미기입 정보 체크 & 이메일 인증 번호 전송 및 확인 & 이메일 중복 확인
 
 ### 관리자
@@ -98,8 +100,8 @@ back-end
 - 주문 생성(상품,쿠폰, 배송 정보 포함)
 
 ### Cart
-- 장바구니 수량 변경/장바구니 삭제/
-- 장바구니 상품리스트/쿠폰 조회
+- 장바구니 수량 변경/장바구니 삭제
+- 장바구니 상품리스트/멤버별 쿠폰 조회
 
 ### Coupon
 - 쿠폰 조회
