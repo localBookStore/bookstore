@@ -41,39 +41,6 @@ $ java -jar build/libs/*.jar
 ```
 
 
-### File Structure (In Progress...)
-
-```markdown
-back-end
-├── README.md
-├── gradlew
-├── gradlew.bat
-├── .gitignore
-├── .gradle
-├── gradle
-├── build
-│   ├── classes
-│   ├── generated
-│   ├── libs
-│   │   └── bookstore-0.0.1-SNAPSHOT.jar
-│   ├── reports
-│   ├── resources
-│   ├── test-result
-│   ├── bootJarMainClassName
-│   └── bootRunMainClassName
-└── src
-    └── main
-    	└── java
-    	    └── com.webservice.bookstore	
-                ├── BookstoreApplication.java
-                ├── domain.entity
-                ├── service
-                └── web
-                    ├── controller
-                    └── dto
-```
-
-
 <br/>
 
 ## 구현된 기능
@@ -110,6 +77,44 @@ back-end
 ### Community
 - 게시글 조회/등록/수정/삭제/추가
 - 댓글 등록/수정/삭제
+
+<br/>
+
+
+### File Structure (In Progress...)
+
+```markdown
+back-end
+├── README.md
+├── gradlew
+├── gradlew.bat
+├── .gitignore
+├── .gradle
+├── gradle
+├── build
+│   ├── classes
+│   ├── generated
+│   ├── libs
+│   │   └── bookstore-0.0.1-SNAPSHOT.jar
+│   ├── reports
+│   ├── resources
+│   ├── test-result
+│   ├── bootJarMainClassName
+│   └── bootRunMainClassName
+└── src
+    └── main
+    	└── java
+    	    └── com.webservice.bookstore	
+                ├── BookstoreApplication.java
+                ├── domain.entity
+                ├── service
+                └── web
+                    ├── controller
+                    └── dto
+```
+
+
+<br/>
 
 
 ## 회고
