@@ -3,9 +3,9 @@
 ## 📖 프로젝트명 : 책팔자
 
 ## 👨‍👨‍👦‍👦 팀 소개
-- Front End
+- **Front End**
    - 편재호
-- Back End
+- **Back End**
    - 조항진 : Security, 검색, 아이템, 쿠폰
    - 이지원 : Security(+Oauth), 장바구니, 쿠폰
    - 이재섭 : 게시판, 리뷰
