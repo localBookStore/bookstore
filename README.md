@@ -39,6 +39,8 @@
 
 ## Requirements Specification
 
+## - Backend
+
 ### [프로젝트 생성 및 DB 연결 설정](https://github.com/wizard0987/bookstore/blob/develop/docs/1_Init.md)
 
 ### [회원](https://github.com/wizard0987/bookstore/blob/develop/docs/User.md)
@@ -50,10 +52,18 @@
 - JWT 토큰을 이용한 Authentication & Authorization (access token, refresh token 생성)
 - Refresh token 저장을 위한 Redis 저장소 구현
 
+### [관리자]()
+- 회원 리스트 조회/회원 게시글 조회
+- 상품 리스트 조회/검색/등록/수정/삭제
+- 회원 주문 리스트 조회/주문 취소/주문 
+
 ### [Item](https://github.com/wizard0987/bookstore/blob/develop/docs/Item.md)
 - 동적 쿼리를 통한 책 검색/ 상세 상품 조회/ 장바구니 담기/ 바로 구매
 - 리뷰 리스트/등록/수정/삭제
-- 배송/ 장바구니 수량 변경/장바구니 삭제/장바구니 상품리스트
+- 배송/ 장바구니 수량 변경/장바구니 삭제/장바구니 상품리스트/쿠폰 조회
+
+
+## - Frontend
 
 
 
