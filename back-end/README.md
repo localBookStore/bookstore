@@ -32,18 +32,19 @@ $ java -jar build/libs/*.jar
 'spring-boot-starter-validation'                                    // validation 체크를 위한 라이브러리
 'mysql-connector-java'              
 'org.projectlombok:lombok'                                          // 롬복
-'org.springframework.boot:spring-boot-starter-hateoas'              // HATEOAS 추가 : RESTFul API 개발을 위한 라이브러리
+'org.springframework.boot:spring-boot-starter-hateoas'              // HATEOAS 추가 : Restful API 개발을 위한 라이브러리
 'org.springframework.boot:spring-boot-starter-security'             // 스프링 시큐리티
 'org.springframework.boot:spring-boot-starter-oauth2-client'        // OAuth2.0 사용 라이브러리
  group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'           // jwt 러이브러리 
  group: 'com.auth0', name: 'java-jwt', version: '3.10.3'            // jwt 러이브러리   
 'org.springframework.boot:spring-boot-starter-data-redis            // Redis 추가 : Refresh 토큰 관리를 DB 대신 캐시 메모리에서 관리하기 위함
+'org.springframework.boot:spring-boot-starter-mail'                 // 이메일 인증 : 위한 이메일 관련 객체 사용
 ```
 
 
 <br/>
 
-## 구현된 기능
+## 🔧구현된 기능
 
 ### Spring Security + Oauth2.0 + JWT
 - Oauth 소셜을 통한 로그인 및 회원가입/로그 아웃/회원 탈퇴
@@ -118,3 +119,5 @@ back-end
 
 
 ## 회고
+
+**항진** : 많은 경험이 되는 프로젝트였다. 다른분들과 협업을 통해 제가 모르고 있었던 점도 배우고 무의식적으로 놓치고 있는 부분에 대해서도 다시 한번 생각하는 계기가 되는 프로젝트인다.프로젝트 초기에 채팅 기능까지 구현해보고 싶었는데. 현시점에서 구현을 아직 안했다. 물론 추후에 기능 추가할 생각이다. 더불어 배포에 대한 어려움을 느낀 프로젝트이다. 완성을 향해 달려가고 있지만, 배포가 이렇게 어려울 줄은 생각도 못했다. 생각도 못한 곳에서 에러도 발생하고. 현재 진행중인 프로젝트라서 여기까지만 적을 생각이다. 추후에 프로젝트에 대한 회고를 추가하겠다.
