@@ -29,6 +29,11 @@
 - React-Router
 - styled-component
 
+![기술 스택 이미지](https://user-images.githubusercontent.com/56857925/114336678-71aeb800-9b8a-11eb-8b20-f9ebc1f036c3.png)
+
+
+<br/>
+
 
 ## 📜 API 설계도
 ![2021-04-12_02-26-35](https://user-images.githubusercontent.com/56857925/114314684-98db9a00-9b36-11eb-96cf-ed48bdb52037.jpg)
