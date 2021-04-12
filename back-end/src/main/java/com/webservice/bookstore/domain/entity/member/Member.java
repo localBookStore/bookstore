@@ -45,7 +45,7 @@ public class Member extends BaseTimeEntity {
     private Boolean enabled;
 
     @Builder.Default
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Coupon> coupons = new ArrayList<>();
 
 
