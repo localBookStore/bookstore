@@ -46,10 +46,10 @@ $ java -jar build/libs/*.jar
 
 ## 🔧구현된 기능
     
-
-> **프로젝트 전반에 걸쳐 , 프론트엔드와 백엔드의 독립적인 개발 , Restful한 API를 만들고자 Spring Hatoas를 사용하여 개발하였다.**
-
-
+```markdown
+프로젝트 전반에 걸쳐 , 프론트엔드와 백엔드의 독립적인 개발 , Restful한 API를 만들고자 Spring Hatoas를 사용하여 개발하였다.
+```
+ 
 ### Spring Security + Oauth2.0 + JWT
 - Oauth 소셜을 통한 로그인 및 회원가입/로그 아웃/회원 탈퇴
 - JWT 토큰을 이용한 Authentication & Authorization (access token, refresh token 생성)
