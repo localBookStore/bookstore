@@ -5,6 +5,7 @@ import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.coupon.CouponRepository;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
+import com.webservice.bookstore.domain.entity.member.MemberRole;
 import com.webservice.bookstore.web.dto.CouponAddDto;
 import com.webservice.bookstore.web.dto.CouponDto;
 import javassist.NotFoundException;
@@ -41,7 +42,9 @@ public class CouponService {
 
         members.forEach(member -> {
             Coupon savedCoupon = savedNewCoupon(couponDto);
-            member.addCoupon(savedCoupon);
+            if (member.getRole() == MemberRole.USER) {
+                member.addCoupon(savedCoupon);
+            }
         });
     }
 
