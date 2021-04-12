@@ -58,7 +58,7 @@ const CartPage = ({ location, history }) => {
       .get("http://localhost:8080/api/coupon", {
         headers: { Authorization: token },
       })
-      .then((res) => console.log(res))//setCoupons([...coupons, ...res.data]))
+      .then((res) => setCoupons([...coupons, ...res.data]))
       .catch((err) => console.log("에러", err.response));
   };
 
