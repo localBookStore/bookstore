@@ -37,7 +37,8 @@
 
 ## 📜 API 설계도
 ![2021-04-12_02-26-35](https://user-images.githubusercontent.com/56857925/114314684-98db9a00-9b36-11eb-96cf-ed48bdb52037.jpg)
-![2021-04-12_02-27-35](https://user-images.githubusercontent.com/56857925/114314695-ac870080-9b36-11eb-81b2-fe52b2ceaafd.jpg)
+![2021-04-12_13-29-39](https://user-images.githubusercontent.com/56857925/114340756-35338a00-9b93-11eb-9598-84761590edeb.jpg)
+
 
 
 <br/>
