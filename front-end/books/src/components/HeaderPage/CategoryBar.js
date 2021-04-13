@@ -1,7 +1,7 @@
 import CategoryHoverDetail from "./CategoryHoverDetail";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
+import axios from "axios"
 
 import styled from "styled-components";
 
@@ -13,7 +13,7 @@ const CategoryBar = () => {
 	const hoverOff = () => setIsHover(false);
 
 	useEffect(() => {
-		getGenreBooks();
+		getGenreBooks()
 	}, []);
 
 	const getGenreBooks = async () => {

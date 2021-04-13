@@ -14,7 +14,6 @@ const LoginPage = ({ history }) => {
   
 
   const submitEvent = (data) => {
-    console.log(data)
     axios.post("http://localhost:8080/login", data)
       .then(res => {
         const token = res.headers.authorization

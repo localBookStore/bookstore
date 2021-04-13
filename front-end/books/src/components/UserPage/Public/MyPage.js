@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useHistory, Route, Switch, NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
+import { MenuList, MenuItem } from "@material-ui/core"
 import { Button, Modal } from "react-bootstrap";
 import styled from "styled-components";
 
@@ -37,13 +38,22 @@ const MyPage = ({ match }) => {
   const { path } = match;
   return (
     <Container>
-      <div>회원을 관리하는 공간입니다.</div>
-      <SideBar>
-        <MenuButton to={{ pathname: `${path}/userinfo`, state: { token } }}>회원 정보</MenuButton>
-        <MenuButton to={{ pathname: `${path}/orderlist`, state:{ token }}}>구매 내역</MenuButton>
-        <MenuButton to={{ pathname: `${path}/mypost`, state: { token }}}>쓴 글보기</MenuButton>
-        <Button onClick={modalOpen}>회원탈퇴</Button>
-      </SideBar>
+      <MenuListStyled>
+        <MenuItem component={NavLink} to={{ pathname: `${path}/userinfo`, state:{ token}}}>
+          회원정보
+        </MenuItem>
+        
+        <MenuItem component={NavLink} to={{ pathname: `${path}/orderlist`, state:{ token }}}>
+          구매내역
+        </MenuItem>
+
+        <MenuItem component={NavLink} to={{ pathname: `${path}/mypost`, state: { token }}}>
+          쓴 글보기
+        </MenuItem>
+        <MenuItem onClick={modalOpen}>
+          회원탈퇴
+        </MenuItem>
+      </MenuListStyled>
       <Switch>
         <Route path={`${path}/userinfo`} component={UserInfo} />
         <Route path={`${path}/orderlist`} component={OrderList} />
@@ -77,9 +87,11 @@ const MyPage = ({ match }) => {
 };
 export default MyPage;
 
-const Container = styled.div``;
-const SideBar = styled.div``;
-const MenuButton = styled(NavLink)`
-  display: block;
-  margin: 10px;
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
+
+const MenuListStyled = styled(MenuList)`
+  margin: 30px 0;
+`

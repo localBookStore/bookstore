@@ -42,7 +42,7 @@ const DefaultPage = () => {
       })
       .then(() => {
         removeCookie("token");
-        console.log("로그아웃댐");
+        goHome()
       })
       .catch((err) => Comment.log("에러"));
 
