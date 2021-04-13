@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie"
 import axios from "axios";
 
+import { Table, TableHead, TableContainer, TableRow, TableCell, Paper } from "@material-ui/core";
 import styled from "styled-components";
 
 const OrderList = () => {
@@ -11,36 +12,36 @@ const OrderList = () => {
   const token = cookies.token
 
 	useEffect(() => {
-		axios
-			.get("http://localhost:8080/api/mypage/order", { headers: { Authorization: token } })
-        .then((res) => setOrders(res.data))
-        .catch((err) => console.log(err.response));
+		axios.get("http://localhost:8080/api/mypage/order", { headers: { Authorization: token } })
+      .then((res) => setOrders(res.data))
+      .catch((err) => console.log(err.response));
 	}, []);
 
-  return (
-		<Container>
-			<h3>주문 목록들 입니다.</h3>
-      <ItemTag>
-        <div>주문일자</div>
-        <div>도착지</div>
-        <div>배송상태</div>
-        <div>배송비</div>
-        <div></div>
-        <div></div>
-      </ItemTag>
-			{orders && orders.map((order, idx) => {
-					return <OrderPage order={order} setOrders={setOrders} key={idx} token={token} />;
-				})}
-		</Container>
-	);
+  return <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>주문일자</StyledTableCell>
+            <StyledTableCell>배송지</StyledTableCell>
+            <StyledTableCell>배송상태</StyledTableCell>
+            <StyledTableCell>배송비</StyledTableCell>
+            <StyledTableCell></StyledTableCell>
+          </TableRow>
+        </TableHead>
+        {orders && orders.map((order, idx) => {
+          return <OrderPage order={order} setOrders={setOrders} key={idx} token={token} />;
+        })}
+      </Table>
+  </TableContainer>
 };
 export default OrderList;
 
 const Container = styled.div`
   width: 100%;
 `;
-const ItemTag = styled.h4`
-	display: flex;
-  justify-content: space-between;
-  margin: 20px 0;
-`;
+
+const StyledTableCell = styled(TableCell)`
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+`

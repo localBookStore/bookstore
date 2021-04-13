@@ -23,25 +23,24 @@ const MyPage = ({ match }) => {
 
   const deleteAccount = (e) => {
     modalClose();
-    axios
-      .post(
-        "http://localhost:8080/api/withdrawal",
-        { password },
-        { headers: { Authorization: token } }
-      )
-      .then(() => {
-        removeCookie("token");
-        history.replace("/");
-      })
-      .catch((err) => console.log(err.response));
+    axios.post("http://localhost:8080/api/withdrawal",
+      { password },
+      { headers: { Authorization: token } }
+    )
+    .then(() => {
+      removeCookie("token");
+      history.replace("/");
+    })
+    .catch((err) => console.log(err.response));
   };
 
   const { path } = match;
+
   return (
 		<Container>
 			<MenuListStyled>
         <Sticky>
-          <Paper>
+          <StyledPaper elevation={2}>
             <MenuItemStyled component={NavLink} to={{ pathname: `${path}/userinfo`, state: { token } }}>
               회원정보
             </MenuItemStyled>
@@ -52,7 +51,7 @@ const MyPage = ({ match }) => {
               쓴 글보기
             </MenuItemStyled>
             <MenuItemStyled onClick={modalOpen}>회원탈퇴</MenuItemStyled>
-          </Paper>
+          </StyledPaper>
         </Sticky>
 			</MenuListStyled>
 
@@ -89,24 +88,22 @@ export default MyPage;
 
 const Container = styled.div`
   display: flex;
-  /* justify-content: space-between; */
-  
-  /* flex: 0 1; */
 `;
 
 const MenuListStyled = styled(MenuList)`
-  position: sticky;
-
   width: 150px;
-  margin-right: 20px;
+  margin-right: 40px;
 
-  /* background-color: #f48fb1; */
 `
 const MenuItemStyled = styled(MenuItem)`
   font-size: 20px;
   text-align: center;
-  background-color: #F7DFF7;
+  background-color: #F5E9F5;
 `
-const SwitchStyled = styled(Switch)`
-  margin: 20px;
+const SwitchStyled = styled(Switch)` 
+`
+
+const StyledPaper = styled(Paper)`
+  padding: 20px 0;
+  background-color: #F5E9F5;
 `

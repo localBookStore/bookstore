@@ -44,6 +44,7 @@ const OrderList = () => {
 export default OrderList;
 
 const Container = styled.div`
+  width: 100%;
 `
 const TagContainer = styled.div`
   display: flex;
