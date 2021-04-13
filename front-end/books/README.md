@@ -17,26 +17,27 @@ npm start
 ###  ⛪️ Library
 
 ```bash
-'react-router-dom' # Apply Domain Routing
-'axios' # Asynchronous Request
-'react-bootstrap' # Apply Carousel & modal
-'react-slick' # For a apply Multi Carousel (Like Netflix...)
-'slick-carousel' # react-slcik CSS
-'fontawesome 3 Pakage' # for react UI font
+'react-router-dom'        # Apply Domain Routing
+'axios'                   # Asynchronous Request
+'react-bootstrap'         # Apply Carousel & modal
+'react-slick'             # For a apply Multi Carousel (Like Netflix...)
+'slick-carousel'          # react-slcik CSS
+'fontawesome 3 Pakage'    # for react UI font
   '@fortawesome/fontawesome-svg-core'
   '@fortawesome/free-solid-svg-icons'
   '@fortawesome/react-fontawesome'
-'styled-components' # apply for CSS in js
-'poished'   # interactive utill funcion
-'qs'    # using query string (사용x)
-'react-cookie'  # Using Cookie in Browser
-'react-hook-form'   # for Using user input form
-'jwt-decode'    # Do jwt decode library (using find user info)
-'react-google-login'    # for social login of google
-'react-paginate'    # apply paginate of items
-'react-rating-starts-component' # apply rating star for react
-'react-icons'   # for react web icon
-'react-material-ui'	# using for various Form
+'styled-components'       # apply for CSS in js
+'poished'                 # interactive utill funcion
+'qs'                      # using query string (사용x)
+'react-cookie'            # Using Cookie in Browser
+'react-hook-form'         # for Using user input form
+'jwt-decode'              # Do jwt decode library (using find user info)
+'react-google-login'      # for social login of google
+'react-paginate'          # apply paginate of items
+'react-rating-starts-component'   # apply rating star for react
+'react-icons'             # for react web icon
+'react-material-ui'	      # using for various Form
+'react-sticky-el'         # for a stick-component
 ```
 
 
