@@ -39,20 +39,20 @@ const MyPage = ({ match }) => {
   return (
     <Container>
       <MenuListStyled>
-        <MenuItem component={NavLink} to={{ pathname: `${path}/userinfo`, state:{ token}}}>
+        <MenuItemStyled component={NavLink} to={{ pathname: `${path}/userinfo`, state:{ token}}}>
           회원정보
-        </MenuItem>
+        </MenuItemStyled>
         
-        <MenuItem component={NavLink} to={{ pathname: `${path}/orderlist`, state:{ token }}}>
+        <MenuItemStyled component={NavLink} to={{ pathname: `${path}/orderlist`, state:{ token }}}>
           구매내역
-        </MenuItem>
+        </MenuItemStyled>
 
-        <MenuItem component={NavLink} to={{ pathname: `${path}/mypost`, state: { token }}}>
+        <MenuItemStyled component={NavLink} to={{ pathname: `${path}/mypost`, state: { token }}}>
           쓴 글보기
-        </MenuItem>
-        <MenuItem onClick={modalOpen}>
+        </MenuItemStyled>
+        <MenuItemStyled onClick={modalOpen}>
           회원탈퇴
-        </MenuItem>
+        </MenuItemStyled>
       </MenuListStyled>
       <Switch>
         <Route path={`${path}/userinfo`} component={UserInfo} />
@@ -90,8 +90,14 @@ export default MyPage;
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
+
 `;
 
 const MenuListStyled = styled(MenuList)`
+  position: sticky;
+  top: 0;
   margin: 30px 0;
+`
+
+const MenuItemStyled = styled(MenuItem)`
 `
