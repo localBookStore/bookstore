@@ -67,7 +67,7 @@ const MyPage = ({ match }) => {
 				<Modal.Header closeButton>
           
 					<Modal.Title style={{fontSize:"30px"}}>
-            <StyledPanToolTwoToneIcon color="secondary" fontSize="large" /> 정말로 탈퇴하겠습니까?
+            <StyledPanToolTwoToneIcon color="secondary" fontSize="large" alt="멈춰!" /> 정말로 탈퇴하겠습니까?
           </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
