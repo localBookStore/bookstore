@@ -1,22 +1,24 @@
 import { useState } from "react"
-import { NavLink } from "react-router-dom"
+import { Link } from "react-router-dom"
 
-import { Button } from "react-bootstrap"
+import { Paper, Button } from "@material-ui/core"
 import styled, { keyframes } from "styled-components"
 
 const tagMap = ["총류", "철학", "종교", "사회과학", "자연과학", "기술과학", "예술", "언어", "문학", "역사"]
 
-const CategoryHoverDetail = ({genreData}) => {
+const CategoryHoverDetail = ({genreData, show}) => {
   const [choiceGenre, setChoiceGenre] = useState(null);
 
   const onHoverEvent = (idx) => {
-    setChoiceGenre(genreData[idx])
+    setTimeout(() => {
+      setChoiceGenre(genreData[idx])
+    }, 200)
   }
 
-  return <HoverComponent>
+  return <HoverComponent show={show}>
     <GenreTag>
       {genreData && tagMap.map((tagName, idx) => {
-        return <GenreButton variant="outline-primary" onMouseEnter={() => onHoverEvent(idx)} key={idx}>
+        return <GenreButton color="primary" onMouseEnter={() => onHoverEvent(idx)} key={idx}>
           {tagName}
         </GenreButton>
       })}
@@ -25,11 +27,12 @@ const CategoryHoverDetail = ({genreData}) => {
     <ItemsContainer>
       {choiceGenre && choiceGenre.map((item, idx) => {
         return <div key={idx}>
-          <ItemNavButton to={{pathname:`/detail/${item.id}`, state:{book:item}}}>
-            <ItemImage src={item.imageUrl} alt={idx} />
-          </ItemNavButton>
+          <Link to={{pathname:`/detail/${item.id}`, state:{book:item}}}>
+            <StyledPaper component={ItemImage} src={item.imageUrl} elevation={1}></StyledPaper>
+          </Link>
           <ItemTitle>{item.name}</ItemTitle>
-        </div> 
+        </div>
+          
       })}
       </ItemsContainer>
   </HoverComponent>
@@ -37,40 +40,46 @@ const CategoryHoverDetail = ({genreData}) => {
 export default CategoryHoverDetail;
 
 
-const slideUp = keyframes`
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
+const slideDown = keyframes`
+	0% {
+		transform: translateY(-100%);
+	}
+	50%{
+		transform: translateY(8%);
+	}
+	65%{
+		transform: translateY(-4%);
+	}
+	80%{
+		transform: translateY(4%);
+	}
+	95%{
+		transform: translateY(-2%);
+	}			
+	100% {
+		transform: translateY(0%);
+	}		
 `
 
 const HoverComponent = styled.div`
   position: absolute;
-  
-  top: 30px;
+  display: ${props => props.show ? "block" : "none"};
 
+  top: -10px;
   left: 100px;
-  margin: 0;
 
-  background-color: rgba(235, 235, 235, 0.95);
+  background-color: #e8eaf6;
   border-radius: 10px;
   width:90%;
-  height: 400px;
 
-  animation-duration: 0.3s;
+  animation-duration: 1.5s;
   animation-timing-function: ease-out;
-  animation-name: ${slideUp};
+  animation-name: ${slideDown};
 `
 const GenreTag = styled.div`
   float:left;
 
   width:10%;
-  height:100%;
   display: flex;
   flex-direction: column;
   
@@ -80,29 +89,29 @@ const GenreTag = styled.div`
 const GenreButton = styled(Button)`
   border:0 none;
   background-color: transparent;
-  height:10%;
+  /* height:10%; */
   
   font-weight: bolder;
 
   &:hover {
-    background-color:"#B3DFFF"
+    background-color:#9fa8da
   }
 `
 const ItemsContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
 `
-
-const ItemNavButton = styled(NavLink)`
-
+const StyledPaper = styled(Paper)`
+  
 `
 const ItemImage = styled.img`
   margin: 20px;
-  width:200px;
-  height: 310px;
+  width:160px;
+  height: 240px;
   object-fit: cover;
-
 `
 const ItemTitle = styled.div`
-
+  margin: 5px 0;
+  font-size: 20px;
+  font-family: 'Sunflower', sans-serif;
 `

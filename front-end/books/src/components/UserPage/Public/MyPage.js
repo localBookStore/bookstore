@@ -7,9 +7,10 @@ import { useHistory, Route, Switch, NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Sticky from "react-sticky-el"
 
-import { MenuList, MenuItem, Paper } from "@material-ui/core"
-import { Button, Modal } from "react-bootstrap";
-import styled from "styled-components";
+import PanToolTwoToneIcon from '@material-ui/icons/PanToolTwoTone';
+import { MenuList, MenuItem, Paper,TextField, Button } from "@material-ui/core"
+import { Modal } from "react-bootstrap";
+import styled, { keyframes } from "styled-components";
 
 const MyPage = ({ match }) => {
   const history = useHistory();
@@ -64,19 +65,30 @@ const MyPage = ({ match }) => {
 
 			<Modal show={show} onHide={modalClose} size="lg">
 				<Modal.Header closeButton>
-					<Modal.Title>정말로 탈퇴하겠습니까?</Modal.Title>
+          
+					<Modal.Title style={{fontSize:"30px"}}>
+            <StyledPanToolTwoToneIcon color="secondary" fontSize="large" alt="멈춰!" /> 정말로 탈퇴하겠습니까?
+          </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					탈퇴시 개인정보와 함께 모든 이용내역이 지워집니다.
-					<br />
-					마지막으로 PASSWORD를 입력하시고 회원 탈퇴를 눌러주세요.
-					<input type="password" onChange={(e) => setPassword(e.target.value)} />
+					<Title>
+            탈퇴시 개인정보와 함께 모든 이용내역이 지워집니다.<br />
+					  마지막으로 <Title2>회원님의 비밀번호</Title2> 입력하시고 회원 탈퇴를 눌러주세요.
+          </Title>
+          <TextField 
+            type="password"
+            label="Your Password!!" 
+            variant="outlined" 
+            required
+            onChange={(e) => setPassword(e.target.value)} 
+            />
+					
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="danger" onClick={deleteAccount}>
+					<Button color="secondary" size="large" onClick={deleteAccount}>
 						회원탈퇴
 					</Button>
-					<Button variant="secondary" onClick={modalClose}>
+					<Button size="large" onClick={modalClose}>
 						취소
 					</Button>
 				</Modal.Footer>
@@ -106,4 +118,28 @@ const SwitchStyled = styled(Switch)`
 const StyledPaper = styled(Paper)`
   padding: 20px 0;
   background-color: #F5E9F5;
+`
+const animate = keyframes`
+  0% {
+    transform: scale(1.0);
+  }
+  50%{
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1.0);
+  }
+
+`
+const StyledPanToolTwoToneIcon = styled(PanToolTwoToneIcon)`
+  animation: ${animate} 2s linear infinite; 
+`
+
+const Title = styled.div`
+  margin: 30px 10px;
+  font-size: 20px;
+`
+const Title2 = styled.span`
+  font-size: 22px;
+  font-weight: bold;
 `

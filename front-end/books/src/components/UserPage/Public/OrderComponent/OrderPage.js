@@ -11,7 +11,7 @@ const DeliveryBar = ({status, percent}) => {
       상품 준비중...
     </Section>
   } else if (status === "CANCEL"){
-    return <Section>
+    return <Section color="#a02725">
       상품이 취소되었습니다.
     </Section>
   } else if (status === "SHIPPING" && percent < 100){
@@ -26,6 +26,7 @@ const DeliveryBar = ({status, percent}) => {
 }
 
 const ModalPage = ({show, showOff, items, status, progress}) => {
+  
   return (
     <Modal
       onHide={showOff}
@@ -33,29 +34,43 @@ const ModalPage = ({show, showOff, items, status, progress}) => {
       size="lg"
       centered
       scrollable
-    >
+      >
       <Modal.Header closeButton>
-        <Modal.Title>주문 상세내용</Modal.Title>
+        <Modal.Title style={{color:"#448aff", fontSize:"30px", fontWeight:"800"}}>Your Ordered List</Modal.Title>
       </Modal.Header>
       <Modal.Body>
           <DeliveryBar status={status} percent={progress} />
-          <Grid container >
+          <ContainerGrid container >
           {items.map((item, idx) => {
             const { orderedItem } = item
-            return <Grid container item spacing={2} key={idx}>
+            return <ItemGrid container item alignItems="center" key={idx}>
               <Grid xs={6} item>
                 <ModalImage src={orderedItem.imageUrl} alt={item.title}/>
               </Grid>
               <Grid xs={6} item>
-                <ModalContent>{orderedItem.name}</ModalContent>
-                <ModalContent>{orderedItem.price}원</ModalContent> 
+                <ModalContent 
+                  fontSize="28px"
+                  color="#616161"
+                  >{orderedItem.name}</ModalContent>
+                <ModalContent 
+                  fontSize="16px"
+                  color="#616161"
+                  >{orderedItem.author}</ModalContent>
+                <ModalContent 
+                  fontSize="16px"
+                  color="#616161"
+                  >{orderedItem.publisher}</ModalContent>
+                <ModalContent 
+                  fontSize="16px"
+                  colo="#616161"
+                  >{orderedItem.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</ModalContent> 
               </Grid>
-            </Grid>
+            </ItemGrid>
           })}
-          </Grid>
+          </ContainerGrid>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={showOff}>Close</Button>
+        <Button color="secondary" onClick={showOff}>Close</Button>
       </Modal.Footer>
     </Modal>
   );
@@ -97,8 +112,10 @@ const OrderPage = ({order, setOrders, token}) => {
 export default OrderPage;
 
 const ModalContent = styled.div`
-  font-size: 24px;
-  text-align: center;
+  margin: 30px 0;
+  font-size: ${props => props.fontSize };
+  color: ${props => props.color};
+  font-family: "Sunflower", sans-serif;
 `
 
 const ModalImage = styled.img`
@@ -107,8 +124,10 @@ const ModalImage = styled.img`
 const Section = styled.div`
   margin: 20px;
   vertical-align: center;
+
   font-size: 22px;
   font-family: "Sunflower", sans-serif;
+  color: ${props => "black" && props.color }
 `
 const StyledTableCell = styled(TableCell)`
   font-size: 18px;
@@ -132,10 +151,11 @@ const StyledButton = styled(Button)`
 `
 
 const StyledProgressBar = styled(ProgressBar)`
-  height: 30px;
+  height: 25px;
 `
 
 const ItemGrid = styled(Grid)`
+  margin: 10px;
 `
 const ContainerGrid = styled(Grid)`
   

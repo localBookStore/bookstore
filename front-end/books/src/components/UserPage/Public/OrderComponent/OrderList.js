@@ -36,10 +36,6 @@ const OrderList = () => {
 };
 export default OrderList;
 
-const Container = styled.div`
-  width: 100%;
-`;
-
 const StyledTableCell = styled(TableCell)`
   font-size: 20px;
   font-weight: bold;

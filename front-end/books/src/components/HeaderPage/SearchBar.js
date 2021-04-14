@@ -42,6 +42,8 @@ const SearchBar = () => {
 			</SelectTag>
 			<SearchInput 
       style={{ fontSize: "23px"}}
+      variant="outlined"
+      label="Search"
       placeholder="Search..." 
       
       onKeyPress={enterEvent}
