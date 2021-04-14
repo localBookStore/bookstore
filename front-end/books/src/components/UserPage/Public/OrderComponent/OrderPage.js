@@ -1,26 +1,26 @@
 import { useState } from "react"
 import axios from "axios"
 
-import { Button, TableBody, TableRow, TableCell } from "@material-ui/core"
+import { Button, TableBody, TableRow, Paper, TableCell, Grid } from "@material-ui/core"
 import { Modal, ProgressBar } from "react-bootstrap"
 import styled from "styled-components"
 
 const DeliveryBar = ({status, percent}) => {
   if (status === "READY"){
     return <Section>
-      상품 준비중
+      상품 준비중...
     </Section>
   } else if (status === "CANCEL"){
     return <Section>
-      취소됨
+      상품이 취소되었습니다.
     </Section>
   } else if (status === "SHIPPING" && percent < 100){
     return <Section>
-      <ProgressBar animated variant="info" now={percent} label={`${percent}%`} />
+      <StyledProgressBar animated variant="info" now={percent} label={`${percent}%`} />
     </Section>
   } else{
     return <Section>
-      <ProgressBar animated now={100} label="100%" />
+      <StyledProgressBar animated now={100} label="100%" />
     </Section>
   }
 }
@@ -39,17 +39,20 @@ const ModalPage = ({show, showOff, items, status, progress}) => {
       </Modal.Header>
       <Modal.Body>
           <DeliveryBar status={status} percent={progress} />
+          <Grid container >
           {items.map((item, idx) => {
             const { orderedItem } = item
-        
-            return <ModalContainer key={idx}>
-              <ModalImage src={orderedItem.imageUrl} />
-              <ModalContent>{orderedItem.name}</ModalContent>
-              <ModalContent>{orderedItem.price}원</ModalContent>
-              <ModalContent>{}</ModalContent>
-            </ModalContainer>
+            return <Grid container item spacing={2} key={idx}>
+              <Grid xs={6} item>
+                <ModalImage src={orderedItem.imageUrl} alt={item.title}/>
+              </Grid>
+              <Grid xs={6} item>
+                <ModalContent>{orderedItem.name}</ModalContent>
+                <ModalContent>{orderedItem.price}원</ModalContent> 
+              </Grid>
+            </Grid>
           })}
-
+          </Grid>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={showOff}>Close</Button>
@@ -93,22 +96,19 @@ const OrderPage = ({order, setOrders, token}) => {
 }
 export default OrderPage;
 
-
-const ModalContainer = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-`
 const ModalContent = styled.div`
-
+  font-size: 24px;
+  text-align: center;
 `
+
 const ModalImage = styled.img`
-  width: 200px;
-  height: 350px;
-  object-fit: cover;
+  width: 300px;
 `
 const Section = styled.div`
   margin: 20px;
+  vertical-align: center;
+  font-size: 22px;
+  font-family: "Sunflower", sans-serif;
 `
 const StyledTableCell = styled(TableCell)`
   font-size: 18px;
@@ -129,4 +129,14 @@ const StyledTableCell = styled(TableCell)`
 `
 const StyledButton = styled(Button)`
   margin: 0 10px;;
+`
+
+const StyledProgressBar = styled(ProgressBar)`
+  height: 30px;
+`
+
+const ItemGrid = styled(Grid)`
+`
+const ContainerGrid = styled(Grid)`
+  
 `
