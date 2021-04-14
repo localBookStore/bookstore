@@ -34,11 +34,8 @@ const DefaultPage = () => {
 
   const logoutEvent = () => {
     const token = cookies.token;
-    axios
-      .post("http://localhost:8080/logout", null, {
-        headers: {
-          Authorization: token,
-        },
+    axios.post("http://localhost:8080/logout", null, {
+        headers: { Authorization: token },
       })
       .then(() => {
         removeCookie("token");

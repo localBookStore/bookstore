@@ -203,7 +203,7 @@ const IconDiv = styled.div`
 `
 
 const FormContainer = styled(Container)`
-  margin: 5%;
+  margin: 5% auto;
 `
 const SubmitButton = styled(Button)`
 height: 40px;

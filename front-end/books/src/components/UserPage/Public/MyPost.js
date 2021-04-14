@@ -2,9 +2,12 @@ import { useState, useEffect } from "react"
 import { useCookies } from "react-cookie"
 import axios from "axios"
 
+import { TableContainer, Table, TableRow, TableHead, TableBody, TableCell, Paper } from "@material-ui/core"
+// import { Icons, BorderColor } from "react-icons";
+import { BorderColor } from '@material-ui/icons/';
 import styled from "styled-components"
 
-const OrderList = () => {
+const OrderList = ({ history }) => {
   const [articles, setArticles] = useState([])
   const [cookies] = useCookies(["token"])
   const { token } = cookies
@@ -20,43 +23,48 @@ const OrderList = () => {
     getUserPost()
   }, [])
 
-  return <Container>
-      <TagContainer>
-        <span>카테고리</span>
-        <span>게시글 명</span>
-        <span>내용</span>
-        <span>최근 날짜</span>
-      </TagContainer>
-    
+  const changeUrl = (id) => {
+    history.replace(`/community/detail/${id}`)
+  }
 
-    {articles.length ? <div>{
-      articles.map((article, idx) => {
-        return <ItemContent>
-          <span>{article.category}</span>
-          <span>{article.title}</span>
-          <span>{article.content}</span>
-          <span>{article.modifiedDate}</span>
-        </ItemContent>
-      })
-      }</div> : <div>등록된 게시글이 없습니다.</div>}
-  </Container>
+  return <TableContainer component={Paper}>
+    <Title><BorderColor fontSize="large" color="primary" /> 회원님의 쓴 글 목록입니다.</Title>
+		<Table>
+			<TableHead>
+				<TableRow>
+					<StyledHeadTableCell>카테고리</StyledHeadTableCell>
+					<StyledHeadTableCell>게시글 명</StyledHeadTableCell>
+					<StyledHeadTableCell>최근 날짜</StyledHeadTableCell>
+				</TableRow>
+			</TableHead>
+
+      <TableBody>
+        {articles.length > 0 ? articles.map((article, idx) => {
+          return <TableRow hover key={idx} onClick={() => changeUrl(article.id)}>
+            <StyledBodyTableCell>{article.category}</StyledBodyTableCell>
+            <StyledBodyTableCell>{article.title}</StyledBodyTableCell>
+            <StyledBodyTableCell>{article.modifiedDate}</StyledBodyTableCell>
+          </TableRow>
+        }) : null}
+      </TableBody>
+    </Table>
+	</TableContainer>
 };
 export default OrderList;
 
-const Container = styled.div`
-  width: 100%;
+const StyledHeadTableCell = styled(TableCell)`
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
 `
-const TagContainer = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-
-  font-size: 22px;
-  font-weight: 600;
+const StyledBodyTableCell = styled(TableCell)`
+  text-align: center;
+  font-size: 16px;
 `
-const ItemContent = styled.div`
-  display: flex;
-  justify-content: space-evenly;
 
+const Title = styled.div`
+  font-family: 'Sunflower', sans-serif;
 
-  margin: 10px 0;
+  font-size: 40px;
+  margin: 20px 30px;
 `

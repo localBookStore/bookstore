@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 const UserInfo = ({ location }) => {
   const [user, setUser] = useState(null);
+  
   useEffect(() => {
     getUserInfo();
   }, []);
