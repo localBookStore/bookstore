@@ -5,7 +5,6 @@ import axios from "axios"
 
 import { Button } from "@material-ui/core"
 import styled from "styled-components";
-import { SettingsBluetooth } from "@material-ui/icons";
 
 const CategoryBar = () => {
 	const [isHover, setIsHover] = useState(false);
@@ -13,12 +12,12 @@ const CategoryBar = () => {
 
 	const hoverOn = () => {
 		setTimeout(() => {
-			return setIsHover(true)
+			setIsHover(true)
 		}, 100)
 	}
 	const hoverOff = () => {
 		setTimeout(() => {
-			return setIsHover(false)
+			setIsHover(false)
 		}, 100)
 	}
 
@@ -33,13 +32,28 @@ const CategoryBar = () => {
 
 	return <AllContainer>
       <GenreContainer onMouseLeave={hoverOff}>
-				<GenreButton onMouseEnter={hoverOn}>장르별</GenreButton>
-				<CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} show={isHover} />
+				<GenreButton variant="contained" onMouseEnter={hoverOn}>장르별</GenreButton>
+				{genreData.length && <CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} show={isHover} />}
 			</GenreContainer>
 			
-			<NavButton component={NavLink} activeClassName={"selected"} to="/bestbooklist">베스트</NavButton>
-			<NavButton component={NavLink} activeClassName={"selected"} to="/newbooklist">최신작</NavButton>
-			<NavButton component={NavLink} activeClassName={"selected"} to="/community">커뮤니티</NavButton>
+			<NavButton
+				variant="contained"
+				component={NavLink} 
+				activeClassName={"selected"} 
+				to="/bestbooklist"
+				>베스트</NavButton>
+			<NavButton 
+				variant="contained" 
+				component={NavLink} 
+				activeClassName={"selected"} 
+				to="/newbooklist"
+				>최신작</NavButton>
+			<NavButton 
+				variant="contained" 
+				component={NavLink} 
+				activeClassName={"selected"} 
+				to="/community"
+				>커뮤니티</NavButton>
 
 		</AllContainer>
 };
@@ -52,7 +66,7 @@ const AllContainer = styled.div`
 	text-align: center;
 	z-index: 1;
 
-	margin: 30px 0 30px 0;
+	margin: 30px 0 50px 0;
 	padding: 0;
 
 	width: 100%;
@@ -63,23 +77,33 @@ const GenreContainer = styled.div`
 
 `
 const GenreButton = styled(Button)`
-font-size: 22px;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-weight: 700;
-	
+	font-size: 24px;
+	background-color: #ede7f6;
+
 	&:hover {
 		color: #2F6D91;
-		font-weight: 700;
 	}
 `
 const NavButton = styled(Button)`
-	color: black;
-	font-size: 22px;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-weight: 700;
+
+	color: black;
+	font-size: 24px;
+	background-color: #ede7f6;
+
 	z-index: -1;
 	text-decoration: none;
 
+	&:hover {
+		background-color: #c5cae9;
+		
+	}
+
 	&.selected {
-		color: #2F6D91;
-		font-weight: 700;
+		background-color: #bbdefb;
+		
 	}
 `;

@@ -49,9 +49,11 @@ const MyPage = ({ match }) => {
               구매내역
             </MenuItemStyled>
             <MenuItemStyled component={NavLink} to={{ pathname: `${path}/mypost`, state: { token } }}>
-              쓴 글보기
+              쓴글보기
             </MenuItemStyled>
-            <MenuItemStyled onClick={modalOpen}>회원탈퇴</MenuItemStyled>
+            <MenuItemStyled onClick={modalOpen}>
+              회원탈퇴
+            </MenuItemStyled>
           </StyledPaper>
         </Sticky>
 			</MenuListStyled>
@@ -103,21 +105,29 @@ const Container = styled.div`
 `;
 
 const MenuListStyled = styled(MenuList)`
-  width: 150px;
+  width: 100px;
   margin-right: 40px;
-
-`
+  
+  `
 const MenuItemStyled = styled(MenuItem)`
+  font-family: 'Jua', sans-serif;
   font-size: 20px;
-  text-align: center;
-  background-color: #F5E9F5;
+  font-weight: 500;
+  background-color: #ffecb3;
+
+  margin: 5px 0;
 `
 const SwitchStyled = styled(Switch)` 
 `
 
 const StyledPaper = styled(Paper)`
-  padding: 20px 0;
-  background-color: #F5E9F5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  height: auto;
+  border: 1px solid white;
+  background-color: #ffecb3;
 `
 const animate = keyframes`
   0% {

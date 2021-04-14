@@ -15,7 +15,7 @@ const CategoryHoverDetail = ({genreData, show}) => {
     }, 200)
   }
 
-  return <HoverComponent show={show}>
+  return <HoverComponent show={show ? 1 : 0} elevation={9}>
     <GenreTag>
       {genreData && tagMap.map((tagName, idx) => {
         return <GenreButton color="primary" onMouseEnter={() => onHoverEvent(idx)} key={idx}>
@@ -61,7 +61,7 @@ const slideDown = keyframes`
 	}		
 `
 
-const HoverComponent = styled.div`
+const HoverComponent = styled(Paper)`
   position: absolute;
   display: ${props => props.show ? "block" : "none"};
 

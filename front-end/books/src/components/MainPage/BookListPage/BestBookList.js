@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom"
 import axios from "axios";
 import { genreMap } from 'feature/GenreMap'
 
+import { Paper } from "@material-ui/core"
 import { Image, Table } from "react-bootstrap";
 import styled from "styled-components";
 
@@ -28,7 +29,8 @@ const BestBookList = () => {
         {books.map((book, idx) => (
           <tr key={idx}>
             <td><NavButton to={{pathname:`/detail/${book.id}`, state:{book}}}>
-              <ItemImage src={book.imageUrl}/>
+              <StyledPaper component={Image} src={book.imageUrl} elevation={8}>
+              </StyledPaper>
             </NavButton></td>
             <td><ItemContent>{book.name}</ItemContent></td>
             <td><ItemContent>{genreMap[book.category_id]}</ItemContent></td>
@@ -52,7 +54,7 @@ const Container = styled(Table)`
   } 
 `
 
-const ItemImage = styled(Image)`
+const StyledPaper = styled(Paper)`
   width: 180px;
   height: 220px;
   object-fit: cover;
