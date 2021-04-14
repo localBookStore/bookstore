@@ -7,9 +7,10 @@ import { useHistory, Route, Switch, NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Sticky from "react-sticky-el"
 
+import PanToolTwoToneIcon from '@material-ui/icons/PanToolTwoTone';
 import { MenuList, MenuItem, Paper } from "@material-ui/core"
 import { Button, Modal } from "react-bootstrap";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const MyPage = ({ match }) => {
   const history = useHistory();
@@ -64,7 +65,10 @@ const MyPage = ({ match }) => {
 
 			<Modal show={show} onHide={modalClose} size="lg">
 				<Modal.Header closeButton>
-					<Modal.Title>정말로 탈퇴하겠습니까?</Modal.Title>
+          
+					<Modal.Title style={{fontSize:"30px"}}>
+            <StyledPanToolTwoToneIcon color="secondary" fontSize="large" /> 정말로 탈퇴하겠습니까?
+          </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					탈퇴시 개인정보와 함께 모든 이용내역이 지워집니다.
@@ -106,4 +110,21 @@ const SwitchStyled = styled(Switch)`
 const StyledPaper = styled(Paper)`
   padding: 20px 0;
   background-color: #F5E9F5;
+`
+const animate = keyframes`
+  0% {
+    transform: scale(1.0);
+  }
+  50%{
+    transform: scale(1.5);
+  }
+  
+  100% {
+    transform: scale(1.0);
+  }
+
+`
+const StyledPanToolTwoToneIcon = styled(PanToolTwoToneIcon)`
+  animation: ${animate} 3s linear infinite;
+  
 `
