@@ -17,14 +17,12 @@ import MyPage from "./components/UserPage/Public/MyPage";
 import AdminPage from "./components/UserPage/Admin/AdminPage";
 
 import { Route, Switch } from "react-router-dom";
-import ScrollToTop from "./ScrollToTop";
 
 import styled from "styled-components";
 
 const App = () => {
   return (
     <AppContainer>
-      {/* <ScrollToTop /> */}
       <DefaultPage />
       <Header />
       <Switch>

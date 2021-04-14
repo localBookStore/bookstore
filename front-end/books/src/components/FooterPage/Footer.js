@@ -9,22 +9,21 @@ const Footer = () => {
 export default Footer;
 
 const FooterContainer = styled.div`
-  position: relative;
-
-  width: 100%;
-  height: 88px;
+  display: center;
+  height: 100px;
+  text-align: center;
+  align-items: center;
   `
 
 const TeamTitle = styled.span`
-  position: absolute;
   top:50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
-  font-size: 12px;
+  vertical-align: center;
+  font-size: 14px;
   font-weight: 800;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  transform: translate(-50%, -50%);
   color: #777;
 `
 const ClassifyLine = styled.hr`

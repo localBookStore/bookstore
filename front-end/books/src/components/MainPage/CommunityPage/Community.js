@@ -37,7 +37,7 @@ const Community = ({ history }) => {
               <td>{article.replyCount}</td>
             </tr>
           })}
-          </tbody>
+        </tbody>
       </Container>
       : <div>게시글이 없습니다.</div>
       }

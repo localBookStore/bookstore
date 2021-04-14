@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import axios from "axios"
 
-import {Avatar, Button, CssBaseline, TextField, Grid, Typography, Container} from '@material-ui/core';
+import {Avatar, Button, CssBaseline, TextField, Typography, Container} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import styled from "styled-components"
 
@@ -14,7 +14,6 @@ const LoginPage = ({ history }) => {
   
 
   const submitEvent = (data) => {
-    console.log(data)
     axios.post("http://localhost:8080/login", data)
       .then(res => {
         const token = res.headers.authorization
@@ -73,7 +72,7 @@ const IconDiv = styled.div`
   align-items: center;
 `
 const FormContainer = styled(Container)`
-  margin: 5%;
+  margin: 5% auto;
 `
 const SubmitButton = styled(Button)`
 height: 40px;

@@ -34,15 +34,12 @@ const DefaultPage = () => {
 
   const logoutEvent = () => {
     const token = cookies.token;
-    axios
-      .post("http://localhost:8080/logout", null, {
-        headers: {
-          Authorization: token,
-        },
+    axios.post("http://localhost:8080/logout", null, {
+        headers: { Authorization: token },
       })
       .then(() => {
         removeCookie("token");
-        console.log("로그아웃댐");
+        goHome()
       })
       .catch((err) => Comment.log("에러"));
 
