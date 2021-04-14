@@ -11,7 +11,7 @@ const DeliveryBar = ({status, percent}) => {
       상품 준비중...
     </Section>
   } else if (status === "CANCEL"){
-    return <Section>
+    return <Section color="#a02725">
       상품이 취소되었습니다.
     </Section>
   } else if (status === "SHIPPING" && percent < 100){
@@ -26,7 +26,7 @@ const DeliveryBar = ({status, percent}) => {
 }
 
 const ModalPage = ({show, showOff, items, status, progress}) => {
-  console.log(items)
+  
   return (
     <Modal
       onHide={showOff}
@@ -63,7 +63,7 @@ const ModalPage = ({show, showOff, items, status, progress}) => {
                 <ModalContent 
                   fontSize="16px"
                   colo="#616161"
-                  >{orderedItem.price}원</ModalContent> 
+                  >{orderedItem.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</ModalContent> 
               </Grid>
             </ItemGrid>
           })}
@@ -124,8 +124,10 @@ const ModalImage = styled.img`
 const Section = styled.div`
   margin: 20px;
   vertical-align: center;
+
   font-size: 22px;
   font-family: "Sunflower", sans-serif;
+  color: ${props => "black" && props.color }
 `
 const StyledTableCell = styled(TableCell)`
   font-size: 18px;
