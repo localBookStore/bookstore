@@ -45,7 +45,7 @@ const TopDetail = ({ book }) => {
         <Content>{author}</Content>
         <Content>{publisher}</Content>
         <Content>{genreMap[category_id]}</Content>
-        <Content>{price}</Content>
+        <Content>{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Content>
         <Content>{quantity}</Content>
         <OverlayTrigger
           placement="bottom"

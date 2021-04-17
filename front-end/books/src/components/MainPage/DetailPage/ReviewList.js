@@ -1,13 +1,12 @@
 import ReactStars from "react-rating-stars-component"
 import { useState, useEffect } from "react"
+import { useCookies } from "react-cookie"
+import jwtDecode from "jwt-decode"
 import axios from "axios"
 import Review from "./Review"
 
-import { Button } from "react-bootstrap"
+import { TextField, Button } from '@material-ui/core'
 import styled from "styled-components";
-import React from "react"
-import { useCookies } from "react-cookie"
-import jwtDecode from "jwt-decode"
 
 const BottomDetail = ({ book }) => {
   const [cookies] = useCookies(["token"])
@@ -54,8 +53,19 @@ const BottomDetail = ({ book }) => {
     }
     {token !== undefined && <Wrap>
       <ReactStars {...config} />
-      <ReviewInput onChange={e => setContent(e.target.value)}/>
-      <SubmitButton onClick={submitEvent}>댓글쓰기</SubmitButton>
+      <ReviewInput 
+        label="Review"
+        variant="outlined"
+        required
+        onChange={e => setContent(e.target.value)}
+        />
+      <SubmitButton 
+        color="primary"
+        variant="contained"
+        onClick={submitEvent}
+        >
+          댓글 쓰기
+        </SubmitButton>
     </Wrap>}
   </Container>
 }
@@ -64,8 +74,8 @@ export default BottomDetail;
 const Container = styled.div`
   
 `
-const ReviewInput = styled.input`
-  height: 8vh;
+const ReviewInput = styled(TextField)`
+  height: 50px;
   width: 30%;
 
   margin: 0 20px;

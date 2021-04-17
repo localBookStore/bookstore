@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom"
 import axios from "axios";
 import { genreMap } from "feature/GenreMap"
 
+import { Paper } from "@material-ui/core"
 import { Image, Table } from "react-bootstrap";
 import styled from "styled-components";
 
@@ -28,7 +29,7 @@ const NewBookList = () => {
           {books.map((book, idx) => (
             <tr key={idx}>
               <td><NavButton to={{pathname:`/detail/${book.id}`, state:{book}}}>
-                <ItemImage src={book.imageUrl}/>
+                <Paper elevation={8}><ItemImage src={book.imageUrl}/></Paper>
               </NavButton></td>
               <td><ItemContent>{book.name}</ItemContent></td>
               <td><ItemContent>{genreMap[book.category_id]}</ItemContent></td>
