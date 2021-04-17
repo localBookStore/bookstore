@@ -12,7 +12,7 @@ const SlideItems = () => {
   const [promoteImage, setPromoteImage] = useState(false)
   
   useEffect(() => {
-    axios.get("http://localhost:8080/api/index/image/")
+    axios.get("http://localhost:8888/api/index/image/")
       .then(res => setPromoteImage(res.data))
       .catch(err => console.log(err))
   }, [])
