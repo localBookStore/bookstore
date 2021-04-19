@@ -104,6 +104,5 @@ const NavButton = styled(Button)`
 
 	&.selected {
 		background-color: #bbdefb;
-		
 	}
 `;
