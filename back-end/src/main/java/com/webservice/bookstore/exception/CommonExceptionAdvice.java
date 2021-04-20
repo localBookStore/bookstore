@@ -27,7 +27,7 @@ public class CommonExceptionAdvice  {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
+    @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class, AfterDateException.class})
     public ErrorResponse badRequestHandler(Exception e) {
         log.error(e.getMessage(), e);
         return new ErrorResponse(400, e.getMessage());

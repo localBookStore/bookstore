@@ -2,6 +2,7 @@ package com.webservice.bookstore.web.controller;
 
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.exception.AfterDateException;
 import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.service.MemberService;
@@ -11,6 +12,7 @@ import com.webservice.bookstore.web.dto.EmailDto;
 import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,6 +24,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Log4j2
@@ -77,12 +80,15 @@ public class MemberController {
         String savedCode = redisUtil.getData(certificateCode);
         if (!certificateCode.equals(savedCode)) {
             throw new IllegalArgumentException("인증코드가 맞지 않습니다.");
+        } else if (StringUtils.isEmpty(savedCode)) {
+            throw new AfterDateException("입력 시간이 초과되었습니다.");
         }
 
         redisUtil.deleteData(certificateCode);
         return ResponseEntity.ok("인증 성공하였습니디.");
 
     }
+
 
     @PostMapping("/withdrawal")
     public ResponseEntity withDrawal(@RequestBody(required = false) WithdrawalRequest withdrawalRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
