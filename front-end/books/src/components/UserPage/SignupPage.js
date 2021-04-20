@@ -50,10 +50,6 @@ const SignupPage = ({ history }) => {
       email: EMAIL.current
     })
       .then(() => {
-        setIsCheck({
-          ...isCheck,
-          checkCode: true
-        })
         setIsLoading(false)
         alert("이메일에 인증코드를 전송하였습니다.")
       })
@@ -125,11 +121,10 @@ const SignupPage = ({ history }) => {
           name="authCode" 
           inputRef={register()} 
           placeholder={isCheck.overLab ? "인증코드 입력" : "중복확인을 하세요"} 
-          readOnly={!isCheck.overLab} 
           disabled={isCheck.checkCode}
         />
 
-        {isCheck.checkCode ? <Button color="secondary" onClick={checkEmailCode}>인증 확인하기</Button> : <span>인증확인</span>}
+        {!isCheck.checkCode ? <Button color="secondary" onClick={checkEmailCode}>인증 확인하기</Button> : <span>인증확인</span>}
       </div>
 
       <TextField
