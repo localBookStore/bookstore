@@ -11,7 +11,7 @@ const SearchBar = () => {
   const history = useHistory();
 
   const getBookList = () => {
-    axios.get("http://localhost:8080/api/items/", {params:{ input, tag }})
+    axios.get("api/items/", {params:{ input, tag }})
       .then(res => {
         const books = res.data._embedded.defaultList
         history.push({
