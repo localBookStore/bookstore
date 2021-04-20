@@ -23,7 +23,7 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     List<Item> findByCategoryId(Long id);
 
 
-    @Query(value = "select * from Item i order by i.view_count desc limit 30", nativeQuery = true)
+    @Query(value = "select * from item i order by i.view_count desc limit 30", nativeQuery = true)
     List<Item> getBestItems();
 
     @Query("select i from Item i join fetch i.category ic where i.id = :id")
@@ -31,7 +31,7 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
 
 //    List<Item> findByIdIn(List<Long> itemIdList);
 
-    @Query(value = "select * from Item i order by i.publication_date desc limit 30", nativeQuery = true)
+    @Query(value = "select * from item i order by i.publication_date desc limit 30", nativeQuery = true)
     List<Item> getNewItems();
 
 
