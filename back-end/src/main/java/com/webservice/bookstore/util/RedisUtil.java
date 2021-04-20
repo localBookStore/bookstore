@@ -17,7 +17,7 @@ public class RedisUtil {
     private final RedisTemplate<String, String> redisTemplate;
 
     public String getData(String key){
-        return redisTemplate.opsForValue().get(key);
+        return stringRedisTemplate.opsForValue().get(key);
     }
 
     public void setData(String key, String value, Long time){
