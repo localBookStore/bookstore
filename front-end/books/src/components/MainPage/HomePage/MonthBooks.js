@@ -16,7 +16,7 @@ const MonthBooks = () => {
 
   useEffect(() => {
     const getImage = async () => {
-      await axios.get("http://15.164.6.3:8080/api/index/thismonth/")
+      await axios.get("api/index/thismonth/")
         .then(res => setImages(res.data))
         .catch(err => console.log(err))
     }

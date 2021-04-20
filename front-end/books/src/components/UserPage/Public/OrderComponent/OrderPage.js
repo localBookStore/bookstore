@@ -84,7 +84,7 @@ const OrderPage = ({order, setOrders, token}) => {
 
   
   const cancelOrder = () => {
-    axios.patch(`http://localhost:8080/api/mypage/order/${id}`,null ,{ headers:{ Authorization: token }})
+    axios.patch(`api/mypage/order/${id}`,null ,{ headers:{ Authorization: token }})
     .then(res => setOrders(res.data))
     .catch(err => console.log(err.response))
   }

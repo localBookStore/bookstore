@@ -19,7 +19,7 @@ const EachComments = ({ comment, setComments, submitEvent, boardId }) => {
 
 	const modifyEvent = () => {
 		const memberEmail = jwtDecode(token).sub
-		axios.put("http://localhost:8080/api/board/reply/modify", {
+		axios.put("api/board/reply/modify", {
 			memberEmail,
 			content: newContent,
 			id: comment.id,

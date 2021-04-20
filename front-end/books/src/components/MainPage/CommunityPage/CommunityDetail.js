@@ -15,7 +15,7 @@ const CommunityDetail = ({ match }) => {
   const [comments, setComments] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/board/${articleId}/`)
+    axios.get(`api/board/${articleId}/`)
       .then(res => {
         setArticle(res.data[0]);
         setComments(res.data[1]);

@@ -13,7 +13,7 @@ const UserInfo = ({ location }) => {
 
   const getUserInfo = () => {
     axios
-      .get("http://localhost:8080/api/mypage", {
+      .get("api/mypage", {
         headers: { Authorization: location.state.token },
       })
       .then((res) => setUser(res.data))

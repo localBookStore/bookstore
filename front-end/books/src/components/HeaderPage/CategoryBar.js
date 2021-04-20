@@ -26,7 +26,7 @@ const CategoryBar = () => {
 	}, []);
 
 	const getGenreBooks = async () => {
-		const { data } = await axios.get("http://localhost:8080/api/index/genre/");
+		const { data } = await axios.get("api/index/genre/");
 		setGenreData(data);
 	};
 

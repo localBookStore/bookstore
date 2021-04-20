@@ -12,7 +12,7 @@ const OrderList = () => {
   const token = cookies.token
 
 	useEffect(() => {
-		axios.get("http://localhost:8080/api/mypage/order", { headers: { Authorization: token } })
+		axios.get("api/mypage/order", { headers: { Authorization: token } })
       .then((res) => setOrders(res.data))
       .catch((err) => console.log(err.response));
 	}, []);

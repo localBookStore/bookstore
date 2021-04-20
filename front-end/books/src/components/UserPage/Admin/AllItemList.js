@@ -14,7 +14,7 @@ const AllItemList = ({ location }) => {
   const [selected, setSelected] = useState(new Set());
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/admin/items", {
+    axios.get("api/admin/items", {
       headers: {
         Authorization: token
       }
@@ -32,7 +32,7 @@ const AllItemList = ({ location }) => {
   const deleteItem = () => {
     console.log([...selected]);
     axios
-      .delete("http://localhost:8080/api/admin/items", {
+      .delete("api/admin/items", {
         headers: {
           Authorization: token,
         },

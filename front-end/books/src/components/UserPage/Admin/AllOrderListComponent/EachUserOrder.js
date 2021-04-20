@@ -32,12 +32,12 @@ const EachUserOrder = ({order, setOrders, token}) => {
 	const showOff = () => setModalShow(false);
 
   const acceptOrder = () => {
-    axios.patch(`http://localhost:8080/api/admin/orders/shipping/${order.id}`, null, {headers: {Authorization: token}})
+    axios.patch(`api/admin/orders/shipping/${order.id}`, null, {headers: {Authorization: token}})
       .then(res => setOrders(res.data))
       .catch(err => console.log(err.response))
   };
 	const cancelOrder = () => {
-    axios.patch(`http://localhost:8080/api/admin/orders/cancel/${order.id}`, null, {headers: {Authorization: token}})
+    axios.patch(`api/admin/orders/cancel/${order.id}`, null, {headers: {Authorization: token}})
       .then(res => setOrders(res.data))
       .catch(err => console.log(err.response))
   };

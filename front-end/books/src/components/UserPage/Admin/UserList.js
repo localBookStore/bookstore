@@ -11,7 +11,7 @@ const UserList = ({ location }) => {
   const [selectIdx, setSelectIdx] = useState(-1);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/admin/members/", {
+    axios.get("api/admin/members/", {
       headers: {
         Authorization: token,
       }

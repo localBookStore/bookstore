@@ -11,7 +11,7 @@ const NewBookList = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/index/newitems/`)
+    axios.get(`api/index/newitems/`)
       .then(({data: { _embedded: { defaultList }}}) => setBooks(defaultList))
       .catch(err => console.log(err))
   }, [])

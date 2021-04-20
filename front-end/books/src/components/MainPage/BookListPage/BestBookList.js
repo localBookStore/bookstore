@@ -11,7 +11,7 @@ const BestBookList = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/index/bestitems/`)
+    axios.get(`api/index/bestitems/`)
       .then(({data: { _embedded: { defaultList }}}) => setBooks(defaultList))
       .catch(err => console.log(err))
   }, [])
