@@ -12,7 +12,7 @@ const ArticleDetail = ({ article, token }) => {
   const { category, content, createdDate, title, id, memberEmail } = article
  
   const onClickEvent = () => {
-    axios.delete("http://localhost:8080/api/board/delete", {
+    axios.delete("api/board/delete", {
       data: {
         id,
         memberEmail:jwtDecode(token).sub,

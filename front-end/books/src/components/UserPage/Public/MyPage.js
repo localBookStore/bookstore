@@ -24,7 +24,7 @@ const MyPage = ({ match }) => {
 
   const deleteAccount = (e) => {
     modalClose();
-    axios.post("http://localhost:8080/api/withdrawal",
+    axios.post("api/withdrawal",
       { password },
       { headers: { Authorization: token } }
     )

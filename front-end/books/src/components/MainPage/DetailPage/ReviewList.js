@@ -21,14 +21,14 @@ const BottomDetail = ({ book }) => {
   }, [])
 
   const getReviewList = () => {
-    axios.get(`http://localhost:8080/api/items/reviews/${book.id}`)
+    axios.get(`api/items/reviews/${book.id}`)
       .then(res => setReviews(res.data))
       .catch(err => console.log(err.response))
   }
 
   const submitEvent = () => {
     const { sub } = jwtDecode(token)
-    axios.post("http://localhost:8080/api/items/register/review", {
+    axios.post("api/items/register/review", {
       itemId:book.id,
       memberEmail: sub,
       content,

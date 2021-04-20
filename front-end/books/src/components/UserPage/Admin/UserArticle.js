@@ -10,7 +10,7 @@ const UserArticle = ({ userInfo }) => {
   const { token } = cookies
 
   useEffect(() => {
-    axios.post("http://localhost:8080/api/admin/member/board", {
+    axios.post("api/admin/member/board", {
       memberEmail: userInfo.email
     }, { headers: { Authorization: token }})
     .then(res => setUserArticles(res.data))

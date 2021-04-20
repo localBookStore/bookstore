@@ -11,7 +11,7 @@ const AllOrderList = ({ location, match }) => {
   const URL = match.url
   
 	useEffect(() => {
-		axios.get("http://localhost:8080/api/admin/members", { headers: { Authorization: token } })
+		axios.get("api/admin/members", { headers: { Authorization: token } })
       .then(res => setUsers(res.data))
 			.catch(err => console.log(err.response));
 	}, []);

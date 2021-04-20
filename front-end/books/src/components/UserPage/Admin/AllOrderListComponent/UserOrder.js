@@ -8,7 +8,7 @@ const UserOrder = ({ location }) => {
 	const [orders, setOrders] = useState([]);
 	const { user, token } = location.state;
 	useEffect(() => {
-		axios.get(`http://localhost:8080/api/admin/members/${user.id}/orders`, { headers: { Authorization: token } })
+		axios.get(`api/admin/members/${user.id}/orders`, { headers: { Authorization: token } })
 			.then((res) => setOrders(res.data))
 			.catch((err) => console.log(err.response));
 	}, []);

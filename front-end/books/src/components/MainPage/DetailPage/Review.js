@@ -13,7 +13,7 @@ const Review = ({ review, itemId, token, setReviews }) => {
 	
 
 	const deleteEvent = () => {
-		axios.delete("http://localhost:8080/api/items/delete/review", {
+		axios.delete("api/items/delete/review", {
 				data: {
 					id: review.id,
 					itemId,

@@ -32,7 +32,7 @@ const SignupPage = ({ history }) => {
     const { overLab, checkCode } = isCheck
 
     if (overLab && checkCode) {
-      axios.post("http://localhost:8080/api/signup/", {
+      axios.post("api/signup/", {
         email,
         password,
         nickName,
@@ -46,7 +46,7 @@ const SignupPage = ({ history }) => {
 
   const sendEmailCode = () => {
     setIsLoading(true)
-    axios.post("http://localhost:8080/api/signup/request-certificated", {
+    axios.post("api/signup/request-certificated", {
       email: EMAIL.current
     })
       .then(() => {
@@ -61,7 +61,7 @@ const SignupPage = ({ history }) => {
   }
 
   const checkEmailCode = () => {
-    axios.post("http://localhost:8080/api/signup/check-certificated", {
+    axios.post("api/signup/check-certificated", {
       certificated: AUTHCODE.current
     })
       .then(() => setIsCheck({
@@ -72,7 +72,7 @@ const SignupPage = ({ history }) => {
   }
 
   const checkOverLab = () => {
-    axios.post("http://localhost:8080/api/signup/duplicated", {
+    axios.post("api/signup/duplicated", {
       email: EMAIL.current
     })
       .then(() => setIsCheck({

@@ -10,7 +10,7 @@ const Community = ({ history }) => {
   const section = ["글 번호", "분류", "제목", "작성시간", "댓글 수"]
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/board")
+    axios.get("api/board")
       .then(res => setArticles(res.data.dtoList))
       .catch(err => console.log(err.response))
   }, [])

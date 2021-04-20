@@ -13,7 +13,7 @@ const OrderList = ({ history }) => {
   const { token } = cookies
 
   const getUserPost = () => {
-    axios.get("http://localhost:8080/api/mypage/boards", {
+    axios.get("api/mypage/boards", {
       headers : { Authorization: token }
     })
     .then(res => setArticles(res.data))

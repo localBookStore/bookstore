@@ -23,7 +23,7 @@ const CommunityRegister = ({ history, location:{ state } }) => {
 	const summitEvent = () => {
     const memberEmail = jwtDecode(cookies.token).sub
 		
-    axios.put("http://localhost:8080/api/board/modify", {
+    axios.put("api/board/modify", {
       ...inputData,
       memberEmail,
     }, { headers: { Authorization: cookies.token }})

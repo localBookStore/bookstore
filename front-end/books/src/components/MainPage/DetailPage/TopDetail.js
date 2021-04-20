@@ -14,7 +14,7 @@ const TopDetail = ({ book }) => {
   const addCart = e => {
     const feature = e.target.name;
 
-    axios.post(`http://localhost:8080/api/cart/${id}/`, {
+    axios.post(`api/cart/${id}/`, {
       orderCount: 1
     }, { headers: { Authorization: cookies.token}})
       .then(() => {

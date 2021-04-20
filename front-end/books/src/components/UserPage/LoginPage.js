@@ -14,7 +14,7 @@ const LoginPage = ({ history }) => {
   
 
   const submitEvent = (data) => {
-    axios.post("http://localhost:8080/login", data)
+    axios.post("login", data)
       .then(res => {
         const token = res.headers.authorization
         setCookie("token", token)

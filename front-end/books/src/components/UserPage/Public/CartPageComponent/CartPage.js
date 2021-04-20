@@ -43,7 +43,7 @@ const CartPage = ({ location, history }) => {
 
   const getCartBook = () => {
     axios
-      .get("http://localhost:8080/api/cart/", { headers: { Authorization: token } })
+      .get("api/cart/", { headers: { Authorization: token } })
       .then((res) => {
         if (res.data) {
           setCartList(res.data);
@@ -55,7 +55,7 @@ const CartPage = ({ location, history }) => {
 
   const getCouponList = () => {
     axios
-      .get("http://localhost:8080/api/coupon", {
+      .get("api/coupon", {
         headers: { Authorization: token },
       })
       .then((res) => setCoupons([...coupons, ...res.data]))
@@ -64,7 +64,7 @@ const CartPage = ({ location, history }) => {
 
   const deleteCartBook = () => {
     axios
-      .delete(`http://localhost:8080/api/cart/`, {
+      .delete(`api/cart/`, {
         data: [...checkList],
         headers: { Authorization: token },
       })
@@ -84,7 +84,7 @@ const CartPage = ({ location, history }) => {
     const orderList = [];
     cartList.map(({ id, orderCount }) => checkList.includes(id) && orderList.push({ id, orderCount }));
 
-    axios.post("http://localhost:8080/api/order", {
+    axios.post("api/order", {
       orderList,
       address,
       coupon_id: selectedCoupon.id

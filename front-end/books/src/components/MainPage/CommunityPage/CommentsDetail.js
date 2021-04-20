@@ -11,7 +11,7 @@ const CommentsDetail = ({ comments, setComments, boardId, token }) => {
 
   const submitEvent = (depth, parent, content) => {
     const memberEmail = jwtDecode(token).sub
-    axios.post("http://localhost:8080/api/board/reply/comment", {
+    axios.post("api/board/reply/comment", {
       memberEmail,
       boardId,
       depth,

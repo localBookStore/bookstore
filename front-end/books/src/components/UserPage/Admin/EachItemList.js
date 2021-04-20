@@ -11,7 +11,7 @@ const EachItemList = ({ data, itemCheck, token }) => {
   const updateEvent = (e, imageUrl, id) => {
     setTimeout(() => {
       axios.put(
-          "http://localhost:8080/api/admin/items",
+          "api/admin/items",
           { ...e,
             imageUrl,
             id },

@@ -25,7 +25,7 @@ const CommunityRegister = ({ history }) => {
 	const summitEvent = () => {
     const memberEmail = jwtDecode(cookies.token).sub
 
-		axios.post("http://localhost:8080/api/board", {
+		axios.post("api/board", {
 				...inputData,
 				memberEmail,
 			})
