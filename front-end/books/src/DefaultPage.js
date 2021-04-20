@@ -29,7 +29,8 @@ const DefaultPage = () => {
   }, [cookies.token]);
 
   const goHome = () => {
-    history.push("/");
+    // history.push("/");
+    window.location.replace("/")
   };
 
   const logoutEvent = () => {
