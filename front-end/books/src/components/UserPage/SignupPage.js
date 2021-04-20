@@ -61,13 +61,14 @@ const SignupPage = ({ history }) => {
   }
 
   const checkEmailCode = () => {
+    console.log(AUTHCODE.current)
     axios.post("api/signup/check-certificated", {
       certificated: AUTHCODE.current
     })
-      .then(() => setIsCheck({
+    .then(() => setIsCheck({
         ...isCheck,
         checkCode: true
-        }))
+    }))
       .catch(() => alert("인증 코드가 다릅니다."))
   }
 
@@ -119,7 +120,15 @@ const SignupPage = ({ history }) => {
         <Typography display="inline" variant="body2">인증확인필요</Typography> 
       }
       <div>
-        <Input style={{marginLeft:"10px"}} placeholder={isCheck.overLab ? "인증코드 입력" : "중복확인을 하세요"} disabled={!isCheck.overLab}/>
+        <TextField 
+          style={{marginLeft:"10px"}} 
+          name="authCode" 
+          inputRef={register()} 
+          placeholder={isCheck.overLab ? "인증코드 입력" : "중복확인을 하세요"} 
+          readOnly={!isCheck.overLab} 
+          disabled={isCheck.checkCode}
+        />
+
         {isCheck.checkCode ? <Button color="secondary" onClick={checkEmailCode}>인증 확인하기</Button> : <span>인증확인</span>}
       </div>
 
