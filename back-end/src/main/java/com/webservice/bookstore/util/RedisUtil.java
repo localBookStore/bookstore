@@ -21,12 +21,12 @@ public class RedisUtil {
     }
 
     public void setData(String key, String value, Long time){
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(value.getClass()));
-        redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+        stringRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(value.getClass()));
+        stringRedisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
     }
 
     public void deleteData(String key){
-        redisTemplate.delete(key);
+        stringRedisTemplate.delete(key);
     }
 
     public void setData(String key, String value){
