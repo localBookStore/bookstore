@@ -10,9 +10,9 @@ branches:
     - hangjin
 
 script:
-  - docker build -t hangs0908/bookstore-frontend ./front-end/books
-  - docker build -t hangs0908/bookstore-backend -f /back-end/Dockerfile .
-  - docker build -t hangs0908/bookstore-nginx ./nginx
+#  - docker build -t hangs0908/bookstore-frontend ./front-end/books
+  - docker build -t hangs0908/bookstore-backend -f ./back-end/Dockerfile .
+#  - docker build -t hangs0908/bookstore-nginx ./nginx
 
 after_success:
   - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
