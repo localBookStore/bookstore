@@ -17,16 +17,16 @@ public class RedisUtil {
     private final RedisTemplate<String, String> redisTemplate;
 
     public String getData(String key){
-        return stringRedisTemplate.opsForValue().get(key);
+        return redisTemplate.opsForValue().get(key);
     }
 
     public void setData(String key, String value, Long time){
-        stringRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(value.getClass()));
-        stringRedisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(value.getClass()));
+        redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
     }
 
     public void deleteData(String key){
-        stringRedisTemplate.delete(key);
+        redisTemplate.delete(key);
     }
 
     public void setData(String key, String value){
