@@ -1,5 +1,5 @@
 FROM openjdk:11-jre-slim
-VOLUME /tmp
-COPY build/libs/*.jar app.jar
+WORKDIR /app/backend
+COPY build/libs/*.jar ./build/libs/app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
