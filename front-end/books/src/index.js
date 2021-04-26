@@ -10,7 +10,7 @@ import "slick-carousel/slick/slick-theme.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { StylesProvider } from "@material-ui/core"
 
-axios.defaults.baseURL = 'http://localhost:8080/';
+axios.defaults.baseURL = 'https://www.book365.shop:8080/';
 
 ReactDOM.render(
   <BrowserRouter>
