@@ -14,9 +14,9 @@ script:
   - docker build -t hangs0908/bookstore-backend ./back-end
 #  - docker build -t hangs0908/bookstore-nginx ./nginx
 
-after_success:
-  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
-
-  - docker push hangs0908/bookstore-frontend
-  - docker push hangs0908/bookstore-backend
-  - docker push hangs0908/bookstore-nginx
+#after_success:
+#  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
+#
+#  - docker push hangs0908/bookstore-frontend
+#  - docker push hangs0908/bookstore-backend
+#  - docker push hangs0908/bookstore-nginx
