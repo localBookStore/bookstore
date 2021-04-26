@@ -5,7 +5,7 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 RUN chmod +x ./gradlew
-RUN ./gradlew bootJar
+RUN ./gradlew clean build --exclude-task test
 
 FROM openjdk:11-jre-slim
 COPY --from=builder build/libs/*.jar app.jar
