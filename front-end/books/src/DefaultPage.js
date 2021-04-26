@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useHistory, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
@@ -15,7 +15,6 @@ const DefaultPage = () => {
     name: "",
     role: false,
   });
-  const history = useHistory();
 
   useEffect(() => {
     if (cookies.token !== undefined) {
@@ -29,12 +28,12 @@ const DefaultPage = () => {
   }, [cookies.token]);
 
   const goHome = () => {
-    history.push("/");
+    window.location.replace("/")
   };
 
   const logoutEvent = () => {
     const token = cookies.token;
-    axios.post("http://localhost:8080/logout", null, {
+    axios.post("logout", null, {
         headers: { Authorization: token },
       })
       .then(() => {
