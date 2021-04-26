@@ -1,0 +1,34 @@
+2021-02-26T03:48:16.6NZ mysqld_safe Logging to '/usr/local/var/mysql/johangjin-ui-MacBook-Pro.local.err'.
+2021-02-26T03:48:16.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2021-02-26T03:48:16.657584Z 0 [System] [MY-010116] [Server] /usr/local/Cellar/mysql/8.0.23/bin/mysqld (mysqld 8.0.23) starting as process 72251
+2021-02-26T03:48:16.661761Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2021-02-26T03:48:16.688504Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2021-02-26T03:48:17.089347Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2021-02-26T03:48:17.258715Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '127.0.0.1' port: 33060, socket: /tmp/mysqlx.sock
+2021-02-26T03:48:17.369086Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2021-02-26T03:48:17.369494Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2021-02-26T03:48:17.426048Z 0 [System] [MY-010931] [Server] /usr/local/Cellar/mysql/8.0.23/bin/mysqld: ready for connections. Version: '8.0.23'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2021-02-26T04:02:53.6NZ mysqld_safe Logging to '/usr/local/var/mysql/johangjin-ui-MacBook-Pro.local.err'.
+2021-02-26T04:02:53.6NZ mysqld_safe A mysqld process already exists
+2021-02-26T04:05:21.6NZ mysqld_safe Logging to '/usr/local/var/mysql/johangjin-ui-MacBook-Pro.local.err'.
+2021-02-26T04:05:21.6NZ mysqld_safe A mysqld process already exists
+2021-02-26T04:09:02.6NZ mysqld_safe Logging to '/usr/local/var/mysql/johangjin-ui-MacBook-Pro.local.err'.
+2021-02-26T04:09:02.6NZ mysqld_safe A mysqld process already exists
+2021-02-26T04:16:35.6NZ mysqld_safe Logging to '/usr/local/var/mysql/johangjin-ui-MacBook-Pro.local.err'.
+2021-02-26T04:16:35.6NZ mysqld_safe A mysqld process already exists
+2021-04-10T17:10:43.301703Z 2233 [Warning] [MY-013360] [Server] Plugin sha256_password reported: ''sha256_password' is deprecated and will be removed in a future release. Please use caching_sha2_password instead'
+2021-04-10T17:10:46.734028Z 2234 [Warning] [MY-013360] [Server] Plugin sha256_password reported: ''sha256_password' is deprecated and will be removed in a future release. Please use caching_sha2_password instead'
+2021-04-20T14:16:43.6NZ mysqld_safe Logging to '/usr/local/var/mysql/johangjin-ui-MacBook-Pro.local.err'.
+2021-04-20T14:16:43.6NZ mysqld_safe Starting mysqld daemon with databases from /usr/local/var/mysql
+2021-04-20T14:16:44.527310Z 0 [System] [MY-010116] [Server] /usr/local/Cellar/mysql/8.0.23/bin/mysqld (mysqld 8.0.23) starting as process 2958
+2021-04-20T14:16:44.606317Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /usr/local/var/mysql/ is case insensitive
+2021-04-20T14:16:44.734570Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2021-04-20T14:16:45.452094Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2021-04-20T14:16:45.664116Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '127.0.0.1' port: 33060, socket: /tmp/mysqlx.sock
+2021-04-20T14:16:45.749872Z 0 [System] [MY-010229] [Server] Starting XA crash recovery...
+2021-04-20T14:16:45.765664Z 0 [System] [MY-010232] [Server] XA crash recovery finished.
+2021-04-20T14:16:45.812631Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2021-04-20T14:16:45.813030Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2021-04-20T14:16:45.860497Z 0 [System] [MY-010931] [Server] /usr/local/Cellar/mysql/8.0.23/bin/mysqld: ready for connections. Version: '8.0.23'  socket: '/tmp/mysql.sock'  port: 3306  Homebrew.
+2021-04-20T14:45:59.6NZ mysqld_safe Logging to '/usr/local/var/mysql/johangjin-ui-MacBook-Pro.local.err'.
+2021-04-20T14:45:59.6NZ mysqld_safe A mysqld process already exists
