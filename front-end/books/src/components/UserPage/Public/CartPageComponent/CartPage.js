@@ -7,7 +7,7 @@ import { useCookies } from "react-cookie"
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
 
-const CartPage = ({ location, history }) => {
+const CartPage = ({ history }) => {
   const [cookies] = useCookies(["token"]);
   const {token} = cookies;
   const [cartList, setCartList] = useState(null);
@@ -18,8 +18,7 @@ const CartPage = ({ location, history }) => {
     id: null,
     discountRate: 0,
   });
-  const [coupons, setCoupons] = useState([
-    {
+  const [coupons, setCoupons] = useState([{
       id: null,
       name: "쿠폰 미적용",
       discountRate: 0,
@@ -42,34 +41,29 @@ const CartPage = ({ location, history }) => {
   }, [cartList, checkList]);
 
   const getCartBook = () => {
-    axios
-      .get("api/cart/", { headers: { Authorization: token } })
+    axios.get("api/cart/", { headers: { Authorization: token } })
       .then((res) => {
         if (res.data) {
           setCartList(res.data);
           res.data.map(({ id }) => checkList.push(id));
         }
       })
-      .catch((err) => console.log("토큰이 만료 되었습니다."));
+      .catch(() => console.log("토큰이 만료 되었습니다."));
   };
 
   const getCouponList = () => {
-    axios
-      .get("api/coupon", {
-        headers: { Authorization: token },
-      })
+    axios.get("api/coupon", { headers: { Authorization: token }})
       .then((res) => setCoupons([...coupons, ...res.data]))
       .catch((err) => console.log("에러", err.response));
   };
 
   const deleteCartBook = () => {
-    axios
-      .delete(`api/cart/`, {
+    axios.delete(`api/cart/`, {
         data: [...checkList],
         headers: { Authorization: token },
       })
-      .then((res) => setCartList(res.data))
-      .catch((err) => console.log(err.response));
+      .then(res => setCartList(res.data))
+      .catch(err => console.log(err.response));
   };
 
   const checkEvent = (id, isChecked) => {
@@ -89,8 +83,8 @@ const CartPage = ({ location, history }) => {
       address,
       coupon_id: selectedCoupon.id
     },{ headers: {Authorization: token }})
-    .then(res => history.replace('/mypage/orderlist'))
-    .catch(err => alert("상품은 하나라도 선택되어야 합니다. 혹은 주소를 입력하세요."))
+    .then(() => history.replace('/mypage/orderlist'))
+    .catch(() => alert("상품은 하나라도 선택되어야 합니다. 혹은 주소를 입력하세요."))
   };
 
   return (
@@ -110,6 +104,7 @@ const CartPage = ({ location, history }) => {
           return <CouponItem data={res} selectedCoupon={selectedCoupon} setSelectedCoupon={setSelectedCoupon} key={idx} />;
         })}
       </CouponContainer>
+
       <ResultContainer>
         <TotalPriceContainer>
           <TotalTitle>Total</TotalTitle>
