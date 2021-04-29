@@ -4,7 +4,7 @@ import EachCartItem from "./EachCartItem";
 import CouponItem from "./CouponItem";
 import { useCookies } from "react-cookie"
 
-import { Button } from "react-bootstrap";
+import { Button, TextField } from "@material-ui/core";
 import styled from "styled-components";
 
 const CartPage = ({ history }) => {
@@ -14,12 +14,13 @@ const CartPage = ({ history }) => {
   const [checkList, setCheckList] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [address, setAddress] = useState("");
+
   const [selectedCoupon, setSelectedCoupon] = useState({
-    id: null,
+    id: -1,
     discountRate: 0,
   });
   const [coupons, setCoupons] = useState([{
-      id: null,
+      id: -1,
       name: "쿠폰 미적용",
       discountRate: 0,
     },
@@ -94,40 +95,61 @@ const CartPage = ({ history }) => {
           {cartList.map((res, idx) => {
             return <EachCartItem data={res} cartList={cartList} setCartList={setCartList} checkEvent={checkEvent} key={idx} />;
           })}
-          <AddressTitle>수령지</AddressTitle>
-          <AddressInput placeholder="주소를 입력하세요" required onChange={e => setAddress(e.target.value)}/ >
-          <ItemDeleteButton variant="danger" onClick={deleteCartBook}>삭제</ItemDeleteButton>
+          <ItemDeleteButton 
+            variant="outlined" 
+            color="secondary" 
+            onClick={deleteCartBook}
+            >
+            장바구니에서 빼기
+          </ItemDeleteButton>
+          <AddressDiv>
+            <AddressTitle>🏠 상품을 받을 도착지를 입력해주세요(필수)</AddressTitle>
+            <AddressInput 
+              placeholder="주소를 입력하세요" 
+              required
+              label="Your Address"
+              variant="outlined"
+              color="primary" 
+              onChange={e => setAddress(e.target.value)}/ >
+          </AddressDiv>
         </>
       )}
+      <CouponTitle>🎟 적용할 쿠폰을 선택하여 주세요</CouponTitle>
       <CouponContainer>
-        {coupons.length && coupons.map((res, idx) => {
-          return <CouponItem data={res} selectedCoupon={selectedCoupon} setSelectedCoupon={setSelectedCoupon} key={idx} />;
-        })}
+        {coupons.length ? coupons.map((res, idx) => {
+          return <CouponItem 
+            data={res} 
+            selectedCoupon={selectedCoupon} 
+            setSelectedCoupon={setSelectedCoupon} 
+            key={idx} 
+            />;
+        }) :
+        null
+        }
       </CouponContainer>
 
+      <TotalTitle>💵 회원님의 장바구니에 총 가격</TotalTitle>
       <ResultContainer>
-        <TotalPriceContainer>
-          <TotalTitle>Total</TotalTitle>
-          <TotalContent>
-            총 가격:
-            {totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          </TotalContent>
-          <TotalContent>
-            할인된 가격:
-            {((totalPrice * (100 - selectedCoupon.discountRate)) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          </TotalContent>
-        </TotalPriceContainer>
+        <TotalContent textDecoration="line-through">
+          {totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ￦
+        </TotalContent>
+        <TotalContent>→</TotalContent>
+
+        <TotalContent fontSize="28px">
+          ⭐️ {((totalPrice * (100 - selectedCoupon.discountRate)) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ￦ ⭐️
+        </TotalContent>
       </ResultContainer>
-      <Button variant="success" onClick={payEvent}>
-        결제하기
-      </Button>
+      <div style={{display:"flex", justifyContent: "center"}}>
+        <PayButton color="primary" variant="contained" onClick={payEvent}>
+          결제하기
+        </PayButton>
+      </div>
     </Container>
   );
 };
 export default CartPage;
 
 const Container = styled.div`
-  /* width: 90%; */
   margin: 0;
 `;
 
@@ -138,51 +160,49 @@ const ResultContainer = styled.div`
   margin: 30px 10px;
 `;
 const CouponContainer = styled.div`
-  display: flex;
-  justify-content: right;
-  align-items: center;
-
-  margin: 30px 10px;
-  width: 90%;
-
-  font-size: 20px;
-`;
-
-const TotalPriceContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  border: 2px solid black;
-  width: 90%;
-
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   margin: 30px;
-`;
-const TotalTitle = styled.div`
-  margin: 20px;
-
-  font-size: 50px;
-  font-weight: bolder;
   text-align: center;
+`;
+const CouponTitle = styled.div`
+  margin-left: 30px;
+  font-size: 20px;
+  font-weight: 600;
+`
+
+const TotalTitle = styled.div`
+  margin: 50px 0 3px 30px;
+
+  font-size: 22px;
+  font-weight: bolder;
+  color: "#424242";
 `;
 const TotalContent = styled.div`
-  margin: 20px;
-  width: 800px;
-
+  margin: 0 60px;
   text-align: center;
   font-weight: 600;
-  font-size: 200%;
+  font-size: ${props => props.fontSize || "25px"};
+  text-decoration: ${props => props.textDecoration || "none"};
 `;
 const ItemDeleteButton = styled(Button)`
-  display: block
+  float: right;
+  font-size: 16px;
 `
-const AddressInput = styled.input`
+const AddressDiv = styled.div`
+  margin: 60px 30px;
+`
+
+const AddressInput = styled(TextField)`
   margin: 20px 0;
-  width: 40%;
+  width: 50vw;
   height: 40px;
 `
 const AddressTitle = styled.div`
   font-size: 20px;
   font-weight: 600;
+`
+const PayButton = styled(Button)`
+  margin: 10px;
+  font-size: 28px;
 `
