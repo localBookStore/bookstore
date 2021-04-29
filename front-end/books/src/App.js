@@ -19,7 +19,6 @@ import AdminPage from "./components/UserPage/Admin/AdminPage";
 import { Route, Switch } from "react-router-dom";
 
 import styled from "styled-components";
-
 const App = () => {
   return (
     <AppContainer>
@@ -42,6 +41,7 @@ const App = () => {
         <Route path="/admin" component={AdminPage} />
       </Switch>
       <Footer />
+
     </AppContainer>
   );
 };

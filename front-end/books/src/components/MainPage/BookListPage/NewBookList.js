@@ -17,10 +17,9 @@ const NewBookList = () => {
   }, [])
   
   return <>
-    {books.length && <Container responsive="sm">
+    {!books.length ? <div> 새로운 도서가 없습니다.</div> : <Container responsive="sm">
       <thead>
-        <tr>
-        {["포스터이미지", "제목", "장르", "출판사", "가격"].map((tag, idx) => (
+        <tr>{["포스터이미지", "제목", "장르", "출판사", "가격"].map((tag, idx) => (
           <th key={idx}><ItemContent>{tag}</ItemContent></th>
         ))}
         </tr>

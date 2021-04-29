@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
 import { jwtDecode } from "feature/JwtDecode";
 
 import styled from "styled-components";
-import { Button } from "react-bootstrap";
+import { Button } from "@material-ui/core";
 import logo from "./icons/bookshop.svg";
 
 const DefaultPage = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const history = useHistory();
   const [user, setUser] = useState({
     name: "",
     role: false,
@@ -28,7 +29,8 @@ const DefaultPage = () => {
   }, [cookies.token]);
 
   const goHome = () => {
-    window.location.replace("/")
+    // window.location.replace("/")
+    history.push('/');
   };
 
   const logoutEvent = () => {
@@ -37,76 +39,95 @@ const DefaultPage = () => {
         headers: { Authorization: token },
       })
       .then(() => {
-        removeCookie("token");
         goHome()
+        removeCookie("token");
       })
-      .catch((err) => Comment.log("에러"));
-
-    goHome();
+      .catch(() => alert("다시 한번 로그아웃 해주세요"));
   };
 
-  const regularUser = () => {
-    return (
-      <>
-        <IsLoginedDiv>
-          {user.name}
-          <span style={{ fontSize: "14px" }}> 님 안녕하세요</span>
-        </IsLoginedDiv>
-        <NavLink to={{ pathname: "/mypage", state: { token: cookies.token } }}>
-          <MyPageButton variant="success">마이페이지</MyPageButton>
-        </NavLink>
-        <NavLink to={{ pathname: "/cart", state: { token: cookies.token } }}>
-          <CartButton variant="primary">장바구니</CartButton>
-        </NavLink>
-        <LogoutButton variant="danger" onClick={logoutEvent}>
-          로그아웃
-        </LogoutButton>
+  const RegularUser = () => {
+    return <>
+        <LoginedDiv>
+          <NameDiv fontSize="20px" fontWeight="700">{user.name}</NameDiv>
+          <NameDiv> 님 안녕하세요</NameDiv>
+        </LoginedDiv>
+        <UserButtons>
+          <UserButton 
+            variant="outlined" 
+            color="primary" 
+            component={NavLink}
+            to={{ pathname: "/mypage", state: { token: cookies.token } }}
+            // right="17vw"
+            >
+            My Page
+          </UserButton>
+
+          <UserButton 
+            variant="outlined" 
+            color="primary" 
+            component={NavLink} 
+            to={{ pathname: "/cart", state: { token: cookies.token } }}
+            // right="9vw"
+            >
+            My Cart
+            </UserButton>
+          
+          <UserButton 
+            variant="outlined" 
+            color="primary" 
+            onClick={logoutEvent}
+            // right="1vw"
+            >
+            Logout
+          </UserButton>
+        </UserButtons>
       </>
-    );
   };
 
-  const adminUser = () => {
-    return (
-      <>
-        <IsLoginedDiv>
-          {user.name}
-          <span style={{ fontSize: "14px" }}> 님 안녕하세요</span>
-        </IsLoginedDiv>
+  const AdminUser = () => {
+    return <>
+      <LoginedDiv>
+          <NameDiv fontSize="20px" fontWeight="700">{user.name}</NameDiv>
+          <NameDiv> 님 안녕하세요</NameDiv>
+        </LoginedDiv>
         <NavLink to={{ pathname: "/admin", state: { token: cookies.token } }}>
-          <CartButton variant="primary">관리 페이지</CartButton>
+          <AdminButton variant="outlined" color="primary">관리 페이지</AdminButton>
         </NavLink>
-        <LogoutButton variant="danger" onClick={logoutEvent}>
+        <AdminButton variant="outlined" color="primary" onClick={logoutEvent}>
           로그아웃
-        </LogoutButton>
+        </AdminButton>
       </>
-    );
   };
 
   return (
     <DefaultContainer>
-      <ImageButton onClick={() => goHome()}>
+      <ImageButton onClick={goHome}>
         <ImageLogo src={logo} alt="logo" />
       </ImageButton>
       {cookies.token !== undefined ? (
-        user.role === "USER" ? (
-          regularUser()
-        ) : (
-          adminUser()
-        )
-      ) : (
-        <div>
-          <NavLink to="/login">
-            <AuthButton variant="outline-info" right="160px" width="105px">
-              Log In
-            </AuthButton>
-          </NavLink>
-          <NavLink to="/signup" replace>
-            <AuthButton variant="outline-info" right="30px" width="100px">
-              Sign Up
-            </AuthButton>
-          </NavLink>
-        </div>
-      )}
+        user.role === "USER" ? <RegularUser /> : <AdminUser />
+      ) : <AuthButtons>
+          <AuthButton 
+            variant="outlined" 
+            color="secondary" 
+            component={NavLink} 
+            to="/login"
+            right="17vw" 
+            >
+            Log In
+          </AuthButton>
+          
+          <AuthButton 
+            variant="outlined" 
+            color="secondary" 
+            right="10vw" 
+            component={NavLink} 
+            to="/signup"
+            >
+            Sign Up
+          </AuthButton> 
+        </AuthButtons>
+      }
     </DefaultContainer>
   );
 };
@@ -125,36 +146,55 @@ const ImageButton = styled.button`
   background-color: transparent;
 `;
 const AuthButton = styled(Button)`
+  padding: 5px;
+  width: 6vw;
+  
+  font-size: 16px;
+  font-weight: 600;
+`;
+const AuthButtons = styled.div`
   position: absolute;
   top: 0;
-  right: ${(props) => props.right};
+  right: 0;
 
-  border: 2px solid;
-  width: ${(props) => props.width};
-  font-size: 18px;
-  font-weight: 800;
-`;
-const IsLoginedDiv = styled.div`
+  width: 14vw;
+  display: flex;
+  justify-content: space-between;
+
+`
+
+const LoginedDiv = styled.div`
   position: absolute;
   top: 50px;
   right: 10px;
   font-size: 20px;
 `;
-const LogoutButton = styled(Button)`
-  position: absolute;
-  top: 0;
-  right: 20px;
+const NameDiv = styled.span`
+  font-size: ${props => props.fontSize || "12px"};
+  font-weight: ${props => props.fontWeight || "300px" };
 `;
-const CartButton = styled(Button)`
+const AdminButton = styled(Button)`
   position: absolute;
   top: 0;
   right: 119px;
 `;
-const MyPageButton = styled(Button)`
+const UserButton = styled(Button)`
+  padding: 5px;
+  width: 6vw;
+
+  font-weight: bold;
+  font-size: 1vw;
+`;
+
+const UserButtons = styled.div`
   position: absolute;
   top: 0;
-  right: 220px;
-`;
+  width: 20vw;
+  display: flex;
+  justify-content: space-between;
+  right: 0;
+`
+
 const ImageLogo = styled.img`
   margin: 0 auto;
   width: 200px;
