@@ -14,7 +14,7 @@ const MidComponent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 200px;
 `
 
 const Description = styled.div`

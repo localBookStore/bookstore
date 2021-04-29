@@ -4,7 +4,7 @@ import { Link, useHistory } from "react-router-dom"
 import { jwtDecode } from "feature/JwtDecode"
 
 import { Modal } from "react-bootstrap"
-import { Button, TextField } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import styled from "styled-components";
 
 const ArticleDetail = ({ article, token }) => {
@@ -32,9 +32,9 @@ const ArticleDetail = ({ article, token }) => {
       </Modal.Header>
       <Modal.Body>글을 삭제하시면 내용과 함께 작성한 댓글까지 삭제됩니다.</Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => setIsShow(false)}>
+        <Button variant="contained" onClick={() => setIsShow(false)}>
           취소</Button>
-        <Button variant="danger" onClick={onClickEvent}>
+        <Button variant="contained" color="secondary" onClick={onClickEvent}>
           삭제</Button>
       </Modal.Footer>
     </Modal>

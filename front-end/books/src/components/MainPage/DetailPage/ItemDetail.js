@@ -11,7 +11,7 @@ const ItemDetail = ({ location }) => {
     <TopDetail book={book}/>
     <Divider />
     <MidDetail description={book.description}/>
-    <Divider marginTop="20px"/>
+    <Divider />
     <ReviewList book={book} />
   </DetailComponent>
 }
@@ -25,7 +25,6 @@ const DetailComponent = styled.div`
 
 const Divider = styled.hr`
   border: solid none;
-  height: 2px;
+  /* height: 0.4px; */
   background-color:#919191;
-  margin-top: ${props => props.marginTop || "60px"};
 `
