@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
-import { NavLink, useHistory } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import { jwtDecode } from "feature/JwtDecode"
 
-import { Button, Modal } from "react-bootstrap"
+import { Modal } from "react-bootstrap"
+import { Button, TextField } from "@material-ui/core";
 import styled from "styled-components";
 
 const ArticleDetail = ({ article, token }) => {
@@ -46,8 +47,24 @@ const ArticleDetail = ({ article, token }) => {
     <ArticleContent>{content}</ArticleContent>
     <ArticleDate>{createdDate}</ArticleDate>
     {token !== undefined && memberEmail === jwtDecode(token).sub && <ButtonFeature>
-      <NavLink to={{pathname:"/community/update", state:{id, category, content, title}}} variant="primary">수정</NavLink>
-      <EditButton variant="danger" onClick={() => setIsShow(true)}>삭제</EditButton>
+      
+      <EditButton
+        component={Link}
+        to={{pathname:"/community/update", state:{id, category, content, title}}}
+        variant="outlined"
+        fontcolor="#ef9a9a"
+        >
+        수정
+      </EditButton>
+      
+      <EditButton 
+        variant="outlined"
+        fontcolor="#ec407a"
+        onClick={() => setIsShow(true)}
+        >
+        삭제
+      </EditButton>
+
     </ButtonFeature>}
     {isShow && <DeleteCheckModal />}
 
@@ -61,13 +78,13 @@ const ArticleContainer = styled.div`
   padding: 20px;
 `
 const ArticleTitle = styled.h2`
-  margin: 10px 0 0 0;
-  font-size: 50px;
+  margin: 10px 0 0 10px;
+  font-size: 33px;
   font-weight: bold;
 `
 const ArticleContent = styled.div`
   padding: 20px;
-  font-size: 20px;
+  font-size: 18px;
   height: 300px;
 `
 const ArticleDate = styled.div`
@@ -87,5 +104,12 @@ const ButtonFeature = styled.div`
   margin-top: 30px;
 `
 const EditButton = styled(Button)`
-  margin: 0 20px;
+  color: ${props => props.fontcolor};
+  font-size: 20px;
+  margin: 0 10px;
+
+  &:hover{
+    background-color: ${props => props.fontcolor};
+    color: white;
+  }
 `

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { jwtDecode } from "feature/JwtDecode"
 
-import { Button } from "react-bootstrap";
+import { TextField, Button, Select, MenuItem} from "@material-ui/core"
 import styled from "styled-components";
 
 const CommunityRegister = ({ history, location:{ state } }) => {
@@ -33,15 +33,19 @@ const CommunityRegister = ({ history, location:{ state } }) => {
 
 	return (
 		<Container>
-			<CategoryInput defaultValue={inputData.category} name="category" onChange={onChangeEvent}>
-				<option value="사고팝니다">사고팝니다</option>
-				<option value="자유게시판">자유게시판</option>
+			<CategoryInput value={inputData.category} variant="outlined" name="category" onChange={onChangeEvent}>
+				<MenuItem value="사고팝니다">사고팝니다</MenuItem>
+				<MenuItem value="자유게시판">자유게시판</MenuItem>
 			</CategoryInput>
 
-			<TitleInput type="text" defaultValue={inputData.title} placeholder="제목을 입력하세요" name="title" onChange={onChangeEvent} />
-			<ContentInput defaultValue={inputData.content} placeholder="내용을 입력하세요" name="content" onChange={onChangeEvent} />
-			<SummitButton onClick={summitEvent}>제출</SummitButton>
+			<TitleInput type="text" variant='outlined' value={inputData.title} placeholder="제목을 입력하세요" name="title" onChange={onChangeEvent} />
+			<ContentInput multiline rows={20} value={inputData.content} variant='outlined' placeholder="내용을 입력하세요" name="content" onChange={onChangeEvent} />
+			<div style={{display:"flex", justifyContent:"flex-end"}}>
+				<SummitButton onClick={summitEvent} variant="contained">☑️ 게시글 수정</SummitButton>
+			</div>
 		</Container>
+
+
 	);
 };
 export default CommunityRegister;
@@ -53,44 +57,24 @@ const Container = styled.div`
 	margin: 0;
 
 	width: 100%;
-	height: 550px;
 `;
-const CategoryInput = styled.select`
-	position: relative;
-	left: 10px;
-
-	width: 150px;
-	height: 45px;
-
+const CategoryInput = styled(Select)`
+	width: 15%;
+	margin-right: 20px;
 	vertical-align: middle;
 `;
 
-const TitleInput = styled.input`
-	position: relative;
-	left: 20px;
-	top: 3px;
-
-	width: 800px;
-	height: 45px;
+const TitleInput = styled(TextField)`
+	width: 75%;
+	margin-bottom: 20px;
 `;
 
-const ContentInput = styled.textarea`
-	position: relative;
-	display: inline-block;
-	top: 13px;
-	left: 10px;
-
+const ContentInput = styled(TextField)`
 	width: 80vw;
-	height: 400px;
-
 	resize: none;
 `;
 const SummitButton = styled(Button)`
-	position: relative;
-	float: right;
-	top: 30px;
-	right: 40px;
+	margin: 30px 50px 30px 0;
+	font-size: 20px;
 
-	width: 80px;
-	height: 40px;
 `;

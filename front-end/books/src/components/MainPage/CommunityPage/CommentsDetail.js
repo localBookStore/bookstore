@@ -1,9 +1,9 @@
 import axios from "axios"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import EachComment from "./EachComment"
 import { jwtDecode } from "feature/JwtDecode"
 
-import { Button } from "react-bootstrap"
+import { Button, TextField } from "@material-ui/core"
 import styled from "styled-components"
 
 const CommentsDetail = ({ comments, setComments, boardId, token }) => {
@@ -34,13 +34,13 @@ const CommentsDetail = ({ comments, setComments, boardId, token }) => {
         boardId={boardId}
         key={idx} />
       }) : 
-      <Notice fontSize="20px">아직 댓글이 없습니다.</Notice>}
+      <Notice>😆 첫 댓글을 등록해 주세요</Notice>}
 
     {token === undefined ? 
-    <Notice>댓글은 로그인 후에 이용할 수 있습니다.</Notice> :
+    <Notice>🥺 댓글을 이용하시려면 로그인을 해주세요</Notice> :
     <>
-      <CommentInput value={content} onChange={e => setContent(e.target.value)} />
-      <CommentButton onClick={() => submitEvent(0, 0, content)}>등록</CommentButton>
+      <CommentInput variant="outlined" size="small" value={content} onChange={e => setContent(e.target.value)} />
+      <CommentButton variant="contained" onClick={() => submitEvent(0, 0, content)}>등록</CommentButton>
     </>
     }
   </CommentContainer>
@@ -50,13 +50,22 @@ export default CommentsDetail;
 const CommentContainer = styled.div`
 
 `
-const CommentInput = styled.input`
-  margin: 20px 0;
+const CommentInput = styled(TextField)`
+  margin: 0 20px;
+  width: 50%;
 `
 const CommentButton = styled(Button)`
+  font-size: 16px;
+  font-weight: bold;
+  background-color:#4db6ac;
+  color: white;
 
+  &:hover{
+    color: #4db6ac;
+    background-color: white;
+  }
 `
 const Notice = styled.div`
-  margin: 20px 0;
-  font-size: ${props => props.fontSize || "12px"}
+  margin: 20px;
+  font-size: 20px;
 `
