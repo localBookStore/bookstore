@@ -6,10 +6,8 @@ import { useCookies } from "react-cookie";
 import { Route, Switch, NavLink } from "react-router-dom";
 import Sticky from "react-sticky-el"
 
-import PanToolTwoToneIcon from '@material-ui/icons/PanToolTwoTone';
-import { MenuList, MenuItem, Paper,TextField, Button } from "@material-ui/core"
-import { Modal } from "react-bootstrap";
-import styled, { keyframes } from "styled-components";
+import { MenuList, MenuItem, Paper } from "@material-ui/core"
+import styled from "styled-components";
 
 const AdminPage = ({ match }) => {
 	const [cookies] = useCookies(["token"]);
@@ -34,12 +32,14 @@ const AdminPage = ({ match }) => {
             </MenuItemStyled>
           </StyledPaper>
 			</MenuListStyled>
-			<SwitchDiv>
-				<Route path={`${path}/userlist`} component={UserList} />
-				<Route path={`${path}/allitemlist`} component={AllItemList} />
-				<Route path={`${path}/allorderedlist`} component={AllOrderList} />
-				<Route path={`${path}/postcoupon`} component={PostCoupon} />
-			</SwitchDiv>
+			<Switch>
+				<SwitchDiv>
+					<Route path={`${path}/userlist`} component={UserList} />
+					<Route path={`${path}/allitemlist`} component={AllItemList} />
+					<Route path={`${path}/allorderedlist`} component={AllOrderList} />
+					<Route path={`${path}/postcoupon`} component={PostCoupon} />
+				</SwitchDiv>
+			</Switch>
 	</Container>
 };
 export default AdminPage;
