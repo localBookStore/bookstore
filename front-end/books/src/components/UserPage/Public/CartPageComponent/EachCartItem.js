@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import { Button } from "@material-ui/core";
 import styled from "styled-components";
 
 const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
@@ -28,14 +28,15 @@ const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
     <Container>
       <CheckBox type="checkbox" defaultChecked onChange={changeCheckEvent} />
       <PosterImage src={imageUrl} />
-      <ItemDiv fontSize="28px" width="300px">{name}</ItemDiv>
-      <ItemDiv fontSize="28px">{price}</ItemDiv>
-      <div>
-        <CountButton onClick={minus}>-</CountButton>
+      <ItemDiv fontSize="20px"fontWeight="bold" width="200px">{name}</ItemDiv>
+      <ItemDiv fontSize="20px">{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ItemDiv>
+      <CountDiv>
+        <CountButton variant="outlined" onClick={minus}>-</CountButton>
         <ItemCount>{orderCount}</ItemCount>
-        <CountButton onClick={plus}>+</CountButton>
-      </div>
-      <ItemDiv>{price * orderCount}</ItemDiv>
+        <CountButton variant="outlined" onClick={plus}>+</CountButton>
+      </CountDiv>
+      
+      <TotalPrice>{(price * orderCount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ₩</TotalPrice>
     </Container>
   );
 };
@@ -46,7 +47,7 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  margin :10 px;
+  margin:30px 50px;
 `;
 const PosterImage = styled.img`
   width: 220px;
@@ -54,19 +55,34 @@ const PosterImage = styled.img`
   object-fit: cover;
 `;
 const ItemDiv = styled.div`
-  font-weight: 800;
+  font-weight: ${props => props.fontWeight || "400"};
   font-size: ${(props) => props.fontSize};
-  width: ${props => props.width || "30px"};
+  width: ${props => props.width || "100px"};
   text-align: center;
 `;
 const ItemCount = styled.span`
   font-size: 20px;
   font-weight: bold;
-
-  margin: 0 20px;
+  text-align: center;
+  width: 50px;
 `;
-const CountButton = styled(Button)``;
+const CountButton = styled(Button)`
+  font-weight: bold;
+  font-size: 18px;
+  padding: 0;
+`;
 const CheckBox = styled.input`
   width: 30px;
   height: 30px;
 `;
+const CountDiv = styled.div`
+  width: 200px;
+  display: flex;
+  justify-content: center;
+`
+const TotalPrice = styled.div`
+  width: 120px;
+  text-align: center;
+  font-size: 21px;
+  font-weight: bold;
+`

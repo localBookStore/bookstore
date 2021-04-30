@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react"
-import { NavLink } from "react-router-dom"
+import { Link } from "react-router-dom"
 import axios from "axios"
 
-import { Table, Button } from "react-bootstrap"
+import { Table } from "react-bootstrap"
+import { Button } from "@material-ui/core"
 import styled from "styled-components"
 
 const Community = ({ history }) => {
@@ -39,12 +40,20 @@ const Community = ({ history }) => {
           })}
         </tbody>
       </Container>
-      : <div>게시글이 없습니다.</div>
+      : 
+      <div>게시글이 없습니다.</div>
       }
 
-    <PostButton>
-      <NavButton to="/community/register">게시물 등록</NavButton>
-    </PostButton>
+    <div style={{display:"flex", justifyContent:"flex-end"}}>
+      <PostButton
+        component={Link}
+        to="/community/register"
+        variant="contained"
+        color="primary"
+        >
+        게시글 등록
+      </PostButton>
+    </div>
   </div >
 }
 export default Community;
@@ -62,13 +71,12 @@ const Container = styled(Table)`
   } 
 `
 
-const NavButton = styled(NavLink)`
+const PostButton = styled(Button)`
   margin: 20px 10%;
   font-size: 18px;
-  
-`
-const PostButton = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  
+
+  &:hover {
+    background-color: white;
+    color: #283593;
+  }
 `

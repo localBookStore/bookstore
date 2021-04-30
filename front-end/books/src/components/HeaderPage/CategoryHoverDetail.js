@@ -10,9 +10,7 @@ const CategoryHoverDetail = ({genreData, show}) => {
   const [choiceGenre, setChoiceGenre] = useState(null);
 
   const onHoverEvent = (idx) => {
-    setTimeout(() => {
-      setChoiceGenre(genreData[idx])
-    }, 200)
+    setTimeout(() => setChoiceGenre(genreData[idx]), 200)
   }
 
   return <HoverComponent show={show ? 1 : 0} elevation={9}>

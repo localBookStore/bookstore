@@ -11,14 +11,10 @@ const CategoryBar = () => {
 	const [genreData, setGenreData] = useState([]);
 
 	const hoverOn = () => {
-		setTimeout(() => {
-			setIsHover(true)
-		}, 100)
+		setTimeout(() => setIsHover(true), 100)
 	}
 	const hoverOff = () => {
-		setTimeout(() => {
-			setIsHover(false)
-		}, 100)
+		setTimeout(() => setIsHover(false), 100)
 	}
 
 	useEffect(() => {
@@ -33,7 +29,10 @@ const CategoryBar = () => {
 	return <AllContainer>
       <GenreContainer onMouseLeave={hoverOff}>
 				<GenreButton variant="contained" onMouseEnter={hoverOn}>장르별</GenreButton>
-				{genreData.length && <CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} show={isHover} />}
+				{genreData.length ? 
+					<CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} show={isHover} /> 
+					: 
+					null }
 			</GenreContainer>
 			
 			<NavButton
@@ -42,12 +41,14 @@ const CategoryBar = () => {
 				activeClassName={"selected"} 
 				to="/bestbooklist"
 				>베스트</NavButton>
+			
 			<NavButton 
 				variant="contained" 
 				component={NavLink} 
 				activeClassName={"selected"} 
 				to="/newbooklist"
 				>최신작</NavButton>
+			
 			<NavButton 
 				variant="contained" 
 				component={NavLink} 
