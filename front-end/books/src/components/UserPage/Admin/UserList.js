@@ -37,7 +37,6 @@ const UserList = ({ location }) => {
 
       {selectIdx > -1 && <UserArticle userInfo={userList[selectIdx]} />}
     </div>
-
   </Container>;
 };
 export default UserList;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-import { Select, Input , MenuItem , Button} from '@material-ui/core';
+import { Select, MenuItem , Button, TextField} from '@material-ui/core';
 import styled from "styled-components";
 
 const SearchBar = () => {
@@ -41,15 +41,14 @@ const SearchBar = () => {
 				<MenuItem value="author">저자</MenuItem>
 			</SelectTag>
 			<SearchInput 
-      style={{ fontSize: "23px"}}
-      variant="outlined"
-      label="Search"
-      placeholder="Search..." 
-      
-      onKeyPress={enterEvent}
-      onChange={(e) => setInput(e.target.value)} 
+        variant="outlined"
+        label="Search"
+        placeholder="Search..." 
+        size="medium"
+        onKeyPress={enterEvent}
+        onChange={(e) => setInput(e.target.value)} 
       />
-			<SearchButton variant="outlined" color="primary" onClick={clickEvent}>🔍</SearchButton>
+			<SearchButton color="primary" onClick={clickEvent}>🔍</SearchButton>
 		</EntireBar>
 	);
 };
@@ -57,35 +56,29 @@ export default SearchBar;
 
 const EntireBar = styled.div`
   position: relative;
-  left: 4%;
-  width: 100%;
-  height: auto;
-`
-const SearchInput = styled(Input)`
-  position: relative;
-  left: 12%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px;
 
-  width: 60%;
-  height: 60px;
-  
-  padding: 0 20px;
-  margin: 40px 0;
+`
+const SearchInput = styled(TextField)`
+  width: 55vw;
+  margin-left: 30px;
+
+  & label.Mui-focused {
+    color: #1e88e5;
+  }
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border: 3px solid #5c6bc0;
+    }
+  }
 `
 const SearchButton = styled(Button)`
-  position: relative;
-  left: 5%;
-
-  border-radius: 20px 20px 20px 20px;
-  width: 6%;
-
-  font-size: 20px;
-  text-align: center;
+  font-size: 27px;
+  
 `;
 const SelectTag = styled(Select)`
-  position: relative;
-  left: 10%;
-
-  width: 8%;
-
-  font-weight: 700;
+  width: 5vw;
 `;

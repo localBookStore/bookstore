@@ -1,49 +1,54 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 import EachUserOder from "./EachUserOrder"
 
+import { Table } from "react-bootstrap"
 import styled from "styled-components";
 
-const UserOrder = ({ location }) => {
+const UserOrder = ({ userInfo }) => {
 	const [orders, setOrders] = useState([]);
-	const { user, token } = location.state;
+	const [cookies] = useCookies(["token"])
+	const token = cookies.token;
+	const {id, nickName} = userInfo;
+
 	useEffect(() => {
-		axios.get(`api/admin/members/${user.id}/orders`, { headers: { Authorization: token } })
+		axios.get(`api/admin/members/${id}/orders`, { headers: { Authorization: token } })
 			.then((res) => setOrders(res.data))
 			.catch((err) => console.log(err.response));
-	}, []);
+	}, [id]);
 
 	return (
 		<Container>
-			<div>
-				<h3>{user.nickName}</h3>님의 주문 목록입니다.
+			<div style={{marginBottom:"10px"}}>
+				<h3 style={{display:"inline"}}>📝 {nickName}</h3> 님의 주문들입니다.
 			</div>
-      <OrderTag>
-        <TagContent>수정 날짜</TagContent>
-        <TagContent>총 가격</TagContent>
-        <TagContent>현재 상태</TagContent>
-        <div></div><div></div>
-      </OrderTag>
-			{orders &&
-				orders.map((order, idx) => {
-					return <EachUserOder order={order} setOrders={setOrders} token={token} key={idx} />;
-				})}
+			<Table responsive style={{width:"50vw"}}>
+				<thead>
+					<Tr>
+						<th>수정 날짜</th>
+						<th>총 가격</th>
+						<th>현재 상태</th>
+					</Tr>
+				</thead>
+				<tbody>
+					{orders && orders.map((order, idx) => {
+						return <Tr>
+								<EachUserOder order={order} setOrders={setOrders} token={token} key={idx} />
+							</Tr>
+						})}
+				</tbody>
+
+			</Table>
 		</Container>
 	);
 };
 export default UserOrder;
 
 const Container = styled.div`
-  
+  margin-left: 5vw;;
 `;
-const OrderTag = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-`
-const TagContent = styled.div`
-  text-align: center;
-  font-size: 22px;
-  width: 90px;
-  margin: 20px;
+const Tr = styled.tr`
+	text-align: center;
+	font-size: 18px;
 `
