@@ -29,8 +29,8 @@ const DefaultPage = () => {
   }, [cookies.token]);
 
   const goHome = () => {
-    // window.location.replace("/")
-    history.push('/');
+    window.location.replace("/")
+    
   };
 
   const logoutEvent = () => {
@@ -39,8 +39,8 @@ const DefaultPage = () => {
         headers: { Authorization: token },
       })
       .then(() => {
-        goHome()
         removeCookie("token");
+        goHome()
       })
       .catch(() => alert("다시 한번 로그아웃 해주세요"));
   };
@@ -57,9 +57,8 @@ const DefaultPage = () => {
             color="primary" 
             component={NavLink}
             to={{ pathname: "/mypage", state: { token: cookies.token } }}
-            // right="17vw"
             >
-            My Page
+            마이페이지
           </UserButton>
 
           <UserButton 
@@ -67,18 +66,16 @@ const DefaultPage = () => {
             color="primary" 
             component={NavLink} 
             to={{ pathname: "/cart", state: { token: cookies.token } }}
-            // right="9vw"
             >
-            My Cart
+            장바구니
             </UserButton>
           
           <UserButton 
             variant="outlined" 
             color="primary" 
             onClick={logoutEvent}
-            // right="1vw"
             >
-            Logout
+            로그아웃
           </UserButton>
         </UserButtons>
       </>
@@ -90,18 +87,28 @@ const DefaultPage = () => {
           <NameDiv fontSize="20px" fontWeight="700">{user.name}</NameDiv>
           <NameDiv> 님 안녕하세요</NameDiv>
         </LoginedDiv>
-        <NavLink to={{ pathname: "/admin", state: { token: cookies.token } }}>
-          <AdminButton variant="outlined" color="primary">관리 페이지</AdminButton>
-        </NavLink>
-        <AdminButton variant="outlined" color="primary" onClick={logoutEvent}>
-          로그아웃
-        </AdminButton>
+        <AdminButtons>
+          <AdminButton
+            component={NavLink}
+            to={{pathname: "/admin"}}
+            variant="outlined"
+            >
+            관리페이지
+          </AdminButton>
+          <AdminButton 
+            variant="outlined" 
+            color="primary" 
+            onClick={logoutEvent}
+            >
+            로그아웃
+          </AdminButton>
+        </AdminButtons>
       </>
   };
 
   return (
     <DefaultContainer>
-      <ImageButton onClick={goHome}>
+      <ImageButton onClick={() => history.push('/')}>
         <ImageLogo src={logo} alt="logo" />
       </ImageButton>
       {cookies.token !== undefined ? (
@@ -173,10 +180,26 @@ const NameDiv = styled.span`
   font-size: ${props => props.fontSize || "12px"};
   font-weight: ${props => props.fontWeight || "300px" };
 `;
-const AdminButton = styled(Button)`
+const AdminButtons = styled.div`
   position: absolute;
   top: 0;
-  right: 119px;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+
+  width: 13vw;
+`
+
+const AdminButton = styled(Button)`
+  color: #3f51b5;
+  background-color: white;
+  font-size: 1vw;
+  font-weight: bold;
+  
+  &:hover{
+    color: white;
+    background-color: #3f51b5;
+  }
 `;
 const UserButton = styled(Button)`
   padding: 5px;
@@ -189,10 +212,10 @@ const UserButton = styled(Button)`
 const UserButtons = styled.div`
   position: absolute;
   top: 0;
+  right: 0;
   width: 20vw;
   display: flex;
   justify-content: space-between;
-  right: 0;
 `
 
 const ImageLogo = styled.img`

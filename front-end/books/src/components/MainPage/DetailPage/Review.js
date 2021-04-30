@@ -11,7 +11,6 @@ const Review = ({ review, itemId, token, setReviews }) => {
   const [newContent, setNewContent] = useState(review.content)
   const [newScore, setNewScore] = useState(review.score)
 	
-
 	const deleteEvent = () => {
 		axios.delete("api/items/delete/review", {
 				data: {
