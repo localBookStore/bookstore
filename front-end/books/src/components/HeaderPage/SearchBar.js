@@ -77,7 +77,6 @@ const SearchInput = styled(TextField)`
 `
 const SearchButton = styled(Button)`
   font-size: 27px;
-  
 `;
 const SelectTag = styled(Select)`
   width: 5vw;
