@@ -33,7 +33,8 @@ const BestBookList = ({ location:{ state } }) => {
           </tr>
         ))}
       </tbody>
-    </Container></>
+    </Container>
+    </>
     }
     </>
 };
