@@ -23,15 +23,14 @@ const CategoryHoverDetail = ({genreData, show}) => {
     </GenreTag>
 
     <ItemsContainer>
-      {choiceGenre && choiceGenre.map((item, idx) => {
-        return <div key={idx}>
+      {choiceGenre && choiceGenre.map((item, idx) => (
+        <div key={idx}>
           <Link to={{pathname:`/detail/${item.id}`, state:{book:item}}}>
-            <StyledPaper component={ItemImage} src={item.imageUrl} elevation={1}></StyledPaper>
+            <StyledPaper component={ItemImage} src={item.imageUrl} elevation={2} />
           </Link>
           <ItemTitle>{item.name}</ItemTitle>
-        </div>
-          
-      })}
+        </div>       
+      ))}
       </ItemsContainer>
   </HoverComponent>
 }

@@ -1,9 +1,11 @@
 import Header from "./components/HeaderPage/Header";
 import Home from "./components/MainPage/HomePage/Home";
 import ItemDetail from "./components/MainPage/DetailPage/ItemDetail";
+
 import BookList from "./components/MainPage/BookListPage/SearchBookList"
 import BestBookList from "./components/MainPage/BookListPage/BestBookList";
 import NewBookList from "./components/MainPage/BookListPage/NewBookList";
+
 import Community from "./components/MainPage/CommunityPage/Community";
 import CommunityRegister from "./components/MainPage/CommunityPage/CommunityRegister";
 import CommunityUpdate from "./components/MainPage/CommunityPage/CommunityUpdate";

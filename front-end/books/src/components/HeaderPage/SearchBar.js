@@ -1,56 +1,70 @@
-import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 
 import { Select, MenuItem , Button, TextField} from '@material-ui/core';
 import styled from "styled-components";
 
-const SearchBar = () => {
-  const [input, setInput] = useState("");
-  const [tag, setTag] = useState("name");
+const SearchBar = ({query, setQuery, searchEvent}) => {
   const history = useHistory();
+  
+  const initialize = () => {
+    setQuery({
+      ...query,
+      input: "",
+      tag: "name",
+    })
+  }
 
-  const getBookList = () => {
-    axios.get("api/items/", {params:{ input, tag }})
-      .then(res => {
+  const queryChangeEvent = (e) => {
+    const { name, value } = e.target
+    setQuery({
+      ...query,
+      [name]: value
+    })
+  }
+
+  const enterEvent = (event) => {
+    if (event.key === "Enter") clickEvent();
+  };
+
+  const clickEvent = () => {
+    if (query.input !== "") {
+      searchEvent().then(res => {
         const books = res.data._embedded.defaultList
         history.push({
           pathname: "/booklist",
-          state: { books },
+          state: { books, input:query.input },
         });
+        
       })
-      .catch(() => alert("검색 결과가 없습니다."));
-    setInput("");
+      .catch(() => alert("검색 결과가 없습니다.👋"));
+    }
+    else alert(" 📝 검색어를 입력하세요.")
+    initialize();
   };
 
-  const enterEvent = (event) => {
-    if (event.key === "Enter") {
-      clickEvent();
-    }
-  };
-  const clickEvent = () => {
-    if (input) {
-      getBookList();
-    }
-  };
-
-  return (
-		<EntireBar>
-			<SelectTag value={tag} onChange={(e) => setTag(e.target.value)}>
+  return <EntireBar>
+			<SelectTag 
+        name="tag" 
+        value={query.tag} 
+        variant="outlined" 
+        onChange={queryChangeEvent}
+        >
 				<MenuItem value="name">제목</MenuItem>
 				<MenuItem value="author">저자</MenuItem>
 			</SelectTag>
+
 			<SearchInput 
         variant="outlined"
         label="Search"
         placeholder="Search..." 
         size="medium"
+        name="input"
+        value={query.input}
         onKeyPress={enterEvent}
-        onChange={(e) => setInput(e.target.value)} 
+        onChange={queryChangeEvent}
       />
 			<SearchButton color="primary" onClick={clickEvent}>🔍</SearchButton>
 		</EntireBar>
-	);
 };
 export default SearchBar;
 
@@ -64,7 +78,7 @@ const EntireBar = styled.div`
 `
 const SearchInput = styled(TextField)`
   width: 55vw;
-  margin-left: 30px;
+  margin-left: 10px;
 
   & label.Mui-focused {
     color: #1e88e5;
@@ -80,4 +94,9 @@ const SearchButton = styled(Button)`
 `;
 const SelectTag = styled(Select)`
   width: 5vw;
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border: 3px solid #5c6bc0;
+    }
+  }
 `;
