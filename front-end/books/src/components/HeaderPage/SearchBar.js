@@ -5,7 +5,6 @@ const SearchBar = ({query, setQuery, searchEvent}) => {
 
   const queryChangeEvent = (e) => {
     const { name, value } = e.target
-    console.log(name, value)
     setQuery({
       ...query,
       [name]: value
@@ -15,7 +14,7 @@ const SearchBar = ({query, setQuery, searchEvent}) => {
   const enterEvent = (event) => {
     if (event.key === "Enter")clickEvent();
   };
-  
+
   const clickEvent = () => {
     if (query.input !== "") searchEvent();
     else alert(" 📝 검색어를 입력하세요.")
