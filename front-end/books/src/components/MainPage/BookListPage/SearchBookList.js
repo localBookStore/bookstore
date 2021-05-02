@@ -6,10 +6,11 @@ import { Image, Table } from "react-bootstrap";
 import styled from "styled-components"
 
 const BookList = ({location}) => {
-  const { books } = location.state
-
+  const { books, input } = location.state
+  
   return <>
-    {books.length && <Container responsive="sm">
+  <ContainerTitle>🖥 입력하신<QueryInput>'{`${input}`}'</QueryInput>에 대한 결과입니다.</ContainerTitle>
+  <Container responsive="sm">
     <thead>
       <tr>
       {["포스터이미지", "제목", "장르", "출판사", "가격"].map((tag, idx) => (
@@ -32,10 +33,20 @@ const BookList = ({location}) => {
         ))}
       </tbody>
     </Container>
-    }</>
-};
+  </> 
+}
 export default BookList;
 
+const ContainerTitle = styled.div`
+  margin: 30px 10%;
+  font-size: 24px;
+  font-weight: bold;
+`
+const QueryInput = styled.span`
+  margin: 0 10px;
+  font-size: 32px;
+  font-weight: bold;
+`
 const Container = styled(Table)`
   margin: 0 auto;
   width: 80%;

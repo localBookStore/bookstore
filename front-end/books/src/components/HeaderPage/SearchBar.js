@@ -1,7 +1,18 @@
+import { useHistory } from "react-router-dom";
+
 import { Select, MenuItem , Button, TextField} from '@material-ui/core';
 import styled from "styled-components";
 
 const SearchBar = ({query, setQuery, searchEvent}) => {
+  const history = useHistory();
+  
+  const initialize = () => {
+    setQuery({
+      ...query,
+      input: "",
+      tag: "name",
+    })
+  }
 
   const queryChangeEvent = (e) => {
     const { name, value } = e.target
@@ -12,32 +23,48 @@ const SearchBar = ({query, setQuery, searchEvent}) => {
   }
 
   const enterEvent = (event) => {
-    if (event.key === "Enter")clickEvent();
+    if (event.key === "Enter") clickEvent();
   };
 
   const clickEvent = () => {
-    if (query.input !== "") searchEvent();
+    if (query.input !== "") {
+      searchEvent().then(res => {
+        const books = res.data._embedded.defaultList
+        history.push({
+          pathname: "/booklist",
+          state: { books, input:query.input },
+        });
+        
+      })
+      .catch(() => alert("검색 결과가 없습니다.👋"));
+    }
     else alert(" 📝 검색어를 입력하세요.")
+    initialize();
   };
 
-  return (
-		<EntireBar>
-			<SelectTag name="tag" value={query.tag} variant="outlined" onChange={e => queryChangeEvent(e)}>
+  return <EntireBar>
+			<SelectTag 
+        name="tag" 
+        value={query.tag} 
+        variant="outlined" 
+        onChange={queryChangeEvent}
+        >
 				<MenuItem value="name">제목</MenuItem>
 				<MenuItem value="author">저자</MenuItem>
 			</SelectTag>
+
 			<SearchInput 
         variant="outlined"
         label="Search"
         placeholder="Search..." 
         size="medium"
         name="input"
+        value={query.input}
         onKeyPress={enterEvent}
-        onChange={queryChangeEvent} 
+        onChange={queryChangeEvent}
       />
 			<SearchButton color="primary" onClick={clickEvent}>🔍</SearchButton>
 		</EntireBar>
-	);
 };
 export default SearchBar;
 

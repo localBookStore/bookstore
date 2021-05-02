@@ -6,18 +6,18 @@ import CategoryHoverDetail from "./CategoryHoverDetail";
 import { Button } from "@material-ui/core"
 import styled from "styled-components";
 
-
 // JSX duplicated code 
-const NavigationButton = ({ title, url }) => {
+const NavigationButton = ({ title, url, data=null }) => {
+	
 	return <NavButton
 		variant="contained"
 		component={NavLink} 
-		activeClassName={"selected"} 
-		to={url}
+		activeClassName={"selected"}
+		to={{pathname:url, state:data}}
 		>{title}</NavButton>
 }
 
-const CategoryBar = ({genreData}) => {	
+const CategoryBar = ({genreData, bestBooks, newBooks}) => {	
 	const [isHover, setIsHover] = useState(false);
 
 	const hoverOn = () => {
@@ -34,8 +34,8 @@ const CategoryBar = ({genreData}) => {
 						<CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} show={isHover} /> : null 
 				}
 			</GenreContainer>
-			<NavigationButton url="/bestbooklist" title="베스트"/>
-			<NavigationButton url="/newbooklist" title="최신작"/>
+			<NavigationButton url="/bestbooklist" data={bestBooks} title="베스트"/>
+			<NavigationButton url="/newbooklist" data={newBooks} title="최신작"/>
 			<NavigationButton url="/community" title="커뮤니티"/>
 
 		</AllContainer>
