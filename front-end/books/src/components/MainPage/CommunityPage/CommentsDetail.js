@@ -1,18 +1,19 @@
 import axios from "axios"
 import { useState } from "react"
 import EachComment from "./EachComment"
-import { jwtDecode } from "feature/JwtDecode"
+
+import jwtDecode from "feature/jwtDecode"
 
 import { Button, TextField } from "@material-ui/core"
 import styled from "styled-components"
 
-const CommentsDetail = ({ comments, setComments, boardId, token }) => {
+const CommentsDetail = ({ comments, setComments, boardId, token, email }) => {
   const [content, setContent] = useState("");
 
   const submitEvent = (depth, parent, content) => {
-    const memberEmail = jwtDecode(token).sub
+    
     axios.post("api/board/reply/comment", {
-      memberEmail,
+      memberEmail:email,
       boardId,
       depth,
       parent,

@@ -1,38 +1,40 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom"
-import { jwtDecode } from "feature/JwtDecode"
 
 import { Modal } from "react-bootstrap"
 import { Button } from "@material-ui/core";
 import styled from "styled-components";
 
-const ArticleDetail = ({ article, token }) => {
+const ArticleDetail = ({ article, token, email }) => {
   const [isShow, setIsShow] = useState(false);
   const history = useHistory();
   const { category, content, createdDate, title, id, memberEmail } = article
- 
+  
+  const showOff = () => setIsShow(false);
+  const showOn = () => setIsShow(true);
+
   const onClickEvent = () => {
     axios.delete("api/board/delete", {
       data: {
         id,
-        memberEmail:jwtDecode(token).sub,
+        memberEmail:email,
       }, headers: {
         Authorization:token
       }
     })
-      .then(res => history.replace('/community'))
+      .then(() => history.replace('/community'))
       .catch(err => console.log(err.response))
   }
 
   const DeleteCheckModal = () => {
-    return <Modal show={isShow} onHide={() => setIsShow(false)}>
+    return <Modal show={isShow} onHide={showOff}>
       <Modal.Header closeButton>
         <Modal.Title>정말로 삭제하시겠습니까?</Modal.Title>
       </Modal.Header>
       <Modal.Body>글을 삭제하시면 내용과 함께 작성한 댓글까지 삭제됩니다.</Modal.Body>
       <Modal.Footer>
-        <Button variant="contained" onClick={() => setIsShow(false)}>
+        <Button variant="contained" onClick={showOn}>
           취소</Button>
         <Button variant="contained" color="secondary" onClick={onClickEvent}>
           삭제</Button>
@@ -46,11 +48,11 @@ const ArticleDetail = ({ article, token }) => {
     <hr />
     <ArticleContent>{content}</ArticleContent>
     <ArticleDate>{createdDate}</ArticleDate>
-    {token !== undefined && memberEmail === jwtDecode(token).sub && <ButtonFeature>
+    {token !== undefined && memberEmail === email && <ButtonFeature>
       
       <EditButton
         component={Link}
-        to={{pathname:"/community/update", state:{id, category, content, title}}}
+        to={{pathname:"/community/update", state:{ data:{id, category, content, title}, email, token}}}
         variant="outlined"
         fontcolor="#ef9a9a"
         >
@@ -60,7 +62,7 @@ const ArticleDetail = ({ article, token }) => {
       <EditButton 
         variant="outlined"
         fontcolor="#ec407a"
-        onClick={() => setIsShow(true)}
+        onClick={showOn}
         >
         삭제
       </EditButton>

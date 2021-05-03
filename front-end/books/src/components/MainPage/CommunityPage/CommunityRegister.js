@@ -1,13 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
-import { jwtDecode } from "feature/JwtDecode"
-import { useCookies } from "react-cookie";
+
+import getCookie from "feature/getCookie"
+import jwtDecode from "feature/jwtDecode"
 
 import { TextField, Button, Select, MenuItem} from "@material-ui/core"
 import styled from "styled-components";
 
 const CommunityRegister = ({ history }) => {
-	const [cookies] = useCookies(["token"]);
+	const { token } = getCookie();
+	const { sub } = jwtDecode(token);
+
 	const [inputData, setInputData] = useState({
     category: "사고팝니다",
     title: "",
@@ -22,17 +25,16 @@ const CommunityRegister = ({ history }) => {
 				[name]: value,
 			});
 		}, 700)
-		
 	};
 
 	const summitEvent = () => {
-    const memberEmail = jwtDecode(cookies.token).sub
-
+    
+		console.log(token)
 		axios.post("api/board", {
 				...inputData,
-				memberEmail,
-			})
-			.then(res => history.push('/community'))
+				memberEmail:sub,
+			}, { headers: {Authorization: token}})
+			.then(() => history.push("/community"))
 			.catch((err) => console.log(err.response));
 	};
 

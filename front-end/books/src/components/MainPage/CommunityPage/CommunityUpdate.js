@@ -1,15 +1,13 @@
 import axios from "axios";
 import { useState } from "react";
-import { useCookies } from "react-cookie";
-import { jwtDecode } from "feature/JwtDecode"
 
 import { TextField, Button, Select, MenuItem} from "@material-ui/core"
 import styled from "styled-components";
 
-const CommunityRegister = ({ history, location:{ state } }) => {
-	const [cookies] = useCookies(["token"]);
+const CommunityUpdate = ({ history, location:{ state } }) => {
+	const { token, email } = state;
 	const [inputData, setInputData] = useState({
-    ...state
+    ...state.data
   });
 
 	const onChangeEvent = (e) => {
@@ -19,16 +17,14 @@ const CommunityRegister = ({ history, location:{ state } }) => {
 			[name]: value,
 		});
 	};
-
-	const summitEvent = () => {
-    const memberEmail = jwtDecode(cookies.token).sub
-		
+	
+	const summitEvent = () => {		
     axios.put("api/board/modify", {
       ...inputData,
-      memberEmail,
-    }, { headers: { Authorization: cookies.token }})
-    .then((res) => history.replace('/community'))
-    .catch((err) => console.log(err.response));
+      memberEmail: email,
+    }, { headers: { Authorization: token }})
+    .then(() => history.replace(`/community`))
+    .catch(err => console.log(err.response));
 	};
 
 	return (
@@ -48,7 +44,7 @@ const CommunityRegister = ({ history, location:{ state } }) => {
 
 	);
 };
-export default CommunityRegister;
+export default CommunityUpdate;
 
 const Container = styled.div`
 	position: relative;

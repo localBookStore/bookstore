@@ -3,7 +3,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
-import { jwtDecode } from "feature/JwtDecode";
+import jwtDecode from "feature/jwtDecode";
 
 import styled from "styled-components";
 import { Button } from "@material-ui/core";

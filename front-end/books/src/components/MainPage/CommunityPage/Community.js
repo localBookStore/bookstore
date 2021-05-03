@@ -11,10 +11,13 @@ const Community = ({ history }) => {
   const section = ["글 번호", "분류", "제목", "작성시간", "댓글 수"]
 
   useEffect(() => {
-    axios.get("api/board")
-      .then(res => setArticles(res.data.dtoList))
-      .catch(err => console.log(err.response))
+    getArticles();
   }, [])
+
+  const getArticles = async () => {
+    const {data: { dtoList }} = await axios.get("api/board");
+    setArticles(dtoList)
+  }
 
   const articleDetailEvent = (id) => {
     history.push(`/community/detail/${id}`)
@@ -41,7 +44,7 @@ const Community = ({ history }) => {
         </tbody>
       </Container>
       : 
-      <div>게시글이 없습니다.</div>
+      <NoArticle>🙅‍♂️ 게시글이 없습니다</NoArticle>
       }
 
     <div style={{display:"flex", justifyContent:"flex-end"}}>
@@ -69,6 +72,11 @@ const Container = styled(Table)`
     font-weight: 600;
     height: 100px;
   } 
+`
+const NoArticle = styled.div`
+  margin: 50px 0 0 10%;
+  font-size: 24px;
+  font-weight: bold;
 `
 
 const PostButton = styled(Button)`
