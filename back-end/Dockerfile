@@ -5,7 +5,7 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 RUN chmod +x ./gradlew
-RUN ./gradlew clean build --no-daemon --exclude-task test
+RUN ./gradlew clean build --no-daemon --exclude-task test --stacktrace
 
 FROM openjdk:11-jre-slim
 COPY --from=builder build/libs/*.jar app.jar
