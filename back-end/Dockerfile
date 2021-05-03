@@ -5,7 +5,7 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 RUN chmod +x ./gradlew
-RUN ./gradlew bootBuildimage --imageName=hangs0908/bookstore-backend --stacktrace
+RUN ./gradlew clean build --no-daemon --exclude-task test
 
 FROM openjdk:11-jre-slim
 COPY --from=builder build/libs/*.jar app.jar
