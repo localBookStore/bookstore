@@ -1,5 +1,8 @@
 language: generic
 
+jdk:
+  - openjdk11
+
 sudo: required
 
 services:
