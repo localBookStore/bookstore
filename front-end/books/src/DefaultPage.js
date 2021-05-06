@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { NavLink, useHistory } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import axios from "axios";
 
-import { jwtDecode } from "feature/JwtDecode";
+import getCookie from "feature/getCookie";
+import jwtDecode from "feature/jwtDecode";
 
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
 import logo from "./icons/bookshop.svg";
 
 const DefaultPage = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const { token, removeCookie } = getCookie();
+  
   const history = useHistory();
   const [user, setUser] = useState({
     name: "",
@@ -18,23 +19,21 @@ const DefaultPage = () => {
   });
 
   useEffect(() => {
-    if (cookies.token !== undefined) {
-      const { nickName, role } = jwtDecode(cookies.token);
+    if (token !== undefined) {
+      const { nickName, role } = jwtDecode(token);
       setUser({
         ...user,
         name: nickName,
         role,
       });
     }
-  }, [cookies.token]);
+  }, [token]);
 
   const goHome = () => {
     window.location.replace("/")
-    
   };
 
   const logoutEvent = () => {
-    const token = cookies.token;
     axios.post("logout", null, {
         headers: { Authorization: token },
       })
@@ -56,7 +55,7 @@ const DefaultPage = () => {
             variant="outlined" 
             color="primary" 
             component={NavLink}
-            to={{ pathname: "/mypage", state: { token: cookies.token } }}
+            to={{ pathname: "/mypage", state: { token } }}
             >
             마이페이지
           </UserButton>
@@ -65,7 +64,7 @@ const DefaultPage = () => {
             variant="outlined" 
             color="primary" 
             component={NavLink} 
-            to={{ pathname: "/cart", state: { token: cookies.token } }}
+            to={{ pathname: "/cart", state: { token } }}
             >
             장바구니
             </UserButton>
@@ -111,7 +110,7 @@ const DefaultPage = () => {
       <ImageButton onClick={() => history.push('/')}>
         <ImageLogo src={logo} alt="logo" />
       </ImageButton>
-      {cookies.token !== undefined ? (
+      {token !== undefined ? (
         user.role === "USER" ? <RegularUser /> : <AdminUser />
       ) : <AuthButtons>
           <AuthButton 

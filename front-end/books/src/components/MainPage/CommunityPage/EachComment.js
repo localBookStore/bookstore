@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useCookies } from "react-cookie"
 import axios from "axios";
+
+import getCookie from "feature/getCookie"
+import jwtDecode from "feature/jwtDecode";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReply } from "@fortawesome/free-solid-svg-icons";
 import { Button, TextField } from "@material-ui/core"
 import styled from "styled-components";
-import jwtDecode from "jwt-decode";
 
 const EachComments = ({ comment, setComments, submitEvent, boardId }) => {
-	const [cookies] = useCookies(["token"]);
-	const token = cookies.token;
+	const { token } = getCookie();
 	const { sub } = jwtDecode(token);
 	const [isUpdate, setIsUpdate] = useState(false);
 	const [showInput, setShowInput] = useState(false);
@@ -18,7 +18,6 @@ const EachComments = ({ comment, setComments, submitEvent, boardId }) => {
 	const [content, setContent] = useState("");
 
 	const modifyEvent = () => {
-		
 		axios.put("api/board/reply/modify", {
 			memberEmail: sub,
 			content: newContent,
@@ -40,43 +39,44 @@ const EachComments = ({ comment, setComments, submitEvent, boardId }) => {
 			.then((res) => setComments(res.data))
 			.catch((err) => console.log(err.response));
 	};
+
 	return (
 		<Container>
 			<div>
-					{ isUpdate ? <InputContainer>
-						<CommentInput marginleft={comment.depth} variant="outlined" size="small" defaultValue={newContent} onChange={e => setNewContent(e.target.value)}/>
-						<CommentButton fontcolor="#ff8a65" onClick={modifyEvent}>저장</CommentButton>
-						<CommentButton fontcolor="#9e9e9e" onClick={() => setIsUpdate(false)}>취소</CommentButton>
-					</InputContainer>
-					: 
-					<>
-						<CommentContent marginleft={comment.depth}>
-						<FontAwesomeIcon icon={faReply} rotation={180} style={{margin: "0 20px"}} />
-						{comment.content}</CommentContent>
+				{ isUpdate ? <InputContainer>
+					<CommentInput marginleft={comment.depth} variant="outlined" size="small" defaultValue={newContent} onChange={e => setNewContent(e.target.value)}/>
+					<CommentButton fontcolor="#ff8a65" onClick={modifyEvent}>저장</CommentButton>
+					<CommentButton fontcolor="#9e9e9e" onClick={() => setIsUpdate(false)}>취소</CommentButton>
+				</InputContainer>
+				: 
+				<>
+					<CommentContent marginleft={comment.depth}>
+					<FontAwesomeIcon icon={faReply} rotation={180} style={{margin: "0 20px"}} />
+					{comment.content}</CommentContent>
 
-						{showInput && <InputContainer>
-							<CommentInput variant="outlined" marginleft={comment.depth+1} size="small" onChange={e => setContent(e.target.value)} />
-								<CommentButton 
-									variant="outlined" 
-									fontcolor="#ff8a65"
-									onClick={() => {
-										submitEvent(comment.depth+1, comment.id, content)
-										setShowInput(false)	
-									}}
-									>
-									답글달기
-								</CommentButton>
-								
-								<CommentButton 
-									variant="outlined" 
-									fontcolor="#9e9e9e"
-									onClick={() => setShowInput(false)}
-									>
-									취소
-								</CommentButton>
-						</InputContainer>}
-					</>
-					}
+					{showInput && <InputContainer>
+						<CommentInput variant="outlined" marginleft={comment.depth+1} size="small" onChange={e => setContent(e.target.value)} />
+							<CommentButton 
+								variant="outlined" 
+								fontcolor="#ff8a65"
+								onClick={() => {
+									submitEvent(comment.depth+1, comment.id, content)
+									setShowInput(false)	
+								}}
+								>
+								답글달기
+							</CommentButton>
+							
+							<CommentButton 
+								variant="outlined" 
+								fontcolor="#9e9e9e"
+								onClick={() => setShowInput(false)}
+								>
+								취소
+							</CommentButton>
+					</InputContainer>}
+				</>
+				}
 			</div>
 			<div>
 				<CommentInfo color="gray">{comment.modifiedDate}</CommentInfo>

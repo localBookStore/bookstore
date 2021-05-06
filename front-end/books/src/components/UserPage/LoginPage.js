@@ -1,6 +1,7 @@
 import { useCookies } from "react-cookie"
-import { Link } from "react-router-dom"
+import { Link, Route } from "react-router-dom"
 import { useForm } from "react-hook-form"
+import qs from "qs";
 import axios from "axios"
 
 import {Avatar, Button, CssBaseline, TextField, Typography, Container} from '@material-ui/core';
@@ -8,10 +9,17 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import styled from "styled-components"
 
 
-const LoginPage = ({ history }) => {
+const LoginPage = ({ history, location }) => {
   const { register, handleSubmit } = useForm();
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   
+  const googleLoginEvent = () => {
+    const URL = 'oauth2/authorization/google';
+    axios.get(URL)
+    .then(res => console.log(res))
+    .catch(err => console.log(err.response))
+  }
+
 
   const submitEvent = (data) => {
     axios.post("login", data)
@@ -61,6 +69,8 @@ const LoginPage = ({ history }) => {
           </SubmitButton>
           <Typography variant="body2" align="center"><Link to="/signup" variant="body1">Sign Up</Link></Typography>
         </form>
+        <Button onClick={() => googleLoginEvent()}>구글 로그인</Button>
+        
       </IconDiv>
     </FormContainer>
 }
