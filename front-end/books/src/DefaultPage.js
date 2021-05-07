@@ -19,13 +19,16 @@ const DefaultPage = () => {
   });
 
   useEffect(() => {
+    // console.log(token)
     if (token !== undefined) {
-      const { nickName, role } = jwtDecode(token);
-      setUser({
-        ...user,
-        name: nickName,
-        role,
-      });
+      // const { nickName, role } = jwtDecode(token);
+      
+      // console.log(nickName, role);
+      // setUser({
+      //   ...user,
+      //   name: nickName,
+      //   role,
+      // });
     }
   }, [token]);
 
