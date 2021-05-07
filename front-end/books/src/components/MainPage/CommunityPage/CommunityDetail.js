@@ -1,7 +1,6 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
-
-import getCookie from "feature/getCookie"
+import { useCookies } from "react-cookie";
 import jwtDecode from "jwt-decode"
 
 import ArticleDetail from "./ArticleDetail"
@@ -11,7 +10,8 @@ import styled from "styled-components"
 
 const CommunityDetail = ({ match }) => {
   const articleId = match.params.id;
-  const { token } = getCookie();
+  const [cookies]= useCookies(['token']);
+  const token = cookies.token
   const { sub } = jwtDecode(token);
 
   const [article, setArticle] = useState(null);

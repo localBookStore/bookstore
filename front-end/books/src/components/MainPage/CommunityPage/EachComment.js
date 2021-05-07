@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
-import getCookie from "feature/getCookie"
+import { useCookies } from "react-cookie";
 import jwtDecode from "feature/jwtDecode";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +9,8 @@ import { Button, TextField } from "@material-ui/core"
 import styled from "styled-components";
 
 const EachComments = ({ comment, setComments, submitEvent, boardId }) => {
-	const { token } = getCookie();
+	const [cookies] = useCookies(['token']);
+	const token = cookies.token;
 	const { sub } = jwtDecode(token);
 	const [isUpdate, setIsUpdate] = useState(false);
 	const [showInput, setShowInput] = useState(false);

@@ -1,28 +1,21 @@
-import { ContactlessOutlined } from "@material-ui/icons";
-import getCookie from "feature/getCookie";
+import { useState, useEffect } from "react";
 import {useCookies} from "react-cookie";
 import { Redirect } from "react-router-dom";
 
-const validation = (value, uri) => {
-	const res = value.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-	const regex = new RegExp("[\\?&]" + res + "=([^&#]*)");
-
-	const results = regex.exec(uri);
-	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+const validation = (uri) => {
+	const result = `Bearer ${uri.slice(7)}`
+	return result
 };
 
-const OauthRedirect = ({ location: { search } }) => {
-	const [cookies, setCookie] = useCookies(["token"]);
+const OauthRedirect = ({location}) => {
+  const [cookies, setCookies] = useCookies(['token']); 
 
-	const token = validation("token", search);
-  setCookie('token', token)
+  const TOKEN = validation(location.search);
+  useEffect(() => {
+    setCookies('token', TOKEN)
+  }, [])
   
-	if (token === "") {
-		// return <Redirect to= "/login" />
-	} else {
-    console.log(cookies.token)
-  //   return <Redirect to='/' />
-  }
-  return <div></div>
+  return <Redirect to="/" />
+  
 };
 export default OauthRedirect;
