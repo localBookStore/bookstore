@@ -1,7 +1,7 @@
 import { useCookies } from "react-cookie";
 
-const GetToken = () => {
+const GetCookie = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   return {token:cookies.token, setCookie, removeCookie}
 }
-export default GetToken;
+export default GetCookie;
