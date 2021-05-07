@@ -23,6 +23,7 @@ import { Route, Switch } from "react-router-dom";
 
 import styled from "styled-components";
 const App = () => {
+
   return (
     <AppContainer>
       <DefaultPage />
@@ -38,7 +39,7 @@ const App = () => {
         <Route exact path="/community/register" component={CommunityRegister} />
         <Route exact path="/community/update" component={CommunityUpdate} />
         <Route path="/login" component={LoginPage} />
-        <Route path="/oauth/redirect" component={OauthRedirect} />
+        <Route path="/oauth" component={OauthRedirect} />
         <Route path="/signup" component={SignupPage} />
 
         <Route path="/cart" component={CartPage} />

@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
-
-import getCookie from "feature/getCookie"
+import { useCookies } from "react-cookie";
 import jwtDecode from "feature/jwtDecode"
 
 import { TextField, Button, Select, MenuItem} from "@material-ui/core"
 import styled from "styled-components";
 
 const CommunityRegister = ({ history }) => {
-	const { token } = getCookie();
+	const [cookies] = useCookies(['token']);
+	const token = cookies.token;
 	const { sub } = jwtDecode(token);
 
 	const [inputData, setInputData] = useState({

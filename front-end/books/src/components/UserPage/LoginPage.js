@@ -1,5 +1,5 @@
 import { useCookies } from "react-cookie"
-import { Link, Route } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import axios from "axios"
 
@@ -7,15 +7,14 @@ import {Avatar, Button, CssBaseline, TextField, Typography, Container} from '@ma
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import styled from "styled-components"
 
-const GOOGLE_LOGIN_URL = 'http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth/redirect';
+const GOOGLE_LOGIN_URL = 'http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth';
 
 const LoginPage = ({ history, location }) => {
   const { register, handleSubmit } = useForm();
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-  
 
+  
   const submitEvent = (data) => {
-    console.log(data)
     axios.post("login", data)
       .then(res => {
         const token = res.headers.authorization
@@ -63,9 +62,8 @@ const LoginPage = ({ history, location }) => {
           </SubmitButton>
           <Typography variant="body2" align="center"><Link to="/signup" variant="body1">Sign Up</Link></Typography>
         </form>
-        <a href={GOOGLE_LOGIN_URL}>구글 로그인</a>
-        
       </IconDiv>
+      <a href={GOOGLE_LOGIN_URL}>구글 로그인</a>
     </FormContainer>
 }
 export default LoginPage;

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { NavLink, useHistory } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 
-import getCookie from "feature/getCookie";
 import jwtDecode from "feature/jwtDecode";
 
 import styled from "styled-components";
@@ -10,7 +10,8 @@ import { Button } from "@material-ui/core";
 import logo from "./icons/bookshop.svg";
 
 const DefaultPage = () => {
-  const { token, removeCookie } = getCookie();
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const token = cookies.token;
   
   const history = useHistory();
   const [user, setUser] = useState({
@@ -19,16 +20,13 @@ const DefaultPage = () => {
   });
 
   useEffect(() => {
-    // console.log(token)
     if (token !== undefined) {
-      // const { nickName, role } = jwtDecode(token);
-      
-      // console.log(nickName, role);
-      // setUser({
-      //   ...user,
-      //   name: nickName,
-      //   role,
-      // });
+      const { nickName, role } = jwtDecode(token);
+      setUser({
+        ...user,
+        name: nickName,
+        role,
+      });
     }
   }, [token]);
 
