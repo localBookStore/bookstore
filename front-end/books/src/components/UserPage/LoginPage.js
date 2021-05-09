@@ -12,7 +12,7 @@ const NAVER_LOGIN_URL = 'http://localhost:8080/oauth2/authorization/naver?redire
 const KAKAO_LOGIN_URL = 'http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/oauth';
 
 
-const LoginPage = ({ history, location }) => {
+const LoginPage = ({ history }) => {
   const { register, handleSubmit } = useForm();
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
@@ -37,22 +37,18 @@ const LoginPage = ({ history, location }) => {
             margin="normal"
             required
             fullWidth
-            id="email"
             label="Email Address"
-            name="email"
             autoFocus
-            inputRef={register}
+            {...register("email")}
           />
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            name="password"
             label="Password"
             type="password"
-            id="password"
-            inputRef={register}
+            {...register('password')}
           />
           <SubmitButton
             type="submit"
@@ -65,9 +61,21 @@ const LoginPage = ({ history, location }) => {
           <Typography variant="body2" align="center"><Link to="/signup" variant="body1">Sign Up</Link></Typography>
         </form>
       </IconDiv>
-      <a href={GOOGLE_LOGIN_URL}>GOOGLE</a><br />
-      <a href={NAVER_LOGIN_URL}>NAVER</a><br />
-      <a href={KAKAO_LOGIN_URL}>KAKAO</a>
+        
+        <LinkContainer>
+          <HrefLink href={GOOGLE_LOGIN_URL} style={{textDecoration: "none"}}>
+              <ImageIcon src='https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png' alt='googleIcon' />
+              <IconName>GOOGLE LOGIN</IconName>
+          </HrefLink>
+          <HrefLink href={NAVER_LOGIN_URL} style={{textDecoration: "none"}}>
+              <ImageIcon src='https://play-lh.googleusercontent.com/Kbu0747Cx3rpzHcSbtM1zDriGFG74zVbtkPmVnOKpmLCS59l7IuKD5M3MKbaq_nEaZM' alt='naverIcon' />
+              <IconName>NAVER LOGIN</IconName>
+          </HrefLink>
+          <HrefLink href={KAKAO_LOGIN_URL} style={{textDecoration: "none"}}>
+              <ImageIcon src='https://t1.kakaocdn.net/kakaocorp/corp_thumbnail/Kakao.png' alt='kakaoIcon' />
+              <IconName>KAKAO LOGIN</IconName>
+          </HrefLink>
+      </LinkContainer>
     </FormContainer>
 }
 export default LoginPage;
@@ -85,4 +93,27 @@ height: 40px;
   &&{
     margin: 5% 0;
   }
+`
+const ImageIcon = styled.img`
+  margin-right: 20px;
+  width: 30px;
+`
+const IconName = styled.span`
+  font-size: 1rem;
+  font-weight: bold;
+  color: black;
+`
+const HrefLink = styled.a`
+  width: 60%;
+  padding: 5px 10px;
+  margin: 5px 0;
+  box-shadow: 2px 2px 2px 2px #bdbdbd;
+  
+`
+const LinkContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
 `

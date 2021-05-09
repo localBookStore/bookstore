@@ -27,8 +27,8 @@ const EachItemList = ({ data, itemCheck, token }) => {
       variant="outlined" 
       size="small" 
       value={value} 
-      ref={register} 
-      name={name} 
+      {...register(name)} 
+      // name={name} 
       />
   }
 
