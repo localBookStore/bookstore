@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom"
 
+import jwtDecode from "jwt-decode"
+
 import { Modal } from "react-bootstrap"
 import { Button } from "@material-ui/core";
 import styled from "styled-components";
@@ -15,10 +17,11 @@ const ArticleDetail = ({ article, token, email }) => {
   const showOn = () => setIsShow(true);
 
   const onClickEvent = () => {
+    const { sub } = jwtDecode(token);
     axios.delete("api/board/delete", {
       data: {
         id,
-        memberEmail:email,
+        memberEmail:sub,
       }, headers: {
         Authorization:token
       }
@@ -49,10 +52,9 @@ const ArticleDetail = ({ article, token, email }) => {
     <ArticleContent>{content}</ArticleContent>
     <ArticleDate>{createdDate}</ArticleDate>
     {token !== undefined && memberEmail === email && <ButtonFeature>
-      
       <EditButton
         component={Link}
-        to={{pathname:"/community/update", state:{ data:{id, category, content, title}, email, token}}}
+        to={{pathname:"/community/update", state:{ data:{id, category, content, title}, token}}}
         variant="outlined"
         fontcolor="#ef9a9a"
         >

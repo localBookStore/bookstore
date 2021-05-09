@@ -48,7 +48,7 @@ const AllContainer = styled.div`
 	display: flex;
 	justify-content: space-evenly;
 	text-align: center;
-	z-index: 1;
+	z-index: 3;
 
 	margin: 30px 0 50px 0;
 	padding: 0;

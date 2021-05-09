@@ -2,14 +2,11 @@ import axios from "axios"
 import { useState } from "react"
 import EachComment from "./EachComment"
 
-import jwtDecode from "feature/jwtDecode"
-
 import { Button, TextField } from "@material-ui/core"
 import styled from "styled-components"
 
-const CommentsDetail = ({ comments, setComments, boardId, token, email }) => {
+const CommentsDetail = ({ comments, setComments, boardId, email, token }) => {
   const [content, setContent] = useState("");
-
   const submitEvent = (depth, parent, content) => {
     
     axios.post("api/board/reply/comment", {
@@ -33,6 +30,7 @@ const CommentsDetail = ({ comments, setComments, boardId, token, email }) => {
         setComments={setComments}
         submitEvent={submitEvent}
         boardId={boardId}
+        token={token}
         key={idx} />
       }) : 
       <Notice>😆 첫 댓글을 등록해 주세요</Notice>}
