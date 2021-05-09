@@ -128,8 +128,8 @@ public class OrdersService {
         if(order.getCoupon() != null) {
             Coupon coupon = order.getCoupon();
             coupon.isUsed(false);
-            order.cancel();
         }
+        order.cancel();
     }
 
 
