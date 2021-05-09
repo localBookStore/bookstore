@@ -118,12 +118,19 @@ public class OrdersService {
     public List<OrdersDto.Default> cancelOrder(OrdersDto.Default ordersDto) {
 
         Orders order = orderRepository.getOne(ordersDto.getId());
-        Coupon coupon = order.getCoupon();
-        coupon.isUsed(false);
-        order.cancel();
-
+        couponIsExisted(order);
         MemberDto.Default memberDto = MemberDto.Default.builder().id(order.getMember().getId()).build();
         List<OrdersDto.Default> ordersList = this.findOrders(memberDto);
         return ordersList;
     }
+
+    private void couponIsExisted(Orders order) {
+        if(order.getCoupon() != null) {
+            Coupon coupon = order.getCoupon();
+            coupon.isUsed(false);
+            order.cancel();
+        }
+    }
+
+
 }
