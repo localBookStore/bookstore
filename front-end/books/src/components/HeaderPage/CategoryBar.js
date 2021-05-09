@@ -1,63 +1,47 @@
-import CategoryHoverDetail from "./CategoryHoverDetail";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios"
+
+import CategoryHoverDetail from "./CategoryHoverDetail";
 
 import { Button } from "@material-ui/core"
 import styled from "styled-components";
 
-const CategoryBar = () => {
+// JSX duplicated code 
+const NavigationButton = ({ title, url, data=null }) => {
+	
+	return <NavButton
+		variant="contained"
+		component={NavLink} 
+		activeClassName={"selected"}
+		to={{pathname:url, state:data}}
+		>{title}</NavButton>
+}
+
+const CategoryBar = ({genreData, bestBooks, newBooks}) => {	
 	const [isHover, setIsHover] = useState(false);
-	const [genreData, setGenreData] = useState([]);
 
 	const hoverOn = () => {
-		setTimeout(() => {
-			setIsHover(true)
-		}, 100)
+		setTimeout(() => setIsHover(true), 100)
 	}
 	const hoverOff = () => {
-		setTimeout(() => {
-			setIsHover(false)
-		}, 100)
+		setTimeout(() => setIsHover(false), 100)
 	}
-
-	useEffect(() => {
-		getGenreBooks()
-	}, []);
-
-	const getGenreBooks = async () => {
-		const { data } = await axios.get("api/index/genre/");
-		setGenreData(data);
-	};
 
 	return <AllContainer>
       <GenreContainer onMouseLeave={hoverOff}>
 				<GenreButton variant="contained" onMouseEnter={hoverOn}>장르별</GenreButton>
-				{genreData.length && <CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} show={isHover} />}
+				{genreData.length ? 
+						<CategoryHoverDetail genreData={genreData} hoverOff={hoverOff} show={isHover} /> : null 
+				}
 			</GenreContainer>
-			
-			<NavButton
-				variant="contained"
-				component={NavLink} 
-				activeClassName={"selected"} 
-				to="/bestbooklist"
-				>베스트</NavButton>
-			<NavButton 
-				variant="contained" 
-				component={NavLink} 
-				activeClassName={"selected"} 
-				to="/newbooklist"
-				>최신작</NavButton>
-			<NavButton 
-				variant="contained" 
-				component={NavLink} 
-				activeClassName={"selected"} 
-				to="/community"
-				>커뮤니티</NavButton>
+			<NavigationButton url="/bestbooklist" data={bestBooks} title="베스트"/>
+			<NavigationButton url="/newbooklist" data={newBooks} title="최신작"/>
+			<NavigationButton url="/community" title="커뮤니티"/>
 
 		</AllContainer>
 };
 export default CategoryBar;
+
 
 const AllContainer = styled.div`
 	position: relative;
@@ -78,8 +62,8 @@ const GenreContainer = styled.div`
 `
 const GenreButton = styled(Button)`
 	font-family: 'Nanum Gothic', sans-serif;
-	font-weight: 700;
-	font-size: 24px;
+	font-weight: bold;
+	font-size: 20px;
 	background-color: #ede7f6;
 
 	&:hover {
@@ -88,10 +72,10 @@ const GenreButton = styled(Button)`
 `
 const NavButton = styled(Button)`
 	font-family: 'Nanum Gothic', sans-serif;
-	font-weight: 700;
+	font-weight: bold;
 
 	color: black;
-	font-size: 24px;
+	font-size: 20px;
 	background-color: #ede7f6;
 
 	z-index: -1;

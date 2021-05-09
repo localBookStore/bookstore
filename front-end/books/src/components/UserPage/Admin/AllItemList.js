@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 import EachItemList from "./EachItemList";
 
 import styled from "styled-components";
-import { Button } from "react-bootstrap";
+import { Button } from "@material-ui/core";
 
 const AllItemList = ({ location }) => {
   const token = location.state.token;
@@ -30,16 +30,11 @@ const AllItemList = ({ location }) => {
   };
 
   const deleteItem = () => {
-    console.log([...selected]);
-    axios
-      .delete("api/admin/items", {
-        headers: {
-          Authorization: token,
-        },
-        data: [...selected],
+    axios.delete("api/admin/items", {
+      data: [...selected],
+        headers: { Authorization: token },
       })
       .then((res) => {
-        console.log(res);
         setItems(res.data);
         setSelected(new Set());
       })
@@ -47,49 +42,42 @@ const AllItemList = ({ location }) => {
   };
 
   const ShowCurrentData = () => {
-    const startIdx = currentPage * 10;
-    const currentData = items.slice(startIdx, startIdx + 10);
+    const startIdx = currentPage * 5;
+    const currentData = items.slice(startIdx, startIdx + 5);
     
     return (
       <ItemContainer>
         {currentData.map((data, idx) => {
-          return (
-            <EachItemList
+          return<EachItemList
               data={data}
               itemCheck={itemCheck}
               token={token}
               key={idx}
             />
-          );
         })}
       </ItemContainer>
     );
   };
 
-  return (
-    <>
-      {items && (
-        <Container>
+  return <>{items && <Container>
           <ShowCurrentData />
-          <DeleteButton variant="danger" onClick={deleteItem}>
-            삭제
+          <DeleteButton variant="contained" color="secondary" onClick={deleteItem}>
+            체크된 아이템 삭제
           </DeleteButton>
           <ReactPaginateStyled>
             <ReactPaginate
-              pageCount={Math.ceil(items.length / 10)}
-              pageRangeDisplayed={9}
+              pageCount={Math.ceil(items.length / 5)}
+              pageRangeDisplayed={10}
               marginPagesDisplayed={0}
-              previousLabel="prev"
-              nextLabel="next"
+              previousLabel="⏪"
+              nextLabel="⏩"
               containerClassName={"pagination"}
               activeClassName={"active"}
               onPageChange={({ selected }) => setCurrentPage(selected)}
             />
           </ReactPaginateStyled>
         </Container>
-      )}
-    </>
-  );
+      }</>
 };
 export default AllItemList;
 
@@ -102,12 +90,12 @@ const ItemContainer = styled.div`
   margin: 10px;
 `;
 
-const DeleteButton = styled(Button)``;
+const DeleteButton = styled(Button)`
+  float: right;
+`;
 
 const ReactPaginateStyled = styled.div`
-  margin: 0 20%;
   .pagination {
-    justify-content: center;
 
     & > li > a {
       font-size: 20px;

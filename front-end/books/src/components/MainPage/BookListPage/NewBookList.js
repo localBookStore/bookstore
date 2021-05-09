@@ -1,32 +1,26 @@
-import { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
-import axios from "axios";
 import { genreMap } from "feature/GenreMap"
 
 import { Paper } from "@material-ui/core"
 import { Image, Table } from "react-bootstrap";
 import styled from "styled-components";
 
-const NewBookList = () => {
-  const [books, setBooks] = useState([]);
-
-  useEffect(() => {
-    axios.get(`api/index/newitems/`)
-      .then(({data: { _embedded: { defaultList }}}) => setBooks(defaultList))
-      .catch(err => console.log(err))
-  }, [])
+const NewBookList = ({location: {state}}) => {
+  const newBooks = state;
   
   return <>
-    {books.length && <Container responsive="sm">
+    {!newBooks.length ? <div>새로운 도서가 없습니다.</div> : 
+    <>
+    <ContainerTitle> 👍 상위 30개의 새로운 도서입니다</ContainerTitle>
+    <Container responsive="sm">
       <thead>
-        <tr>
-        {["포스터이미지", "제목", "장르", "출판사", "가격"].map((tag, idx) => (
+        <tr>{["포스터이미지", "제목", "장르", "출판사", "가격"].map((tag, idx) => (
           <th key={idx}><ItemContent>{tag}</ItemContent></th>
         ))}
         </tr>
         </thead>
         <tbody>
-          {books.map((book, idx) => (
+          {newBooks.map((book, idx) => (
             <tr key={idx}>
               <td><NavButton to={{pathname:`/detail/${book.id}`, state:{book}}}>
                 <Paper elevation={8}><ItemImage src={book.imageUrl}/></Paper>
@@ -39,9 +33,16 @@ const NewBookList = () => {
           ))}
         </tbody>
       </Container>
+      </>
     }</>
 };
 export default NewBookList;
+
+const ContainerTitle = styled.div`
+  margin: 30px 10%;
+  font-size: 28px;
+  font-weight: bold;
+`
 
 const Container = styled(Table)`
   margin: 0 auto;

@@ -1,6 +1,8 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
-import { useCookies } from "react-cookie"
+import { useCookies } from "react-cookie";
+import jwtDecode from "jwt-decode"
+
 import ArticleDetail from "./ArticleDetail"
 import CommentsDetail from "./CommentsDetail"
 
@@ -8,8 +10,9 @@ import styled from "styled-components"
 
 const CommunityDetail = ({ match }) => {
   const articleId = match.params.id;
-  const [cookies] = useCookies(["token"])
+  const [cookies]= useCookies(['token']);
   const token = cookies.token
+  const { sub } = jwtDecode(token);
 
   const [article, setArticle] = useState(null);
   const [comments, setComments] = useState(null);
@@ -25,13 +28,18 @@ const CommunityDetail = ({ match }) => {
 
   return <>
     {article && comments && <BoardContainer>
-      <ArticleDetail article={article} token={token}/>
+      <ArticleDetail 
+        article={article} 
+        token={token}
+        email={sub}
+        />
       
       <CommentsDetail 
         comments={comments} 
         setComments={setComments} 
         boardId={articleId} 
         token={token}
+        email={sub}
         />
     </BoardContainer>
     }

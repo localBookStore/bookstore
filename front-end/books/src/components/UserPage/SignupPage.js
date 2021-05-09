@@ -2,7 +2,7 @@ import { useState, useRef } from "react"
 import { useForm } from "react-hook-form"
 import axios from "axios"
 
-import {Avatar, Button, Input, CssBaseline, TextField, CircularProgress, Typography, Container} from '@material-ui/core';
+import {Avatar, Button, CssBaseline, TextField, CircularProgress, Typography, Container} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import styled from "styled-components"
@@ -30,7 +30,6 @@ const SignupPage = ({ history }) => {
   const doSignup = data => {
     const { email, password, nickName, birth } = data
     const { overLab, checkCode } = isCheck
-
     if (overLab && checkCode) {
       axios.post("api/signup/", {
         email,
@@ -57,7 +56,7 @@ const SignupPage = ({ history }) => {
   }
 
   const checkEmailCode = () => {
-    console.log(AUTHCODE.current)
+    console.log(AUTHCODE.current);
     axios.post("api/signup/check-certificated", {
       certificated: AUTHCODE.current
     })
@@ -110,7 +109,6 @@ const SignupPage = ({ history }) => {
         <span>사용가능</span> : 
         <Button color="primary" onClick={checkOverLab}>중복확인</Button>
       }
-      <span>{errors.email && errors.email.message}</span>
       {isCheck.overLab ? 
         <Button color="primary" onClick={sendEmailCode}>인증 코드 보내기</Button> : 
         <Typography display="inline" variant="body2">인증확인필요</Typography> 
@@ -123,7 +121,6 @@ const SignupPage = ({ history }) => {
           placeholder={isCheck.overLab ? "인증코드 입력" : "중복확인을 하세요"} 
           disabled={isCheck.checkCode}
         />
-
         {!isCheck.checkCode ? <Button color="secondary" onClick={checkEmailCode}>인증 확인하기</Button> : <span>인증확인</span>}
       </div>
 
@@ -172,6 +169,9 @@ const SignupPage = ({ history }) => {
         name="nickName"
         label="Nick Name"
         type="text"
+        inputRef={register({
+          required: 'this is a required',
+          })}
         fullWidth
       />
       <TextField 
@@ -181,6 +181,9 @@ const SignupPage = ({ history }) => {
         name="birth"
         label="Birth"
         type="text"
+        inputRef={register({
+          required: 'this is a required',
+          })}
         fullWidth
         placeholder="ex) 930820"
       />

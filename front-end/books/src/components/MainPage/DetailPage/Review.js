@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 import { useState } from "react";
 import ReactStars from "react-rating-stars-component"
 
-import { Button } from "react-bootstrap";
+import { Button, TextField } from "@material-ui/core";
 import styled from "styled-components";
 
 const Review = ({ review, itemId, token, setReviews }) => {
@@ -11,7 +11,6 @@ const Review = ({ review, itemId, token, setReviews }) => {
   const [newContent, setNewContent] = useState(review.content)
   const [newScore, setNewScore] = useState(review.score)
 	
-
 	const deleteEvent = () => {
 		axios.delete("api/items/delete/review", {
 				data: {
@@ -37,7 +36,7 @@ const Review = ({ review, itemId, token, setReviews }) => {
       setReviews(res.data)
       setIsUpdate(false)
     })
-    .catch(err => console.log(err.response))
+    .catch(() => alert("구매자만이 리뷰를 쓸 수 있습니다."))
 	};
 
 	const Score = ({ score }) => {
@@ -45,9 +44,10 @@ const Review = ({ review, itemId, token, setReviews }) => {
 		for (var i = 0; i < score; i++) result += "⭐️";
 		return <span>{result}</span>;
 	};
-
+	
   const config = {
     size: 30,
+		char: "",
     value: newScore,
     activeColor: "#58A677",
     onChange: newValue => setNewScore(newValue)
@@ -56,12 +56,12 @@ const Review = ({ review, itemId, token, setReviews }) => {
 	return (
 		<Container>
 			<div>
-				{isUpdate ? <>
+				{isUpdate ? <div style={{display:"flex", justifyContent:"flex-start"}}>
             <ReactStars {...config} />
-						<ContentInput defaultValue={newContent} onChange={e => setNewContent(e.target.value)}/>
-            <SubmitButton onClick={updateEvent}>저장</SubmitButton>
-            <SubmitButton onClick={() => setIsUpdate(false)}>취소</SubmitButton>
-				</> : <>
+						<ContentInput variant="outlined" size="small" defaultValue={newContent} onChange={e => setNewContent(e.target.value)}/>
+            <SubmitButton variant="outlined" fontcolor="#66bb6a" onClick={updateEvent}>저장</SubmitButton>
+            <SubmitButton variant="outlined" fontcolor="#bdbdbd" onClick={() => setIsUpdate(false)}>취소</SubmitButton>
+				</div> : <>
 						<Content><Score score={review.score} /></Content>
 						<Content>{review.content}</Content>
 				</>}
@@ -70,8 +70,8 @@ const Review = ({ review, itemId, token, setReviews }) => {
 				<ContentInfo>{review.modifiedDate}</ContentInfo>
 				<ContentInfo>{review.memberNickName}</ContentInfo>
 				{token !== undefined && review.memberEmail === jwtDecode(token).sub && !isUpdate && <>
-						<SubmitButton variant="info" onClick={() => setIsUpdate(true)}>수정</SubmitButton>
-						<SubmitButton variant="danger" onClick={deleteEvent}>삭제</SubmitButton>
+						<SubmitButton variant="outlined" fontcolor="#fb8c00" onClick={() => setIsUpdate(true)}>수정</SubmitButton>
+						<SubmitButton variant="outlined" fontcolor="#f44336" onClick={deleteEvent}>삭제</SubmitButton>
 					</>}
 			</div>
 		</Container>
@@ -88,6 +88,13 @@ const Container = styled.div`
 `;
 const SubmitButton = styled(Button)`
 	margin: 0 10px;
+	color: ${props => props.fontcolor};
+	background-color: white;
+	font-weight: 600;
+	&:hover{
+		color: white;
+		background-color: ${props => props.fontcolor};
+	}
 `;
 const Content = styled.span`
 	font-size: 20px;
@@ -95,8 +102,9 @@ const Content = styled.span`
 
 	margin-right: 20px;
 `;
-const ContentInput = styled.input`
-
+const ContentInput = styled(TextField)`
+	width: 300px;
+	margin: 5px 10px;
 `
 
 const ContentInfo = styled.span`

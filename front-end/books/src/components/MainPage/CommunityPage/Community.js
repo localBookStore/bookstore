@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react"
-import { NavLink } from "react-router-dom"
+import { Link } from "react-router-dom"
 import axios from "axios"
 
-import { Table, Button } from "react-bootstrap"
+import { Table } from "react-bootstrap"
+import { Button } from "@material-ui/core"
 import styled from "styled-components"
 
 const Community = ({ history }) => {
@@ -10,10 +11,13 @@ const Community = ({ history }) => {
   const section = ["글 번호", "분류", "제목", "작성시간", "댓글 수"]
 
   useEffect(() => {
-    axios.get("api/board")
-      .then(res => setArticles(res.data.dtoList))
-      .catch(err => console.log(err.response))
+    getArticles();
   }, [])
+
+  const getArticles = async () => {
+    const {data: { dtoList }} = await axios.get("api/board");
+    setArticles(dtoList)
+  }
 
   const articleDetailEvent = (id) => {
     history.push(`/community/detail/${id}`)
@@ -39,12 +43,20 @@ const Community = ({ history }) => {
           })}
         </tbody>
       </Container>
-      : <div>게시글이 없습니다.</div>
+      : 
+      <NoArticle>🙅‍♂️ 게시글이 없습니다</NoArticle>
       }
 
-    <PostButton>
-      <NavButton to="/community/register">게시물 등록</NavButton>
-    </PostButton>
+    <div style={{display:"flex", justifyContent:"flex-end"}}>
+      <PostButton
+        component={Link}
+        to="/community/register"
+        variant="contained"
+        color="primary"
+        >
+        게시글 등록
+      </PostButton>
+    </div>
   </div >
 }
 export default Community;
@@ -61,14 +73,18 @@ const Container = styled(Table)`
     height: 100px;
   } 
 `
+const NoArticle = styled.div`
+  margin: 50px 0 0 10%;
+  font-size: 24px;
+  font-weight: bold;
+`
 
-const NavButton = styled(NavLink)`
+const PostButton = styled(Button)`
   margin: 20px 10%;
   font-size: 18px;
-  
-`
-const PostButton = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  
+
+  &:hover {
+    background-color: white;
+    color: #283593;
+  }
 `

@@ -4,7 +4,8 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
-import com.webservice.bookstore.config.security.auth.CustomUserDetailsService;
+import com.webservice.bookstore.domain.entity.member.Member;
+import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import com.webservice.bookstore.util.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -31,22 +32,22 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private JwtUtil jwtUtil;
     private RedisUtil redisUtil;
-    private CustomUserDetailsService customUserDetailsService;
+    private MemberRepository memberRepository;
     private ObjectMapper objectMapper = new ObjectMapper();
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
                                   JwtUtil jwtUtil, RedisUtil redisUtil,
-                                  CustomUserDetailsService customUserDetailsService) {
+                                  MemberRepository memberRepository) {
         super(authenticationManager);
         this.jwtUtil    = jwtUtil;
         this.redisUtil      = redisUtil;
-        this.customUserDetailsService = customUserDetailsService;
+        this.memberRepository = memberRepository;
     }
 
     private void saveAuthSecuritySession(VerifyResult verifyResult) {
         log.info("Query Member By JWT Subject(email) :");
-        CustomUserDetails customUserDetails
-                = (CustomUserDetails) customUserDetailsService.loadUserByUsername(verifyResult.getEmail());
+        Member member = memberRepository.findByEmail(verifyResult.getEmail()).get();
+        CustomUserDetails customUserDetails = new CustomUserDetails(member, null);
         Authentication auth
                 = new UsernamePasswordAuthenticationToken(customUserDetails ,null, customUserDetails.getAuthorities());
 

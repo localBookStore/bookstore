@@ -1,13 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
-import { jwtDecode } from "feature/JwtDecode"
 import { useCookies } from "react-cookie";
+import jwtDecode from "feature/jwtDecode"
 
-import { Button } from "react-bootstrap";
+import { TextField, Button, Select, MenuItem} from "@material-ui/core"
 import styled from "styled-components";
 
 const CommunityRegister = ({ history }) => {
-	const [cookies] = useCookies(["token"]);
+	const [cookies] = useCookies(['token']);
+	const token = cookies.token;
+	const { sub } = jwtDecode(token);
+
 	const [inputData, setInputData] = useState({
     category: "사고팝니다",
     title: "",
@@ -15,34 +18,39 @@ const CommunityRegister = ({ history }) => {
   });
 
 	const onChangeEvent = (e) => {
-		const { name, value } = e.target;
-		setInputData({
-			...inputData,
-			[name]: value,
-		});
+		setTimeout(() => {
+			const { name, value } = e.target;
+			setInputData({
+				...inputData,
+				[name]: value,
+			});
+		}, 700)
 	};
 
 	const summitEvent = () => {
-    const memberEmail = jwtDecode(cookies.token).sub
-
+    
+		console.log(token)
 		axios.post("api/board", {
 				...inputData,
-				memberEmail,
-			})
-			.then(res => history.push('/community'))
+				memberEmail:sub,
+			}, { headers: {Authorization: token}})
+			.then(() => history.push("/community"))
 			.catch((err) => console.log(err.response));
 	};
 
 	return (
 		<Container>
-			<CategoryInput name="category" onChange={onChangeEvent}>
-				<option value="사고팝니다">사고팝니다</option>
-				<option value="자유게시판">자유게시판</option>
+			<CategoryInput value={inputData.category} variant="outlined" name="category" onChange={onChangeEvent}>
+				<MenuItem value="사고팝니다">사고팝니다</MenuItem>
+				<MenuItem value="자유게시판">자유게시판</MenuItem>
 			</CategoryInput>
 
-			<TitleInput type="text" placeholder="제목을 입력하세요" name="title" onChange={onChangeEvent} />
-			<ContentInput placeholder="내용을 입력하세요" name="content" onChange={onChangeEvent} />
-			<SummitButton onClick={summitEvent}>제출</SummitButton>
+			<TitleInput type="text" variant='outlined' placeholder="제목을 입력하세요" name="title" onChange={onChangeEvent} />
+			<ContentInput multiline rows={20} variant='outlined' placeholder="내용을 입력하세요" name="content" onChange={onChangeEvent} />
+			<div style={{display:"flex", justifyContent:"flex-end"}}>
+				<SummitButton onClick={summitEvent} variant="contained">☑️ 게시글 등록</SummitButton>
+			</div>
+
 		</Container>
 	);
 };
@@ -55,44 +63,24 @@ const Container = styled.div`
 	margin: 0;
 
 	width: 100%;
-	height: 550px;
 `;
-const CategoryInput = styled.select`
-	position: relative;
-	left: 10px;
-
-	width: 150px;
-	height: 45px;
-
+const CategoryInput = styled(Select)`
+	width: 15%;
+	margin-right: 20px;
 	vertical-align: middle;
 `;
 
-const TitleInput = styled.input`
-	position: relative;
-	left: 20px;
-	top: 3px;
-
-	width: 800px;
-	height: 45px;
+const TitleInput = styled(TextField)`
+	width: 75%;
+	margin-bottom: 20px;
 `;
 
-const ContentInput = styled.textarea`
-	position: relative;
-	display: inline-block;
-	top: 13px;
-	left: 10px;
-
+const ContentInput = styled(TextField)`
 	width: 80vw;
-	height: 400px;
-
 	resize: none;
 `;
 const SummitButton = styled(Button)`
-	position: relative;
-	float: right;
-	top: 30px;
-	right: 40px;
+	margin: 30px 50px 30px 0;
+	font-size: 20px;
 
-	width: 80px;
-	height: 40px;
 `;

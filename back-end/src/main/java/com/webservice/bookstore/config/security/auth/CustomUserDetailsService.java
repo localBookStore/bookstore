@@ -28,12 +28,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
-        Member memberEntity = null;
         if(!optionalMember.isPresent()) {
             throw new UsernameNotFoundException(email);
         }
 
-        memberEntity = optionalMember.get();
+        Member memberEntity = optionalMember.get();
         if(!AuthProvider.DEFAULT.equals(memberEntity.getProvider())) {
             String msg = "해당 이메일 계정은 "+ memberEntity.getProvider() + " 간편 로그인으로 진행하셔야합니다.";
             throw new AuthenticationException(msg) {};

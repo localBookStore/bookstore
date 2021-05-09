@@ -7,6 +7,7 @@ import com.webservice.bookstore.config.security.oauth2.CustomOAuth2UserService;
 import com.webservice.bookstore.config.security.oauth2.handler.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.webservice.bookstore.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import com.webservice.bookstore.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -39,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final MemberRepository memberRepository;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
@@ -60,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilter(corsFilter)
             .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, redisUtil),
                     UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, redisUtil, customUserDetailsService),
+                .addFilterBefore(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, redisUtil, memberRepository),
                     BasicAuthenticationFilter.class)
             .formLogin().disable()
             .httpBasic().disable()
