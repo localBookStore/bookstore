@@ -82,7 +82,7 @@ const CartPage = ({ history }) => {
     axios.post("api/order", {
       orderList,
       address,
-      coupon_id: selectedCoupon.id
+      coupon_id: selectedCoupon.id === -1 ? null : selectedCoupon.id
     },{ headers: {Authorization: token }})
     .then(() => history.replace('/mypage/orderlist'))
     .catch(() => alert("상품은 하나라도 선택되어야 합니다. 혹은 주소를 입력하세요."))
