@@ -41,11 +41,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    private String writeTimeNow() {
-        return LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         log.info("OAuth2 clearAuthenticationAttributes 메소드 호출");
         super.clearAuthenticationAttributes(request);
@@ -106,7 +101,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         log.info("JwtAuthenticationFilter.successfulAuthentication : 'OK'");
         log.info("request.getRequestURI() : " + request.getRequestURI());
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        String email = customUserDetails.getMember().getEmail();
 
+        redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L*60*24);
         String targetUrl = determineTargetUrl(request, response, authentication);
         log.info("targetUrl : " + targetUrl);
 
@@ -117,55 +115,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
-
-    //    CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-    //    log.info(customUserDetails.getMember());
-    //    String email    = customUserDetails.getMember().getEmail();
-    //    String nickName = customUserDetails.getMember().getNickName();
-    //    String role     = String.valueOf(customUserDetails.getMember().getRole());
-
-    //    clearAuthenticationAttributes(request, response);
-
-    //    if(customUserDetails.isEnabled()) {
-    //        // Refresh 토큰 생성하여 Redis에 저장
-    //        redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L*20);
-
-    //        response.setStatus(HttpStatus.OK.value());
-    //        response.setContentType("application/json;charset=utf-8");
-    //        response.setHeader(JwtProperties.HEADER_STRING,
-    //                     JwtProperties.TOKEN_PREFIX
-    //                            + jwtUtil.createAccessToken(email, nickName, role));
-
-    //        Map<String, Object> resultAttributes = new HashMap<>();
-    //        resultAttributes.put("timestamp", writeTimeNow());
-    //        resultAttributes.put("status", HttpStatus.OK);
-    //        resultAttributes.put("message", "Authentication completed (OAuth)");
-    //        resultAttributes.put("path", request.getRequestURI());
-
-    //        response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
-
-    //        // java.io.CharConversionException 에러는 tomcat에서 발생하는 예외이다.
-    //        // 발생하는 이유는 tomcat Encoding 설정이 ISO-8859-1 형식으로 되어있기 때문에,
-    //        // 별도로 tomcat 설정을 수정하거나 ServletOutputStream 객체가 아닌 위처럼 PrintWriter 객체로 넘겨주어야한다.
-    //        //response.getOutputStream().println(objectMapper.writeValueAsString(resultAttributes));
-
-    //        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/oauth2/redirect");
-
-    //    } else {
-    //        response.setStatus(HttpStatus.LOCKED.value()); // 423 응답값
-    //        response.setContentType("application/json;charset=utf-8");
-
-    //        Map<String, Object> resultAttributes = new HashMap<>();
-    //        resultAttributes.put("timestamp", writeTimeNow());
-    //        resultAttributes.put("status", HttpStatus.LOCKED);
-    //        resultAttributes.put("message", "This Email is locked (OAuth)");
-    //        resultAttributes.put("path", request.getRequestURI());
-
-    //        response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
-
-    //        SecurityContextHolder.getContext().setAuthentication(null);
-    //        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/oauth2/redirect");
-    //    }
 
     }
 
