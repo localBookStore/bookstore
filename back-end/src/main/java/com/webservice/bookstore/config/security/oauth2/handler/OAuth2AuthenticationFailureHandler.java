@@ -28,16 +28,18 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
         log.info("OAuth2AuthenticationSuccessHandler.onAuthenticationFailure : 'Unauthorized'");
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json;charset=utf-8");
+//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//        response.setContentType("application/json;charset=utf-8");
+//
+//        Map<String, Object> errorAttributes = new HashMap<>();
+//        errorAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+//        errorAttributes.put("status", HttpStatus.UNAUTHORIZED);
+//        errorAttributes.put("exception", exception.getMessage());
+//        errorAttributes.put("path", request.getRequestURI());
 
-        Map<String, Object> errorAttributes = new HashMap<>();
-        errorAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        errorAttributes.put("status", HttpStatus.UNAUTHORIZED);
-        errorAttributes.put("exception", exception.getMessage());
-        errorAttributes.put("path", request.getRequestURI());
+        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/oauth?error=true");
 
-        response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
+//        response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
 //        response.getWriter().write(objectMapper.writeValueAsString(errorAttributes)); // response 바디에 json 으로 담기
 
 
