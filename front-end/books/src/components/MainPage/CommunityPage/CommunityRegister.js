@@ -9,7 +9,7 @@ import styled from "styled-components";
 const CommunityRegister = ({ history }) => {
 	const [cookies] = useCookies(['token']);
 	const token = cookies.token;
-	const { sub } = jwtDecode(token);
+	
 
 	const [inputData, setInputData] = useState({
     category: "사고팝니다",
@@ -28,8 +28,8 @@ const CommunityRegister = ({ history }) => {
 	};
 
 	const summitEvent = () => {
-    
-		console.log(token)
+    const { sub } = jwtDecode(token);
+		
 		axios.post("api/board", {
 				...inputData,
 				memberEmail:sub,

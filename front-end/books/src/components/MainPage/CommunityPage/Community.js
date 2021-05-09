@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
 import axios from "axios"
+import { Link } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useCookies } from "react-cookie";
 
 import { Table } from "react-bootstrap"
 import { Button } from "@material-ui/core"
 import styled from "styled-components"
 
 const Community = ({ history }) => {
+  const [cookies] = useCookies(['token'])
+  const token = cookies.token;
   const [articles, setArticles] = useState([]);
   const section = ["글 번호", "분류", "제목", "작성시간", "댓글 수"]
 
@@ -47,17 +50,18 @@ const Community = ({ history }) => {
       <NoArticle>🙅‍♂️ 게시글이 없습니다</NoArticle>
       }
 
-    <div style={{display:"flex", justifyContent:"flex-end"}}>
-      <PostButton
-        component={Link}
-        to="/community/register"
-        variant="contained"
-        color="primary"
-        >
-        게시글 등록
-      </PostButton>
-    </div>
-  </div >
+    {token !== undefined && <div style={{display:"flex", justifyContent:"flex-end"}}>
+        <PostButton
+          component={Link}
+          to="/community/register"
+          variant="contained"
+          color="primary"
+          >
+          게시글 등록
+        </PostButton>
+      </div>
+    }
+  </div>
 }
 export default Community;
 

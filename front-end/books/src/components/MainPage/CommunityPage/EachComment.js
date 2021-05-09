@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import { useCookies } from "react-cookie";
 import jwtDecode from "feature/jwtDecode";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,16 +7,15 @@ import { faReply } from "@fortawesome/free-solid-svg-icons";
 import { Button, TextField } from "@material-ui/core"
 import styled from "styled-components";
 
-const EachComments = ({ comment, setComments, submitEvent, boardId }) => {
-	const [cookies] = useCookies(['token']);
-	const token = cookies.token;
-	const { sub } = jwtDecode(token);
+const EachComments = ({ comment, setComments, submitEvent, boardId, token }) => {
 	const [isUpdate, setIsUpdate] = useState(false);
 	const [showInput, setShowInput] = useState(false);
 	const [newContent, setNewContent] = useState(comment.content)
 	const [content, setContent] = useState("");
 
 	const modifyEvent = () => {
+		const { sub } = jwtDecode(token);
+		
 		axios.put("api/board/reply/modify", {
 			memberEmail: sub,
 			content: newContent,
