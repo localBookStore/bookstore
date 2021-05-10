@@ -1,16 +1,20 @@
 package com.webservice.bookstore.service;
 
-import com.webservice.bookstore.domain.entity.item.Item;
-import com.webservice.bookstore.domain.entity.item.ItemQueryRespository;
-import com.webservice.bookstore.domain.entity.item.ItemRepository;
-import com.webservice.bookstore.domain.entity.item.ItemSearch;
+import com.webservice.bookstore.domain.entity.item.*;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -92,10 +96,30 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemDto.Default addItem(ItemDto.ItemAddDto itemDto) {
+    public ItemDto.Default addItem(ItemDto.ItemAddDto itemDto) throws Exception {
+        String imageUrl = itemDto.getImage();
+        if(StringUtils.isNotEmpty(imageUrl)) {
+            String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
+            String contentType = imageDataBytes.substring(0, imageDataBytes.indexOf(";"));
+            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
+            checkImageType(itemDto, contentType, bufferedImage);
+        }
+
         Item item = itemDto.toEntity();
         Item savedItem = itemRepository.save(item);
+
         return ItemDto.Default.of(savedItem);
+    }
+
+    private void checkImageType(ItemDto.ItemAddDto itemDto, String contentType, BufferedImage bufferedImage) throws IOException {
+//        this.getClass().getResource("/");
+        if (contentType.contains("image/jpeg")) {
+            ImageIO.write(bufferedImage, "jpg", new File("classpath:/static/" + itemDto.getIsbn() + ".jpg"));
+        } else if (contentType.contains("image/png")) {
+            ImageIO.write(bufferedImage, "png", new File("classpath:/static/" + itemDto.getIsbn() + ".jpg"));
+        } else if (contentType.contains("image/gif")) {
+            ImageIO.write(bufferedImage, "gif", new File("classpath:/static/" + itemDto.getIsbn() + ".jpg"));
+        }
     }
 
     @Transactional
