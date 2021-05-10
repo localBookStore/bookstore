@@ -1,6 +1,5 @@
 package com.webservice.bookstore.service;
 
-import com.webservice.bookstore.domain.entity.FileHandler;
 import com.webservice.bookstore.domain.entity.item.*;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,10 +26,6 @@ public class ItemService {
     private final ItemQueryRespository itemQueryRespository;
 
     private final ItemRepository itemRepository;
-
-    private final ItemPictureRepository itemPictureRepository;
-
-    private FileHandler fileHandler;
 
     public List<Item> searchBooks(ItemSearch itemSearch) {
         return itemQueryRespository.findDynamicBooks(itemSearch);
@@ -94,19 +94,14 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemDto.Default addItem(ItemDto.ItemAddDto itemDto) throws Exception{
+    public ItemDto.Default addItem(ItemDto.ItemAddDto itemDto) throws Exception {
+        String imageUrl = itemDto.getImage();
+        String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
+        BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
+        ImageIO.write(bufferedImage, "jpg", new File("C:/_intellJ/workspace/bookstore/back-end/src/main/resources/static/"+ itemDto.getIsbn() +".jpg"));
+
         Item item = itemDto.toEntity();
         Item savedItem = itemRepository.save(item);
-        List<ItemPicture> list = fileHandler.parseFile(savedItem.getId(), itemDto.getImages());
-        if(list.isEmpty()) {
-
-        } else {
-            List<ItemPicture> pictures = new ArrayList<>();
-            for(ItemPicture itemPicture : list) {
-                pictures.add(itemPictureRepository.save(itemPicture));
-            }
-            item.setItemPicture(pictures);
-        }
 
         return ItemDto.Default.of(savedItem);
     }

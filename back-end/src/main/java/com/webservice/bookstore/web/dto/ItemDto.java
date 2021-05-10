@@ -151,8 +151,7 @@ public class ItemDto {
 
         private String isbn;
 
-        private List<MultipartFile> images;
-
+        private String image;
 
         public Item toEntity() {
 
