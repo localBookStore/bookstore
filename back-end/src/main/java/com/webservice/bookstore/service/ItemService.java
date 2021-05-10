@@ -100,7 +100,7 @@ public class ItemService {
         String imageUrl = itemDto.getImage();
         if(StringUtils.isNotEmpty(imageUrl)) {
             String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
-            String contentType = imageDataBytes.substring(5, imageDataBytes.indexOf(";"));
+            String contentType = imageDataBytes.substring(0, imageDataBytes.indexOf(";"));
             BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
             checkImageType(itemDto, contentType, bufferedImage);
         }
@@ -112,12 +112,13 @@ public class ItemService {
     }
 
     private void checkImageType(ItemDto.ItemAddDto itemDto, String contentType, BufferedImage bufferedImage) throws IOException {
+//        this.getClass().getResource("/");
         if (contentType.contains("image/jpeg")) {
-            ImageIO.write(bufferedImage, "jpg", new File("~/workspace/bookstore/back-end/src/main/resources/static/" + itemDto.getIsbn() + ".jpg"));
+            ImageIO.write(bufferedImage, "jpg", new File("classpath:/static/" + itemDto.getIsbn() + ".jpg"));
         } else if (contentType.contains("image/png")) {
-            ImageIO.write(bufferedImage, "png", new File("~/workspace/bookstore/back-end/src/main/resources/static/" + itemDto.getIsbn() + ".jpg"));
+            ImageIO.write(bufferedImage, "png", new File("classpath:/static/" + itemDto.getIsbn() + ".jpg"));
         } else if (contentType.contains("image/gif")) {
-            ImageIO.write(bufferedImage, "gif", new File("~/workspace/bookstore/back-end/src/main/resources/static/" + itemDto.getIsbn() + ".jpg"));
+            ImageIO.write(bufferedImage, "gif", new File("classpath:/static/" + itemDto.getIsbn() + ".jpg"));
         }
     }
 
