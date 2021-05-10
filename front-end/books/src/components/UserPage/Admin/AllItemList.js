@@ -7,9 +7,12 @@ import EachItemList from "./EachItemList";
 
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
+import { useCookies } from "react-cookie";
 
-const AllItemList = ({ location }) => {
-  const token = location.state.token;
+const AllItemList = () => {
+  const [cookies] = useCookies(['token']);
+  const token = cookies.token;
+
   const [items, setItems] = useState(null);
   const [modalShow, setModalShow] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
@@ -89,6 +92,7 @@ const AllItemList = ({ location }) => {
           {modalShow && <UpdateNewItem 
               modalShow={modalShow}
               modalShowOff={modalShowOff}
+              token={token}
             />}
         </Container>
       }</>
