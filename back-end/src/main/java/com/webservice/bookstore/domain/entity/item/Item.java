@@ -7,6 +7,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -37,6 +39,10 @@ public class Item {
 
     private String imageUrl;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<ItemPicture> itemPicture = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -45,6 +51,13 @@ public class Item {
     private int viewCount = 0;
 
     private LocalDate publicationDate;
+
+    public void setItemPicture(List<ItemPicture> itemPicture) {
+        this.itemPicture = itemPicture;
+        for (ItemPicture picture : itemPicture) {
+            picture.setItem(this);
+        }
+    }
 
     /* (주문 생성 시) 재고량(stock) 감소 */
     public void removeStockQuantity(int quantity) {

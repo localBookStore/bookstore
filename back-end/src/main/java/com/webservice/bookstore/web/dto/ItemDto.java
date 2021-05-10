@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.webservice.bookstore.domain.entity.category.Category;
 import com.webservice.bookstore.domain.entity.item.Item;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public class ItemDto {
 
@@ -148,7 +151,7 @@ public class ItemDto {
 
         private String isbn;
 
-        private String imageUrl;
+        private List<MultipartFile> images;
 
 
         public Item toEntity() {
@@ -162,7 +165,6 @@ public class ItemDto {
                     .price(this.price)
                     .quantity(this.quantity)
                     .isbn(this.isbn)
-                    .imageUrl(this.imageUrl)
                     .build();
         }
 

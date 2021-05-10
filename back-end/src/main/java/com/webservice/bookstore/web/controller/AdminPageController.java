@@ -73,7 +73,7 @@ public class AdminPageController {
 
 
     @PostMapping(value = "/items/additem")
-    public ResponseEntity addAdminItem(@RequestBody ItemDto.ItemAddDto itemDto) {
+    public ResponseEntity addAdminItem(@RequestBody ItemDto.ItemAddDto itemDto) throws Exception{
         ItemDto.Default savedItemDto = this.itemService.addItem(itemDto);
         DefaultItemResource defaultItemResource = new DefaultItemResource(savedItemDto);
         URI uri = linkTo(ItemController.class).slash(savedItemDto.getId()).toUri();
