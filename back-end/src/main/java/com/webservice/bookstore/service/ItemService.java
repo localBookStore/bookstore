@@ -1,9 +1,7 @@
 package com.webservice.bookstore.service;
 
-import com.webservice.bookstore.domain.entity.item.Item;
-import com.webservice.bookstore.domain.entity.item.ItemQueryRespository;
-import com.webservice.bookstore.domain.entity.item.ItemRepository;
-import com.webservice.bookstore.domain.entity.item.ItemSearch;
+import com.webservice.bookstore.domain.entity.FileHandler;
+import com.webservice.bookstore.domain.entity.item.*;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,6 +22,10 @@ public class ItemService {
     private final ItemQueryRespository itemQueryRespository;
 
     private final ItemRepository itemRepository;
+
+    private final ItemPictureRepository itemPictureRepository;
+
+    private FileHandler fileHandler;
 
     public List<Item> searchBooks(ItemSearch itemSearch) {
         return itemQueryRespository.findDynamicBooks(itemSearch);
@@ -92,9 +94,20 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemDto.Default addItem(ItemDto.ItemAddDto itemDto) {
+    public ItemDto.Default addItem(ItemDto.ItemAddDto itemDto) throws Exception{
         Item item = itemDto.toEntity();
         Item savedItem = itemRepository.save(item);
+        List<ItemPicture> list = fileHandler.parseFile(savedItem.getId(), itemDto.getImages());
+        if(list.isEmpty()) {
+
+        } else {
+            List<ItemPicture> pictures = new ArrayList<>();
+            for(ItemPicture itemPicture : list) {
+                pictures.add(itemPictureRepository.save(itemPicture));
+            }
+            item.setItemPicture(pictures);
+        }
+
         return ItemDto.Default.of(savedItem);
     }
 
