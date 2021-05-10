@@ -56,7 +56,7 @@ const AllItemList = () => {
     return (
       <ItemContainer>
         {currentData.map((data, idx) => {
-          return<EachItemList
+          return <EachItemList
               data={data}
               itemCheck={itemCheck}
               token={token}
