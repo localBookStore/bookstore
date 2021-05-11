@@ -135,11 +135,11 @@ public class ItemDto {
     @ToString
     public static class ItemAddDto {
 
-        private String name;
+        private String title;
 
         private Long category_id;
 
-        private String description;
+        private String content;
 
         private String publisher;
 
@@ -147,7 +147,7 @@ public class ItemDto {
 
         private Integer price;
 
-        private Integer quantity;
+        private Integer count;
 
         private String isbn;
 
@@ -157,12 +157,12 @@ public class ItemDto {
 
             Category category = Category.builder().id(this.category_id).build();
             return Item.builder()
-                    .name(this.name)
+                    .name(this.title)
                     .category(category)
-                    .description(this.description)
+                    .description(this.content)
                     .publisher(this.publisher)
                     .price(this.price)
-                    .quantity(this.quantity)
+                    .quantity(this.count)
                     .isbn(this.isbn)
                     .build();
         }
