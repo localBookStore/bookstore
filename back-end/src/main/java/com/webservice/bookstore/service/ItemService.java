@@ -1,12 +1,13 @@
 package com.webservice.bookstore.service;
 
-import com.webservice.bookstore.domain.entity.item.*;
+import com.webservice.bookstore.domain.entity.item.Item;
+import com.webservice.bookstore.domain.entity.item.ItemQueryRespository;
+import com.webservice.bookstore.domain.entity.item.ItemRepository;
+import com.webservice.bookstore.domain.entity.item.ItemSearch;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.core.ApplicationContext;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +16,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
