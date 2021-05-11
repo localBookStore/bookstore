@@ -1,10 +1,13 @@
 package com.webservice.bookstore.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRole;
 import lombok.*;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class MemberDto {
 
@@ -60,6 +63,40 @@ public class MemberDto {
         private String address;
         private String provider;
         private String imageUrl;
+
+        // Entity -> MyInfoRequest
+        public static MyInfoRequest of(Member member) {
+            return MyInfoRequest.builder()
+                                .email(member.getEmail())
+                                .nickName(member.getNickName())
+                                .address(member.getAddress())
+                                .provider(String.valueOf(member.getProvider()))
+                                .imageUrl(member.getImageUrl())
+                                .build();
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Modify {
+        private String email;
+
+        @NotBlank(message = "닉네임을 입력해주세요.")
+        @Size(min = 2, max = 10, message = "최소 2자리, 최대 10자리 이상의 닉네임을 입력해주세요")
+        private String nickName;
+
+        @Pattern(regexp = "(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}",
+                 message = "숫자 + 특문 + 영문 8자 이상 조합으로 입력해주세요.")
+        private String currentPassword;
+
+        @Pattern(regexp = "(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}",
+                 message = "숫자 + 특문 + 영문 8자 이상 조합으로 입력해주세요.")
+        private String newPassword;
+
+        private String image;
+
     }
 
 }

@@ -1,28 +1,33 @@
 package com.webservice.bookstore.service;
 
-import com.webservice.bookstore.domain.entity.coupon.Coupon;
 import com.webservice.bookstore.domain.entity.member.AuthProvider;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.domain.entity.member.MemberRepository;
 import com.webservice.bookstore.domain.entity.member.MemberRole;
 import com.webservice.bookstore.exception.DuplicateUserException;
+import com.webservice.bookstore.exception.MatchUserPasswordException;
 import com.webservice.bookstore.exception.PreventRemembershipException;
 import com.webservice.bookstore.exception.SimpleFieldError;
 import com.webservice.bookstore.util.EmailUtil;
 import com.webservice.bookstore.util.RedisUtil;
 import com.webservice.bookstore.web.dto.EmailDto;
 import com.webservice.bookstore.web.dto.MemberDto;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
 import javax.persistence.EntityNotFoundException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,6 +89,46 @@ public class MemberService {
         }
         redisUtil.deleteData(email);
         this.memberRepository.withdraw(email);
+    }
+
+    /*
+    회원정보 수정
+    */
+    public MemberDto.MyInfoRequest modifyMyInfo(MemberDto.Modify memberDto) throws Exception  {
+
+        Member member = this.memberRepository.findByEmail(memberDto.getEmail())
+                                                .orElseThrow(() -> new EntityNotFoundException());
+
+        if(StringUtils.isNotBlank(memberDto.getCurrentPassword())) {
+
+            if (!encoder.matches(memberDto.getCurrentPassword(), member.getPassword())) {
+                throw new MatchUserPasswordException("비밀번호가 일치하지 않습니다.",
+                        new SimpleFieldError("password", "비밀번호 변경"));
+            }
+            member.changePassword(encoder.encode(memberDto.getNewPassword()));
+        }
+        member.changeNickName(memberDto.getNickName());
+        String imageUrl = memberDto.getImage();
+        if(StringUtils.isNotEmpty(imageUrl)) {
+            String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
+            String contentType = imageUrl.substring(0, imageUrl.indexOf(";"));
+            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
+            checkImageType(memberDto, contentType, bufferedImage);
+        }
+
+        return MemberDto.MyInfoRequest.of(member);
+
+    }
+
+    private void checkImageType(MemberDto.Modify memberDto, String contentType, BufferedImage bufferedImage) throws Exception {
+        String path = System.getProperty("user.dir") + "/back-end/src/main/resources/static/profile/" + memberDto.getEmail();
+        if (contentType.contains("image/jpeg")) {
+            ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
+        } else if (contentType.contains("image/png")) {
+            ImageIO.write(bufferedImage, "png", new File(path + ".png"));
+        } else if (contentType.contains("image/gif")) {
+            ImageIO.write(bufferedImage, "gif", new File(path + ".gif"));
+        }
     }
 
     /*
