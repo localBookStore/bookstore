@@ -31,12 +31,12 @@ public class UserMyPageController {
 
         Member member = customUserDetails.getMember();
         MemberDto.MyInfoRequest myInfoRequest = MemberDto.MyInfoRequest.builder()
-                .email(member.getEmail())
-                .nickName(member.getNickName())
-                .address(member.getAddress())
-                .provider(String.valueOf(member.getProvider()))
-                .build();
-
+                                                         .email(member.getEmail())
+                                                         .nickName(member.getNickName())
+                                                         .address(member.getAddress())
+                                                         .provider(String.valueOf(member.getProvider()))
+                                                         .imageUrl(String.valueOf(member.getImageUrl()))
+                                                         .build();
         return ResponseEntity.ok(myInfoRequest);
     }
 
