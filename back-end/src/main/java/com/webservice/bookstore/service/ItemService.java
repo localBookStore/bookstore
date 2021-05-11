@@ -115,7 +115,8 @@ public class ItemService {
     }
 
     private void checkImageType(ItemDto.ItemAddDto itemDto, String contentType, BufferedImage bufferedImage) throws Exception {
-        String path = System.getProperty("user.dir") + "/back-end/src/main/resources/static/" + itemDto.getIsbn();
+        String path = checkImageFilePath(itemDto);
+
         if (contentType.contains("image/jpeg")) {
             ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
         } else if (contentType.contains("image/png")) {
@@ -123,6 +124,20 @@ public class ItemService {
         } else if (contentType.contains("image/gif")) {
             ImageIO.write(bufferedImage, "gif", new File(path + ".gif"));
         }
+    }
+
+    private String checkImageFilePath(ItemDto.ItemAddDto itemDto) {
+        String prefixPath = System.getProperty("user.dir");
+        String path = null;
+        String lastSubString = prefixPath.substring(prefixPath.lastIndexOf("/"));
+
+
+        if(lastSubString.equals("/back-end")) {
+            path = prefixPath + "/src/main/resources/static/" + itemDto.getIsbn();
+        } else if (lastSubString.equals("/bookstore")) {
+            path = prefixPath + "/back-end/src/main/resources/static/" + itemDto.getIsbn();
+        }
+        return path;
     }
 
     @Transactional
