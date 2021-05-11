@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 import { Button, TextField } from "@material-ui/core";
@@ -9,6 +10,7 @@ import styled from "styled-components";
 const nonImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAY1BMVEX///82OEskJz6+vsIqLUKWlp0UGDQcHzkwMkfk5eZlZ3Li4uNhYm4zNUl8fomEhY8YHDfNztLV1tkhJD0nKkFBQ1VHSVqurrVzdH+ZmqCoqa87PlBaW2mHiJL19vbv8PFOUF/lf4xeAAACvUlEQVR4nO3a63LaMBRFYdkx14YWm9KGXNq+/1O2TQjsTjLESCfDVrrWb8bjb3SERCYpvWyybYxaffv+yjsWdd1eGvVvq9lNLHBYX5r0ovZLqPDKbAn/1n7+6MJmE0m0FIYO6l7YTR2avwfxSdjtwh5Y0lKIYYO6F06inleUCONW0VYYRvQVRg2qo3C+iiQaCrvbAzFiUA2Fs8WwDiQ6Cj+lvo0bVE9h6ruwVTQVyiqWEl2FqY/ai7bC46AW/tLwFUbtRWNh6mcRRGdh6jcBh4a1UAY1n+gtTP3X4kE1FwYcGu5CWcXMQbUXFh8a/sLSC1wFQtmLOYNag/C4F3MucFUIi/ZiHcKSC1wlwoILXC3C/B9T1QizL3D1CHMvcBUJMy9wNQnzDo2qhPKNOp5Yl1DOxdGDWpkw41e/o3Bx6jPDXXPeoBoKV/fXJ1oe/oVrJNFK+NA9vvpqfqrmUPsw5qFWwmHTnNX01I59zkqYbrqzhO3ViGd6CX/czd9SVS5MP++f/yjzUYUp3f5qZ2/XVSxMaTGip2/dWoVjmiA8htA0hBJC0xBKCE1DKCE0DaGE0DSEEkLTEEoITUMoITQNoYTQNIQSQtMQSghNQyghNA2hhNA0hBJC0xBKCE1DKCE0DaGE0DSEEkLTEEoITUMoITQNoYTQNIQSQtMQSghNQyghNA2hhNA0hBJC0xBKCE1DKCE0DaGE0DSEEkLTEEoITUMoITQNoYTQNIQSQtMQSghNQyghNA2hhNA0hBJC0xBKCE1DKCE0DaGE0DSEEkLTEEoITUMoITQNoYTQNIQSQtMQSghNQyghNA2hhNA0hBJC0xBKCE1DKCE0DaGE0DSEEkLTEEoITUMo7YW7d3+n2HbnCptuWlePwLOEdYbwPxEO60u/ZkHrYYQwLetdxHY5BvjnaNle+k0z2752iP8Gy6JAexK7UH8AAAAASUVORK5CYII="
 
 const UpdateNewItem = ({modalShow, modalShowOff, token}) => {
+  const history = useHistory();
   const { register, handleSubmit } = useForm();
   const [image, setImage] = useState({
     isUpload: false,
@@ -19,10 +21,13 @@ const UpdateNewItem = ({modalShow, modalShowOff, token}) => {
   const onSubmit = data => {
     axios.post("/api/admin/items/additem", {
       ...data,
-      image:image.imageData,
+      image:image.image,
     }, { headers: {Authorization: token}})
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
+    .then(res => history.push({
+      pathname:`/detail/${res.data.id}`, 
+      state: {book: res.data}
+    }))
+    .catch(err => console.log(err.response))
   }
 
   const fileChangeEvent = e => {
@@ -74,7 +79,7 @@ const UpdateNewItem = ({modalShow, modalShowOff, token}) => {
           accept='image/jpg,image/png,image/jpeg'
           onChange={fileChangeEvent}
         />
-        <TextBox label="카테고리 번호" name="categoryId" />
+        <TextBox label="카테고리 번호" name="category_id" />
         <TextBox label="책 제목" name="title" />
         <TextBox label="내용 / 설명" name="content" rows="12" multiline={true}/>
         <TextBox label="저자" name="author" />
