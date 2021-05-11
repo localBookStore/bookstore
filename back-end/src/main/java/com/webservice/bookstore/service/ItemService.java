@@ -4,6 +4,10 @@ import com.webservice.bookstore.domain.entity.item.*;
 import com.webservice.bookstore.web.dto.ItemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.catalina.core.ApplicationContext;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +15,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -24,7 +30,7 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final ItemQueryRespository itemQueryRespository;
-
+    private final ResourceLoader resourceLoader;
     private final ItemRepository itemRepository;
 
     public List<Item> searchBooks(ItemSearch itemSearch) {
@@ -96,14 +102,28 @@ public class ItemService {
     @Transactional
     public ItemDto.Default addItem(ItemDto.ItemAddDto itemDto) throws Exception {
         String imageUrl = itemDto.getImage();
-        String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
-        BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
-        ImageIO.write(bufferedImage, "jpg", new File("C:/_intellJ/workspace/bookstore/back-end/src/main/resources/static/"+ itemDto.getIsbn() +".jpg"));
+        if(StringUtils.isNotEmpty(imageUrl)) {
+            String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
+            String contentType = imageUrl.substring(0, imageUrl.indexOf(";"));
+            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
+            checkImageType(itemDto, contentType, bufferedImage);
+        }
 
         Item item = itemDto.toEntity();
         Item savedItem = itemRepository.save(item);
 
         return ItemDto.Default.of(savedItem);
+    }
+
+    private void checkImageType(ItemDto.ItemAddDto itemDto, String contentType, BufferedImage bufferedImage) throws Exception {
+        String path = System.getProperty("user.dir") + "/back-end/src/main/resources/static/" + itemDto.getIsbn();
+        if (contentType.contains("image/jpeg")) {
+            ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
+        } else if (contentType.contains("image/png")) {
+            ImageIO.write(bufferedImage, "png", new File(path + ".png"));
+        } else if (contentType.contains("image/gif")) {
+            ImageIO.write(bufferedImage, "gif", new File(path + ".gif"));
+        }
     }
 
     @Transactional

@@ -45,7 +45,7 @@ public class InsertItem {
             Category category = Category.builder().id(i).name(categoryNames[i.intValue()]).build();
             categoryRepository.save(category);
         }
-        JsonData data = new JsonData("c:/final.json");
+        JsonData data = new JsonData("/Users/johangjin/workspace/input.txt");
         JSONArray jsonArray = data.getJsonArray();
 
         for(int i=0;i<jsonArray.size();i++){
