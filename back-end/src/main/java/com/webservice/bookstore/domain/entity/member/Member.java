@@ -97,4 +97,8 @@ public class Member extends BaseTimeEntity {
     public void changeNickName(String nickName) {
         this.nickName = nickName;
     }
+
+    public void changeImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

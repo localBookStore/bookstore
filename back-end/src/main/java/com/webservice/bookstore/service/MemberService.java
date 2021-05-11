@@ -104,20 +104,22 @@ public class MemberService {
             if (!encoder.matches(memberDto.getCurrentPassword(), member.getPassword())) {
                 throw new MatchUserPasswordException("비밀번호가 일치하지 않습니다.",
                         new SimpleFieldError("password", "비밀번호 변경"));
+            } else if(StringUtils.isNotBlank(memberDto.getNewPassword())) {
+                member.changePassword(encoder.encode(memberDto.getNewPassword()));
             }
-            member.changePassword(encoder.encode(memberDto.getNewPassword()));
-        }
-        member.changeNickName(memberDto.getNickName());
-        String imageUrl = memberDto.getImage();
-        if(StringUtils.isNotEmpty(imageUrl)) {
-            String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
-            String contentType = imageUrl.substring(0, imageUrl.indexOf(";"));
-            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
-            checkImageType(memberDto, contentType, bufferedImage);
+            member.changeNickName(memberDto.getNickName());
+            String imageUrl = memberDto.getImageUrl();
+            if(StringUtils.isNotEmpty(imageUrl)) {
+                String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
+                String contentType = imageUrl.substring(0, imageUrl.indexOf(";"));
+                String extension = contentType.substring(contentType.indexOf("/") + 1);
+                member.changeImage(member.getEmail() + "." + extension);
+                BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
+                checkImageType(memberDto, contentType, bufferedImage);
+            }
         }
 
         return MemberDto.MyInfoRequest.of(member);
-
     }
 
     private void checkImageType(MemberDto.Modify memberDto, String contentType, BufferedImage bufferedImage) throws Exception {
