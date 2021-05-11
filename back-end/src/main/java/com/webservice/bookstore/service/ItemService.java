@@ -131,6 +131,7 @@ public class ItemService {
         String path = null;
         String lastSubString = prefixPath.substring(prefixPath.lastIndexOf("/"));
 
+
         if(lastSubString.equals("/back-end")) {
             path = prefixPath + "/src/main/resources/static/" + itemDto.getIsbn();
         } else if (lastSubString.equals("/bookstore")) {
