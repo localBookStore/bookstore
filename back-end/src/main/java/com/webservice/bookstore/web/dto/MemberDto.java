@@ -59,6 +59,7 @@ public class MemberDto {
         private String nickName;
         private String address;
         private String provider;
+        private String imageUrl;
     }
 
 }
