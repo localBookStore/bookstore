@@ -39,7 +39,8 @@ public class ItemDto {
 
 
         // Entity -> DTO
-        public static Default of(Item item) {
+        public static Default
+        of(Item item) {
             return Default.builder()
                     .id(item.getId())
                     .name(item.getName())
@@ -163,6 +164,7 @@ public class ItemDto {
                     .publisher(this.publisher)
                     .price(this.price)
                     .quantity(this.count)
+                    .author(this.author)
                     .isbn(this.isbn)
                     .build();
         }
