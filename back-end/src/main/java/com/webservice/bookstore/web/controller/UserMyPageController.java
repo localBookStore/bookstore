@@ -3,6 +3,8 @@ package com.webservice.bookstore.web.controller;
 import com.webservice.bookstore.config.security.auth.CustomUserDetails;
 import com.webservice.bookstore.domain.entity.member.Member;
 import com.webservice.bookstore.exception.UnauthorizedException;
+import com.webservice.bookstore.exception.ValidationException;
+import com.webservice.bookstore.service.MemberService;
 import com.webservice.bookstore.service.OrdersService;
 import com.webservice.bookstore.web.dto.MemberDto;
 import com.webservice.bookstore.web.dto.OrdersDto;
@@ -11,8 +13,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +26,12 @@ import java.util.List;
 @RequestMapping(value = "/api/mypage", produces = MediaTypes.HAL_JSON_VALUE+";charset=utf-8")
 public class UserMyPageController {
 
+    private final MemberService memberService;
     private final OrdersService orderService;
 
+    /*
+    마이페이지 내 회원정보 내역 조회
+    */
     @GetMapping
     public ResponseEntity searchMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
@@ -31,11 +39,32 @@ public class UserMyPageController {
 
         Member member = customUserDetails.getMember();
         MemberDto.MyInfoRequest myInfoRequest = MemberDto.MyInfoRequest.builder()
-                .email(member.getEmail())
-                .nickName(member.getNickName())
-                .address(member.getAddress())
-                .provider(String.valueOf(member.getProvider()))
-                .build();
+                                                         .email(member.getEmail())
+                                                         .nickName(member.getNickName())
+                                                         .address(member.getAddress())
+                                                         .provider(String.valueOf(member.getProvider()))
+                                                         .imageUrl(String.valueOf(member.getImageUrl()))
+                                                         .build();
+        return ResponseEntity.ok(myInfoRequest);
+    }
+
+    /*
+    마이페이지 내 회원정보 수정
+    */
+    @PatchMapping({"/modify", "/modify/"})
+    public ResponseEntity modifyMyInfo(@RequestBody @Valid MemberDto.Modify memberDto, BindingResult bindingResult,
+                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
+
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException("회원정보 수정 실패", bindingResult.getFieldErrors());
+        }
+
+        verifyAuthentication(customUserDetails);
+
+        Member member = customUserDetails.getMember();
+        memberDto.setEmail(member.getEmail());
+
+        MemberDto.MyInfoRequest myInfoRequest = memberService.modifyMyInfo(memberDto);
 
         return ResponseEntity.ok(myInfoRequest);
     }

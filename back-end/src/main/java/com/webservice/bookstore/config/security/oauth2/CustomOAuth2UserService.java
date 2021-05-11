@@ -32,7 +32,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
 
-
     /*
         OAuth2 공급자로부터 액세스 토큰을 얻은 후에 호출됩니다. Oauth2 공급자로부터 사용자의 세부정보를 가져옴.
         동일한 이메일을 사용하는 사용자가 이미 데이터베이스에 있으면 세부 정보를 업데이트하고 그렇지 않으면 새 사용자를 등록합니다.
@@ -45,8 +44,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         log.info("getAccessToken : " + userRequest.getAccessToken().getTokenValue());
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
-        log.info("oAuth2User : " + oAuth2User);
 
         try {
             return processOAuth2User(userRequest, oAuth2User);
@@ -94,12 +91,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } else {
 
             memberEntity = optionalMember.get();
-            // DB에서 조회한 계정이 일반 계정인지 판단
-            if(AuthProvider.DEFAULT.equals(memberEntity.getProvider())) {
-                throw new OAuth2AuthenticationProcessingException("해당 이메일 계정 \'"+ email +"\'을 사용하시려면 일반 로그인으로 진행하셔야합니다.");
+            // DB에서 조회한 계정이 일반계정 여부 판단
+            if(AuthProvider.DEFAULT.equals(memberEntity.getProvider()) ||
+                    !provider.equals(memberEntity.getProvider().toString())) {
+                throw new OAuth2AuthenticationProcessingException(memberEntity.getProvider().toString().toLowerCase());
             }
             log.info("DB에 존재할 경우, 변경된 정보만 업데이트");
-            log.info("ID 확인 : " + memberEntity.getEmail());
             memberEntity.updateMemberInfo(oAuth2UserInfo.getName(), oAuth2UserInfo.getImageUrl());
         }
 
@@ -109,12 +106,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private Member registerNewMember(OAuth2UserInfo oAuth2UserInfo) {
 
         Member newMember = Member.builder()
-                                .email(oAuth2UserInfo.getEmail())
-                                .nickName(oAuth2UserInfo.getName())
-                                .role(MemberRole.USER)
-                                .provider(AuthProvider.valueOf(oAuth2UserInfo.getProvider()))
-                                .enabled(true)  // OAuth 계정은 굳이 이메일 인증 절차가 필요없다고 판단
-                                .build();
+                                 .email(oAuth2UserInfo.getEmail())
+                                 .nickName(oAuth2UserInfo.getName())
+                                 .role(MemberRole.USER)
+                                 .provider(AuthProvider.valueOf(oAuth2UserInfo.getProvider()))
+                                 .enabled(true)  // OAuth 계정은 굳이 이메일 인증 절차가 필요없다고 판단
+                                 .build();
 
         return memberRepository.save(newMember);
     }

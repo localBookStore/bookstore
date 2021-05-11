@@ -17,12 +17,12 @@ public class NaverOAuth2UserInfo implements OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        return this.attributes.get("email").toString();
+        return String.valueOf(this.attributes.get("email"));
     }
 
     @Override
     public String getName() {
-        return attributes.get("name").toString();
+        return String.valueOf(this.attributes.get("name"));
     }
 
     @Override
