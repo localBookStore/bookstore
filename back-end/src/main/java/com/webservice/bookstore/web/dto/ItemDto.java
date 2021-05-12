@@ -37,6 +37,8 @@ public class ItemDto {
 
         private String imageUrl;
 
+        private String upload_image_name;
+
 
         // Entity -> DTO
         public static Default
@@ -52,6 +54,7 @@ public class ItemDto {
                     .author(item.getAuthor())
                     .imageUrl(item.getImageUrl())
                     .category_id(item.getCategory().getId())
+                    .upload_image_name(item.getUploadImageName())
 //                .category_name(item.getCategory().getName())
                     .build();
         }
@@ -155,7 +158,7 @@ public class ItemDto {
         private String image;
 
         @JsonIgnore
-        private String imageUrl;
+        private String upload_image_name;
 
         public Item toEntity() {
 
@@ -168,6 +171,7 @@ public class ItemDto {
                     .price(this.price)
                     .quantity(this.count)
                     .author(this.author)
+                    .uploadImageName(this.upload_image_name)
                     .build();
         }
 
