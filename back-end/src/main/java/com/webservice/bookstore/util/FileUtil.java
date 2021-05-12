@@ -13,15 +13,15 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
 
     public void checkImageType(T itemDto, String contentType, BufferedImage bufferedImage) throws Exception {
         String path = checkImageFilePath(itemDto);
-
+        String isbn = itemDto.getIsbn();
         if (contentType.contains("image/jpeg")) {
-            itemDto.setImageUrl(itemDto.getIsbn() + ".jpg");
+            itemDto.setImageUrl(isbn + ".jpg");
             ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
         } else if (contentType.contains("image/png")) {
-            itemDto.setImageUrl(itemDto.getIsbn() + ".png");
+            itemDto.setImageUrl(isbn + ".png");
             ImageIO.write(bufferedImage, "png", new File(path + ".png"));
         } else if (contentType.contains("image/gif")) {
-            itemDto.setImageUrl(itemDto.getIsbn() + ".gif");
+            itemDto.setImageUrl(isbn + ".gif");
             ImageIO.write(bufferedImage, "gif", new File(path + ".gif"));
         }
     }
