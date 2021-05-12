@@ -15,10 +15,13 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         String path = checkImageFilePath(itemDto);
 
         if (contentType.contains("image/jpeg")) {
+            itemDto.setImageUrl(itemDto.getIsbn() + ".jpg");
             ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
         } else if (contentType.contains("image/png")) {
+            itemDto.setImageUrl(itemDto.getIsbn() + ".png");
             ImageIO.write(bufferedImage, "png", new File(path + ".png"));
         } else if (contentType.contains("image/gif")) {
+            itemDto.setImageUrl(itemDto.getIsbn() + ".gif");
             ImageIO.write(bufferedImage, "gif", new File(path + ".gif"));
         }
     }

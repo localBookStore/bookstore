@@ -154,6 +154,9 @@ public class ItemDto {
 
         private String image;
 
+        @JsonIgnore
+        private String imageUrl;
+
         public Item toEntity() {
 
             Category category = Category.builder().id(this.category_id).build();
@@ -165,7 +168,6 @@ public class ItemDto {
                     .price(this.price)
                     .quantity(this.count)
                     .author(this.author)
-                    .isbn(this.isbn)
                     .build();
         }
 
