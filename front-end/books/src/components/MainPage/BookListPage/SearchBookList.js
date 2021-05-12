@@ -4,6 +4,7 @@ import { genreMap } from "feature/GenreMap"
 import { Paper } from "@material-ui/core"
 import { Image, Table } from "react-bootstrap";
 import styled from "styled-components"
+const ENV = process.env.NODE_ENV;
 
 const BookList = ({location}) => {
   const { books, input } = location.state
@@ -22,8 +23,11 @@ const BookList = ({location}) => {
         {books.map((book, idx) => (
           <tr key={idx}>
             <td><NavButton to={{pathname:`/detail/${book.id}`, state:{book}}}>
-              <StyledPaper component={Image} src={book.imageUrl} elevation={8}>
-              </StyledPaper>
+            {
+              ENV === 'development' ?
+                <StyledPaper component={Image} src={book.imageUrl} elevation={2} /> :
+                <StyledPaper component={Image} src={`/image/${book.uploadImageName}`} elevation={2} />
+            }
             </NavButton></td>
             <td><ItemContent>{book.name}</ItemContent></td>
             <td><ItemContent>{genreMap[book.category_id]}</ItemContent></td>
@@ -36,17 +40,18 @@ const BookList = ({location}) => {
   </> 
 }
 export default BookList;
-
-const ContainerTitle = styled.div`
-  margin: 30px 10%;
-  font-size: 24px;
-  font-weight: bold;
-`
 const QueryInput = styled.span`
   margin: 0 10px;
   font-size: 32px;
   font-weight: bold;
 `
+
+const ContainerTitle = styled.div`
+  margin: 30px 10%;
+  font-size: 28px;
+  font-weight: bold;
+`
+
 const Container = styled(Table)`
   margin: 0 auto;
   width: 80%;

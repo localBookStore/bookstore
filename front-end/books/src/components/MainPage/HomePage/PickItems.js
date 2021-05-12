@@ -9,6 +9,7 @@ import NextArrow from "./CustomArrow/NextArrow"
 import PrevArrow from "./CustomArrow/PrevArrow"
 import { Image } from "react-bootstrap"
 import styled from "styled-components"
+const ENV = process.env.NODE_ENV;
 
 const PickItems = () => {
   const [images, setImages] = useState(false);
@@ -43,7 +44,10 @@ const PickItems = () => {
         return <EachBook key={idx}>
           <BookButton>
             <Link to={{pathname:`/detail/${book.id}`, state:{book}}}>
-              <ImageCard rounded src={book.imageUrl} alt={idx} />
+              { ENV === 'development' ? 
+                <ImageCard rounded src={book.imageUrl} alt={idx} />:
+                <ImageCard rounded src={`/image/${book.uploadImageName}`} alt={idx}/>
+              }
             </Link>
           </BookButton>
         </EachBook>

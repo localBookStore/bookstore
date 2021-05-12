@@ -41,7 +41,6 @@ const App = () => {
         <Route path="/login" component={LoginPage} />
         <Route path="/oauth" component={OauthRedirect} />
         <Route path="/signup" component={SignupPage} />
-
         <Route path="/cart" component={CartPage} />
         <Route path="/mypage" component={MyPage} />
         <Route path="/admin" component={AdminPage} />

@@ -3,7 +3,6 @@ import { useCookies } from "react-cookie"
 import axios from "axios"
 
 import { TableContainer, Table, TableRow, TableHead, TableBody, TableCell, Paper } from "@material-ui/core"
-// import { Icons, BorderColor } from "react-icons";
 import { BorderColor } from '@material-ui/icons/';
 import styled from "styled-components"
 
@@ -27,9 +26,9 @@ const OrderList = ({ history }) => {
     history.replace(`/community/detail/${id}`)
   }
 
-  return <TableContainer component={Paper}>
+  return <TableContainer component={Paper} style={{margin:"0 30px"}}>
     <Title><BorderColor fontSize="large" color="primary" /> 회원님의 쓴 글 목록입니다.</Title>
-		<Table>
+		<Table style={{width:"60vw"}}>
 			<TableHead>
 				<TableRow>
 					<StyledHeadTableCell>카테고리</StyledHeadTableCell>

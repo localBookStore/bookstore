@@ -21,7 +21,7 @@ const UserArticle = ({ userInfo }) => {
   console.log(userArticles)
   return <Container>
     {userArticles.length ? 
-      <Table response style={{width:"50vw"}}>
+      <Table response style={{width:"60vw"}}>
         <thead>
           <Tr>
             <th>글번호</th>

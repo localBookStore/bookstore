@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 
 import { Paper, Button } from "@material-ui/core"
 import styled, { keyframes } from "styled-components"
+const ENV = process.env.NODE_ENV;
 
 const tagMap = ["총류", "철학", "종교", "사회과학", "자연과학", "기술과학", "예술", "언어", "문학", "역사"]
 
@@ -26,7 +27,11 @@ const CategoryHoverDetail = ({genreData, show}) => {
       {choiceGenre && choiceGenre.map((item, idx) => (
         <div key={idx}>
           <Link to={{pathname:`/detail/${item.id}`, state:{book:item}}}>
-            <StyledPaper component={ItemImage} src={item.imageUrl} elevation={2} />
+            {
+              ENV === 'development' ?
+                <StyledPaper component={ItemImage} src={item.imageUrl} elevation={2} /> :
+                <StyledPaper component={ItemImage} src={`/image/${item.uploadImageName}`} elevation={2} />
+            }
           </Link>
           <ItemTitle>{item.name}</ItemTitle>
         </div>       

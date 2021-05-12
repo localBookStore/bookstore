@@ -5,11 +5,10 @@ import UserOrder from "./UserOrder"
 import { Button } from "@material-ui/core"
 import styled from "styled-components";
 
-const AllOrderList = ({ location, match }) => {
+const AllOrderList = ({ location }) => {
 	const [users, setUsers] = useState([]);
   const [selectIdx, setSelectIdx] = useState(-1);
 	const token = location.state.token;
-  const URL = match.url
   
 	useEffect(() => {
 		axios.get("api/admin/members", { headers: { Authorization: token } })
@@ -23,9 +22,9 @@ const AllOrderList = ({ location, match }) => {
       <UserButtons>
       {users.length ? users.map((user, idx) => {
         return <UserButton 
-        onClick={() => setSelectIdx(idx)}
-        variant="outlined"
-        key={idx} 
+          onClick={() => setSelectIdx(idx)}
+          variant="outlined"
+          key={idx} 
         >{user.email}<br/>{user.nickName}
       </UserButton>
       }) : <NotUser>😭 등록된 회원들이 없습니다</NotUser>}
