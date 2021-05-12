@@ -1,58 +1,105 @@
-import { useForm } from "react-hook-form";
+
 import axios from "axios";
 
 import { TextField, Button, Paper } from "@material-ui/core";
 import styled from "styled-components";
+import { useState } from "react";
 
 const EachItemList = ({ data, itemCheck, token }) => {
-  const { register, handleSubmit } = useForm();
-  const { id, imageUrl, category_id, name, description, author, publisher, price, quantity, isbn } = data;
+  const { id, imageUrl } = data;
+  const [info, setInfo] = useState({
+    ...data
+  });
 
-  const updateEvent = (e, imageUrl, id) => {
-    setTimeout(() => {
-      axios.put("api/admin/items",{ 
-        ...e,
-          imageUrl,
-          id 
-        },
-        { headers: { Authorization: token }}
+  const updateEvent = () => {
+    axios.put("api/admin/items", {
+      ...info
+    }, { 
+      headers: { Authorization: token }}
       )
       .then(() => alert("수정되었습니다."))
-      .catch((err) => console.log(err.response.config));
-    }, 200);
-  };
-
-  const ItemContext = ({value, name}) => {
-    return <ItemContent 
-      variant="outlined" 
-      size="small" 
-      value={value} 
-      ref={register} 
-      name={name} 
-      />
+      .catch((err) => console.log(err.response));
+    };
+  
+  const eventHandler = e => {
+    const { name, value } = e.target;
+    setTimeout(() => {
+      setInfo({
+        ...info,
+        [name]:value
+      })
+    }, 400)
   }
 
   return (
-    <form onSubmit={handleSubmit((e) => updateEvent(e, imageUrl, id))}>
-      <EachItem>
-        <CheckBoxInput type="checkbox" onChange={(e) => itemCheck(id, e.target.checked)} />
-        <Paper component={ItemImage} src={imageUrl} alt={id} elevation={8} />
+    <EachItem>
+      <CheckBoxInput type="checkbox" onChange={(e) => itemCheck(id, e.target.checked)} />
+      <Paper component={ItemImage} src={imageUrl} alt={id} elevation={8} />
 
-        <Contents>
-          <Div>카테고리ID: <ItemContext value={category_id} name="category_id" /></Div>
-          <Div>제목: <ItemContext value={name} name="name" /></Div>
-          <Div>설명: <ItemTextArea multiline rows={10} variant="outlined" value={description} name="description" /></Div>
-          <Div>저자: <ItemContext value={author} name="author" /></Div>
-          <Div>출판사: <ItemContext value={publisher} name="publisher" /></Div>
-          <Div>가격: <ItemContext value={price} name="price" /></Div>
-          <Div>수량: <ItemContext value={quantity} name="quantity" /></Div>
-          <Div>ISBN: <ItemContext value={isbn} name="isbn" /></Div>
-        </Contents>
-          <EditButton type="submit" variant="contained" color="primary">
-            수정하기
-          </EditButton>
-      </EachItem>
-    </form>
+      <Contents>
+        <Div>카테고리ID: <ItemContent 
+          name="category_id" 
+          variant="outlined" 
+          size="small"
+          defaultValue={info.category_id}
+          onChange={eventHandler}
+          /></Div>
+        <Div>제목: <ItemContent 
+          name="name" 
+          variant="outlined" 
+          size="small"
+          defaultValue={info.name}
+          onChange={eventHandler}
+          /></Div>
+        <Div>설명: <ItemContent 
+          multiline={true} 
+          rows={10} 
+          name="description" 
+          variant="outlined" 
+          size="small"
+          defaultValue={info.description}
+          onChange={eventHandler}
+          /></Div>
+        <Div>설명: <ItemContent
+          name="author" 
+          variant="outlined" 
+          size="small"
+          defaultValue={info.author}
+          onChange={eventHandler}
+          /></Div>
+        <Div>설명: <ItemContent 
+          name="publisher" 
+          variant="outlined" 
+          size="small"
+          defaultValue={info.publisher}
+          onChange={eventHandler}
+          /></Div>
+        <Div>설명: <ItemContent 
+          name="price" 
+          variant="outlined" 
+          size="small"
+          defaultValue={info.price}
+          onChange={eventHandler}
+          /></Div>
+        <Div>설명: <ItemContent 
+          name="quantity" 
+          variant="outlined" 
+          size="small"
+          defaultValue={info.quantity}
+          onChange={eventHandler}
+          /></Div>
+        <Div>설명: <ItemContent 
+          name="isbn" 
+          variant="outlined" 
+          size="small"
+          defaultValue={info.isbn}
+          onChange={eventHandler}
+          /></Div>
+      </Contents>
+      <EditButton variant="contained" color="primary" onClick={updateEvent}>
+        수정하기
+      </EditButton>
+    </EachItem>
   );
 };
 export default EachItemList;
@@ -80,7 +127,7 @@ const Div = styled.div`
 
 const ItemContent = styled(TextField)`
   margin-left: 10px;
-  height: 40px;
+  /* height: 40px; */
   width: 400px;
 `;
 

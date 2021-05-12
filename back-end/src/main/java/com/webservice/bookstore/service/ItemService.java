@@ -115,8 +115,7 @@ public class ItemService {
     }
 
     private void checkImageType(ItemDto.ItemAddDto itemDto, String contentType, BufferedImage bufferedImage) throws Exception {
-        String path = checkImageFilePath(itemDto);
-
+        String path = System.getProperty("user.dir") + "/src/main/resources/static/" + itemDto.getIsbn();
         if (contentType.contains("image/jpeg")) {
             ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
         } else if (contentType.contains("image/png")) {

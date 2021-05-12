@@ -2,16 +2,24 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 
+import UpdateNewItem from "./UpdateNewItem";
 import EachItemList from "./EachItemList";
 
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
+import { useCookies } from "react-cookie";
 
-const AllItemList = ({ location }) => {
-  const token = location.state.token;
+const AllItemList = () => {
+  const [cookies] = useCookies(['token']);
+  const token = cookies.token;
+
   const [items, setItems] = useState(null);
+  const [modalShow, setModalShow] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [selected, setSelected] = useState(new Set());
+
+  const modalShowOn = () => setModalShow(true);
+  const modalShowOff = () => setModalShow(false);
 
   useEffect(() => {
     axios.get("api/admin/items", {
@@ -48,7 +56,7 @@ const AllItemList = ({ location }) => {
     return (
       <ItemContainer>
         {currentData.map((data, idx) => {
-          return<EachItemList
+          return <EachItemList
               data={data}
               itemCheck={itemCheck}
               token={token}
@@ -61,9 +69,14 @@ const AllItemList = ({ location }) => {
 
   return <>{items && <Container>
           <ShowCurrentData />
-          <DeleteButton variant="contained" color="secondary" onClick={deleteItem}>
-            체크된 아이템 삭제
-          </DeleteButton>
+          <div style={{display:"flex", justifyContent:"flex-end"}}>
+            <EventButton variant="contained" color="primary" onClick={modalShowOn}>
+              새로운 아이템 추가하기
+            </EventButton>
+            <EventButton variant="contained" color="secondary" onClick={deleteItem}>
+              체크된 아이템 삭제
+            </EventButton>
+          </div>
           <ReactPaginateStyled>
             <ReactPaginate
               pageCount={Math.ceil(items.length / 5)}
@@ -76,6 +89,11 @@ const AllItemList = ({ location }) => {
               onPageChange={({ selected }) => setCurrentPage(selected)}
             />
           </ReactPaginateStyled>
+          {modalShow && <UpdateNewItem 
+              modalShow={modalShow}
+              modalShowOff={modalShowOff}
+              token={token}
+            />}
         </Container>
       }</>
 };
@@ -90,8 +108,8 @@ const ItemContainer = styled.div`
   margin: 10px;
 `;
 
-const DeleteButton = styled(Button)`
-  float: right;
+const EventButton = styled(Button)`
+  margin: 0 10px;
 `;
 
 const ReactPaginateStyled = styled.div`

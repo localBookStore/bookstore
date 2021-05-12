@@ -1,5 +1,5 @@
 import { useState, useRef } from "react"
-import { useForm } from "react-hook-form"
+import { get, useForm } from "react-hook-form"
 import axios from "axios"
 
 import {Avatar, Button, CssBaseline, TextField, CircularProgress, Typography, Container} from '@material-ui/core';
@@ -10,25 +10,15 @@ import styled from "styled-components"
 
 const SignupPage = ({ history }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const { register, handleSubmit, errors, watch } = useForm();
+  const { register, handleSubmit, getValues, formState:{ errors } } = useForm();
   const [isCheck, setIsCheck] = useState({
     overLab: "",
     checkCode: "",
   })
 
-  const EMAIL = useRef(null);
-  const PASSWORD = useRef(null);
-  const AUTHCODE = useRef(null);
-  const NICKNAME = useRef(null);
-  const BIRTH = useRef(null);
-  EMAIL.current = watch("email", "");
-  PASSWORD.current = watch("password", "");
-  AUTHCODE.current = watch("authCode", "");
-  NICKNAME.current = watch("nickName", "");
-  BIRTH.current = watch("birth", "");
-
   const doSignup = data => {
     const { email, password, nickName, birth } = data
+    
     const { overLab, checkCode } = isCheck
     if (overLab && checkCode) {
       axios.post("api/signup/", {
@@ -46,7 +36,7 @@ const SignupPage = ({ history }) => {
   const sendEmailCode = () => {
     setIsLoading(true)
     axios.post("api/signup/request-certificated", {
-      email: EMAIL.current
+      email: getValues('email')
     })
       .then(() => {
         setIsLoading(false)
@@ -56,9 +46,9 @@ const SignupPage = ({ history }) => {
   }
 
   const checkEmailCode = () => {
-    console.log(AUTHCODE.current);
+    
     axios.post("api/signup/check-certificated", {
-      certificated: AUTHCODE.current
+      certificated: getValues('authCode')
     })
     .then(() => setIsCheck({
         ...isCheck,
@@ -69,13 +59,13 @@ const SignupPage = ({ history }) => {
 
   const checkOverLab = () => {
     axios.post("api/signup/duplicated", {
-      email: EMAIL.current
-    })
-      .then(() => setIsCheck({
-          ...isCheck,
-          overLab: EMAIL.current
-        }))
-      .catch(err => alert(err.response.data.message))
+    email: getValues('email')
+  })
+    .then(() => setIsCheck({
+        ...isCheck,
+        overLab: getValues('email')
+      }))
+    .catch(err => alert(err.response.data.message))
   }
 
   if (isLoading) { return <Typography variant="h2" align="center"><CircularProgress color="secondary"/></Typography> }
@@ -97,14 +87,14 @@ const SignupPage = ({ history }) => {
         autoFocus
         type="text"
         readOnly={isCheck.overLab}
-        inputRef={register({
+        {...register('email', {
           required: 'this is a required',
           pattern: {
             value: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
             message: '올바른 형식의 이메일을 입력하세요!',
           },
         })}
-        />
+        />{errors.email && <div>{errors.email.message}</div>}
       {isCheck.overLab ? 
         <span>사용가능</span> : 
         <Button color="primary" onClick={checkOverLab}>중복확인</Button>
@@ -117,9 +107,9 @@ const SignupPage = ({ history }) => {
         <TextField 
           style={{marginLeft:"10px"}} 
           name="authCode" 
-          inputRef={register()} 
+          {...register('authCode')} 
           placeholder={isCheck.overLab ? "인증코드 입력" : "중복확인을 하세요"} 
-          disabled={isCheck.checkCode}
+          disabled={isCheck.checkCode ? true : false}
         />
         {!isCheck.checkCode ? <Button color="secondary" onClick={checkEmailCode}>인증 확인하기</Button> : <span>인증확인</span>}
       </div>
@@ -132,19 +122,15 @@ const SignupPage = ({ history }) => {
         name="password"
         label="Password"
         type="password"
-        inputRef={register({
-          required: 'this is a required',
-          minLength: {
-            value: 8,
-            message: "비밀번호는 8자 이상으로 입력하세요."
-          },
+        {...register('password', {
+          minLength: 8,
           pattern: {
             value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/,
             message: '비밀번호는 숫자, 문자, 특수문자의 조합으로 생성해주세요/',
           },
         })}
-      />
-      <div>{errors.password && errors.password.message}</div>
+      />{errors.password1 && <span>{errors.password1.message}</span>}
+      
 
       <TextField
         variant="outlined"
@@ -154,13 +140,12 @@ const SignupPage = ({ history }) => {
         name="password2"
         label="Password Confirm"
         type="password"
-        inputRef={register({
+        {...register('password2', {
           required: 'this is a required',
           validate: value =>
-            value === PASSWORD.current || "비밀번호가 일치하지 않습니다."
+            value === getValues('password') || "비밀번호가 일치하지 않습니다."
           })}
-        />
-      <div>{errors.password2 && errors.password2.message}</div>
+        />{errors.password2 && <span>{errors.password2.message}</span>}
       
       <TextField 
         required
@@ -169,7 +154,7 @@ const SignupPage = ({ history }) => {
         name="nickName"
         label="Nick Name"
         type="text"
-        inputRef={register({
+        {...register('nickName', {
           required: 'this is a required',
           })}
         fullWidth
@@ -181,7 +166,7 @@ const SignupPage = ({ history }) => {
         name="birth"
         label="Birth"
         type="text"
-        inputRef={register({
+        {...register('birth', {
           required: 'this is a required',
           })}
         fullWidth

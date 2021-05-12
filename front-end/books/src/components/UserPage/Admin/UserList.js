@@ -4,9 +4,12 @@ import UserArticle from "./UserArticle"
 
 import { Button } from "@material-ui/core"
 import styled from "styled-components";
+import { useCookies } from "react-cookie";
 
-const UserList = ({ location }) => {
-  const { token } = location.state;
+const UserList = () => {
+  const [cookies] = useCookies(['token']);
+  const { token } = cookies;
+  
   const [userList, setUserList] = useState([]);
   const [selectIdx, setSelectIdx] = useState(-1);
 

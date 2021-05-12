@@ -123,7 +123,7 @@ public class MemberService {
     }
 
     private void checkImageType(MemberDto.Modify memberDto, String contentType, BufferedImage bufferedImage) throws Exception {
-        String path = System.getProperty("user.dir") + "/back-end/src/main/resources/static/profile/" + memberDto.getEmail();
+        String path = System.getProperty("user.dir") + "/src/main/resources/static/profile/" + memberDto.getEmail();
         if (contentType.contains("image/jpeg")) {
             ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
         } else if (contentType.contains("image/png")) {

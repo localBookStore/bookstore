@@ -8,7 +8,6 @@ import styled from "styled-components";
 
 // JSX duplicated code 
 const NavigationButton = ({ title, url, data=null }) => {
-	
 	return <NavButton
 		variant="contained"
 		component={NavLink} 

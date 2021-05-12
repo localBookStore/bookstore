@@ -59,11 +59,11 @@ const MyPage = ({ match }) => {
 			</MenuListStyled>
 
       
-      <SwitchStyled>
+      <Switch>
 				<Route path={`${path}/userinfo`} component={UserInfo} />
 				<Route path={`${path}/orderlist`} component={OrderList} />
 				<Route path={`${path}/mypost`} component={MyPost} />
-			</SwitchStyled>
+			</Switch>
 
 			<Modal show={show} onHide={modalClose} size="lg">
 				<Modal.Header closeButton>
@@ -101,13 +101,11 @@ const MyPage = ({ match }) => {
 export default MyPage;
 
 const Container = styled.div`
-  display: flex;
+	display: inline-flex;
 `;
 
-const MenuListStyled = styled(MenuList)`
-  width: 100px;
-  margin-right: 40px;
-  
+const MenuListStyled = styled(MenuList)`  
+	width: 13vw;
   `
 const MenuItemStyled = styled(MenuItem)`
   font-family: 'Jua', sans-serif;
@@ -117,17 +115,18 @@ const MenuItemStyled = styled(MenuItem)`
 
   margin: 5px 0;
 `
-const SwitchStyled = styled(Switch)` 
-`
-
 const StyledPaper = styled(Paper)`
+
   display: flex;
   flex-direction: column;
   align-items: center;
-
+	
   height: auto;
   border: 1px solid white;
   background-color: #ffecb3;
+`
+const SwitchDiv = styled.div`
+	margin-left: 2vw;
 `
 const animate = keyframes`
   0% {
