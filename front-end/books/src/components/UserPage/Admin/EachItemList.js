@@ -1,12 +1,13 @@
-
+import { useState } from "react";
 import axios from "axios";
 
 import { TextField, Button, Paper } from "@material-ui/core";
 import styled from "styled-components";
-import { useState } from "react";
+const ENV = process.env.NODE_ENV;
 
 const EachItemList = ({ data, itemCheck, token }) => {
-  const { id, imageUrl } = data;
+  const { id, imageUrl, uploadImageName } = data;
+  
   const [info, setInfo] = useState({
     ...data
   });
@@ -35,7 +36,11 @@ const EachItemList = ({ data, itemCheck, token }) => {
     <EachItem>
       <CheckBoxInput type="checkbox" onChange={(e) => itemCheck(id, e.target.checked)} />
       <Paper component={ItemImage} src={imageUrl} alt={id} elevation={8} />
-
+      { 
+        ENV === 'development' ? 
+          <Paper component={ItemImage} src={imageUrl} alt={id} elevation={8} />:
+          <Paper component={ItemImage} src={`/image/${uploadImageName}`} alt={id} elevation={8}/>
+      }
       <Contents>
         <Div>카테고리ID: <ItemContent 
           name="category_id" 

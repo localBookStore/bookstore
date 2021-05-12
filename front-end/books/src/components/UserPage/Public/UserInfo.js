@@ -18,26 +18,21 @@ const UserInfo = ({ location: { state } }) => {
 	}, []);
 
 	const getUserInfo = () => {
-		axios
-			.get("api/mypage", { headers: { Authorization: state.token } })
+		axios.get("api/mypage", { headers: { Authorization: state.token } })
 			.then((res) => setUser(res.data))
 			.catch((err) => console.log(err.response));
 	};
 
 	const modifyUser = () => {
 		const { currentPassword, newPassword } = password;
-		axios
-			.patch(
-				"api/mypage/modify",
-				{
-					...user,
-					currentPassword,
-					newPassword: newPassword === "" ? null : newPassword,
-				},
-				{ headers: { Authorization: state.token } }
-			)
+		axios.patch("api/mypage/modify",
+      {
+        ...user,
+        currentPassword,
+        newPassword: newPassword === "" ? null : newPassword,
+      }, { headers: { Authorization: state.token } })
 			.then(() => alert("정보가 변경되었습니다."))
-			.catch((err) => console.log(err.response));
+			.catch((err) => console.log(err.response))
 	};
 
 	const fileChangeEvent = (e) => {
@@ -90,7 +85,7 @@ const UserInfo = ({ location: { state } }) => {
 			{user && (
 				<Container>
 					<Wrap>
-						<ProfileImage src={user.imageUrl} />
+						<ProfileImage src={`/profile/${user.imageUrl}`} />
 						<PostButton type="file" accept="image/jpg,image/png,image/jpeg" onChange={fileChangeEvent} />
 					</Wrap>
 					<TagContainer>
@@ -153,7 +148,7 @@ const Container = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 70vw; ;
+	width: 60vw; ;
 `;
 
 const Wrap = styled.div`

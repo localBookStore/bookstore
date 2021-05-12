@@ -9,6 +9,7 @@ import { Image } from "react-bootstrap"
 import styled from "styled-components"
 import NextArrow from "./CustomArrow/NextArrow"
 import PrevArrow from "./CustomArrow/PrevArrow"
+const ENV = process.env.NODE_ENV;
 
 const MonthBooks = () => {
   const [images, setImages] = useState(null);
@@ -44,7 +45,10 @@ const MonthBooks = () => {
           return <EachBook key={idx}>
             <BookButton>
               <Link to={{pathname: `/detail/${book.id}`, state:{book}}}>
-                <ImageCard src={book.imageUrl} alt={idx} />
+                { ENV === 'development' ? 
+                  <ImageCard rounded src={book.imageUrl} alt={idx} />:
+                  <ImageCard rounded src={`/image/${book.uploadImageName}`} alt={idx}/>
+                }
               </Link>
             </BookButton>
           </EachBook>

@@ -4,6 +4,7 @@ import axios from "axios"
 import { Modal } from "react-bootstrap"
 import { Button, Grid } from "@material-ui/core"
 import styled from "styled-components"
+const ENV = process.env.NODE_ENV;
 
 const ModalPage = ({show, showOff, items}) => {
   
@@ -24,7 +25,10 @@ const ModalPage = ({show, showOff, items}) => {
             const { orderedItem } = item
             return <ItemGrid container item alignItems="center" key={idx}>
               <Grid xs={6} item>
-                <ModalImage src={orderedItem.imageUrl} alt={item.title}/>
+              { ENV === 'development' ? 
+                <ModalImage src={orderedItem.imageUrl} alt={item.idx} />:
+                <ModalImage rounded src={`/image/${orderedItem.uploadImageName}`} alt={item.idx}/>
+              }
               </Grid>
               <Grid xs={6} item>
                 <ModalContent 
@@ -77,7 +81,7 @@ const EachUserOrder = ({order, setOrders, token}) => {
       <td>{paymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ￦</td>
       <Td status={status}>{status}</Td>
       <ItemButton variant="outlined" fontcolor="#4caf50" onClick={showOn}>상세보기</ItemButton>
-      <ItemButton variant="outlined" fontcolor="#3f51b5" disabled={status !== "READY"} onClick={acceptOrder}>주문 수락</ItemButton>
+      <ItemButton variant="outlined" fontcolor="#3f51b5" disabled={status !== "READY"} onClick={acceptOrder}>주문수락</ItemButton>
       <ItemButton variant="outlined" fontcolor="#f57c00" disabled={status !== "READY"} onClick={cancelOrder}>주문취소</ItemButton>
 
       <ModalPage show={modalShow} showOff={showOff} items={orderItemList} />

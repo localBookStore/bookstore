@@ -1,9 +1,10 @@
 import { Button } from "@material-ui/core";
 import styled from "styled-components";
+const ENV = process.env.NODE_ENV;
 
 const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
   const { orderCount, id } = data
-  const {item: {imageUrl, name, price, quantity }} = data
+  const {item: {imageUrl, name, price, quantity, uploadImageName }} = data
   
   const changeCheckEvent = (e) => {
     const { target: { checked } } = e;
@@ -28,6 +29,11 @@ const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
     <Container>
       <CheckBox type="checkbox" defaultChecked onChange={changeCheckEvent} />
       <PosterImage src={imageUrl} />
+      { 
+        ENV === 'development' ? 
+          <PosterImage src={imageUrl} />:
+          <PosterImage src={`/image/${uploadImageName}`}/>
+      }
       <ItemDiv fontSize="20px"fontWeight="bold" width="200px">{name}</ItemDiv>
       <ItemDiv fontSize="20px">{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ItemDiv>
       <CountDiv>

@@ -57,7 +57,6 @@ const MyPage = ({ match }) => {
           </StyledPaper>
         </Sticky>
 			</MenuListStyled>
-
       
       <Switch>
 				<Route path={`${path}/userinfo`} component={UserInfo} />

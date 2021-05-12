@@ -4,6 +4,7 @@ import { genreMap } from "feature/GenreMap"
 import { Paper } from "@material-ui/core"
 import { Image, Table } from "react-bootstrap";
 import styled from "styled-components";
+const ENV = process.env.NODE_ENV;
 
 const NewBookList = ({location: {state}}) => {
   const newBooks = state;
@@ -23,7 +24,11 @@ const NewBookList = ({location: {state}}) => {
           {newBooks.map((book, idx) => (
             <tr key={idx}>
               <td><NavButton to={{pathname:`/detail/${book.id}`, state:{book}}}>
-                <Paper elevation={8}><ItemImage src={book.imageUrl}/></Paper>
+                {
+                  ENV === 'development' ?
+                  <StyledPaper component={Image} src={book.imageUrl} elevation={8} /> :
+                  <StyledPaper component={Image} src={`/image/${book.uploadImageName}`} elevation={8} />
+                }
               </NavButton></td>
               <td><ItemContent>{book.name}</ItemContent></td>
               <td><ItemContent>{genreMap[book.category_id]}</ItemContent></td>
@@ -54,7 +59,7 @@ const Container = styled(Table)`
   } 
 `
 
-const ItemImage = styled(Image)`
+const StyledPaper = styled(Paper)`
   width: 180px;
   height: 220px;
   object-fit: cover;

@@ -44,8 +44,6 @@ const CommunityUpdate = ({ history, location:{ state } }) => {
 				<SummitButton onClick={summitEvent} variant="contained">☑️ 게시글 수정</SummitButton>
 			</div>
 		</Container>
-
-
 	);
 };
 export default CommunityUpdate;

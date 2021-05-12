@@ -7,6 +7,7 @@ import NextArrow from "./CustomArrow/NextArrow"
 
 import { Image } from "react-bootstrap"
 import styled from "styled-components"
+const ENV = process.env.NODE_ENV;
 
 const SlideItems = () => {
   const [promoteImage, setPromoteImage] = useState(false)
@@ -16,7 +17,6 @@ const SlideItems = () => {
       .then(res => setPromoteImage(res.data))
       .catch(err => console.log(err))
   }, [])
-
 
   const settings = {
     dots: true,
@@ -28,12 +28,17 @@ const SlideItems = () => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />
   };
-
+  
   return <WholeContainer>
     <Slider {...settings}>
       {promoteImage && promoteImage.map((book, idx) => {
+        
         return <Link to={{pathname:`/detail/${book.id}`, state:{book}}} key={idx}>
-          <ImageCard rounded className="w-100" src={book.imageUrl} alt={idx}/>
+          {
+            ENV === 'development' ? 
+              <ImageCard rounded className="w-100" src={book.imageUrl} alt={idx} />:
+              <ImageCard rounded className="w-100" src={`/image/${book.uploadImageName}`} alt={idx}/>
+          }
         </Link>
       })}
     </Slider>
@@ -47,11 +52,6 @@ const WholeContainer = styled.div`
   height: auto;
 `
 
-const SliderImage = styled.img`
-  width: auto;
-  height: 480px;
-  object-fit: cover;
-`
 const ImageCard = styled(Image)`
   width: auto;
   height: 500px;

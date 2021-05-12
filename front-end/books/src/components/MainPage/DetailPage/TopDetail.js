@@ -6,9 +6,10 @@ import { Image, OverlayTrigger, Tooltip } from "react-bootstrap"
 import { Paper, Button } from "@material-ui/core"
 import styled from "styled-components"
 import { genreMap } from "feature/GenreMap"
+const ENV = process.env.NODE_ENV;
 
 const TopDetail = ({ book }) => {
-  const { name, author, imageUrl, price, publisher, quantity, id, category_id } = book
+  const { name, author, imageUrl, price, publisher, quantity, id, category_id, uploadImageName } = book
   const history = useHistory();
   const [cookies] = useCookies(['token']);
 
@@ -17,7 +18,7 @@ const TopDetail = ({ book }) => {
 
     axios.post(`api/cart/${id}/`, {
       orderCount: 1
-    }, { headers: { Authorization: cookies.token}})
+    }, { headers: { Authorization: cookies.token }})
       .then(() => {
         if (feature === "directBuy") history.push({
           pathname: "/cart",
@@ -30,7 +31,11 @@ const TopDetail = ({ book }) => {
   return <>
   <Container>
       <Paper elevation={9} variant="outlined">
-        <PosterImage src={imageUrl} alt={id} rounded fluid />
+        {
+          ENV === 'development' ?
+          <PosterImage src={imageUrl} elevation={8} alt={id} rounded fluid /> :
+          <PosterImage src={`/image/${uploadImageName}`} alt={id} rounded fluid />
+        }
       </Paper>
       <ContentsContainer>
           <TagNames>

@@ -17,10 +17,10 @@ const OrderList = () => {
       .catch((err) => console.log(err.response));
 	}, []);
 
-  return <TableContainer component={Paper}>
-      <Table>
+  return <TableContainer component={Paper} style={{ margin:"0 30px"}} >
+      <Table  style={{width:"60vw"}}>
         <TableHead>
-          <TableRow>
+          <TableRow >
             <StyledTableCell>주문일자</StyledTableCell>
             <StyledTableCell>배송지</StyledTableCell>
             <StyledTableCell>배송상태</StyledTableCell>
