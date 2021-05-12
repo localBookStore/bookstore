@@ -9,6 +9,7 @@ import com.webservice.bookstore.exception.MatchUserPasswordException;
 import com.webservice.bookstore.exception.PreventRemembershipException;
 import com.webservice.bookstore.exception.SimpleFieldError;
 import com.webservice.bookstore.util.EmailUtil;
+import com.webservice.bookstore.util.FileUtil;
 import com.webservice.bookstore.util.RedisUtil;
 import com.webservice.bookstore.web.dto.EmailDto;
 import com.webservice.bookstore.web.dto.MemberDto;
@@ -24,7 +25,6 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityNotFoundException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -40,6 +40,7 @@ public class MemberService {
     private final PasswordEncoder encoder;
     private final MemberRepository memberRepository;
     private final JavaMailSender javaMailSender;
+    private final FileUtil<com.webservice.bookstore.web.dto.ItemDto.ItemAddDto, MemberDto.Modify> fileUtil;
     private final RedisUtil redisUtil;
 
     public void signup(EmailDto.SignUpRequest signUpRequest) {
@@ -115,23 +116,25 @@ public class MemberService {
                 String extension = contentType.substring(contentType.indexOf("/") + 1);
                 member.changeImage(member.getEmail() + "." + extension);
                 BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
-                checkImageType(memberDto, contentType, bufferedImage);
+                fileUtil.checkImageType(memberDto, contentType, bufferedImage);
             }
         }
 
         return MemberDto.MyInfoRequest.of(member);
     }
 
-    private void checkImageType(MemberDto.Modify memberDto, String contentType, BufferedImage bufferedImage) throws Exception {
-        String path = System.getProperty("user.dir") + "/src/main/resources/static/profile/" + memberDto.getEmail();
-        if (contentType.contains("image/jpeg")) {
-            ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
-        } else if (contentType.contains("image/png")) {
-            ImageIO.write(bufferedImage, "png", new File(path + ".png"));
-        } else if (contentType.contains("image/gif")) {
-            ImageIO.write(bufferedImage, "gif", new File(path + ".gif"));
-        }
-    }
+
+//    private void checkImageType(MemberDto.Modify memberDto, String contentType, BufferedImage bufferedImage) throws Exception {
+//        String path = System.getProperty("user.dir") + "/back-end/src/main/resources/static/profile/" + memberDto.getEmail();
+//        if (contentType.contains("image/jpeg")) {
+//            ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
+//        } else if (contentType.contains("image/png")) {
+//            ImageIO.write(bufferedImage, "png", new File(path + ".png"));
+//        } else if (contentType.contains("image/gif")) {
+//            ImageIO.write(bufferedImage, "gif", new File(path + ".gif"));
+//        }
+//    }
+
 
     /*
     비밀번호 찾기
