@@ -80,6 +80,8 @@ const UserInfo = ({ location: { state } }) => {
 					return alert("새로운 비밀번호와 확인 비밀번호가 다릅니다.");
 				}
 			}
+		}else {
+			modifyUser();
 		}
 	};
 	
