@@ -39,6 +39,8 @@ public class Item {
 
     private String imageUrl;
 
+    private String uploadImageName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
