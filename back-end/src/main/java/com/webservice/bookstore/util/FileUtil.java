@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystemException;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -22,11 +23,7 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
     private String path = null;
 
     public void deleteImageFile(String uploadImageName) throws IOException {
-        if(lastSubString.equals("/back-end")) {
-            path = prefixPath + "/src/main/resources/static/";
-        } else if (lastSubString.equals("/bookstore")) {
-            path = prefixPath + "/back-end/src/main/resources/static/" ;
-        }
+        path = checkStaticFilePath();
 
         File file = new File(path);
         if(file.exists()) {
@@ -36,8 +33,6 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
                     if (f.getName().equals(uploadImageName)) {
                         f.delete();
                         System.out.println(f.getName() + " 삭제 성공");
-                    } else {
-                        throw new FileSystemException("해당 파일이 존재하지 않아 삭제되지 않았습니다.");
                     }
                 }
             } else {
@@ -49,8 +44,19 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
 
     }
 
+    private String checkStaticFilePath() {
+        if(lastSubString.equals("/back-end")) {
+            return prefixPath + "/src/main/resources/static/";
+        } else if (lastSubString.equals("/bookstore")) {
+            return prefixPath + "/back-end/src/main/resources/static/" ;
+        } else {
+            return null;
+        }
+
+    }
+
     public void checkImageType(T itemDto, String contentType, BufferedImage bufferedImage) throws Exception {
-        String path = checkImageFilePath(itemDto);
+        path = checkStaticFilePath() + itemDto.getIsbn();
         String isbn = itemDto.getIsbn();
         if (contentType.contains("image/jpeg")) {
             itemDto.setUpload_image_name(isbn + ".jpg");
@@ -64,19 +70,18 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         }
     }
 
-    public String checkImageFilePath(T itemDto) {
-        String path = null;
-
-        if(lastSubString.equals("/back-end")) {
-            path = prefixPath + "/src/main/resources/static/" + itemDto.getIsbn();
-        } else if (lastSubString.equals("/bookstore")) {
-            path = prefixPath + "/back-end/src/main/resources/static/" + itemDto.getIsbn();
-        }
-        return path;
-    }
+//    public String checkImageFilePath(T itemDto) {
+//
+//        if(lastSubString.equals("/back-end")) {
+//            path = prefixPath + "/src/main/resources/static/" + itemDto.getIsbn();
+//        } else if (lastSubString.equals("/bookstore")) {
+//            path = prefixPath + "/back-end/src/main/resources/static/" + itemDto.getIsbn();
+//        }
+//        return path;
+//    }
 
     public void checkImageType(M memberDto, String contentType, BufferedImage bufferedImage) throws Exception {
-        String path = checkImageFilePath(memberDto);
+        path = checkStaticFilePath() +  "profile/"+ memberDto.getEmail();
         if (contentType.contains("image/jpeg")) {
             ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
         } else if (contentType.contains("image/png")) {
@@ -86,16 +91,14 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         }
     }
 
-    public String checkImageFilePath(M memberDto) {
-        String path = null;
-
-        if(lastSubString.equals("/back-end")) {
-            path = prefixPath + "/src/main/resources/static/profile/" + memberDto.getEmail();
-        } else if (lastSubString.equals("/bookstore")) {
-            path = prefixPath + "/back-end/src/main/resources/static/profile/" + memberDto.getEmail();
-        }
-        return path;
-    }
+//    public String checkImageFilePath(M memberDto) {
+//        if(lastSubString.equals("/back-end")) {
+//            path = prefixPath + "/src/main/resources/static/profile/" + memberDto.getEmail();
+//        } else if (lastSubString.equals("/bookstore")) {
+//            path = prefixPath + "/back-end/src/main/resources/static/profile/" + memberDto.getEmail();
+//        }
+//        return path;
+//    }
 
 
 
