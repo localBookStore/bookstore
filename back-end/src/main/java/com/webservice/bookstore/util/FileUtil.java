@@ -21,8 +21,8 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
     private String lastSubString = prefixPath.substring(prefixPath.lastIndexOf("/"));
     private String path = null;
 
-    public void deleteImageFile(String uploadImageName) throws IOException {
-        path = checkStaticFilePath();
+    public void deleteImageFile(String uploadImageName, String path) throws IOException {
+//        path = checkStaticFilePath();
 
         File file = new File(path);
         if(file.exists()) {
@@ -43,7 +43,7 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
 
     }
 
-    private String checkStaticFilePath() {
+    public String checkStaticFilePath() {
         if(lastSubString.equals("/back-end")) {
             return prefixPath + "/src/main/resources/static/";
         } else if (lastSubString.equals("/bookstore")) {

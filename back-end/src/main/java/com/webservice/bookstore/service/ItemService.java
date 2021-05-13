@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -121,8 +122,11 @@ public class ItemService {
 
 
     @Transactional
-    public void modifyItem(ItemDto.Default itemDto) {
+    public void modifyItem(ItemDto.Default itemDto) throws IOException {
         Item item = itemDto.toEntity();
+        String path = fileUtil.checkStaticFilePath() + "item/";
+        fileUtil.deleteImageFile(item.getUploadImageName(), path);
+
         itemRepository.save(item);
     }
 

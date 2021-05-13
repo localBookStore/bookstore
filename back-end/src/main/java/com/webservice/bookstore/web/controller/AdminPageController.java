@@ -87,7 +87,7 @@ public class AdminPageController {
 
 
     @PutMapping("/items")
-    public ResponseEntity modifyItem(@RequestBody ItemDto.Default itemDto) {
+    public ResponseEntity modifyItem(@RequestBody ItemDto.Default itemDto) throws Exception{
         itemService.modifyItem(itemDto);
         return ResponseEntity.ok("상품이 수정되었습니다.");
     }
@@ -97,7 +97,8 @@ public class AdminPageController {
     public ResponseEntity deleteItems(@RequestBody List<Long> ids) throws IOException {
         List<ItemDto.Default> items = itemService.findItems(ids);
         for (ItemDto.Default item : items) {
-            fileUtil.deleteImageFile(item.getUpload_image_name());
+            String path = fileUtil.checkStaticFilePath() + "/image";
+            fileUtil.deleteImageFile(item.getUpload_image_name(), path);
         }
         List<ItemDto.Default> remainItems = itemService.deleteItem(ids);
         List<DefaultItemResource> itemLinkResources = remainItems.stream().map(DefaultItemResource::new).collect(Collectors.toList());

@@ -117,8 +117,8 @@ public class MemberService {
             String extension = contentType.substring(contentType.indexOf("/") + 1);
             if(extension.equals("jpeg")) extension = "jpg";
             String newFileName = fileUtil.makeProfileName(member.getId());
-
-            fileUtil.deleteImageFile(member.getImageUrl()); // 기존 프로필 이미지 파일 삭제
+            String path = fileUtil.checkStaticFilePath() + "profile/";
+            fileUtil.deleteImageFile(member.getImageUrl(), path); // 기존 프로필 이미지 파일 삭제
             member.changeImage(newFileName + "." + extension);
             BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
             fileUtil.checkImageType(newFileName, contentType, bufferedImage);
