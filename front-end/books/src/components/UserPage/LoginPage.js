@@ -23,7 +23,9 @@ const LoginPage = ({ history }) => {
         setCookie("token", token)
         history.replace("/")
       })
-      .catch(() => alert("아이디 혹은 비밀번호가 틀렸습니다."))
+      .catch(error => {
+          alert(error.response.data.exception)
+      })
     }
 
   return <FormContainer component="main" maxWidth="xs">

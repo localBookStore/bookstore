@@ -6,6 +6,7 @@ import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.exception.ValidationException;
 import com.webservice.bookstore.service.MemberService;
 import com.webservice.bookstore.service.OrdersService;
+import com.webservice.bookstore.util.FileUtil;
 import com.webservice.bookstore.web.dto.MemberDto;
 import com.webservice.bookstore.web.dto.OrdersDto;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class UserMyPageController {
 
     private final MemberService memberService;
     private final OrdersService orderService;
+    private final FileUtil fileUtil;
 
     /*
     마이페이지 내 회원정보 내역 조회
@@ -38,12 +40,16 @@ public class UserMyPageController {
         verifyAuthentication(customUserDetails);
 
         Member member = customUserDetails.getMember();
+        String imageData = null;
+        if(member.getImageUrl() != null) {
+            imageData = String.valueOf(fileUtil.encodingImageFile(member.getImageUrl()));
+        }
         MemberDto.MyInfoRequest myInfoRequest = MemberDto.MyInfoRequest.builder()
                                                          .email(member.getEmail())
                                                          .nickName(member.getNickName())
                                                          .address(member.getAddress())
                                                          .provider(String.valueOf(member.getProvider()))
-                                                         .imageUrl(String.valueOf(memberService.encodingProfile(member.getImageUrl())))
+                                                         .imageUrl(imageData)
                                                          .build();
         return ResponseEntity.ok(myInfoRequest);
     }

@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.FileSystemException;
+import java.util.Base64;
 import java.util.UUID;
 
 @Slf4j
@@ -22,7 +22,6 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
     private String path = null;
 
     public void deleteImageFile(String uploadImageName, String path) throws IOException {
-//        path = checkStaticFilePath();
         File file = new File(path);
         if(file.exists()) {
             File[] files = file.listFiles();
@@ -33,11 +32,7 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
                         System.out.println(f.getName() + " 삭제 성공");
                     }
                 }
-            } else {
-                throw new FileSystemException("해당 디렉토리는 비어있는 파일입니다.");
             }
-        } else {
-            throw new FileNotFoundException("해당 디렉토리 존재하지 않습니다");
         }
 
     }
@@ -85,6 +80,34 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         StringBuffer sb = new StringBuffer(newFileName);
         sb.insert(start, memberId);
         return sb.toString();
+    }
+
+    /*
+    회원 프로필 이미지 파일 조회 및 base64 인코딩
+    */
+    public String encodingImageFile(String fileName) {
+        String extenstion = fileName.substring(fileName.indexOf(".") +1);
+        if(extenstion.equals("jpg")) {
+            extenstion = "jpeg";
+        }
+        String prefixPath = System.getProperty("user.dir").replace("\\", "/");
+        byte[] binary = getFileBinary(prefixPath + "/back-end/src/main/resources/static/profile/" + fileName);
+
+        if(binary == null) {
+            return null;
+        }
+        return "data:image/" + extenstion + ";base64," + Base64.getEncoder().encodeToString(binary);
+    }
+
+    private static byte[] getFileBinary(String filepath) {
+        File file = new File(filepath);
+        byte[] data = new byte[(int) file.length()];
+        try (FileInputStream stream = new FileInputStream(file)) {
+            stream.read(data, 0, data.length);
+        } catch (Throwable e) {
+            return null;
+        }
+        return data;
     }
 
 

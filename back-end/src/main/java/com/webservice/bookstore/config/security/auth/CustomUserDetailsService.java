@@ -32,9 +32,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(email);
         }
 
-        Member memberEntity = optionalMember.get();
-        if(!AuthProvider.DEFAULT.equals(memberEntity.getProvider())) {
-            String msg = "해당 이메일 계정은 "+ memberEntity.getProvider() + " 간편 로그인으로 진행하셔야합니다.";
+        Member member = optionalMember.get();
+        if(!AuthProvider.DEFAULT.equals(member.getProvider())) {
+            String msg = "해당 e-mail은 " + member.getProvider().toString().toLowerCase() + " 소셜 계정입니다.";
             throw new AuthenticationException(msg) {};
         }
 

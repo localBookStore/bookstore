@@ -70,6 +70,7 @@ public class InsertItem {
                     .imageUrl(imageUrl)
                     .category(newCategory)
                     .publicationDate(randLocalDate())
+                    .uploadImageName(isbn + ".jpg")
                     .build();
             itemRepository.save(item);
 
