@@ -12,12 +12,24 @@ const EachItemList = ({ data, itemCheck, token }) => {
     ...data
   });
 
+	const fileChangeEvent = (e) => {
+		const reader = new FileReader();
+		const file = e.target.files[0];
+    
+		reader.onloadend = () => {
+      setInfo({
+        ...info,
+				image: reader.result,
+			});
+		}
+    if (file)
+      reader.readAsDataURL(file);
+	};
+
   const updateEvent = () => {
     axios.put("api/admin/items", {
       ...info
-    }, { 
-      headers: { Authorization: token }}
-      )
+    }, { headers: { Authorization: token }})
       .then(() => alert("수정되었습니다."))
       .catch((err) => console.log(err.response));
     };
@@ -31,16 +43,18 @@ const EachItemList = ({ data, itemCheck, token }) => {
       })
     }, 400)
   }
-
+  console.log(info)
   return (
     <EachItem>
       <CheckBoxInput type="checkbox" onChange={(e) => itemCheck(id, e.target.checked)} />
-      <Paper component={ItemImage} src={imageUrl} alt={id} elevation={8} />
-      { 
-        ENV === 'development' ? 
-          <Paper component={ItemImage} src={imageUrl} alt={id} elevation={8} />:
-          <Paper component={ItemImage} src={`/image/${uploadImageName}`} alt={id} elevation={8}/>
-      }
+      <div>
+        { 
+          ENV === 'development' ? 
+            <ItemPaper component={ItemImage} src={info.imageUrl} alt={id} elevation={8} />:
+            <ItemPaper component={ItemImage} src={`/image/${info.uploadImageName}`} alt={id} elevation={8}/>
+        }
+        <ItemInput type="file" accept="image/jpg,image/png,image/jpeg" onChange={fileChangeEvent} />
+      </div>
       <Contents>
         <Div>카테고리ID: <ItemContent 
           name="category_id" 
@@ -112,14 +126,15 @@ export default EachItemList;
 const Contents = styled.div`
 
 `
-const ItemTextArea = styled(TextField)`
-  width: 400px;
-`;
-
+const ItemPaper = styled(Paper)`
+  width: 310px;
+  /* height: 500px; */
+  
+`
 const ItemImage = styled.img`
   display: inline-block;
-  height: 350px;
-  object-fit: cover;
+  height: 440px;
+  object-fit: contain;
   margin-right: 20px;
 `;
 const Div = styled.div`
@@ -132,7 +147,6 @@ const Div = styled.div`
 
 const ItemContent = styled(TextField)`
   margin-left: 10px;
-  /* height: 40px; */
   width: 400px;
 `;
 
@@ -151,3 +165,7 @@ const CheckBoxInput = styled.input`
 const EditButton = styled(Button)`
   margin-left: 10px;
 `;
+const ItemInput = styled.input`
+  display: block;
+  margin: 20px 0;
+`

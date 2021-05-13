@@ -12,16 +12,12 @@ const nonImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJ
 const UpdateNewItem = ({modalShow, modalShowOff, token}) => {
   const history = useHistory();
   const { register, handleSubmit } = useForm();
-  const [image, setImage] = useState({
-    isUpload: false,
-    image: nonImage,
-    imageData: null,
-  });
+  const [image, setImage] = useState(nonImage);
   
   const onSubmit = data => {
     axios.post("/api/admin/items/additem", {
       ...data,
-      image:image.image,
+      image,
     }, { headers: {Authorization: token}})
     .then(res => history.push({
       pathname:`/detail/${res.data.id}`, 
@@ -33,16 +29,12 @@ const UpdateNewItem = ({modalShow, modalShowOff, token}) => {
   const fileChangeEvent = e => {
     const reader = new FileReader();
     const file = e.target.files[0];
-    reader.readAsDataURL(file);
     
     reader.onloadend = () => {
-      setImage({
-        ...image,
-        isUpload: true,
-        image: reader.result,
-        imageData:file,
-      })
+      setImage(reader.result)
     }
+    if (file)
+      reader.readAsDataURL(file);
   }
 
   const TextBox = ({label, name, rows, multiline}) => {
