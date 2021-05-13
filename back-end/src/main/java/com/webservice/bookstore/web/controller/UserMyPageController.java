@@ -43,7 +43,7 @@ public class UserMyPageController {
                                                          .nickName(member.getNickName())
                                                          .address(member.getAddress())
                                                          .provider(String.valueOf(member.getProvider()))
-                                                         .imageUrl(String.valueOf(member.getImageUrl()))
+                                                         .imageUrl(String.valueOf(memberService.encodingProfile(member.getImageUrl())))
                                                          .build();
         return ResponseEntity.ok(myInfoRequest);
     }
