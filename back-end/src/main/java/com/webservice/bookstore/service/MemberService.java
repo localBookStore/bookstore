@@ -137,13 +137,15 @@ public class MemberService {
         Member member = this.memberRepository.findByEmail(memberDto.getEmail())
                                                 .orElseThrow(() -> new EntityNotFoundException());
 
-        if(StringUtils.isNotBlank(memberDto.getCurrentPassword())) {
+        if(String.valueOf(memberDto.getProvider()).equals("DEFAULT")) {
+            if (StringUtils.isNotBlank(memberDto.getCurrentPassword())) {
 
-            if (!encoder.matches(memberDto.getCurrentPassword(), member.getPassword())) {
-                throw new MatchUserPasswordException("비밀번호가 일치하지 않습니다.",
-                        new SimpleFieldError("password", "비밀번호 변경"));
-            } else if(StringUtils.isNotBlank(memberDto.getNewPassword())) {
-                member.changePassword(encoder.encode(memberDto.getNewPassword()));
+                if (!encoder.matches(memberDto.getCurrentPassword(), member.getPassword())) {
+                    throw new MatchUserPasswordException("비밀번호가 일치하지 않습니다.",
+                            new SimpleFieldError("password", "비밀번호 변경"));
+                } else if (StringUtils.isNotBlank(memberDto.getNewPassword())) {
+                    member.changePassword(encoder.encode(memberDto.getNewPassword()));
+                }
             }
         }
         member.changeNickName(memberDto.getNickName());

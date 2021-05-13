@@ -88,6 +88,7 @@ public class MemberDto {
                  message = "특수문자를 제외한 한글, 영문 또는 숫자로 이루어진 2~10자리 조합으로 입력해주세요.")
         private String nickName;
 
+        @NotBlank(message = "정보를 수정하시려면 현재 비밀번호를 입력해주셔야 합니다.")
         @Pattern(regexp = "(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}",
                  message = "숫자 + 특문 + 영문 8자 이상 조합으로 입력해주세요.")
         private String currentPassword;
@@ -95,6 +96,8 @@ public class MemberDto {
         @Pattern(regexp = "(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}",
                  message = "숫자 + 특문 + 영문 8자 이상 조합으로 입력해주세요.")
         private String newPassword;
+
+        private AuthProvider provider;
 
         private String imageUrl;
 

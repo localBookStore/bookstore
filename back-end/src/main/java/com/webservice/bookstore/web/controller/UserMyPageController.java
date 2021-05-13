@@ -63,6 +63,7 @@ public class UserMyPageController {
 
         Member member = customUserDetails.getMember();
         memberDto.setEmail(member.getEmail());
+        memberDto.setProvider(member.getProvider());
 
         MemberDto.MyInfoRequest myInfoRequest = memberService.modifyMyInfo(memberDto);
 
