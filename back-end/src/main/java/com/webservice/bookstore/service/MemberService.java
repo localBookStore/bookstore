@@ -108,33 +108,24 @@ public class MemberService {
             } else if(StringUtils.isNotBlank(memberDto.getNewPassword())) {
                 member.changePassword(encoder.encode(memberDto.getNewPassword()));
             }
-            member.changeNickName(memberDto.getNickName());
-            String imageUrl = memberDto.getImageUrl();
-            if(StringUtils.isNotEmpty(imageUrl)) {
-                String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
-                String contentType = imageUrl.substring(0, imageUrl.indexOf(";"));
-                String extension = contentType.substring(contentType.indexOf("/") + 1);
-                member.changeImage(member.getEmail() + "." + extension);
-                BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
-                fileUtil.checkImageType(memberDto, contentType, bufferedImage);
-            }
+        }
+        member.changeNickName(memberDto.getNickName());
+        String imageUrl = memberDto.getImageUrl();
+        if(StringUtils.isNotEmpty(imageUrl)) {
+            String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
+            String contentType = imageUrl.substring(0, imageUrl.indexOf(";"));
+            String extension = contentType.substring(contentType.indexOf("/") + 1);
+            if(extension.equals("jpeg")) extension = "jpg";
+            String newFileName = fileUtil.makeProfileName(member.getId());
+
+            fileUtil.deleteImageFile(member.getImageUrl()); // 기존 프로필 이미지 파일 삭제
+            member.changeImage(newFileName + "." + extension);
+            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes)));
+            fileUtil.checkImageType(newFileName, contentType, bufferedImage);
         }
 
         return MemberDto.MyInfoRequest.of(member);
     }
-
-
-//    private void checkImageType(MemberDto.Modify memberDto, String contentType, BufferedImage bufferedImage) throws Exception {
-//        String path = System.getProperty("user.dir") + "/back-end/src/main/resources/static/profile/" + memberDto.getEmail();
-//        if (contentType.contains("image/jpeg")) {
-//            ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
-//        } else if (contentType.contains("image/png")) {
-//            ImageIO.write(bufferedImage, "png", new File(path + ".png"));
-//        } else if (contentType.contains("image/gif")) {
-//            ImageIO.write(bufferedImage, "gif", new File(path + ".gif"));
-//        }
-//    }
-
 
     /*
     비밀번호 찾기

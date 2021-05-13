@@ -84,11 +84,10 @@ public class MemberDto {
         private String email;
 
         @NotBlank(message = "닉네임을 입력해주세요.")
-        @Size(min = 2, max = 10, message = "최소 2자리, 최대 10자리 이상의 닉네임을 입력해주세요")
-        @Pattern(regexp = "(^[가-힣a-zA-Z0-9]*$)", message = "특수문자를 제외한 한글, 영문 또는 숫자로 이루어진 조합으로 입력해주세요.")
+        @Pattern(regexp = "(^[가-힣a-zA-Z0-9]{2,10}$)",
+                 message = "특수문자를 제외한 한글, 영문 또는 숫자로 이루어진 2~10자리 조합으로 입력해주세요.")
         private String nickName;
 
-        @NotBlank(message = "비밀번호를 입력해주세요.")
         @Pattern(regexp = "(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}",
                  message = "숫자 + 특문 + 영문 8자 이상 조합으로 입력해주세요.")
         private String currentPassword;

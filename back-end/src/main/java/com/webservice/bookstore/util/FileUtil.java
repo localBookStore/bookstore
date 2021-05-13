@@ -3,7 +3,6 @@ package com.webservice.bookstore.util;
 import com.webservice.bookstore.web.dto.ItemDto;
 import com.webservice.bookstore.web.dto.MemberDto;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -12,13 +11,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystemException;
-import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
 public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> {
 
-    private String prefixPath = System.getProperty("user.dir");
+    private String prefixPath = System.getProperty("user.dir").replace("\\", "/");
     private String lastSubString = prefixPath.substring(prefixPath.lastIndexOf("/"));
     private String path = null;
 
@@ -70,18 +69,8 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         }
     }
 
-//    public String checkImageFilePath(T itemDto) {
-//
-//        if(lastSubString.equals("/back-end")) {
-//            path = prefixPath + "/src/main/resources/static/" + itemDto.getIsbn();
-//        } else if (lastSubString.equals("/bookstore")) {
-//            path = prefixPath + "/back-end/src/main/resources/static/" + itemDto.getIsbn();
-//        }
-//        return path;
-//    }
-
-    public void checkImageType(M memberDto, String contentType, BufferedImage bufferedImage) throws Exception {
-        path = checkStaticFilePath() +  "profile/"+ memberDto.getEmail();
+    public void checkImageType(String fileName, String contentType, BufferedImage bufferedImage) throws Exception {
+        path = checkStaticFilePath() +  "profile/"+ fileName;
         if (contentType.contains("image/jpeg")) {
             ImageIO.write(bufferedImage, "jpg", new File(path + ".jpg"));
         } else if (contentType.contains("image/png")) {
@@ -91,15 +80,13 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         }
     }
 
-//    public String checkImageFilePath(M memberDto) {
-//        if(lastSubString.equals("/back-end")) {
-//            path = prefixPath + "/src/main/resources/static/profile/" + memberDto.getEmail();
-//        } else if (lastSubString.equals("/bookstore")) {
-//            path = prefixPath + "/back-end/src/main/resources/static/profile/" + memberDto.getEmail();
-//        }
-//        return path;
-//    }
-
+    public String makeProfileName(Long memberId) {
+        int start = (int) (Math.random()*17); // 0 <= x <= 16
+        String newFileName = UUID.randomUUID().toString().replace("-", "").substring(start, start + 16);
+        StringBuffer sb = new StringBuffer(newFileName);
+        sb.insert(start, memberId);
+        return sb.toString();
+    }
 
 
 }
