@@ -4,7 +4,7 @@ const ENV = process.env.NODE_ENV;
 
 const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
   const { orderCount, id } = data
-  const {item: {imageUrl, name, price, quantity, uploadImageName }} = data
+  const {item: {imageUrl, name, price, quantity, upload_image_name }} = data
   
   const changeCheckEvent = (e) => {
     const { target: { checked } } = e;
@@ -32,7 +32,7 @@ const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
       { 
         ENV === 'development' ? 
           <PosterImage src={imageUrl} />:
-          <PosterImage src={`/image/${uploadImageName}`}/>
+          <PosterImage src={`/image/${upload_image_name}`}/>
       }
       <ItemDiv fontSize="20px"fontWeight="bold" width="200px">{name}</ItemDiv>
       <ItemDiv fontSize="20px">{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ItemDiv>

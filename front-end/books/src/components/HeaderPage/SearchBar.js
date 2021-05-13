@@ -34,7 +34,6 @@ const SearchBar = ({query, setQuery, searchEvent}) => {
           pathname: "/booklist",
           state: { books, input:query.input },
         });
-        
       })
       .catch(() => alert("검색 결과가 없습니다.👋"));
     }
