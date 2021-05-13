@@ -40,9 +40,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        log.info("getClientRegistration : " + userRequest.getClientRegistration());
-        log.info("getAccessToken : " + userRequest.getAccessToken().getTokenValue());
-
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         try {
@@ -83,24 +80,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2UserInfo.getEmail();
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
-        Member memberEntity = null;
+        Member member = null;
 
         if(optionalMember.isEmpty()) {
             log.info("DB에 존재하지 않으므로 바로 회원가입");
-            memberEntity = registerNewMember(oAuth2UserInfo);
+            member = registerNewMember(oAuth2UserInfo);
         } else {
-
-            memberEntity = optionalMember.get();
+            member = optionalMember.get();
             // DB에서 조회한 계정이 일반계정 여부 판단
-            if(AuthProvider.DEFAULT.equals(memberEntity.getProvider()) ||
-                    !provider.equals(memberEntity.getProvider().toString())) {
-                throw new OAuth2AuthenticationProcessingException(memberEntity.getProvider().toString().toLowerCase());
+            if(AuthProvider.DEFAULT.equals(member.getProvider()) || !provider.equals(member.getProvider().toString())) {
+                throw new OAuth2AuthenticationProcessingException(member.getProvider().toString().toLowerCase());
             }
-            log.info("DB에 존재할 경우, 변경된 정보만 업데이트");
-            memberEntity.updateMemberInfo(oAuth2UserInfo.getName(), oAuth2UserInfo.getImageUrl());
         }
 
-        return new CustomUserDetails(memberEntity, oAuth2User.getAttributes());
+        return new CustomUserDetails(member, oAuth2User.getAttributes());
     }
 
     private Member registerNewMember(OAuth2UserInfo oAuth2UserInfo) {

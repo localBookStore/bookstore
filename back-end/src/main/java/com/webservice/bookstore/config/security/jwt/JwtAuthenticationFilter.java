@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -20,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,9 +38,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         log.info("JwtAuthenticationFilter.attemptAuthentication : Attempting Login...");
-
         try {
-
             ObjectMapper objectMapper = new ObjectMapper();
             Member member = objectMapper.readValue(request.getInputStream(), Member.class);
 
@@ -52,9 +50,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // 권한(Role) 확인을 위해 세션에 임시로 저장하여 un/successfulAuthentication 메소드에 넘겨줌
             return authentication;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        } catch (IOException | BadCredentialsException e) {
+            throw new AuthenticationException("아이디 혹은 비밀번호가 틀렸습니다.") {};
         }
     }
 
@@ -70,16 +67,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authentication) throws IOException, ServletException {
 
         log.info("JwtAuthenticationFilter.successfulAuthentication :");
-
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String email = customUserDetails.getMember().getEmail();
         String nickName = customUserDetails.getMember().getNickName();
         String role = String.valueOf(customUserDetails.getMember().getRole());
 
         if(customUserDetails.isEnabled()) {
-            // 새로운 Refresh 토큰 생서 및 Redis에 저장
-            redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L*60*24);
-
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json;charset=utf-8");
             response.setHeader(JwtProperties.HEADER_STRING,
@@ -90,9 +83,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             resultAttributes.put("status", HttpStatus.OK);
             resultAttributes.put("message", "Authentication completed (Default)");
             resultAttributes.put("path", request.getRequestURI());
-
             response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
 
+            // 새로운 Refresh 토큰 생성 및 Redis에 저장
+            redisUtil.setData(email, jwtUtil.createRefreshToken(email), 60L*60*24);
         } else {
             response.setStatus(HttpStatus.LOCKED.value()); // 423 응답값
             response.setContentType("application/json;charset=utf-8");
@@ -102,13 +96,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             resultAttributes.put("status", HttpStatus.LOCKED);
             resultAttributes.put("message", "This Email is locked (Default)");
             resultAttributes.put("path", request.getRequestURI());
-
             response.getWriter().println(objectMapper.writeValueAsString(resultAttributes));
-//            response.getWriter().write(objectMapper.writeValueAsString(resultAttributes)); response 바디에 json 으로 담기.
 
             SecurityContextHolder.getContext().setAuthentication(null);
         }
-
     }
 
     @Override
@@ -122,14 +113,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json;charset=utf-8");
 
         Map<String, Object> errorAttributes = new HashMap<>();
-        errorAttributes.put("timestamp", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        errorAttributes.put("timestamp", writeTimeNow());
         errorAttributes.put("status", HttpStatus.UNAUTHORIZED);
         errorAttributes.put("exception", failed.getMessage());
         errorAttributes.put("path", request.getRequestURI());
 
         response.getWriter().println(objectMapper.writeValueAsString(errorAttributes));
-//        response.getWriter().write(objectMapper.writeValueAsString(errorAttributes)); // write response body
-
     }
 
 }
