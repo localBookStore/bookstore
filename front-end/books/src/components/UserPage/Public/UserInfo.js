@@ -38,14 +38,15 @@ const UserInfo = ({ location: { state } }) => {
 	const fileChangeEvent = (e) => {
 		const reader = new FileReader();
 		const file = e.target.files[0];
-		reader.readAsDataURL(file);
-
+		
 		reader.onloadend = () => {
 			setUser({
 				...user,
 				imageUrl: reader.result,
 			});
-		};
+		}
+		if (file)
+			reader.readAsDataURL(file);
 	};
 
 	const eventHandler = (e) => {
