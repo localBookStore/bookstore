@@ -46,7 +46,7 @@ const MonthBooks = () => {
             <BookButton>
               <Link to={{pathname: `/detail/${book.id}`, state:{book}}}>
                 { ENV === 'development' ? 
-                  <ImageCard rounded src={book.imageUrl} alt={idx} />:
+                  <ImageCard rounded src={book.imageUrl} alt={idx} /> :
                   <ImageCard rounded src={`/image/${book.upload_image_name}`} alt={idx}/>
                 }
               </Link>

@@ -31,8 +31,8 @@ const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
       <PosterImage src={imageUrl} />
       { 
         ENV === 'development' ? 
-          <PosterImage src={imageUrl} />:
-          <PosterImage src={`/image/${upload_image_name}`}/>
+        <PosterImage src={imageUrl} />:
+        <PosterImage src={`/image/${upload_image_name}`}/>
       }
       <ItemDiv fontSize="20px"fontWeight="bold" width="200px">{name}</ItemDiv>
       <ItemDiv fontSize="20px">{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ItemDiv>

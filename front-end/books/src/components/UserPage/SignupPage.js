@@ -46,7 +46,6 @@ const SignupPage = ({ history }) => {
   }
 
   const checkEmailCode = () => {
-    
     axios.post("api/signup/check-certificated", {
       certificated: getValues('authCode')
     })
