@@ -25,9 +25,9 @@ const EachItemList = ({ data, itemCheck, token }) => {
     if (file)
       reader.readAsDataURL(file);
 	};
-  console.log(data)
+  
   const updateEvent = () => {
-    axios.put("api/admin/items", {
+    axios.patch("api/admin/items", {
       ...info
     }, { headers: { Authorization: token }})
       .then(() => alert("수정되었습니다."))
@@ -50,8 +50,8 @@ const EachItemList = ({ data, itemCheck, token }) => {
       <div>
         { 
           ENV === 'development' ? 
-            <ItemPaper component={ItemImage} src={info.imageUrl} alt={id} elevation={8} />:
-            <ItemPaper component={ItemImage} src={`/image/${info.upload_image_name}`} alt={id} elevation={8}/>
+          <ItemPaper component={ItemImage} src={info.imageUrl} alt={id} elevation={8} />:
+          <ItemPaper component={ItemImage} src={`/image/${info.upload_image_name}`} alt={id} elevation={8} />
         }
         {/* <ItemInput type="file" accept="image/jpg,image/png,image/jpeg" onChange={fileChangeEvent} /> */}
       </div>

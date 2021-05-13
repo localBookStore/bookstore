@@ -12,7 +12,6 @@ const CommunityDetail = ({ match }) => {
   const [cookies]= useCookies(['token']);
   const token = cookies.token
   
-
   const [article, setArticle] = useState(null);
   const [comments, setComments] = useState(null);
 
