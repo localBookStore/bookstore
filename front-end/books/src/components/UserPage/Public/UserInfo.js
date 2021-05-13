@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Image } from "react-bootstrap";
 import { TextField, Button } from "@material-ui/core";
 import styled from "styled-components";
+const ENV = process.env.NODE_ENV;
 
 const UserInfo = ({ location: { state } }) => {
 	const [user, setUser] = useState(null);
@@ -80,13 +81,18 @@ const UserInfo = ({ location: { state } }) => {
 			}
 		}
 	};
-
+	
 	return (
 		<>
 			{user && (
 				<Container>
 					<Wrap>
-						<ProfileImage src={`/profile/${user.imageUrl}`} />
+						<ProfileImage src={`${user.imageUrl}`} />
+						{/* {
+							ENV === 'development' ?
+							<ProfileImage src={`${user.imageUrl}`} /> :
+							<ProfileImage src={`${user.imageUrl}`} />
+						} */}
 						<PostButton type="file" accept="image/jpg,image/png,image/jpeg" onChange={fileChangeEvent} />
 					</Wrap>
 					<TagContainer>
