@@ -97,6 +97,12 @@ public class ItemService {
         return collect;
     }
 
+    public List<ItemDto.Default> findItems(List<Long> ids) {
+        List<Item> items = itemRepository.selectIn(ids);
+        List<ItemDto.Default> collect = items.stream().map(ItemDto.Default::of).collect(Collectors.toList());
+        return collect;
+    }
+
     @Transactional
     public ItemDto.Default addItem(ItemDto.ItemAddDto itemDto) throws Exception {
         String imageUrl = itemDto.getImage();
@@ -122,6 +128,7 @@ public class ItemService {
 
     @Transactional
     public List<ItemDto.Default> deleteItem(List<Long> ids) {
+
         itemRepository.deleteIn(ids);
         List<Item> remainItems = itemRepository.findAll();
         List<ItemDto.Default> reaminItemDtos = remainItems.stream().map(ItemDto.Default::of).collect(Collectors.toList());

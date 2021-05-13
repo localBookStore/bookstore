@@ -8,6 +8,7 @@ import com.webservice.bookstore.exception.UnauthorizedException;
 import com.webservice.bookstore.service.BoardService;
 import com.webservice.bookstore.service.MemberService;
 import com.webservice.bookstore.service.OrdersService;
+import com.webservice.bookstore.util.FileUtil;
 import com.webservice.bookstore.web.dto.BoardDTO;
 import com.webservice.bookstore.web.dto.MemberDto;
 import com.webservice.bookstore.web.dto.OrdersDto;
@@ -24,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,7 @@ public class AdminPageController {
     private final MemberService memberService;
     private final ItemService itemService;
     private final OrdersService orderService;
+    private final FileUtil fileUtil;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -91,7 +94,11 @@ public class AdminPageController {
 
 
     @DeleteMapping("/items")
-    public ResponseEntity deleteItems(@RequestBody List<Long> ids) {
+    public ResponseEntity deleteItems(@RequestBody List<Long> ids) throws IOException {
+        List<ItemDto.Default> items = itemService.findItems(ids);
+        for (ItemDto.Default item : items) {
+            fileUtil.deleteImageFile(item.getUpload_image_name());
+        }
         List<ItemDto.Default> remainItems = itemService.deleteItem(ids);
         List<DefaultItemResource> itemLinkResources = remainItems.stream().map(DefaultItemResource::new).collect(Collectors.toList());
         return ResponseEntity.ok(itemLinkResources);

@@ -39,6 +39,8 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     @Query("delete from Item i where i.id in :ids")
     void deleteIn(@Param("ids") List<Long> ids);
 
+    @Query("select i from Item i where i.id in :ids")
+    List<Item> selectIn(@Param("ids") List<Long> ids);
 
 
 
