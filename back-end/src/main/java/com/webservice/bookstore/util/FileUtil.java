@@ -28,7 +28,6 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
             path = prefixPath + "/back-end/src/main/resources/static/" ;
         }
 
-        log.info("path :  " + path);
         File file = new File(path);
         if(file.exists()) {
             File[] files = file.listFiles();
@@ -42,7 +41,6 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
                     }
                 }
             } else {
-                log.info("dsafasfasdfasdfdsafasd");
                 throw new FileSystemException("해당 디렉토리는 비어있는 파일입니다.");
             }
         } else {
@@ -92,9 +90,9 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         String path = null;
 
         if(lastSubString.equals("/back-end")) {
-            path = prefixPath + "/src/main/resources/static/" + memberDto.getEmail();
+            path = prefixPath + "/src/main/resources/static/profile/" + memberDto.getEmail();
         } else if (lastSubString.equals("/bookstore")) {
-            path = prefixPath + "/back-end/src/main/resources/static/" + memberDto.getEmail();
+            path = prefixPath + "/back-end/src/main/resources/static/profile/" + memberDto.getEmail();
         }
         return path;
     }
