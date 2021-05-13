@@ -122,17 +122,22 @@ public class ItemService {
 
 
     @Transactional
-    public void modifyItem(ItemDto.Default itemDto) throws IOException {
+    public void modifyItem(ItemDto.Default itemDto) throws Exception {
         Item item = itemDto.toEntity();
         String path = fileUtil.checkStaticFilePath() + "item/";
         fileUtil.deleteImageFile(item.getUploadImageName(), path);
-
+        ItemDto.ItemAddDto itemAddDto = ItemDto.ItemAddDto.toItemAddDto(itemDto);
+        addItem(itemAddDto);
         itemRepository.save(item);
     }
 
     @Transactional
-    public List<ItemDto.Default> deleteItem(List<Long> ids) {
-
+    public List<ItemDto.Default> deleteItem(List<Long> ids) throws IOException {
+        List<ItemDto.Default> items = findItems(ids);
+        for (ItemDto.Default item : items) {
+            String path = fileUtil.checkStaticFilePath() + "item/";
+            fileUtil.deleteImageFile(item.getUpload_image_name(), path);
+        }
         itemRepository.deleteIn(ids);
         List<Item> remainItems = itemRepository.findAll();
         List<ItemDto.Default> reaminItemDtos = remainItems.stream().map(ItemDto.Default::of).collect(Collectors.toList());

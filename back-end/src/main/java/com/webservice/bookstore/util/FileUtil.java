@@ -23,7 +23,6 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
 
     public void deleteImageFile(String uploadImageName, String path) throws IOException {
 //        path = checkStaticFilePath();
-
         File file = new File(path);
         if(file.exists()) {
             File[] files = file.listFiles();
@@ -55,7 +54,7 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
     }
 
     public void checkImageType(T itemDto, String contentType, BufferedImage bufferedImage) throws Exception {
-        path = checkStaticFilePath() + itemDto.getIsbn();
+        path = checkStaticFilePath() + "item/" + itemDto.getIsbn();
         String isbn = itemDto.getIsbn();
         if (contentType.contains("image/jpeg")) {
             itemDto.setUpload_image_name(isbn + ".jpg");

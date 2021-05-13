@@ -19,8 +19,6 @@ public class ItemDto {
 
         private Long category_id;
 
-//    private String category_name;
-
         private String name;
 
         private String description;
@@ -172,6 +170,20 @@ public class ItemDto {
                     .quantity(this.count)
                     .author(this.author)
                     .uploadImageName(this.upload_image_name)
+                    .build();
+        }
+
+        public static ItemAddDto toItemAddDto(ItemDto.Default itemDto) {
+            return ItemAddDto.builder()
+                    .author(itemDto.getAuthor())
+                    .category_id(itemDto.getCategory_id())
+                    .content(itemDto.getDescription())
+                    .count(itemDto.getQuantity())
+                    .image(itemDto.getUpload_image_name())
+                    .isbn(itemDto.getIsbn())
+                    .price(itemDto.getPrice())
+                    .publisher(itemDto.getPublisher())
+                    .title(itemDto.getName())
                     .build();
         }
 

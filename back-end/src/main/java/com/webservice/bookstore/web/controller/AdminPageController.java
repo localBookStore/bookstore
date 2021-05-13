@@ -95,11 +95,11 @@ public class AdminPageController {
 
     @DeleteMapping("/items")
     public ResponseEntity deleteItems(@RequestBody List<Long> ids) throws IOException {
-        List<ItemDto.Default> items = itemService.findItems(ids);
-        for (ItemDto.Default item : items) {
-            String path = fileUtil.checkStaticFilePath() + "/image";
-            fileUtil.deleteImageFile(item.getUpload_image_name(), path);
-        }
+//        List<ItemDto.Default> items = itemService.findItems(ids);
+//        for (ItemDto.Default item : items) {
+//            String path = fileUtil.checkStaticFilePath() + "/image";
+//            fileUtil.deleteImageFile(item.getUpload_image_name(), path);
+//        }
         List<ItemDto.Default> remainItems = itemService.deleteItem(ids);
         List<DefaultItemResource> itemLinkResources = remainItems.stream().map(DefaultItemResource::new).collect(Collectors.toList());
         return ResponseEntity.ok(itemLinkResources);
