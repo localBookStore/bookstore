@@ -37,7 +37,7 @@ const SlideItems = () => {
           {
             ENV === 'development' ? 
               <ImageCard rounded className="w-100" src={book.imageUrl} alt={idx} />:
-              <ImageCard rounded className="w-100" src={`/image/${book.uploadImageName}`} alt={idx}/>
+              <ImageCard rounded className="w-100" src={`/image/${book.upload_image_name}`} alt={idx}/>
           }
         </Link>
       })}

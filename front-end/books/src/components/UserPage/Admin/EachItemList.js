@@ -6,7 +6,7 @@ import styled from "styled-components";
 const ENV = process.env.NODE_ENV;
 
 const EachItemList = ({ data, itemCheck, token }) => {
-  const { id, imageUrl, uploadImageName } = data;
+  const { id } = data;
   
   const [info, setInfo] = useState({
     ...data
@@ -25,7 +25,7 @@ const EachItemList = ({ data, itemCheck, token }) => {
     if (file)
       reader.readAsDataURL(file);
 	};
-
+  console.log(data)
   const updateEvent = () => {
     axios.put("api/admin/items", {
       ...info
@@ -43,7 +43,7 @@ const EachItemList = ({ data, itemCheck, token }) => {
       })
     }, 400)
   }
-  console.log(info)
+  
   return (
     <EachItem>
       <CheckBoxInput type="checkbox" onChange={(e) => itemCheck(id, e.target.checked)} />
@@ -51,9 +51,9 @@ const EachItemList = ({ data, itemCheck, token }) => {
         { 
           ENV === 'development' ? 
             <ItemPaper component={ItemImage} src={info.imageUrl} alt={id} elevation={8} />:
-            <ItemPaper component={ItemImage} src={`/image/${info.uploadImageName}`} alt={id} elevation={8}/>
+            <ItemPaper component={ItemImage} src={`/image/${info.upload_image_name}`} alt={id} elevation={8}/>
         }
-        <ItemInput type="file" accept="image/jpg,image/png,image/jpeg" onChange={fileChangeEvent} />
+        {/* <ItemInput type="file" accept="image/jpg,image/png,image/jpeg" onChange={fileChangeEvent} /> */}
       </div>
       <Contents>
         <Div>카테고리ID: <ItemContent 
@@ -79,35 +79,35 @@ const EachItemList = ({ data, itemCheck, token }) => {
           defaultValue={info.description}
           onChange={eventHandler}
           /></Div>
-        <Div>설명: <ItemContent
+        <Div>저자: <ItemContent
           name="author" 
           variant="outlined" 
           size="small"
           defaultValue={info.author}
           onChange={eventHandler}
           /></Div>
-        <Div>설명: <ItemContent 
+        <Div>출판사: <ItemContent 
           name="publisher" 
           variant="outlined" 
           size="small"
           defaultValue={info.publisher}
           onChange={eventHandler}
           /></Div>
-        <Div>설명: <ItemContent 
+        <Div>가격: <ItemContent 
           name="price" 
           variant="outlined" 
           size="small"
           defaultValue={info.price}
           onChange={eventHandler}
           /></Div>
-        <Div>설명: <ItemContent 
+        <Div>수량: <ItemContent 
           name="quantity" 
           variant="outlined" 
           size="small"
           defaultValue={info.quantity}
           onChange={eventHandler}
           /></Div>
-        <Div>설명: <ItemContent 
+        <Div>ISBN: <ItemContent 
           name="isbn" 
           variant="outlined" 
           size="small"

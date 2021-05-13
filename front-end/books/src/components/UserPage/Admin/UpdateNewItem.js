@@ -65,7 +65,7 @@ const UpdateNewItem = ({modalShow, modalShowOff, token}) => {
     <Modal.Body>
       <Blocks>
         <span>⚠️ 사진을 가장 먼저 첨부해주세요</span>
-        <BookImage src={image.image} rounded/>
+        <BookImage src={image} rounded/>
         <ImageInput 
           type="file"
           accept='image/jpg,image/png,image/jpeg'
