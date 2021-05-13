@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.AuthenticationFailedException;
+import java.io.FileNotFoundException;
+import java.nio.file.FileSystemException;
 import java.util.List;
 
 @Log4j2
@@ -41,7 +43,7 @@ public class CommonExceptionAdvice  {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = {NullPointerException.class})
+    @ExceptionHandler(value = {NullPointerException.class, FileNotFoundException.class, FileSystemException.class})
     public ErrorResponse notFoundHandler(Exception e) {
         log.error(e.getMessage(), e);
         return new ErrorResponse(404, e.getMessage());
