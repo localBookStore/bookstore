@@ -96,6 +96,8 @@ public class MemberDto {
                  message = "숫자 + 특문 + 영문 8자 이상 조합으로 입력해주세요.")
         private String newPassword;
 
+        private AuthProvider provider;
+
         private String imageUrl;
 
     }

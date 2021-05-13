@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Image } from "react-bootstrap";
 import { TextField, Button } from "@material-ui/core";
 import styled from "styled-components";
+const ENV = process.env.NODE_ENV;
 
 const UserInfo = ({ location: { state } }) => {
 	const [user, setUser] = useState(null);
@@ -25,14 +26,13 @@ const UserInfo = ({ location: { state } }) => {
 
 	const modifyUser = () => {
 		const { currentPassword, newPassword } = password;
-		axios.patch("api/mypage/modify",
-      {
+		axios.patch("api/mypage/modify", {
         ...user,
-        currentPassword,
+        currentPassword: currentPassword === "" ? null : currentPassword,
         newPassword: newPassword === "" ? null : newPassword,
       }, { headers: { Authorization: state.token } })
 			.then(() => alert("정보가 변경되었습니다."))
-			.catch((err) => console.log(err.response))
+			.catch((err) => alert(err.response.data.message))
 	};
 
 	const fileChangeEvent = (e) => {
@@ -65,28 +65,35 @@ const UserInfo = ({ location: { state } }) => {
 	};
 
 	const submitEvent = () => {
-		const { newPassword, newPassword2 } = password;
+		const {currentPassword, newPassword, newPassword2 } = password;
 		const regexr = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
 
-		if (newPassword === "" && newPassword2 === "") {
-			modifyUser();
-		} else {
-			if (regexr.test(newPassword) && newPassword === newPassword2) {
+		if (user.provider === 'DEFAULT'){
+			if (regexr.test(currentPassword) && newPassword === "" && newPassword2 === "") {
 				modifyUser();
-			} else if (!regexr.test(newPassword)) {
-				return alert("비밀번호는 8자이상 16자 이하로 영문 숫자 특수문자 조합으로 해주세요.");
 			} else {
-				return alert("새로운 비밀번호와 확인 비밀번호가 다릅니다.");
+				if (!regexr.test(newPassword) || !regexr.test(currentPassword)) {
+					return alert("비밀번호는 8자이상 16자 이하로 영문 숫자 특수문자 조합으로 해주세요.");
+				} else if (newPassword === newPassword2) {
+					modifyUser();
+				} else {
+					return alert("새로운 비밀번호와 확인 비밀번호가 다릅니다.");
+				}
 			}
 		}
 	};
-
+	
 	return (
 		<>
 			{user && (
 				<Container>
 					<Wrap>
-						<ProfileImage src={`/profile/${user.imageUrl}`} />
+						<ProfileImage src={`${user.imageUrl}`} />
+						{/* {
+							ENV === 'development' ?
+							<ProfileImage src={`${user.imageUrl}`} /> :
+							<ProfileImage src={`${user.imageUrl}`} />
+						} */}
 						<PostButton type="file" accept="image/jpg,image/png,image/jpeg" onChange={fileChangeEvent} />
 					</Wrap>
 					<TagContainer>
@@ -97,15 +104,30 @@ const UserInfo = ({ location: { state } }) => {
 
 						<div style={{ display: "flex", justifyContent: "space-between" }}>
 							<Tag>닉네임</Tag>
-							<TextBlock required defaultValue={user.nickName} variant="outlined" size="small" name="nickName" onChange={eventHandler} />
+							<TextBlock 
+								required={true}
+								defaultValue={user.nickName} 
+								variant="outlined" 
+								size="small" 
+								name="nickName" 
+								onChange={eventHandler} 
+							/>
 						</div>
 
 						{user.provider === "DEFAULT" ? (
 							<>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <Tag>현재 비밀번호</Tag>
-                  <TextBlock required label="Current Password" type="password" size="small" name="currentPassword" value={password.currentPassword} onChange={eventHandler} />
+                  <TextBlock
+										required={true}
+										label="Current Password" 
+										type="password" size="small" 
+										name="currentPassword" 
+										value={password.currentPassword} 
+										onChange={eventHandler} 
+									/>
                 </div>
+
 								<div style={{ display: "flex", justifyContent: "space-between" }}>
 									<Tag>새로운 비밀번호</Tag>
 									<TextBlock

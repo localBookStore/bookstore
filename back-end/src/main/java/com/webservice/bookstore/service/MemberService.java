@@ -25,6 +25,8 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityNotFoundException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -43,6 +45,9 @@ public class MemberService {
     private final FileUtil<com.webservice.bookstore.web.dto.ItemDto.ItemAddDto, MemberDto.Modify> fileUtil;
     private final RedisUtil redisUtil;
 
+    /*
+    회원가입
+    */
     public void signup(EmailDto.SignUpRequest signUpRequest) {
 
         log.info("signup memberDto : " + signUpRequest);
@@ -75,12 +80,44 @@ public class MemberService {
         }
     }
 
+    /*
+    이메일 계정 중복검사
+    */
     public void duplicatedEmail(String email) {
         if(this.memberRepository.existsByEmail(email)) {
             throw new DuplicateUserException("사용 중인 이메일 입니다.", new SimpleFieldError("email", "사용중인 이메일"));
         }
     }
 
+    /*
+    회원 프로필 이미지 파일 조회 및 base64 인코딩
+    */
+    public String encodingProfile(String fileName) {
+        String extenstion = fileName.substring(fileName.indexOf(".") +1);
+        if(extenstion.equals("jpg")) {
+            extenstion = "jpeg";
+        }
+        String prefixPath = System.getProperty("user.dir").replace("\\", "/");
+        byte[] binary = getFileBinary(prefixPath + "/back-end/src/main/resources/static/profile/" + fileName);
+
+        return "data:image/" + extenstion + ";base64," + Base64.getEncoder().encodeToString(binary);
+    }
+
+    // 파일 읽어드리는 함수
+    private static byte[] getFileBinary(String filepath) {
+        File file = new File(filepath);
+        byte[] data = new byte[(int) file.length()];
+        try (FileInputStream stream = new FileInputStream(file)) {
+            stream.read(data, 0, data.length);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    /*
+    회원 탈퇴
+    */
     public void withdraw(String email, String password) {
         Member member = this.memberRepository.findByEmail(email).get();
         if(password != null) {
@@ -100,13 +137,15 @@ public class MemberService {
         Member member = this.memberRepository.findByEmail(memberDto.getEmail())
                                                 .orElseThrow(() -> new EntityNotFoundException());
 
-        if(StringUtils.isNotBlank(memberDto.getCurrentPassword())) {
+        if(String.valueOf(memberDto.getProvider()).equals("DEFAULT")) {
+            if (StringUtils.isNotBlank(memberDto.getCurrentPassword())) {
 
-            if (!encoder.matches(memberDto.getCurrentPassword(), member.getPassword())) {
-                throw new MatchUserPasswordException("비밀번호가 일치하지 않습니다.",
-                        new SimpleFieldError("password", "비밀번호 변경"));
-            } else if(StringUtils.isNotBlank(memberDto.getNewPassword())) {
-                member.changePassword(encoder.encode(memberDto.getNewPassword()));
+                if (!encoder.matches(memberDto.getCurrentPassword(), member.getPassword())) {
+                    throw new MatchUserPasswordException("비밀번호가 일치하지 않습니다.",
+                            new SimpleFieldError("password", "비밀번호 변경"));
+                } else if (StringUtils.isNotBlank(memberDto.getNewPassword())) {
+                    member.changePassword(encoder.encode(memberDto.getNewPassword()));
+                }
             }
         }
         member.changeNickName(memberDto.getNickName());
