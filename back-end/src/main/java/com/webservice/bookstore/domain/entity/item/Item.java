@@ -70,4 +70,17 @@ public class Item {
         this.viewCount  += 1;
     }
 
+    public void setItem(Item item) {
+        this.id = item.getId();
+        this.category = item.getCategory();
+        this.name = item.getName();
+        this.description = item.description;
+        this.publisher = item.getPublisher();
+        this.author = item.author;
+        this.price = item.price;
+        this.quantity = item.quantity;
+        this.isbn = item.isbn;
+        this.imageUrl = item.isbn;
+    }
+
 }

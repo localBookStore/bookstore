@@ -35,6 +35,7 @@ public class ItemDto {
 
         private String imageUrl;
 
+        @JsonIgnore
         private String upload_image_name;
 
 
@@ -173,19 +174,19 @@ public class ItemDto {
                     .build();
         }
 
-        public static ItemAddDto toItemAddDto(ItemDto.Default itemDto) {
-            return ItemAddDto.builder()
-                    .author(itemDto.getAuthor())
-                    .category_id(itemDto.getCategory_id())
-                    .content(itemDto.getDescription())
-                    .count(itemDto.getQuantity())
-                    .image(itemDto.getUpload_image_name())
-                    .isbn(itemDto.getIsbn())
-                    .price(itemDto.getPrice())
-                    .publisher(itemDto.getPublisher())
-                    .title(itemDto.getName())
-                    .build();
-        }
+//        public static ItemAddDto toItemAddDto(ItemDto.Default itemDto) {
+//            return ItemAddDto.builder()
+//                    .author(itemDto.getAuthor())
+//                    .category_id(itemDto.getCategory_id())
+//                    .content(itemDto.getDescription())
+//                    .count(itemDto.getQuantity())
+//                    .image(itemDto.getUpload_image_name())
+//                    .isbn(itemDto.getIsbn())
+//                    .price(itemDto.getPrice())
+//                    .publisher(itemDto.getPublisher())
+//                    .title(itemDto.getName())
+//                    .build();
+//        }
 
     }
 }

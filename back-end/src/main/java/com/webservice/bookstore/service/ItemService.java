@@ -124,7 +124,8 @@ public class ItemService {
     @Transactional
     public void modifyItem(ItemDto.Default itemDto) throws Exception {
         Item item = itemDto.toEntity();
-        itemRepository.save(item);
+        Item savedItem = itemRepository.findById(item.getId()).get();
+        savedItem.setItem(item);
     }
 
     @Transactional
