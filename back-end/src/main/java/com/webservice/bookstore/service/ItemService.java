@@ -124,11 +124,11 @@ public class ItemService {
     @Transactional
     public void modifyItem(ItemDto.Default itemDto) throws Exception {
         Item item = itemDto.toEntity();
+        Item savedItem = itemRepository.findById(item.getId()).get();
         String path = fileUtil.checkStaticFilePath() + "item/";
-        fileUtil.deleteImageFile(item.getUploadImageName(), path);
+        fileUtil.deleteImageFile(savedItem.getUploadImageName(), path);
         ItemDto.ItemAddDto itemAddDto = ItemDto.ItemAddDto.toItemAddDto(itemDto);
         addItem(itemAddDto);
-        itemRepository.save(item);
     }
 
     @Transactional
