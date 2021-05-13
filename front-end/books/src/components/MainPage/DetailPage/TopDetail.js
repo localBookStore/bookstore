@@ -9,7 +9,7 @@ import { genreMap } from "feature/GenreMap"
 const ENV = process.env.NODE_ENV;
 
 const TopDetail = ({ book }) => {
-  const { name, author, imageUrl, price, publisher, quantity, id, category_id, uploadImageName } = book
+  const { name, author, imageUrl, price, publisher, quantity, id, category_id, upload_image_name } = book
   const history = useHistory();
   const [cookies] = useCookies(['token']);
 
@@ -34,7 +34,7 @@ const TopDetail = ({ book }) => {
         {
           ENV === 'development' ?
           <PosterImage src={imageUrl} elevation={8} alt={id} rounded fluid /> :
-          <PosterImage src={`/image/${uploadImageName}`} alt={id} rounded fluid />
+          <PosterImage src={`/image/${upload_image_name}`} alt={id} rounded fluid />
         }
       </Paper>
       <ContentsContainer>

@@ -1,9 +1,10 @@
 import { useState } from "react"
 import axios from "axios"
 
-import { Button, TableBody, TableRow, Paper, TableCell, Grid } from "@material-ui/core"
+import { Button, TableBody, TableRow, TableCell, Grid } from "@material-ui/core"
 import { Modal, ProgressBar } from "react-bootstrap"
 import styled from "styled-components"
+const ENV = process.env.NODE_ENV;
 
 const DeliveryBar = ({status, percent}) => {
   if (status === "READY"){
@@ -46,6 +47,11 @@ const ModalPage = ({show, showOff, items, status, progress}) => {
             return <ItemGrid container item alignItems="center" key={idx}>
               <Grid xs={6} item>
                 <ModalImage src={orderedItem.imageUrl} alt={item.title}/>
+                { 
+                  ENV === 'development' ? 
+                    <ModalImage src={orderedItem.imageUrl} alt={item.title}/> :
+                    <ModalImage src={`/image/${orderedItem.upload_image_name}`} alt={item.title} />
+                }
               </Grid>
               <Grid xs={6} item>
                 <ModalContent 

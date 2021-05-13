@@ -26,7 +26,7 @@ const BookList = ({location}) => {
             {
               ENV === 'development' ?
                 <StyledPaper component={Image} src={book.imageUrl} elevation={2} /> :
-                <StyledPaper component={Image} src={`/image/${book.uploadImageName}`} elevation={2} />
+                <StyledPaper component={Image} src={`/image/${book.upload_image_name}`} elevation={2} />
             }
             </NavButton></td>
             <td><ItemContent>{book.name}</ItemContent></td>
