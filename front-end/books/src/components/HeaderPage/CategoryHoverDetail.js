@@ -30,7 +30,7 @@ const CategoryHoverDetail = ({genreData, show}) => {
             {
               ENV === 'development' ?
                 <StyledPaper component={ItemImage} src={item.imageUrl} elevation={2} /> :
-                <StyledPaper component={ItemImage} src={`/image/${item.uploadImageName}`} elevation={2} />
+                <StyledPaper component={ItemImage} src={`/image/${item.upload_image_name}`} elevation={2} />
             }
           </Link>
           <ItemTitle>{item.name}</ItemTitle>
