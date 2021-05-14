@@ -110,7 +110,7 @@ public class MemberService {
                                                 .orElseThrow(() -> new EntityNotFoundException());
 
         if(String.valueOf(memberDto.getProvider()).equals("DEFAULT")) {
-            if (StringUtils.isNotBlank(memberDto.getCurrentPassword())) {
+            if (!StringUtils.isBlank(memberDto.getCurrentPassword())) {
 
                 if (!encoder.matches(memberDto.getCurrentPassword(), member.getPassword())) {
                     throw new MatchUserPasswordException("비밀번호가 일치하지 않습니다.",
@@ -122,7 +122,7 @@ public class MemberService {
         }
         member.changeNickName(memberDto.getNickName());
         String imageUrl = memberDto.getImageUrl();
-        if(imageUrl.startsWith("data:image/")) {
+        if(!StringUtils.isBlank(imageUrl)) {
             String imageDataBytes = imageUrl.substring(imageUrl.indexOf(",") + 1);
             String contentType = imageUrl.substring(0, imageUrl.indexOf(";"));
             String extension = contentType.substring(contentType.indexOf("/") + 1);
