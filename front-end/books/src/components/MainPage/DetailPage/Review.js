@@ -48,7 +48,7 @@ const Review = ({ review, itemId, token, setReviews }) => {
 	
   const config = {
     size: 30,
-		char: "",
+		char: "⭐️",
     value: newScore,
     activeColor: "#58A677",
     onChange: newValue => setNewScore(newValue)

@@ -18,7 +18,7 @@ const AllOrderList = ({ location }) => {
   
 	return <Container>
     <ContainerTitle>👨‍👩‍👧‍👦📦 각 회원들의 주문 내용입니다.</ContainerTitle>
-    <div  style={{display:"flex", justifyContent:"flex-start"}}>
+    <div style={{display:"flex", justifyContent:"flex-start"}}>
       <UserButtons>
       {users.length ? users.map((user, idx) => {
         return <UserButton 
@@ -47,7 +47,7 @@ const UserButtons = styled.div`
 const UserButton = styled(Button)`
   margin:10px 0;
   text-transform: none;
-
+  
   color: #009688;
   background-color: white;
 
@@ -63,6 +63,6 @@ const NotUser = styled.div`
 
 const ContainerTitle = styled.div`
   margin: 30px 20px;
-  font-size: 26px;
+  font-size: 2vw;
   font-weight: bold;
 `

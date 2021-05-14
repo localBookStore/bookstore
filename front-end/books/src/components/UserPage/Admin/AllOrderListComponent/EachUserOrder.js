@@ -27,7 +27,7 @@ const ModalPage = ({show, showOff, items}) => {
               <Grid xs={6} item>
               { ENV === 'development' ? 
                 <ModalImage src={orderedItem.imageUrl} alt={item.idx} />:
-                <ModalImage rounded src={`/image/${orderedItem.uploadImageName}`} alt={item.idx}/>
+                <ModalImage rounded src={`/image/${orderedItem.upload_image_name}`} alt={item.idx}/>
               }
               </Grid>
               <Grid xs={6} item>
@@ -77,8 +77,8 @@ const EachUserOrder = ({order, setOrders, token}) => {
 
   const { createDate, paymentAmount, orderItemList, delivery: { status }} = order;
   return <> 
-      <td>{createDate}</td>
-      <td>{paymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ￦</td>
+      <TableDiv>{createDate}</TableDiv>
+      <TableDiv>{paymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ￦</TableDiv>
       <Td status={status}>{status}</Td>
       <ItemButton variant="outlined" fontcolor="#4caf50" onClick={showOn}>상세보기</ItemButton>
       <ItemButton variant="outlined" fontcolor="#3f51b5" disabled={status !== "READY"} onClick={acceptOrder}>주문수락</ItemButton>
@@ -103,8 +103,9 @@ const ModalImage = styled.img`
 	object-fit: cover;
 `;
 const ItemButton = styled(Button)`
-  margin: 10px;
-
+  margin: 3px;
+  font-size: 1vw;
+  padding: 0;
   background-color: ${props => props.fontcolor};
   color: white;
 
@@ -113,6 +114,10 @@ const ItemButton = styled(Button)`
     background-color: white;
   }
 `
+const TableDiv = styled.td`
+  font-size: 1.2vw;
+`;
+
 const Td = styled.td`
   color: ${props => {
     if (props.status === "CANCEL"){

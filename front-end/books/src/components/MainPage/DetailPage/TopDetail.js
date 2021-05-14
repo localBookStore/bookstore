@@ -12,20 +12,20 @@ const TopDetail = ({ book }) => {
   const { name, author, imageUrl, price, publisher, quantity, id, category_id, upload_image_name } = book
   const history = useHistory();
   const [cookies] = useCookies(['token']);
+  const token = cookies.token;
 
-  const addCart = e => {
-    const feature = e.target.name;
-
+  const addCart = flag => {
     axios.post(`api/cart/${id}/`, {
       orderCount: 1
-    }, { headers: { Authorization: cookies.token }})
+    }, { headers: { Authorization: token }})
       .then(() => {
-        if (feature === "directBuy") history.push({
+        if (!!flag){
+          history.push({
           pathname: "/cart",
           state: { token: cookies.token}
-        })
+        })}
       })
-      .catch(err => console.log(err.response))
+      .catch(err => alert(err.response.data))
     }
 
   return <>
@@ -60,13 +60,13 @@ const TopDetail = ({ book }) => {
           placement="bottom"
           delay={{ show: 250, hide: 400 }}
           overlay={props => <Tooltip {...props}>장바구니에 담고 이동합니다.</Tooltip>}>
-        <CartButton variant="contained" color="primary" onClick={addCart} left="760px" name="directBuy">바로구매</CartButton>
+        <CartButton variant="contained" color="primary" onClick={() => addCart(true)} left="760px">바로구매</CartButton>
         </OverlayTrigger>
         <OverlayTrigger
           placement="bottom"
           delay={{ show: 250, hide: 400 }}
           overlay={props => <Tooltip {...props}>장바구니에 담기기만 합니다.</Tooltip>}>
-        <CartButton variant="contained" color="primary" left="600px" onClick={addCart} name="containItem">장바구니</CartButton>
+        <CartButton variant="contained" color="primary" left="600px" onClick={() => addCart(false)}>장바구니</CartButton>
         </OverlayTrigger>
       </Buttons>
   </>
