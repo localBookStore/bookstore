@@ -87,7 +87,6 @@ const UserInfo = ({ location: { state } }) => {
 			modifyUser();
 		}
 	};
-	console.log(user)
 	return (
 		<>
 			{user && (
