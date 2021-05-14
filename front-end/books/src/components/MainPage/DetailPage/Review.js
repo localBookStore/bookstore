@@ -24,6 +24,7 @@ const Review = ({ review, itemId, token, setReviews }) => {
 	};
 
 	const updateEvent = () => {
+
 		axios.put("http://localhost:8080/api/items/modify/review", {
 				content: newContent,
 				score: review.score,

@@ -80,11 +80,11 @@ const EachComments = ({ comment, setComments, submitEvent, boardId, token }) => 
 				<CommentInfo color="gray">{comment.modifiedDate}</CommentInfo>
 				<CommentInfo color="gray">{comment.nickName}</CommentInfo>
 				{token !== undefined && jwtDecode(token).sub === comment.memberEmail && !isUpdate && !showInput && 
-				<>
+				<span>
 					<CommentButton variant="outlined" fontcolor="#5c6bc0" onClick={() => setShowInput(true)}>답글</CommentButton>
 					<CommentButton variant="outlined" fontcolor="#7cb342" onClick={() => setIsUpdate(true)}>수정</CommentButton>
 					<CommentButton variant="outlined" fontcolor="#b71c1c" onClick={() => deleteEvent(comment.id)}>삭제</CommentButton>
-				</>
+				</span>
 				}
 			</div> 
 		</Container>
@@ -115,10 +115,10 @@ const CommentInput = styled(TextField)`
 `;
 const CommentButton = styled(Button)`
 	margin: 0 5px;
-	font-size: 16px;
+	padding: 0px;
+	font-size: 1vw;
 	color: ${props => props.fontcolor};
 	background-color: white;
-
 	&:hover{
 		background-color: ${props => props.fontcolor};
 		color: white;

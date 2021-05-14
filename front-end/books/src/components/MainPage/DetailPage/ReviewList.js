@@ -28,6 +28,7 @@ const BottomDetail = ({ book }) => {
 
   const submitEvent = () => {
     const { sub } = jwtDecode(token)
+    
     axios.post("api/items/register/review", {
       itemId:book.id,
       memberEmail: sub,

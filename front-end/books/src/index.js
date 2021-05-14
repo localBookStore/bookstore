@@ -11,7 +11,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { StylesProvider } from "@material-ui/core"
 import { CookiesProvider } from 'react-cookie';
 
-axios.defaults.baseURL = 'http://localhost:8080';
+if (process.env.NODE_ENV === 'development'){
+  axios.defaults.baseURL = 'http://localhost:8080';
+}  else{
+  axios.defaults.baseURL = 'http://3.37.26.75:8080';
+}
 
 ReactDOM.render(
   <BrowserRouter>

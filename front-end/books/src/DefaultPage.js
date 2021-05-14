@@ -48,7 +48,7 @@ const DefaultPage = () => {
   const RegularUser = () => {
     return <>
         <LoginedDiv>
-          <NameDiv fontSize="20px" fontWeight="700">{user.name}</NameDiv>
+          <NameDiv fontSize="2vw" fontWeight="700">{user.name}</NameDiv>
           <NameDiv> 님 안녕하세요</NameDiv>
         </LoginedDiv>
         <UserButtons>
@@ -84,7 +84,7 @@ const DefaultPage = () => {
   const AdminUser = () => {
     return <>
       <LoginedDiv>
-          <NameDiv fontSize="20px" fontWeight="700">{user.name}</NameDiv>
+          <NameDiv fontSize="2vw" fontWeight="700">{user.name}</NameDiv>
           <NameDiv> 님 안녕하세요</NameDiv>
         </LoginedDiv>
         <AdminButtons>
@@ -156,7 +156,7 @@ const AuthButton = styled(Button)`
   padding: 5px;
   width: 6vw;
   
-  font-size: 16px;
+  font-size: 1.1vw;
   font-weight: 600;
 `;
 const AuthButtons = styled.div`
@@ -167,9 +167,7 @@ const AuthButtons = styled.div`
   width: 14vw;
   display: flex;
   justify-content: space-between;
-
 `
-
 const LoginedDiv = styled.div`
   position: absolute;
   top: 50px;
@@ -177,7 +175,7 @@ const LoginedDiv = styled.div`
   font-size: 20px;
 `;
 const NameDiv = styled.span`
-  font-size: ${props => props.fontSize || "12px"};
+  font-size: ${props => props.fontSize || "1vw"};
   font-weight: ${props => props.fontWeight || "300px" };
 `;
 const AdminButtons = styled.div`
@@ -187,14 +185,14 @@ const AdminButtons = styled.div`
   display: flex;
   justify-content: space-between;
 
-  width: 13vw;
+  width: 11vw;
 `
-
 const AdminButton = styled(Button)`
   color: #3f51b5;
   background-color: white;
   font-size: 1vw;
   font-weight: bold;
+  padding: 5px;
   
   &:hover{
     color: white;

@@ -28,7 +28,7 @@ const EachItemList = ({ data, itemCheck, token }) => {
   
   const updateEvent = () => {
     axios.patch("api/admin/items", {
-      ...info
+    ...info
     }, { headers: { Authorization: token }})
       .then(() => alert("수정되었습니다."))
       .catch((err) => console.log(err.response));

@@ -92,7 +92,7 @@ const SearchButton = styled(Button)`
   font-size: 27px;
 `;
 const SelectTag = styled(Select)`
-  width: 5vw;
+  width: 10vw;
   & .MuiOutlinedInput-root {
     &.Mui-focused fieldset {
       border: 3px solid #5c6bc0;
