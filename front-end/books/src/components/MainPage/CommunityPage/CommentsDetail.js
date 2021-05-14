@@ -24,7 +24,7 @@ const CommentsDetail = ({ comments, setComments, boardId, token }) => {
     })
     .catch(err => console.log(err.response))
   }
-
+  
   return <CommentContainer>
     {comments.length ? comments.map((comment, idx) => {
       return <EachComment

@@ -28,7 +28,7 @@ const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
   return (
     <Container>
       <CheckBox type="checkbox" defaultChecked onChange={changeCheckEvent} />
-      <PosterImage src={imageUrl} />
+      {/* <PosterImage src={imageUrl} /> */}
       { 
         ENV === 'development' ? 
         <PosterImage src={imageUrl} />:
