@@ -12,7 +12,7 @@ const EachComments = ({ comment, setComments, submitEvent, boardId, token }) => 
 	const [showInput, setShowInput] = useState(false);
 	const [newContent, setNewContent] = useState(comment.content)
 	const [content, setContent] = useState("");
-
+	
 	const modifyEvent = () => {
 		const { sub } = jwtDecode(token);
 		
@@ -37,12 +37,11 @@ const EachComments = ({ comment, setComments, submitEvent, boardId, token }) => 
 			.then((res) => setComments(res.data))
 			.catch((err) => console.log(err.response));
 	};
-
 	return (
 		<Container>
 			<div>
 				{ isUpdate ? <InputContainer>
-					<CommentInput marginleft={comment.depth} variant="outlined" size="small" defaultValue={newContent} onChange={e => setNewContent(e.target.value)}/>
+					<CommentInput marginleft={comment.depth} variant="outlined" size="small" defaultValue={comment.content} onChange={e => setNewContent(e.target.value)}/>
 					<CommentButton fontcolor="#ff8a65" onClick={modifyEvent}>저장</CommentButton>
 					<CommentButton fontcolor="#9e9e9e" onClick={() => setIsUpdate(false)}>취소</CommentButton>
 				</InputContainer>
@@ -53,13 +52,13 @@ const EachComments = ({ comment, setComments, submitEvent, boardId, token }) => 
 					{comment.content}</CommentContent>
 
 					{showInput && <InputContainer>
-						<CommentInput variant="outlined" marginleft={comment.depth+1} size="small" onChange={e => setContent(e.target.value)} />
+						<CommentInput variant="outlined" marginleft={comment.depth+1} size="small" onChange={e => setContent(e.target.value)}/>
 							<CommentButton 
 								variant="outlined" 
 								fontcolor="#ff8a65"
 								onClick={() => {
 									submitEvent(comment.depth+1, comment.id, content)
-									setShowInput(false)	
+									setShowInput(false)
 								}}
 								>
 								답글달기

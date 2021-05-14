@@ -46,7 +46,6 @@ const ModalPage = ({show, showOff, items, status, progress}) => {
             const { orderedItem } = item
             return <ItemGrid container item alignItems="center" key={idx}>
               <Grid xs={6} item>
-                <ModalImage src={orderedItem.imageUrl} alt={item.title}/>
                 { 
                   ENV === 'development' ? 
                     <ModalImage src={orderedItem.imageUrl} alt={item.title}/> :
@@ -108,7 +107,7 @@ const OrderPage = ({order, setOrders, token}) => {
       <StyledTableCell>{deliveryCharge.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</StyledTableCell>
       <StyledTableCell>
         <StyledButton color="primary" variant="outlined" onClick={showOn}>상세보기</StyledButton>
-        <StyledButton color="secondary" variant="outlined" disabled={status === "CANCEL"} onClick={cancelOrder}>주문취소</StyledButton>
+        <StyledButton color="secondary" variant="outlined" disabled={status !== "READY" } onClick={cancelOrder}>주문취소</StyledButton>
       </StyledTableCell>
     </TableRow>
 
