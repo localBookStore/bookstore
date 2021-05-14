@@ -21,7 +21,7 @@ import java.util.UUID;
 public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> {
 
     @Autowired
-    private Environment environment;
+    public Environment environment;
     private String prefixPath = System.getProperty("user.dir").replace("\\", "/");
     private String lastSubString = prefixPath.substring(prefixPath.lastIndexOf("/"));
     private String path = null;
@@ -110,9 +110,10 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         String[] activeProfiles = environment.getActiveProfiles();
         if (activeProfiles[0].equals("deploy")) {
             prefixPath = "/home/ubuntu/static/".replace("\\", "/");
+        } else {
+            prefixPath = System.getProperty("user.dir").replace("\\", "/");
         }
 
-        prefixPath = System.getProperty("user.dir").replace("\\", "/");
         byte[] binary = getFileBinary(prefixPath + "/back-end/src/main/resources/static/profile/" + fileName);
 
         if(binary == null) {
