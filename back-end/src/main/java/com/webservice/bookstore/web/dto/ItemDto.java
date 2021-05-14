@@ -35,7 +35,6 @@ public class ItemDto {
 
         private String imageUrl;
 
-        @JsonIgnore
         private String upload_image_name;
 
 
