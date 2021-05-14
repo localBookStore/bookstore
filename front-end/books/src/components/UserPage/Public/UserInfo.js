@@ -184,7 +184,7 @@ const TagContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	width: 30vw;
+	width: 22vw;
 `;
 
 const PostButton = styled.input`
@@ -193,24 +193,25 @@ const PostButton = styled.input`
 `;
 
 const ProfileImage = styled(Image)`
-	height: 400px;
-	width: 400px;
+	height: 50vh;
+	width: 30vw;
 	object-fit: contain;
 	margin: 20px;
 `;
 
 const Tag = styled.div`
 	margin: auto 0;
+	font-size: 1vw;
 `;
 
 const UserContent = styled.div`
 	margin-bottom: 10px;
-	font-size: 20px;
+	font-size: 1.4vw;
 	font-weight: bold;
 `;
 
 const TextBlock = styled(TextField)`
-	width: 280px;
+	width: 10vw;
 `;
 const EditButton = styled(Button)`
 	margin-top: 30px;

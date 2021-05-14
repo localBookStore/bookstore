@@ -40,7 +40,7 @@ const TopDetail = ({ book }) => {
       <ContentsContainer>
           <TagNames>
             {["이름", "저자", "출판사", "장르", "가격", "남은 수량"].map((tag, idx) => (
-              <div key={idx}>{tag}</div>
+              <TagName key={idx}>{tag}</TagName>
             ))}
           </TagNames>
 
@@ -74,7 +74,6 @@ const TopDetail = ({ book }) => {
 export default TopDetail;
 
 const Container = styled.div`
-  
   display:flex;
   justify-content: center;
 `
@@ -86,32 +85,37 @@ const ContentsContainer = styled.div`
 const TagNames = styled.div`
   display: flex;
   flex-direction: column;
-
-  width: 80px;
+  width: 6vw;
   justify-content: space-between;
-  font-size: 18px;
+  font-size: 1.5vw;
 `
+const TagName = styled.div`
+  font-size: 1.5vw;
+`;
+
 const Contents = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 400px;
+  width: 40vw;
 `
 const PosterImage = styled(Image)`
-  width: 300px;
-  height: auto;
+  width: 25vw;
   object-fit: cover;
+  box-shadow: 2px 2px 2px gray;
 `
 
 const CartButton = styled(Button)`
-  width: 10%;
-  font-size: 20px;
+  width: 10vw;
+  font-size: 1vw;
   margin: 0 20px;
+  padding: 7px 0;
 `
 const Content = styled.div`
-  font-size: 20px;
+  font-size: 1.5vw;
   font-weight: bold;
+  
 `
 const Buttons = styled.div`
   position: relative;

@@ -30,18 +30,18 @@ const Community = ({ history }) => {
     {articles.length ? <Container hover responsive >
         <thead>
           <tr>{section.map((res, idx) => {
-            return <td key={idx}>{res}</td>
+            return <Td key={idx}>{res}</Td>
           })}</tr>
         </thead>
 
         <tbody>
           {articles.map((article, idx) => {
             return <tr key={idx} onClick={() => articleDetailEvent(article.id)}>  
-              <td>{article.id}</td>
-              <td>{article.category}</td>
-              <td>{article.title}</td>
-              <td>{article.modifiedDate}</td>
-              <td>{article.replyCount}</td>
+              <Td>{article.id}</Td>
+              <Td>{article.category}</Td>
+              <Td>{article.title}</Td>
+              <Td>{article.modifiedDate}</Td>
+              <Td>{article.replyCount}</Td>
             </tr>
           })}
         </tbody>
@@ -91,4 +91,7 @@ const PostButton = styled(Button)`
     background-color: white;
     color: #283593;
   }
+`
+const Td = styled.td`
+  font-size: 1.3vw;
 `
