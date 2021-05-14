@@ -11,6 +11,8 @@ public interface JwtProperties {
     String TOKEN_PREFIX  = "Bearer ";
     String SECRET        = Base64.getEncoder().encodeToString("ejdejfjfjznf".getBytes()); // 덩더러러쿨
 
-    List<String> OAUTH2_AUTHORIZED_REDIRECT_URIS = new ArrayList<>(Arrays.asList("http://localhost:3000/oauth2/redirect"));
+    List<String> OAUTH2_AUTHORIZED_REDIRECT_URIS
+            = new ArrayList<>(Arrays.asList("http://localhost:3000/oauth2/redirect",
+                                            "http://3.37.26.75/oauth2/redirect"));
 
 }
