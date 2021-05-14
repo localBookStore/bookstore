@@ -58,12 +58,12 @@ const StyledHeadTableCell = styled(TableCell)`
 `
 const StyledBodyTableCell = styled(TableCell)`
   text-align: center;
-  font-size: 16px;
+  font-size: 1.5vw;
 `
 
 const Title = styled.div`
   font-family: 'Sunflower', sans-serif;
 
-  font-size: 40px;
+  font-size: 4vw;
   margin: 20px 30px;
 `

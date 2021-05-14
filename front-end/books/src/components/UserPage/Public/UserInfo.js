@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { Image } from "react-bootstrap";
 import { TextField, Button } from "@material-ui/core";
 import styled from "styled-components";
-const ENV = process.env.NODE_ENV;
+const noProfile = 'https://image.flaticon.com/icons/png/512/634/634741.png';
+
 
 const UserInfo = ({ location: { state } }) => {
 	const [user, setUser] = useState(null);
@@ -90,12 +91,7 @@ const UserInfo = ({ location: { state } }) => {
 			{user && (
 				<Container>
 					<Wrap>
-						<ProfileImage src={`${user.imageUrl}`} />
-						{/* {
-							ENV === 'development' ?
-							<ProfileImage src={`${user.imageUrl}`} /> :
-							<ProfileImage src={`${user.imageUrl}`} />
-						} */}
+						<ProfileImage src={`${user.imageUrl === 'null' ? noProfile : user.imageUrl }`} />
 						<PostButton type="file" accept="image/jpg,image/png,image/jpeg" onChange={fileChangeEvent} />
 					</Wrap>
 					<TagContainer>
@@ -211,7 +207,7 @@ const UserContent = styled.div`
 `;
 
 const TextBlock = styled(TextField)`
-	width: 10vw;
+	width: 15vw;
 `;
 const EditButton = styled(Button)`
 	margin-top: 30px;

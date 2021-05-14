@@ -187,7 +187,8 @@ const TotalContent = styled.div`
 `;
 const ItemDeleteButton = styled(Button)`
   float: right;
-  font-size: 16px;
+  font-size: 1.3vw;
+  padding: 4px 0;
 `
 const AddressDiv = styled.div`
   margin: 60px 30px;
@@ -204,5 +205,5 @@ const AddressTitle = styled.div`
 `
 const PayButton = styled(Button)`
   margin: 10px;
-  font-size: 28px;
+  font-size: 2vw;
 `

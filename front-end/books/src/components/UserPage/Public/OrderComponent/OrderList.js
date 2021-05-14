@@ -18,7 +18,7 @@ const OrderList = () => {
 	}, []);
 
   return <TableContainer component={Paper} style={{ margin:"0 30px"}} >
-      <Table  style={{width:"60vw"}}>
+      <Table  style={{width:"70vw"}}>
         <TableHead>
           <TableRow >
             <StyledTableCell>주문일자</StyledTableCell>
@@ -37,7 +37,7 @@ const OrderList = () => {
 export default OrderList;
 
 const StyledTableCell = styled(TableCell)`
-  font-size: 20px;
+  font-size: 1.2vw;
   font-weight: bold;
   text-align: center;
 `

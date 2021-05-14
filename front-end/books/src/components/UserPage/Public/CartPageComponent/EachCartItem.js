@@ -34,8 +34,8 @@ const EachCartItem = ({ data, cartList, setCartList, checkEvent }) => {
         <PosterImage src={imageUrl} />:
         <PosterImage src={`/image/${upload_image_name}`}/>
       }
-      <ItemDiv fontSize="20px"fontWeight="bold" width="200px">{name}</ItemDiv>
-      <ItemDiv fontSize="20px">{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</ItemDiv>
+      <ItemDiv fontSize="1.5vw"fontWeight="bold" width="200px">{name}</ItemDiv>
+      <ItemDiv fontSize="1.5vw">{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ₩</ItemDiv>
       <CountDiv>
         <CountButton variant="outlined" onClick={minus}>-</CountButton>
         <ItemCount>{orderCount}</ItemCount>
@@ -53,12 +53,12 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  margin:30px 50px;
+  /* margin:30px 50px; */
 `;
 const PosterImage = styled.img`
-  width: 220px;
-  height: 300px;
-  object-fit: cover;
+  width: 16vw;
+  height: auto;
+  object-fit: contain;
 `;
 const ItemDiv = styled.div`
   font-weight: ${props => props.fontWeight || "400"};
@@ -67,19 +67,20 @@ const ItemDiv = styled.div`
   text-align: center;
 `;
 const ItemCount = styled.span`
-  font-size: 20px;
+  /* font-size: 1.4vw; */
   font-weight: bold;
   text-align: center;
-  width: 50px;
+  width: 30px;
 `;
 const CountButton = styled(Button)`
   font-weight: bold;
-  font-size: 18px;
-  padding: 0;
+  font-size: 1.2vw;
+  padding: 4px 0;
 `;
 const CheckBox = styled.input`
-  width: 30px;
-  height: 30px;
+  width: 2vw;
+  height: 2vw;
+  margin-right: 10px; 
 `;
 const CountDiv = styled.div`
   width: 200px;
@@ -89,6 +90,6 @@ const CountDiv = styled.div`
 const TotalPrice = styled.div`
   width: 120px;
   text-align: center;
-  font-size: 21px;
+  font-size: 1.6vw;
   font-weight: bold;
 `

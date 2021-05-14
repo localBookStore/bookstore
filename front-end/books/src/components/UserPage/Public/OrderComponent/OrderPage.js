@@ -131,12 +131,12 @@ const Section = styled.div`
   margin: 20px;
   vertical-align: center;
 
-  font-size: 22px;
+  font-size: 1.1vw;
   font-family: "Sunflower", sans-serif;
   color: ${props => "black" && props.color }
 `
 const StyledTableCell = styled(TableCell)`
-  font-size: 18px;
+  font-size: 1.5vw;
   text-align: center;
   font-weight: 530;
 
@@ -151,9 +151,10 @@ const StyledTableCell = styled(TableCell)`
       return "#00a152"
     }
   }}
-`
+`;
 const StyledButton = styled(Button)`
   margin: 0 10px;;
+  font-size: 1vw
 `
 
 const StyledProgressBar = styled(ProgressBar)`
