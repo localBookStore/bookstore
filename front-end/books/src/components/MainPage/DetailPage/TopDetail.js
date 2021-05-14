@@ -40,20 +40,31 @@ const TopDetail = ({ book }) => {
         }
       </Paper>
       <ContentsContainer>
-          <TagNames>
-            {["이름", "저자", "출판사", "장르", "가격", "남은 수량"].map((tag, idx) => (
-              <TagName key={idx}>{tag}</TagName>
-            ))}
-          </TagNames>
+            <Div>
+              <Tag>이름</Tag>
+              <Content>{name}</Content>
+            </Div>
+            <Div>
+              <Tag>저자</Tag>
+              <Content>{author}</Content>
+            </Div>
+            <Div>
+              <Tag>출판사</Tag>
+              <Content>{publisher}</Content>
+            </Div>
+            <Div>
+              <Tag>장르</Tag>
+              <Content>{genreMap[category_id]}</Content>
+            </Div>
+            <Div>
+              <Tag>가격</Tag>
+              <Content>{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ￦</Content>
+            </Div>
+            <Div>
+              <Tag>남은 수량</Tag>
+              <Content>{quantity}</Content>
+            </Div>
 
-          <Contents>
-            <Content>{name}</Content>
-            <Content>{author}</Content>
-            <Content>{publisher}</Content>
-            <Content>{genreMap[category_id]}</Content>
-            <Content>{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ￦</Content>
-            <Content>{quantity}</Content>
-          </Contents>
       </ContentsContainer>
     </Container>
       { token === undefined ? 
@@ -83,31 +94,24 @@ const Container = styled.div`
   justify-content: center;
 `
 const ContentsContainer = styled.div`
-  margin: 0 50px;
-  display: flex;
-  justify-content: space-between;
-`
-const TagNames = styled.div`
+  margin-left: 50px;
   display: flex;
   flex-direction: column;
-  width: 6vw;
   justify-content: space-between;
-  font-size: 1.5vw;
 `
-const TagName = styled.div`
-  font-size: 1.5vw;
-`;
-
-const Contents = styled.div`
+const Div = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: space-between;
-  width: 40vw;
+ 
 `
+const Tag = styled.div`
+  font-size: 1vw;
+`
+
 const PosterImage = styled(Image)`
   width: 25vw;
-  object-fit: cover;
+  object-fit: contain;
   box-shadow: 2px 2px 2px gray;
 `
 
@@ -120,7 +124,9 @@ const CartButton = styled(Button)`
 const Content = styled.div`
   font-size: 1.5vw;
   font-weight: bold;
-  
+  margin: 0 auto;
+  padding: 10px;
+
 `
 const Buttons = styled.div`
   position: relative;
@@ -128,8 +134,8 @@ const Buttons = styled.div`
   margin: 40px 0;
 `
 const NeedLoginDiv = styled.div`
-  margin: 4vw 0;
+  margin: 3vw 0;
   text-align: center;
-  font-size: 2vw;
+  font-size: 3vw;
   font-weight: bold;
 `
