@@ -2,7 +2,10 @@ package com.webservice.bookstore.util;
 
 import com.webservice.bookstore.web.dto.ItemDto;
 import com.webservice.bookstore.web.dto.MemberDto;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -17,11 +20,18 @@ import java.util.UUID;
 @Component
 public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> {
 
+    @Autowired
+    private Environment environment;
     private String prefixPath = System.getProperty("user.dir").replace("\\", "/");
     private String lastSubString = prefixPath.substring(prefixPath.lastIndexOf("/"));
     private String path = null;
 
     public void deleteImageFile(String uploadImageName, String path) throws IOException {
+        String[] activeProfiles = environment.getActiveProfiles();
+        if (activeProfiles[0].equals("deploy")) {
+            prefixPath = "/home/ubuntu/static/".replace("\\", "/");
+        }
+
         File file = new File(path);
         if(file.exists()) {
             File[] files = file.listFiles();
@@ -38,6 +48,12 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
     }
 
     public String checkStaticFilePath() {
+        String[] activeProfiles = environment.getActiveProfiles();
+        if (activeProfiles[0].equals("deploy")) {
+            prefixPath = "/home/ubuntu/static/".replace("\\", "/");
+            return prefixPath;
+        }
+
         if(lastSubString.equals("/back-end")) {
             return prefixPath + "/src/main/resources/static/";
         } else if (lastSubString.equals("/bookstore")) {
@@ -49,6 +65,7 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
     }
 
     public void checkImageType(T itemDto, String contentType, BufferedImage bufferedImage) throws Exception {
+
         path = checkStaticFilePath() + "item/" + itemDto.getIsbn();
         String isbn = itemDto.getIsbn();
         if (contentType.contains("image/jpeg")) {
@@ -90,7 +107,12 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         if(extenstion.equals("jpg")) {
             extenstion = "jpeg";
         }
-        String prefixPath = System.getProperty("user.dir").replace("\\", "/");
+        String[] activeProfiles = environment.getActiveProfiles();
+        if (activeProfiles[0].equals("deploy")) {
+            prefixPath = "/home/ubuntu/static/".replace("\\", "/");
+        }
+
+        prefixPath = System.getProperty("user.dir").replace("\\", "/");
         byte[] binary = getFileBinary(prefixPath + "/back-end/src/main/resources/static/profile/" + fileName);
 
         if(binary == null) {
