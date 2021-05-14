@@ -18,7 +18,7 @@ const UserInfo = ({ location: { state } }) => {
 	useEffect(() => {
 		getUserInfo();
 	}, []);
-	
+
 	const getUserInfo = () => {
 		axios.get("api/mypage", { headers: { Authorization: state.token } })
 			.then((res) => setUser(res.data))
@@ -87,7 +87,7 @@ const UserInfo = ({ location: { state } }) => {
 			modifyUser();
 		}
 	};
-
+	console.log(user)
 	return (
 		<>
 			{user && (

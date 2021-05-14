@@ -21,11 +21,12 @@ const DefaultPage = () => {
 
   useEffect(() => {
     if (token !== undefined) {
-      const { nickName, role } = jwtDecode(token);
+      const { nickName, role, sub } = jwtDecode(token);
       setUser({
         ...user,
         name: nickName,
         role,
+        email: sub
       });
     }
   }, [token]);
@@ -48,8 +49,8 @@ const DefaultPage = () => {
   const RegularUser = () => {
     return <>
         <LoginedDiv>
-          <NameDiv fontSize="2vw" fontWeight="700">{user.name}</NameDiv>
-          <NameDiv> 님 안녕하세요</NameDiv>
+          <NameDiv>로그인 계정: </NameDiv>
+          <NameDiv fontSize="1.5vw" fontWeight="700">{user.email}</NameDiv>
         </LoginedDiv>
         <UserButtons>
           <UserButton 
@@ -84,8 +85,8 @@ const DefaultPage = () => {
   const AdminUser = () => {
     return <>
       <LoginedDiv>
-          <NameDiv fontSize="2vw" fontWeight="700">{user.name}</NameDiv>
-          <NameDiv> 님 안녕하세요</NameDiv>
+          <NameDiv>로그인 계정:</NameDiv>
+          <NameDiv fontSize="1.5vw" fontWeight="700">{user.email}</NameDiv>
         </LoginedDiv>
         <AdminButtons>
           <AdminButton

@@ -56,7 +56,9 @@ const TopDetail = ({ book }) => {
           </Contents>
       </ContentsContainer>
     </Container>
-      
+      { token === undefined ? 
+      <NeedLoginDiv>😓 선택한 도서를 구매하시려면 로그인을 해주세요</NeedLoginDiv>
+      :
       <Buttons>
         <OverlayTrigger
           placement="bottom"
@@ -71,6 +73,7 @@ const TopDetail = ({ book }) => {
         <CartButton variant="contained" color="primary" left="600px" onClick={() => addCart(false)}>장바구니</CartButton>
         </OverlayTrigger>
       </Buttons>
+      }
   </>
 }
 export default TopDetail;
@@ -123,4 +126,10 @@ const Buttons = styled.div`
   position: relative;
   text-align: center;
   margin: 40px 0;
+`
+const NeedLoginDiv = styled.div`
+  margin: 4vw 0;
+  text-align: center;
+  font-size: 2vw;
+  font-weight: bold;
 `
