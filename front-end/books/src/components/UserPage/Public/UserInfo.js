@@ -32,7 +32,7 @@ const UserInfo = ({ location: { state } }) => {
         ...user,
         currentPassword: currentPassword === "" ? null : currentPassword,
         newPassword: newPassword === "" ? null : newPassword,
-				imageUrl: userImage === "null" ? null : noProfile,
+				imageUrl: userImage === null ? null : noProfile,
       }, { headers: { Authorization: state.token } })
 			.then(() => alert("정보가 변경되었습니다."))
 			.catch((err) => alert(err.response.data.message))
@@ -87,13 +87,13 @@ const UserInfo = ({ location: { state } }) => {
 			modifyUser();
 		}
 	};
-	
+
 	return (
 		<>
 			{user && (
 				<Container>
 					<Wrap>
-						<ProfileImage src={`${user.imageUrl === 'null' ? noProfile : user.imageUrl }`} />
+						<ProfileImage src={`${user.imageUrl === null ? noProfile : user.imageUrl }`} />
 						<PostButton type="file" accept="image/jpg,image/png,image/jpeg" onChange={fileChangeEvent} />
 					</Wrap>
 					<TagContainer>
