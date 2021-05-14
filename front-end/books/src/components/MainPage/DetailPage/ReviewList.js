@@ -37,7 +37,7 @@ const BottomDetail = ({ book }) => {
     }, { 
       headers: { Authorization: token }})
     .then(res => setReviews(res.data))
-    .catch(err => console.log(err.response))
+    .catch(err => alert("해당 도서의 구매자만 리뷰를 작성할 수 있습니다."))
   }
 
   const config = {

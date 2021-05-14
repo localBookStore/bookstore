@@ -79,12 +79,16 @@ const EachComments = ({ comment, setComments, submitEvent, boardId, token }) => 
 			<div>
 				<CommentInfo color="gray">{comment.modifiedDate}</CommentInfo>
 				<CommentInfo color="gray">{comment.nickName}</CommentInfo>
-				{token !== undefined && jwtDecode(token).sub === comment.memberEmail && !isUpdate && !showInput && 
-				<span>
-					<CommentButton variant="outlined" fontcolor="#5c6bc0" onClick={() => setShowInput(true)}>답글</CommentButton>
-					<CommentButton variant="outlined" fontcolor="#7cb342" onClick={() => setIsUpdate(true)}>수정</CommentButton>
-					<CommentButton variant="outlined" fontcolor="#b71c1c" onClick={() => deleteEvent(comment.id)}>삭제</CommentButton>
-				</span>
+				{token !== undefined && !isUpdate && !showInput && 
+					<span>
+						<CommentButton variant="outlined" fontcolor="#5c6bc0" onClick={() => setShowInput(true)}>답글</CommentButton>
+						{jwtDecode(token).sub === comment.memberEmail &&
+							<>
+								<CommentButton variant="outlined" fontcolor="#7cb342" onClick={() => setIsUpdate(true)}>수정</CommentButton>
+								<CommentButton variant="outlined" fontcolor="#b71c1c" onClick={() => deleteEvent(comment.id)}>삭제</CommentButton>
+							</>
+						}
+					</span>
 				}
 			</div> 
 		</Container>

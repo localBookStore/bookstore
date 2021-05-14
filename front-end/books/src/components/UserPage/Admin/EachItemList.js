@@ -124,16 +124,16 @@ const EachItemList = ({ data, itemCheck, token }) => {
 export default EachItemList;
 
 const Contents = styled.div`
-
+  width: 33vw;
 `
 const ItemPaper = styled(Paper)`
   width: 310px;
-  /* height: 500px; */
   
 `
 const ItemImage = styled.img`
   display: inline-block;
-  height: 440px;
+  width: 25vw;
+  height: 50vh;
   object-fit: contain;
   margin-right: 20px;
 `;
@@ -143,11 +143,12 @@ const Div = styled.div`
   align-items: center;
 
   margin-bottom: 5px;
+  font-size: 1vw;
 `
 
 const ItemContent = styled(TextField)`
   margin-left: 10px;
-  width: 400px;
+  width: 27vw;
 `;
 
 const EachItem = styled.div`
@@ -164,8 +165,6 @@ const CheckBoxInput = styled.input`
 
 const EditButton = styled(Button)`
   margin-left: 10px;
+  padding: 4px;
+  font-size: 1vw;
 `;
-const ItemInput = styled.input`
-  display: block;
-  margin: 20px 0;
-`

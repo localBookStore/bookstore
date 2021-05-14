@@ -6,10 +6,18 @@ import axios from "axios"
 import {Avatar, Button, CssBaseline, TextField, Typography, Container} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import styled from "styled-components"
+const ENV = process.env.NODE_ENV;
 
-const GOOGLE_LOGIN_URL = 'http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth';
-const NAVER_LOGIN_URL = 'http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:3000/oauth';
-const KAKAO_LOGIN_URL = 'http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/oauth';
+
+const GOOGLE_LOGIN_URL = (ENV === 'development' ? 
+  'http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth':
+  'http://3.37.26.75:8080/oauth2/authorization/google?redirect_uri=http://3.37.26.75/oauth')
+const NAVER_LOGIN_URL = (ENV === 'development' ? 
+  'http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:3000/oauth' :
+  'http://3.37.26.75:8080/oauth2/authorization/naver?redirect_uri=http://3.37.26.75/oauth')
+const KAKAO_LOGIN_URL = (ENV === 'development' ?
+  'http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/oauth' :
+  'http://3.37.26.75:8080/oauth2/authorization/kakao?redirect_uri=http://3.37.26.75/oauth')
 
 
 const LoginPage = ({ history }) => {
