@@ -19,7 +19,7 @@ const OauthRedirect = ({location}) => {
   const history = useHistory();
 
   const TOKEN = validation(location.search);
-
+  
   useEffect(() => {
     if (!TOKEN.startsWith("Bearer ")){
       let message
@@ -34,7 +34,7 @@ const OauthRedirect = ({location}) => {
       setCookies('token', TOKEN)
     }
   }, [])
-  return <Redirect to="/" />
 
+  return <Redirect to="/" />
 };
 export default OauthRedirect;

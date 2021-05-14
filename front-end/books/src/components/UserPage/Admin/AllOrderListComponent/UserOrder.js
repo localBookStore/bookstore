@@ -26,9 +26,9 @@ const UserOrder = ({ userInfo }) => {
 			<Table responsive style={{width:"50vw"}}>
 				<thead>
 					<Tr>
-						<th>수정 날짜</th>
-						<th>총 가격</th>
-						<th>현재 상태</th>
+						<Th>수정 날짜</Th>
+						<Th>총 가격</Th>
+						<Th>현재 상태</Th>
 					</Tr>
 				</thead>
 				<tbody>
@@ -50,5 +50,8 @@ const Container = styled.div`
 `;
 const Tr = styled.tr`
 	text-align: center;
-	font-size: 18px;
+	font-size: 1vw;
 `
+const Th = styled.th`
+	font-size: 1vw;
+`;

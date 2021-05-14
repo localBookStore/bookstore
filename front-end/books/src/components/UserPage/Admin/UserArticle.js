@@ -18,10 +18,9 @@ const UserArticle = ({ userInfo }) => {
     .catch(err => console.log(err.response))
   }, [userInfo.email])
 
-  console.log(userArticles)
   return <Container>
     {userArticles.length ? 
-      <Table response style={{width:"60vw"}}>
+      <Table response style={{width:"45vw"}}>
         <thead>
           <Tr>
             <th>글번호</th>
@@ -53,7 +52,7 @@ const Container = styled.div`
 `
 const Tr = styled.tr`
   text-align: center;
-  font-size: 20px;
+  font-size: 1vw;
   
 `
 const NotPost = styled.div`
