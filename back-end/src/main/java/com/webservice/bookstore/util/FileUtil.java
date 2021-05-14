@@ -2,9 +2,10 @@ package com.webservice.bookstore.util;
 
 import com.webservice.bookstore.web.dto.ItemDto;
 import com.webservice.bookstore.web.dto.MemberDto;
-import lombok.Value;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +19,17 @@ import java.util.UUID;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> {
 
-    @Autowired
-    public Environment environment;
+    @Value("${check.envname}")
+    public String env;
     private String prefixPath = System.getProperty("user.dir").replace("\\", "/");
     private String lastSubString = prefixPath.substring(prefixPath.lastIndexOf("/"));
     private String path = null;
 
     public void deleteImageFile(String uploadImageName, String path) throws IOException {
-        String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles[0].equals("deploy")) {
+        if(env.equals("deploy")) {
             prefixPath = "/home/ubuntu/static/".replace("\\", "/");
         }
 
@@ -48,8 +49,7 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
     }
 
     public String checkStaticFilePath() {
-        String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles[0].equals("deploy")) {
+        if(env.equals("deploy")) {
             prefixPath = "/home/ubuntu/static/".replace("\\", "/");
             return prefixPath;
         }
@@ -107,14 +107,8 @@ public class FileUtil<T extends ItemDto.ItemAddDto, M extends MemberDto.Modify> 
         if(extenstion.equals("jpg")) {
             extenstion = "jpeg";
         }
-        String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles[0].equals("deploy")) {
-            prefixPath = "/home/ubuntu/static/".replace("\\", "/");
-        } else {
-            prefixPath = System.getProperty("user.dir").replace("\\", "/");
-        }
 
-        byte[] binary = getFileBinary(prefixPath + "/back-end/src/main/resources/static/profile/" + fileName);
+        byte[] binary = getFileBinary(checkStaticFilePath() + "profile/" + fileName);
 
         if(binary == null) {
             return null;
