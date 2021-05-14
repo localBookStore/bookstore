@@ -26,7 +26,7 @@ const UserArticle = ({ userInfo }) => {
 
   return <Container>
     {userArticles.length ? 
-      <Table response style={{width:"45vw"}}>
+      <Table response hover style={{width:"45vw"}}>
         <thead>
           <Tr>
             <th>글번호</th>
