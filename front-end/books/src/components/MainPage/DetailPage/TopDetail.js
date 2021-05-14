@@ -23,7 +23,9 @@ const TopDetail = ({ book }) => {
           history.push({
           pathname: "/cart",
           state: { token: cookies.token}
-        })}
+        })} else{
+          alert("장바구니에 담겼습니다.")
+        }
       })
       .catch(err => alert(err.response.data))
     }

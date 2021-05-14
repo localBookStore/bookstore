@@ -24,10 +24,10 @@ const Review = ({ review, itemId, token, setReviews }) => {
 	};
 
 	const updateEvent = () => {
-
-		axios.put("http://localhost:8080/api/items/modify/review", {
+		console.log(review.score)
+		axios.put("api/items/modify/review", {
 				content: newContent,
-				score: review.score,
+				score: newScore,
 				itemId,
 				id: review.id,
 			},
@@ -42,23 +42,22 @@ const Review = ({ review, itemId, token, setReviews }) => {
 
 	const Score = ({ score }) => {
 		var result = "";
-		for (var i = 0; i < score; i++) result += "⭐️";
-		return <span>{result}</span>;
+		for (var i = 0; i < score; i++) result += "★";
+		return <span style={{color: "#ff9100"}}>{result}</span>;
 	};
 	
   const config = {
     size: 30,
-		char: "⭐️",
+		char: "★",
     value: newScore,
     activeColor: "#58A677",
     onChange: newValue => setNewScore(newValue)
   }
-
 	return (
 		<Container>
 			<div>
 				{isUpdate ? <div style={{display:"flex", justifyContent:"flex-start"}}>
-            <ReactStars {...config} />
+            <ReactStars {...config} style={{fontSize: "1vw"}} />
 						<ContentInput variant="outlined" size="small" defaultValue={newContent} onChange={e => setNewContent(e.target.value)}/>
             <SubmitButton variant="outlined" fontcolor="#66bb6a" onClick={updateEvent}>저장</SubmitButton>
             <SubmitButton variant="outlined" fontcolor="#bdbdbd" onClick={() => setIsUpdate(false)}>취소</SubmitButton>
@@ -70,10 +69,11 @@ const Review = ({ review, itemId, token, setReviews }) => {
 			<div>
 				<ContentInfo>{review.modifiedDate}</ContentInfo>
 				<ContentInfo>{review.memberNickName}</ContentInfo>
-				{token !== undefined && review.memberEmail === jwtDecode(token).sub && !isUpdate && <>
+				{token !== undefined && review.memberEmail === jwtDecode(token).sub && !isUpdate && <span>
 						<SubmitButton variant="outlined" fontcolor="#fb8c00" onClick={() => setIsUpdate(true)}>수정</SubmitButton>
 						<SubmitButton variant="outlined" fontcolor="#f44336" onClick={deleteEvent}>삭제</SubmitButton>
-					</>}
+					</span>
+				}
 			</div>
 		</Container>
 	);
@@ -89,6 +89,8 @@ const Container = styled.div`
 `;
 const SubmitButton = styled(Button)`
 	margin: 0 10px;
+	font-size: 1vw;
+	padding: 4px;
 	color: ${props => props.fontcolor};
 	background-color: white;
 	font-weight: 600;

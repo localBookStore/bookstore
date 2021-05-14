@@ -42,7 +42,7 @@ const BottomDetail = ({ book }) => {
 
   const config = {
     size: 30,
-    char: "",
+    char: "★",
     activeColor: "#58A677",
     onChange: newValue => setScore(newValue)
   }
