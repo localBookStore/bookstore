@@ -32,9 +32,11 @@ const UserInfo = ({ location: { state } }) => {
         ...user,
         currentPassword: currentPassword === "" ? null : currentPassword,
         newPassword: newPassword === "" ? null : newPassword,
-				imageUrl: userImage === null ? null : noProfile,
+				imageUrl: userImage === null ? noProfile : userImage,
       }, { headers: { Authorization: state.token } })
-			.then(() => alert("정보가 변경되었습니다."))
+			.then(() => {
+				alert("정보가 변경되었습니다.")
+		})
 			.catch((err) => alert(err.response.data.message))
 	};
 
