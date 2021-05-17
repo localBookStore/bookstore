@@ -104,7 +104,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {
-        // 401(Unauthorized) 상태 발생
         log.info("JwtAuthenticationFilter.unsuccessfulAuthentication : 'Unauthorized'");
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
