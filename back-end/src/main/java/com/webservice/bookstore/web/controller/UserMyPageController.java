@@ -96,7 +96,7 @@ public class UserMyPageController {
     }
 
     /*
-    일반 유저 페이지 주문 취소 요청
+    마이페이지 주문 취소 요청
     */
     @PatchMapping("/order/{order_id}")
     public ResponseEntity cancelOrder(@RequestBody @PathVariable(value = "order_id") Long orders_id,
