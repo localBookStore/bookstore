@@ -1,4 +1,4 @@
-# 📚 BookStore
+# 📚 BookStore [![Build Status](https://www.travis-ci.com/localBookStore/bookstore.svg?branch=develop)](https://www.travis-ci.com/localBookStore/bookstore)
 
 ## 📖 프로젝트명 : 책팔자
 ### 한줄요약 : 책에 대한 정보와 커뮤니티를 융합한 온라인 서점 개발 프로젝트.
