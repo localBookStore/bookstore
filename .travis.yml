@@ -11,8 +11,9 @@ cache:
   directories:
     - '$HOME/.gradle'
 
-script:
+before_script:
   - "cd back-end"
+script:
   - "./gradlew clean build --exclude-task test"
 
 # CI 실행 완료시 메일로 알람
