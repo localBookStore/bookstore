@@ -51,7 +51,6 @@ public class AdminPageController {
     @Autowired
     private BoardService boardService;
 
-
     @GetMapping("/items")
     public ResponseEntity getAdminItems() {
         List<ItemDto.Default> itemDtos = this.itemService.findItems();
@@ -73,7 +72,6 @@ public class AdminPageController {
         List<DefaultItemResource> defaultItemResources = collect.stream().map(DefaultItemResource::new).collect(Collectors.toList());
         return ResponseEntity.ok(defaultItemResources);
     }
-
 
     @PostMapping(value = "/items/additem")
     public ResponseEntity addAdminItem(@RequestBody ItemDto.ItemAddDto itemDto) throws Exception{

@@ -149,7 +149,6 @@ public class MemberService {
         Member member = this.memberRepository.findByEmailAndNickName(findPwdRequest.getEmail(),
                                                                      findPwdRequest.getNickName())
                                              .orElseThrow(() -> new EntityNotFoundException());
-
         String tempPassword = EmailUtil.randomString();
         member.changePassword(encoder.encode(tempPassword));
 
