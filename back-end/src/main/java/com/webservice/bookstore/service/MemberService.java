@@ -169,4 +169,5 @@ public class MemberService {
         return member.getEmail();
     }
 
+
 }
