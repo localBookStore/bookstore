@@ -83,13 +83,11 @@ public class AdminPageController {
         return ResponseEntity.created(uri).body(defaultItemResource);
     }
 
-
     @PatchMapping("/items")
     public ResponseEntity modifyItem(@RequestBody ItemDto.Default itemDto) throws Exception{
         itemService.modifyItem(itemDto);
         return ResponseEntity.ok("상품이 수정되었습니다.");
     }
-
 
     @DeleteMapping("/items")
     public ResponseEntity deleteItems(@RequestBody List<Long> ids) throws IOException {
