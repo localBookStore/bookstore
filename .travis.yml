@@ -1,22 +1,23 @@
-language: generic
-
-sudo: required
-
-services:
-  - docker
+language: java
+jdk:
+  - openjdk11
 
 branches:
   only:
-    - hangjin
+    - develop
+
+# Travis CI 서버의 Home
+cache:
+  directories:
+    - '$HOME/app/bookstore/back-end/.gradle'
 
 script:
-  - docker build -t hangs0908/bookstore-frontend ./front-end/books
-  - docker build -t hangs0908/bookstore-backend ./back-end
-  - docker build -t hangs0908/bookstore-nginx ./nginx
+  - "cd app"
+  - "sudo ./backend.sh"
+#  - "./gradlew clean build --exclude-task test"
 
-after_success:
-  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
-
-  - docker push hangs0908/bookstore-frontend
-  - docker push hangs0908/bookstore-backend
-  - docker push hangs0908/bookstore-nginx
+# CI 실행 완료시 메일로 알람
+notifications:
+  email:
+    recipients:
+      - bookstore0324@gmail.com
