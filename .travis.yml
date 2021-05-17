@@ -13,6 +13,7 @@ cache:
 
 before_script:
   - "cd back-end"
+  - "chmod +x gradlew"
 script:
   - "sudo ./gradlew clean build --exclude-task test"
 
