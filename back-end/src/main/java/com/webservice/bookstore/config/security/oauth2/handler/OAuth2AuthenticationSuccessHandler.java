@@ -50,9 +50,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected String determineTargetUrl(HttpServletRequest request,
                                         HttpServletResponse response, Authentication authentication) {
 
-        log.info("OAuth2 determineTargetUrl 메소드 호출");
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        log.info(customUserDetails.getMember());
         String email    = customUserDetails.getMember().getEmail();
         String nickName = customUserDetails.getMember().getNickName();
         String role     = String.valueOf(customUserDetails.getMember().getRole());
