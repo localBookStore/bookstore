@@ -72,20 +72,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private boolean isAuthorizedRedirectUri(String uri) {
         log.info("OAuth2 isAuthorizedRedirectUri 메소드 호출");
         URI clientRedirectUri = URI.create(uri);
-        log.info("clientRedirectUri : " + clientRedirectUri);
 
         return JwtProperties.OAUTH2_AUTHORIZED_REDIRECT_URIS.stream()
-                                .anyMatch(authorizedRedirectUri -> {
-                                    // Only validate host and port. Let the clients use different paths if they want to
-                                    URI authorizedURI = URI.create(authorizedRedirectUri);
-                                    if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-                                                    && authorizedURI.getPort() == clientRedirectUri.getPort()) {
-                                        log.info("");
-                                        return true;
-                                    }
-                                    log.info("");
-                                    return false;
-                                });
+                            .anyMatch(authorizedRedirectUri -> {
+                                // Only validate host and port. Let the clients use different paths if they want to
+                                URI authorizedURI = URI.create(authorizedRedirectUri);
+                                if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+                                                && authorizedURI.getPort() == clientRedirectUri.getPort()) {
+                                    return true;
+                                }
+                                return false;
+                            });
     }
 
     @Override
