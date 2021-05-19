@@ -13,6 +13,7 @@ public interface JwtProperties {
 
     List<String> OAUTH2_AUTHORIZED_REDIRECT_URIS
             = new ArrayList<>(Arrays.asList("http://localhost:3000/oauth2/redirect",
-                                            "http://3.37.26.75/oauth2/redirect"));
-
+                                            "http://3.37.26.75/oauth2/redirect",
+                                            "https://books25.shop/oauth2/redirect",
+                                            "https://www.books25.shop/oauth2/redirect"));
 }

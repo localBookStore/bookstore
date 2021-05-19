@@ -14,7 +14,7 @@ import { CookiesProvider } from 'react-cookie';
 if (process.env.NODE_ENV === 'development'){
   axios.defaults.baseURL = 'http://localhost:8080';
 }  else{
-  axios.defaults.baseURL = 'http://3.37.26.75:8080';
+  axios.defaults.baseURL = 'https://www.books25.shop:8080';
 }
 
 ReactDOM.render(

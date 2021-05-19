@@ -11,13 +11,13 @@ const ENV = process.env.NODE_ENV;
 
 const GOOGLE_LOGIN_URL = (ENV === 'development' ? 
   'http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth':
-  'http://3.37.26.75:8080/oauth2/authorization/google?redirect_uri=http://3.37.26.75/oauth')
+  'https://www.books25.shop:8080/oauth2/authorization/google?redirect_uri=https://www.books25.shop/oauth')
 const NAVER_LOGIN_URL = (ENV === 'development' ? 
   'http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:3000/oauth' :
-  'http://3.37.26.75:8080/oauth2/authorization/naver?redirect_uri=http://3.37.26.75/oauth')
+  'https://www.books25.shop:8080/oauth2/authorization/naver?redirect_uri=https://www.books25.shop/oauth')
 const KAKAO_LOGIN_URL = (ENV === 'development' ?
   'http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/oauth' :
-  'http://3.37.26.75:8080/oauth2/authorization/kakao?redirect_uri=http://3.37.26.75/oauth')
+  'https://www.books25.shop:8080/oauth2/authorization/kakao?redirect_uri=https://www.books25.shop/oauth')
 
 
 const LoginPage = ({ history }) => {
