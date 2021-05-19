@@ -90,7 +90,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        log.info("JwtAuthenticationFilter.successfulAuthentication : 'OK'");
         log.info("request.getRequestURI() : " + request.getRequestURI());
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String email = customUserDetails.getMember().getEmail();
