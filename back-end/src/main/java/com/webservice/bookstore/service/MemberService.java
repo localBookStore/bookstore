@@ -113,8 +113,8 @@ public class MemberService {
             if (!StringUtils.isBlank(memberDto.getCurrentPassword())) {
 
                 if (!encoder.matches(memberDto.getCurrentPassword(), member.getPassword())) {
-                    throw new MatchUserPasswordException("비밀번호가 일치하지 않습니다.",
-                            new SimpleFieldError("password", "비밀번호 변경"));
+                    throw new MatchUserPasswordException("현재 비밀번호가 일치하지 않습니다.",
+                            new SimpleFieldError("password", "현재 비밀번호가 일치하지 않습니다."));
                 } else if (StringUtils.isNotBlank(memberDto.getNewPassword())) {
                     member.changePassword(encoder.encode(memberDto.getNewPassword()));
                 }
